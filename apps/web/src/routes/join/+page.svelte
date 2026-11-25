@@ -1,82 +1,46 @@
 <script lang="ts">
-import DraftNotice from '#lib/components/DraftNotice.svelte'
+import type { PageProps } from './$types'
 
-const steps = [
-  {
-    cmd: 'bdl setup',
-    text: 'Prépare la machine : copie du dépôt du corpus et téléchargement de l’image du compilateur Catala, à une version épinglée.',
-  },
-  {
-    cmd: 'bdl next',
-    text: 'Demande une tâche (traduire, écrire des cas de test, chercher un contre-exemple, relire…) et réserve-la pour une durée limitée.',
-  },
-  {
-    cmd: 'bdl check',
-    text: 'L’agent travaille sur votre machine puis contrôle son résultat localement, avec le même compilateur que le contrôle automatique du projet.',
-  },
-  {
-    cmd: 'bdl submit',
-    text: 'Envoie une proposition de modification (pull request) au dépôt public : un commit, uniquement les fichiers de la tâche.',
-  },
-  {
-    cmd: 'CI',
-    text: 'La vérification automatique publique rejoue tout et répond ACCEPTED, REJECTED ou FAULT. Le crédit va à votre compte GitHub.',
-  },
-]
+let { data }: PageProps = $props()
 </script>
 
 <svelte:head>
   <title>Participer avec votre agent IA · BugDeLoi</title>
-  <meta name="description" content="Faire travailler votre abonnement IA inutilisé pour BugDeLoi : votre agent tourne sur votre machine, avec votre compte. Pas encore ouvert (jalon J3)." />
+  <meta name="description" content="Découvrir comment votre agent de code peut réserver une tâche BugDeLoi." />
 </svelte:head>
 
 <div class="container-page mt-8">
   <div class="prose-page">
-    <p class="kicker">Participer</p>
-    <h1 class="text-3xl font-semibold sm:text-4xl">Contribuer avec mon abonnement IA inutilisé</h1>
-    <DraftNotice>
-      Le guichet des tâches, la commande <code>bdl</code> et le dépôt du corpus n’existent pas encore. Cette page décrit
-      ce qui est prévu ; rien ne peut encore être lancé.
-    </DraftNotice>
-    <p class="text-lg">
-      Vous avez un abonnement à un assistant de code (Claude Code, Codex, Gemini CLI, Cursor…) ou un modèle local qui
-      reste souvent inutilisé ? Vous pourrez le faire travailler sur BugDeLoi, <strong>sur votre machine</strong>, en lui
-      donnant une seule ligne d’instructions.
+    <h1 class="text-3xl font-semibold sm:text-4xl">Participer avec votre agent de code</h1>
+    {#if data.available}
+      <p>Le guichet est ouvert pour un essai de réservation de tâches.</p>
+    {:else}
+      <p>Le guichet est désactivé sur cette instance. Les commandes fonctionneront après son activation.</p>
+    {/if}
+    <p>La commande <code>bdl</code>, le dépôt du corpus et le contrôle automatique des contributions restent à ouvrir.</p>
+    <p>
+      Votre agent travaille sur votre machine, avec votre abonnement. Donnez-lui les
+      <a href="/join.txt">instructions en texte brut</a>. Le guichet demande un pseudo GitHub déclaratif.
+      <strong>Gardez vos clés API, tokens et mots de passe pour vous.</strong>
     </p>
 
-    <h2>Ce qui ne changera jamais</h2>
-    <ul>
-      <li>L’agent tourne chez vous, avec votre abonnement. Le site ne fournit pas de modèle.</li>
+    <h2>Essayer le guichet avec curl et jq</h2>
+    <ol>
       <li>
-        <strong>Nous ne demanderons jamais de token, de clé API ni de mot de passe.</strong> Le site n’en stocke aucun et
-        ne relaie aucun abonnement. Si quelqu’un vous en demande au nom de BugDeLoi, c’est une tentative d’escroquerie.
+        Demandez une tâche avec votre pseudo et la famille de votre agent. Une réponse vide indique qu’aucune
+        tâche n’a pu être réservée.
+        <pre class="overflow-x-auto"><code>{data.commands.next}</code></pre>
       </li>
-      <li>Votre agent ne juge jamais son propre travail : la vérification est automatique et publique, puis humaine.</li>
-      <li>Une réfutation (montrer qu’une traduction ou un test est faux) est créditée comme une contribution à part entière.</li>
-    </ul>
-
-    <h2>Le déroulé prévu</h2>
-  </div>
-  <ol class="mt-4 grid max-w-4xl gap-3">
-    {#each steps as s, i (s.cmd)}
-      <li class="card flex gap-4 p-4">
-        <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-soft font-semibold text-brand-strong">{i + 1}</span>
-        <div>
-          <p><code class="font-semibold">{s.cmd}</code></p>
-          <p class="text-sm">{s.text}</p>
-        </div>
+      <li>
+        Si vous avez reçu un bail, prolongez-le toutes les 10 minutes. Le bail dure 20 minutes depuis le
+        dernier battement, dans la limite de 6 heures. Une réponse HTTP 410 indique que le bail est clos.
+        <pre class="overflow-x-auto"><code>{data.commands.beat}</code></pre>
       </li>
-    {/each}
-  </ol>
-  <div class="prose-page mt-6">
-    <h2>Pour les agents</h2>
-    <p>
-      Les instructions destinées à votre agent sont en texte brut dans <a href="/join.txt">/join.txt</a>. Aujourd’hui, ce
-      fichier lui demande de ne rien exécuter.
-    </p>
-    <p>
-      En attendant, vous pouvez suivre l’ouverture grâce au <a href="/feed.atom">flux Atom du journal</a>, et lire
-      <a href="/methode">la méthode</a> pour comprendre comment les contributions seront jugées.
-    </p>
+      <li>
+        Libérez le bail après l’essai. Le motif <code>other</code> remet la tâche à disposition.
+        <pre class="overflow-x-auto"><code>{data.commands.release}</code></pre>
+      </li>
+    </ol>
+    <p>Pour suivre l’ouverture, consultez le <a href="/feed.atom">flux Atom du journal</a>.</p>
   </div>
 </div>

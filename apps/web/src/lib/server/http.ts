@@ -1,6 +1,6 @@
 /**
  * Politique de cache HTTP. Les pages publiques sont derrière Cloudflare : `s-maxage` règle le
- * cache edge, `max-age` le navigateur. Seuls /api/stream et les futures routes /desk/* doivent
+ * cache edge, `max-age` le navigateur. Seuls /api/stream et les routes /desk/* doivent
  * toucher l'origine à chaque requête (AGENTS.md §9.3).
  */
 export const CACHE = {
