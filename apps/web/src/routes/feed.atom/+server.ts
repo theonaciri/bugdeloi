@@ -1,5 +1,4 @@
-import { eventLabel } from '#lib/format.ts'
-import { isLegiarti } from '#lib/ids.ts'
+import { eventHref, explainEvent } from '#lib/events.ts'
 import { CACHE } from '#lib/server/http.ts'
 import { feedEvents } from '#lib/server/queries.ts'
 import type { RequestHandler } from './$types'
@@ -19,9 +18,11 @@ export const GET: RequestHandler = async ({ url }) => {
   const updated = events[0]?.ts ?? new Date(0).toISOString()
   const entries = events
     .map((e) => {
-      const title = `${eventLabel(e.type)}${e.subject ? ` · ${e.subject}` : ''}`
-      const summary = [e.summary, `Type : ${e.type}`, `Acteur : ${e.actor}`].filter(Boolean).join(' — ')
-      const link = isLegiarti(e.subject) ? `${origin}/article/${e.subject}` : `${origin}/`
+      const title = `${explainEvent(e.type).title}${e.subject ? ` · ${e.subject}` : ''}`
+      const summary = [e.summary ?? explainEvent(e.type).why, `Type : ${e.type}`, `Acteur : ${e.actor}`]
+        .filter(Boolean)
+        .join(' — ')
+      const link = `${origin}${eventHref(e.id)}`
       return `  <entry>
     <id>tag:bugdeloi,2026:event/${e.id}</id>
     <title>${esc(title)}</title>

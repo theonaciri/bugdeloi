@@ -17,7 +17,7 @@ const lifecycle = [
   {
     code: 'qualified',
     label: 'Qualifié',
-    text: 'Un humain conclut à un défaut du texte ou à une lacune. Son verdict, son motif et le commit Git qui porte sa signature figurent dans le certificat.',
+    text: 'Un humain conclut à un défaut du texte ou à une lacune. Son verdict, son motif et le commit Git du verdict figurent dans le certificat.',
   },
   {
     code: 'published',
@@ -135,6 +135,10 @@ const lifecycle = [
           nous l’écrivons au lieu d’afficher 0 %.
         </dd>
       </div>
+      <div id="compteur-formalisations">
+        <dt class="font-semibold">Articles compilés par le projet</dt>
+        <dd>Somme des articles en vigueur classés N2, N3, N4 ou N5. Le marqueur externe ★ est présenté à part.</dd>
+      </div>
       <div id="compteur-anomalies">
         <dt class="font-semibold">Anomalies qualifiées</dt>
         <dd>
@@ -163,7 +167,7 @@ const lifecycle = [
         <dt class="font-semibold">Derniers événements</dt>
         <dd>
           Les entrées les plus récentes du journal public, qui conserve son historique. Pour les anomalies, il présente
-          les événements de qualification favorable et de publication.
+          les événements de qualification favorable et de publication. Pour un contrôle automatique, la fiche compte les articles en vigueur examinés par code à sa date de projection, à partir du résultat enregistré dans le journal.
         </dd>
       </div>
     </dl>

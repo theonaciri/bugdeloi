@@ -15,6 +15,7 @@
 | Service systemd + mise en ligne sur 19069         | orchestrateur              | ✔ fait — `scripts/deploy.sh` (révisions + retour arrière)                                                                                                                           | `infra/systemd/`                                         |
 | Balayage mécanique C0.2 (renvois morts…)          | claude-sonnet-5-5 (high)   | ✔ fait — 4 détecteurs déterministes, **1 128 candidats non qualifiés** (REF_MORTE 1 117, SYNTAXE 9, NUMEROTATION 2), certificats rejouables ; rapport `replications/c0.2/REPORT.md` | `packages/sweep`                                         |
 | Couverture Inria → ★ sur la carte                 | orchestrateur              | ✔ fait — **290 articles ★** (CGI 32, CSS 24, CCH 234) via `replications/c0.1/promote.ts`                                                                                            | `reference_coverage`                                     |
+| Pédagogie du site                                 | codex/gpt-6.2-sol (medium) | Fiches d’événement, parcours en trois étapes et frise des constats sur la branche de travail                                                                                        | `apps/web`, `docs/DESIGN.md`                             |
 
 ## Journal des décisions
 

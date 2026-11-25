@@ -1,11 +1,24 @@
 <script lang="ts">
 import { VERDICT_LABEL } from '@bugdeloi/core/findings'
+import FlowDiagram from '#lib/components/FlowDiagram.svelte'
+import { findingSteps } from '#lib/finding-guide.ts'
 import { etatLabel, formatDateTime, formatLegiDate } from '#lib/format.ts'
 import type { PageProps } from './$types'
 
 let { data }: PageProps = $props()
 let item = $derived(data.finding)
 let rejected = $derived(item.status === 'rejected')
+const currentStep = $derived(findingSteps.findIndex((step) => step.status === item.status))
+const abrogation = $derived(
+  item.target?.etat === 'ABROGE' && item.target.dateFin && !item.target.dateFin.startsWith('2999')
+    ? `Abrogé le ${formatLegiDate(item.target.dateFin)}`
+    : null,
+)
+
+function articleLabel(ref: typeof item.source, fallback: string) {
+  const label = ref?.num ? [ref.code, ref.num].filter(Boolean).join(' · ') : null
+  return label && label.length <= 20 ? `Art. ${label}` : fallback
+}
 </script>
 
 <svelte:head><title>{item.id} · Anomalies · BugDeLoi</title></svelte:head>
@@ -13,9 +26,56 @@ let rejected = $derived(item.status === 'rejected')
 <div class="container-page mt-8">
   <div class="prose-page">
     <p><a href={rejected ? '/anomalies/cimetiere' : '/anomalies'}>{rejected ? 'Cimetière des constats rejetés' : 'Anomalies qualifiées'}</a></p>
-    <h1 class="text-3xl font-semibold sm:text-4xl">{item.id} · {item.typeLabel}</h1>
-    <p class="text-muted">{rejected ? 'Rejeté par un humain' : item.status === 'published' ? 'Publié' : 'Qualifié'}</p>
-    <p>{item.claim}</p>
+    <h1 class="text-3xl font-semibold sm:text-4xl">{item.typeLabel}</h1>
+    <p class="text-muted">
+      <code class="mr-2 text-xs">{item.id}</code>
+      {rejected ? 'Rejeté par un humain' : item.status === 'published' ? 'Publié après verdict humain' : 'Qualifié par un humain'}
+      <code class="ml-2 text-xs">{item.type} · {item.status}</code>
+    </p>
+
+    <h2>Ce que le contrôle a relevé</h2>
+    {#if item.type === 'REF_MORTE'}
+      <p>Le programme a repéré un renvoi vers un article qu’il a identifié comme abrogé à la date du contrôle.</p>
+      <figure>
+        <FlowDiagram
+          title="Le renvoi signalé"
+          description={`${articleLabel(item.source, 'L’article source')} cite ${articleLabel(item.target, 'l’article cité')}.`}
+          from={articleLabel(item.source, 'Article source')}
+          to={articleLabel(item.target, 'Article cité')}
+          relation="Cite"
+          detail={abrogation}
+        />
+        <figcaption class="mt-2 text-sm text-muted">Le schéma reprend les versions enregistrées dans le certificat.</figcaption>
+      </figure>
+      <p>Un renvoi vers une ancienne version peut être volontaire. Le verdict humain précise ce qui a été retenu dans ce cas.</p>
+      <details>
+        <summary>Constat enregistré par le programme</summary>
+        <p class="mt-2">{item.claim}</p>
+      </details>
+    {:else}
+      <p>{item.claim}</p>
+    {/if}
+
+    <h2>Où en est ce constat ?</h2>
+    <ol class="mt-4 grid list-none gap-y-2 border-y border-line p-0 sm:grid-cols-4" aria-label="Cycle du constat">
+      {#each findingSteps as step, index (step.status)}
+        {@const reached = rejected ? index < 2 : index <= currentStep}
+        <li class="m-0 border-t border-line px-3 py-3 first:border-0 sm:border-l sm:border-t-0" aria-current={item.status === step.status ? 'step' : undefined}>
+          <p class="font-semibold">{step.term}</p>
+          <p class="text-xs {item.status === step.status ? 'font-semibold text-brand-strong' : 'text-muted'}">
+            {item.status === step.status ? 'Étape actuelle' : reached ? 'Étape passée' : rejected ? 'Étape écartée' : 'Étape suivante'}
+          </p>
+          <p class="mt-1 text-sm">{step.definition}</p>
+        </li>
+      {/each}
+    </ol>
+    {#if rejected}
+      <p>Le relecteur a écarté le constat après sa reproduction. <a href="#verdict">Lire son motif</a>.</p>
+    {:else if item.status === 'qualified'}
+      <p><a href="#verdict">Lire le verdict</a>. Une entrée de publication pourra ensuite être ajoutée au journal.</p>
+    {:else}
+      <p>Vous pouvez <a href="#verdict">lire le verdict</a> et relancer le contrôle à partir du certificat.</p>
+    {/if}
 
     <h2>Versions d’articles</h2>
     {#if item.projectionDate}
@@ -48,7 +108,10 @@ let rejected = $derived(item.status === 'rejected')
     {#if typeof item.reproduction.verdict === 'string'}
       <dl>
         <dt>Verdict du rejeu</dt>
-        <dd>{item.reproduction.verdict}</dd>
+        <dd>
+          {item.reproduction.verdict === 'confirmé' ? 'La chaîne indépendante a retrouvé le constat.' : 'Le certificat consigne le résultat du contrôle.'}
+          <code class="ml-2 text-xs text-muted">{item.reproduction.verdict}</code>
+        </dd>
         {#if typeof item.reproduction.source === 'string'}
           <dt>Source</dt>
           <dd>{item.reproduction.source}</dd>
@@ -62,7 +125,7 @@ let rejected = $derived(item.status === 'rejected')
       <p>Aucun verdict de reproduction indépendante dans le certificat.</p>
     {/if}
 
-    <h2>Verdict humain</h2>
+    <h2 id="verdict">Verdict humain</h2>
     {#if item.qualification}
       <p>
         <strong>{VERDICT_LABEL[item.qualification.verdict]}</strong> · @{item.qualification.reviewer} ·

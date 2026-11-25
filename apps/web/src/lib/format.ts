@@ -59,26 +59,6 @@ export function etatLabel(etat: string | null | undefined): string {
   return ETAT_LABEL[etat] ?? etat
 }
 
-const EVENT_LABEL: Record<string, string> = {
-  'ingest.started': 'Ingestion LEGI démarrée',
-  'ingest.finished': 'Ingestion LEGI terminée',
-  'ingest.failed': 'Ingestion LEGI en échec',
-  'replication.started': 'Rejeu de référence démarré',
-  'replication.passed': 'Rejeu de référence réussi',
-  'replication.failed': 'Rejeu de référence en échec',
-  'replication.finished': 'Rejeu de référence terminé',
-  'level.changed': 'Niveau de preuve modifié',
-  'coverage.recorded': 'Couverture de référence enregistrée',
-  'sweep.finished': 'Balayage mécanique terminé',
-  'finding.qualified': 'Anomalie qualifiée par un humain',
-  'finding.published': 'Anomalie publiée',
-  'site.deployed': 'Site déployé',
-}
-
-export function eventLabel(type: string): string {
-  return EVENT_LABEL[type] ?? type
-}
-
 const LINK_LABEL: Record<string, string> = {
   CITATION: 'Citation',
   MODIFIE: 'Modifié par',

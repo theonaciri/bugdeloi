@@ -74,17 +74,80 @@ const ISO = (d: Date | string | null | undefined): string | null =>
 /** Filtre des événements publiables : tout sauf les anomalies non encore qualifiées. */
 const publicEventFilter: SQL = sql`(${event.type} NOT LIKE 'finding.%' OR ${event.type} IN ('finding.qualified', 'finding.published'))`
 
-/** Les `limit` derniers événements publics, du plus récent au plus ancien. */
-export async function latestEvents(limit = 10): Promise<PublicEvent[]> {
-  const rows = await db().select().from(event).where(publicEventFilter).orderBy(desc(event.id)).limit(limit)
-  return rows.map((r) => ({
+function publicEvent(r: typeof event.$inferSelect): PublicEvent {
+  return {
     id: r.id,
-    ts: ISO(r.ts) as string,
+    ts: r.ts.toISOString(),
     type: r.type,
     actor: r.actor,
     subject: r.subject,
-    summary: typeof r.payload.summary === 'string' ? r.payload.summary : null,
-  }))
+    summary:
+      r.type !== 'reproduction.finished' && typeof r.payload.summary === 'string' ? r.payload.summary : null,
+  }
+}
+
+/** Les `limit` derniers événements publics, du plus récent au plus ancien. */
+export async function latestEvents(limit = 10): Promise<PublicEvent[]> {
+  const rows = await db().select().from(event).where(publicEventFilter).orderBy(desc(event.id)).limit(limit)
+  return rows.map(publicEvent)
+}
+
+/** Le détail applique le filtre du journal et ne transmet pas le payload brut. */
+export async function eventDetail(id: number, database = db()) {
+  const [row] = await database
+    .select()
+    .from(event)
+    .where(and(eq(event.id, id), publicEventFilter))
+    .limit(1)
+  if (!row) return null
+  const { payload, subject, type } = row
+  const asOf = payload.asOf
+  const stats = payload.stats
+  const articlesChecked = payload.articlesChecked
+  const runs = Array.isArray(payload.runs) ? payload.runs : []
+  const [article] =
+    subject && LEGIARTI_RE.test(subject)
+      ? await database
+          .select({ num: legalArticle.num })
+          .from(legalArticle)
+          .where(eq(legalArticle.id, subject))
+      : []
+  const findingHref =
+    subject && (type === 'finding.qualified' || type === 'finding.published') && FINDING_ID_RE.test(subject)
+      ? `/anomalies/${subject}`
+      : null
+  return {
+    ...publicEvent(row),
+    archive: type.startsWith('ingest.') && typeof payload.archive === 'string' ? payload.archive : null,
+    projectionDate: type.startsWith('ingest.') && typeof asOf === 'string' ? asOf : null,
+    scopes: CODE_KEYS.flatMap((code) => {
+      const total =
+        type === 'ingest.finished'
+          ? field(stats, `${code}.versions`)
+          : type === 'sweep.finished'
+            ? field(articlesChecked, code)
+            : undefined
+      const date = field(asOf, code)
+      return typeof total === 'number' ? [{ code, total, date: typeof date === 'string' ? date : null }] : []
+    }),
+    reference:
+      type === 'reference.promoted' && typeof payload.promoted === 'number' ? payload.promoted : null,
+    replayStatuses:
+      type === 'replication.finished'
+        ? runs.flatMap((run: unknown) => {
+            const status = field(run, 'status')
+            return typeof status === 'string' ? [status] : []
+          })
+        : [],
+    article: article && subject ? { id: subject, num: article.num } : null,
+    findingHref,
+  }
+}
+
+function field(record: unknown, key: string): unknown {
+  return record && typeof record === 'object' && Object.hasOwn(record, key)
+    ? (record as Record<string, unknown>)[key]
+    : undefined
 }
 
 // ---------------------------------------------------------------------------
@@ -740,6 +803,7 @@ export async function findingDetail(id: string, database = db()) {
 
   return {
     ...summary,
+    type: row.type,
     ...findingEvidence(row.certificate),
     certificate: JSON.stringify(row.certificate, null, 2),
     replay: typeof row.certificate.replay === 'string' ? row.certificate.replay : null,

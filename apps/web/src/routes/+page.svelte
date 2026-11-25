@@ -2,9 +2,11 @@
 import CallToAction from '#lib/components/CallToAction.svelte'
 import EmptyState from '#lib/components/EmptyState.svelte'
 import EventList from '#lib/components/EventList.svelte'
+import GlossaryTerm from '#lib/components/GlossaryTerm.svelte'
 import LevelBar from '#lib/components/LevelBar.svelte'
 import LevelSwatch from '#lib/components/LevelSwatch.svelte'
 import ProgressBar from '#lib/components/ProgressBar.svelte'
+import { findingSteps } from '#lib/finding-guide.ts'
 import { formatDateTime, formatInt, formatShare, plural } from '#lib/format.ts'
 import { addCounts, emptyLevelCounts, LEVEL_INFO, LEVELS, levelName } from '#lib/levels.ts'
 import type { Snapshot } from '#lib/snapshot.ts'
@@ -23,7 +25,7 @@ const totals = $derived.by(() => {
   return t
 })
 const inForceTotal = $derived((snap?.codes ?? []).reduce((s, c) => s + c.inForce, 0))
-const ingestedCodes = $derived((snap?.codes ?? []).filter((c) => c.ingested))
+const compiledTotal = $derived(totals.N2 + totals.N3 + totals.N4 + totals.N5)
 
 // Abonnement temps réel (SSE) avec repli en polling toutes les 30 s.
 $effect(() => {
@@ -76,33 +78,88 @@ $effect(() => {
 </svelte:head>
 
 <section class="border-b border-line bg-surface">
-  <div class="container-page py-10 sm:py-14">
-    <p class="kicker">Jalon J0 · fondations en cours</p>
-    <h1 class="mt-2 max-w-3xl text-3xl font-semibold sm:text-5xl">
-      Le droit calculable français, formalisé et rejouable par tous.
-    </h1>
-    <p class="mt-4 max-w-2xl text-lg text-muted">
-      BugDeLoi traduit les textes de loi en code <a href="https://catala-lang.org">Catala</a>, cherche les anomalies et
-      publie chaque résultat avec un certificat que n’importe qui peut rejouer. Des agents IA proposent, le compilateur,
-      des sources indépendantes et des relecteurs humains jugent.
+  <div class="container-page py-9 sm:py-12">
+    <h1 class="max-w-3xl text-4xl font-semibold sm:text-5xl">Du texte de loi au constat public</h1>
+    <p class="mt-4 max-w-[66ch] text-lg text-muted">
+      BugDeLoi travaille sur les règles que l’on peut écrire sous forme de calcul. Le projet cherche aussi les
+      incohérences dans les textes officiels, par exemple un renvoi vers un article abrogé.
     </p>
-    <p class="mt-3 max-w-2xl">
-      <strong>Où en est-on vraiment ?</strong> Au tout début. Aucun article n’est encore formalisé par le projet. Les chiffres
-      ci-dessous sont lus en base à chaque visite, même quand ils valent zéro.
-    </p>
-    <div class="mt-6"><CallToAction /></div>
+    <p class="mt-4"><a href="/methode">Lire la méthode et le détail des compteurs</a></p>
+
+    <ol class="mt-8 max-w-4xl list-decimal divide-y divide-line border-y border-line">
+      <li class="ml-6 py-4 pl-2">
+        <h2 class="text-xl font-semibold">Rassembler les textes officiels</h2>
+        <p class="mt-1 max-w-[65ch]">Le projet charge les versions datées diffusées par la Direction de l’information légale et administrative.</p>
+        {#if snap}
+          <p class="mt-2">
+            <strong>{plural(inForceTotal, 'article en vigueur', 'articles en vigueur')}</strong> dans les codes suivis.
+            <a href="/methode#compteur-articles">Calcul</a> · <a href="/carte">Explorer les articles</a>
+          </p>
+        {/if}
+      </li>
+      <li class="ml-6 py-4 pl-2">
+        <h2 class="text-xl font-semibold">Traduire les règles et contrôler les textes</h2>
+        <p class="mt-1 max-w-[65ch]">
+          Le projet écrit les règles de calcul en code Catala. D’autres programmes examinent les textes pour repérer
+          des cas à relire, qu’on appelle des candidats.
+        </p>
+        {#if snap}
+          <p class="mt-2">
+            <strong>{plural(compiledTotal, 'article au niveau N2 à N5', 'articles aux niveaux N2 à N5')}</strong> parmi les travaux du projet.
+            <a href="/methode#compteur-formalisations">Calcul</a>
+          </p>
+          <p class="mt-1">
+            Pour les travaux de référence, <strong>{formatInt(snap.replications.passed)} sur {formatInt(snap.replications.total)}</strong> suites de tests rejouées avec succès.
+            <a href="/methode#compteur-rejeux">Calcul</a>
+          </p>
+        {/if}
+      </li>
+      <li class="ml-6 py-4 pl-2">
+        <h2 class="text-xl font-semibold">Faire relire le constat avant publication</h2>
+        <p class="mt-1 max-w-[65ch]">
+          Une chaîne indépendante refait le contrôle. Un humain examine ensuite le constat et consigne son verdict.
+        </p>
+        {#if snap}
+          <p class="mt-2">
+            <strong>{plural(snap.findings.public, 'anomalie qualifiée', 'anomalies qualifiées')}</strong> par un humain.
+            <a href="/methode#compteur-anomalies">Calcul</a> · <a href="/anomalies">Consulter les anomalies</a>
+          </p>
+        {/if}
+      </li>
+    </ol>
+
+    <p class="mt-4 max-w-[65ch] text-sm text-muted">Un compte, pas une probabilité. Ces chiffres décrivent les textes chargés et les contrôles effectués.</p>
   </div>
 </section>
 
 {#if data.dbError || !snap}
   <div class="container-page mt-8">
     <EmptyState title="La base de données ne répond pas pour le moment.">
-      Les compteurs ne peuvent pas être affichés : nous préférons ne rien montrer plutôt qu’un chiffre faux. Voir
+      Les chiffres seront disponibles au retour de la base. Voir
       <a href="/status">l’état du service</a>.
     </EmptyState>
   </div>
 {:else}
   <div class="container-page mt-10 space-y-12">
+    <section aria-labelledby="journal">
+      <div class="flex flex-wrap items-baseline justify-between gap-2">
+        <h2 id="journal" class="text-2xl font-semibold">Derniers événements</h2>
+        <a href="/feed.atom" class="text-sm">S’abonner (Atom)</a>
+      </div>
+      <p class="mb-4 mt-1 text-muted">Choisissez un événement pour voir ce qui s’est passé, à quoi cela sert et ce qui vient ensuite.</p>
+      <EventList events={snap.events} />
+    </section>
+
+    <section aria-labelledby="statuts">
+      <h2 id="statuts" class="text-2xl font-semibold">Les étapes d’un constat</h2>
+      <p class="mt-2 max-w-[65ch] text-muted">Un verdict humain peut aussi écarter le constat. Les rejets motivés figurent dans le <a href="/anomalies/cimetiere">cimetière</a>.</p>
+      <ol class="mt-3 flex flex-wrap items-start gap-x-5 gap-y-2">
+        {#each findingSteps as step (step.status)}
+          <li><GlossaryTerm term={step.term} definition={step.definition} href="/methode#cycle" /></li>
+        {/each}
+      </ol>
+    </section>
+
     <section aria-labelledby="avancement">
       <div class="flex flex-wrap items-baseline justify-between gap-2">
         <h2 id="avancement" class="text-2xl font-semibold">Avancement par code</h2>
@@ -113,12 +170,12 @@ $effect(() => {
         </p>
       </div>
       <p class="mt-1 text-muted">
-        Part des articles en vigueur ayant atteint au moins le niveau <strong>N2 Compilé</strong>.
+        Part des articles en vigueur aux niveaux N2 à N5 ou portant le marqueur ★.
         <a href="/methode#compteur-avancement">Méthode</a>
       </p>
-      <ul class="mt-4 grid gap-4 md:grid-cols-3">
+      <ul class="mt-4 divide-y divide-line border-y border-line">
         {#each snap.codes as code (code.id)}
-          <li class="card p-4">
+          <li class="py-4">
             <p class="flex items-baseline justify-between gap-2">
               <span class="text-lg font-semibold">{code.short}</span>
               <span class="mono text-xs text-muted">{code.id}</span>
@@ -131,10 +188,10 @@ $effect(() => {
               <div class="mt-3"><ProgressBar value={code.atLeastN2} max={code.inForce} /></div>
               <p class="mt-2">
                 <strong>{formatShare(code.atLeastN2, code.inForce) ?? '—'}</strong>
-                — {formatInt(code.atLeastN2)} sur {plural(code.inForce, 'article')} en vigueur au niveau N2 ou plus.
+                — {formatInt(code.atLeastN2)} sur {plural(code.inForce, 'article')} en vigueur aux niveaux N2 à N5 ou avec le marqueur ★.
               </p>
               {#if code.atLeastN2 === 0}
-                <p class="text-sm text-muted">Aucun article de ce code n’est encore compilé en Catala par le projet.</p>
+                <p class="text-sm text-muted">Aucun article de ce code dans ces catégories.</p>
               {/if}
               <p class="mt-1 text-sm text-muted">{plural(code.versions, 'version ingérée', 'versions ingérées')} (tous états).</p>
             {/if}
@@ -143,55 +200,15 @@ $effect(() => {
       </ul>
     </section>
 
-    <section aria-labelledby="compteurs">
-      <h2 id="compteurs" class="text-2xl font-semibold">Compteurs</h2>
-      <p class="mt-1 text-muted">
-        <strong>Un compte, pas une probabilité.</strong> Chaque nombre est le résultat d’une requête documentée.
-        <a href="/methode#compteurs">Comment ils sont calculés</a>
-      </p>
-      <dl class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div class="card p-4">
-          <dt class="text-sm text-muted">Articles en vigueur ingérés</dt>
-          <dd class="mt-1 text-3xl font-semibold">{formatInt(inForceTotal)}</dd>
-          <dd class="mt-1 text-sm text-muted">
-            {#if ingestedCodes.length === 0}Aucun code encore ingéré.{:else}Dans {ingestedCodes.map((c) => c.short).join(', ')}.{/if}
-            <a href="/methode#compteur-articles">Méthode</a>
-          </dd>
-        </div>
-        <div class="card p-4">
-          <dt class="text-sm text-muted"><a href="/anomalies">Anomalies qualifiées par un humain</a></dt>
-          <dd class="mt-1 text-3xl font-semibold">{formatInt(snap.findings.public)}</dd>
-          <dd class="mt-1 text-sm text-muted">
-            Les candidats non qualifiés ne sont jamais comptés. <a href="/methode#compteur-anomalies">Méthode</a>
-          </dd>
-        </div>
-        <div class="card p-4">
-          <dt class="text-sm text-muted">Rejeux de référence réussis</dt>
-          <dd class="mt-1 text-3xl font-semibold">
-            {formatInt(snap.replications.passed)}<span class="text-lg font-normal text-muted"> / {formatInt(snap.replications.total)}</span>
-          </dd>
-          <dd class="mt-1 text-sm text-muted">
-            Suites de tests de chercheurs rejouées chez nous (réussis / terminés).
-            <a href="/methode#compteur-rejeux">Méthode</a>
-          </dd>
-        </div>
-        <div class="card p-4">
-          <dt class="text-sm text-muted">Identifiants d’articles cités par la recherche</dt>
-          <dd class="mt-1 text-3xl font-semibold">{formatInt(snap.coverage.cited)}</dd>
-          <dd class="mt-1 text-sm text-muted">
-            {#if snap.coverage.cited === 0}Pas encore relevé.{:else}Identifiants cités par {plural(snap.coverage.sources, 'formalisation')}
-              de référence, dont {formatInt(snap.coverage.matched)} présents dans notre base.{/if}
-            <a href="/methode#compteur-couverture">Méthode</a>
-          </dd>
-        </div>
-      </dl>
-    </section>
-
     <section aria-labelledby="niveaux">
       <h2 id="niveaux" class="text-2xl font-semibold">Répartition par niveau de preuve</h2>
       <p class="mt-1 text-muted">
         Articles en vigueur, tous codes confondus. Un article ingéré est au niveau N0 tant qu’aucun contrôle
         supplémentaire n’a réussi. <a href="/methode#niveaux">Ce que garantit chaque niveau</a>
+      </p>
+      <p class="mt-2 text-sm text-muted">
+        Les travaux de référence citent {plural(snap.coverage.cited, 'identifiant')} de version, dont {formatInt(snap.coverage.matched)} en base.
+        <a href="/methode#compteur-couverture">Calcul</a>
       </p>
       {#if inForceTotal === 0}
         <div class="mt-4">
@@ -216,10 +233,8 @@ $effect(() => {
             {#each LEVELS as level (level)}
               <tr class="border-b border-line">
                 <th scope="row" class="py-2 pr-4 font-normal">
-                  <span class="inline-flex items-center gap-2" title={LEVEL_INFO[level].meaning}>
-                    <LevelSwatch {level} />
-                    {levelName(level)}
-                  </span>
+                  <LevelSwatch {level} />
+                  <GlossaryTerm term={levelName(level)} definition={LEVEL_INFO[level].meaning} href="/methode#niveaux" />
                 </th>
                 {#each snap.codes as code (code.id)}
                   <td class="py-2 pr-4 text-right tabular-nums">{code.ingested ? formatInt(code.byLevel[level]) : '—'}</td>
@@ -230,17 +245,10 @@ $effect(() => {
           </tbody>
         </table>
       </div>
-      <p class="mt-2 text-sm text-muted">« — » : code pas encore ingéré.</p>
+      <p class="mt-2 text-sm text-muted">Un tiret indique que le code n’a pas encore été chargé.</p>
     </section>
 
-    <section aria-labelledby="journal">
-      <div class="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 id="journal" class="text-2xl font-semibold">Derniers événements</h2>
-        <a href="/feed.atom" class="text-sm">S’abonner (Atom)</a>
-      </div>
-      <p class="mb-4 mt-1 text-muted">Journal public, en ajout seul : rien n’y est réécrit ni effacé.</p>
-      <EventList events={snap.events} />
-    </section>
+
   </div>
 {/if}
 

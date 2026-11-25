@@ -1,7 +1,7 @@
 import { expect, test } from 'bun:test'
-import { createSql, type Db, finding, schema } from '@bugdeloi/db'
+import { createSql, type Db, event, finding, schema } from '@bugdeloi/db'
 import { drizzle } from 'drizzle-orm/postgres-js'
-import { findingDetail, publicFindings, rejectedFindings } from './queries.ts'
+import { eventDetail, findingDetail, publicFindings, rejectedFindings } from './queries.ts'
 
 const url =
   process.env.TEST_DATABASE_URL ?? 'postgres://ubuntu@localhost:5432/bugdeloi_test?host=/var/run/postgresql'
@@ -79,3 +79,52 @@ test.skipIf(!reachable)('requêtes publiques et cimetière sur bugdeloi_test', a
     await client.end()
   }
 })
+
+test.skipIf(!reachable)(
+  'le détail du journal masque les constats non publics et les décomptes internes',
+  async () => {
+    const client = createSql(url, { max: 1 })
+    const database = drizzle(client, { schema })
+    const rollback = new Error('annulation des données fictives')
+    try {
+      await expect(
+        database.transaction(async (tx) => {
+          const db = tx as unknown as Db
+          const rows = await tx
+            .insert(event)
+            .values([
+              { type: 'finding.candidate', actor: 'test', subject: 'F-2099-7020' },
+              { type: 'finding.rejected', actor: 'test', subject: 'F-2099-7028' },
+              { type: 'finding.qualified', actor: 'test', subject: 'F-2099-7026' },
+              {
+                type: 'reproduction.finished',
+                actor: 'test',
+                payload: { confirmed: 42, summary: 'Décompte interne' },
+              },
+              {
+                type: 'sweep.finished',
+                actor: 'test',
+                payload: { articlesChecked: { CGI: 60 }, asOf: { CGI: '2099-01-01' } },
+              },
+            ])
+            .returning({ id: event.id })
+          const [candidate, rejected, qualified, reproduction, sweep] = rows.map(({ id }) => id)
+          if (!candidate || !rejected || !qualified || !reproduction || !sweep)
+            throw new Error('Événements fictifs absents')
+          expect(await eventDetail(candidate, db)).toBeNull()
+          expect(await eventDetail(rejected, db)).toBeNull()
+          expect(await eventDetail(qualified, db)).toMatchObject({ findingHref: '/anomalies/F-2099-7026' })
+          const reproductionDetail = await eventDetail(reproduction, db)
+          expect(reproductionDetail).toMatchObject({ summary: null })
+          expect(reproductionDetail).not.toHaveProperty('payload')
+          expect(await eventDetail(sweep, db)).toMatchObject({
+            scopes: [{ code: 'CGI', total: 60, date: '2099-01-01' }],
+          })
+          throw rollback
+        }),
+      ).rejects.toBe(rollback)
+    } finally {
+      await client.end()
+    }
+  },
+)

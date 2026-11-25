@@ -373,6 +373,8 @@ scripts/deploy.sh [ref]     # mise en production (127.0.0.1:19069), retour arri�
 
 ### 9.5 Interface et rédaction
 
+Voir [les principes de conception et de rédaction](docs/DESIGN.md).
+
 - Français d'abord, phrases courtes, sans jargon non défini ; chaque terme technique renvoie au glossaire.
 - Accessibilité **RGAA / WCAG 2.2 AA** : contraste, clavier, alternatives textuelles des graphiques.
 - Couleurs de niveaux de preuve **toujours doublées d'un texte ou d'un motif** (daltonisme).
