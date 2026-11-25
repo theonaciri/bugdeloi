@@ -16,7 +16,18 @@ export const FINDING_TYPES = [
 ] as const
 export type FindingType = (typeof FINDING_TYPES)[number]
 
-export const FINDING_STATUSES = ['candidate', 'reproduced', 'qualified', 'published', 'rejected'] as const
+/**
+ * `withdrawn` : retiré **par une machine** (détecteur corrigé, reproduction indépendante qui infirme) —
+ * jamais montré au cimetière public, qui ne contient que des rejets **humains** (`rejected`).
+ */
+export const FINDING_STATUSES = [
+  'candidate',
+  'reproduced',
+  'qualified',
+  'published',
+  'rejected',
+  'withdrawn',
+] as const
 export type FindingStatus = (typeof FINDING_STATUSES)[number]
 
 /** Seuls ces statuts peuvent alimenter un compteur public ou un texte publié. */

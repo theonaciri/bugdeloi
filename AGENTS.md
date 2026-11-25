@@ -132,7 +132,7 @@ derivation: | # OBLIGATOIRE si kind = derivation_manuelle : calcul pas à pas, c
 ```yaml
 id: F-2026-0001
 type: FALAISE # REF_MORTE | NUMEROTATION | SYNTAXE | CONFLIT | VIDE | FALAISE | ARRONDI | DIVERGENCE_DOCTRINE | DIVERGENCE_SIMULATEUR | AMBIGUITE
-status: candidate # candidate → reproduced → qualified → published | rejected
+status: candidate # candidate → reproduced → qualified → published | rejected (humain) | withdrawn (machine)
 claim: "Une phrase factuelle, sans adjectif."
 legal_units: [LEGIARTI…@<version>]
 pinned:
@@ -166,6 +166,14 @@ Définitions précises :
 
 **Rien n'entre dans un compteur public ni dans un texte publié avant `reproduced` (rejoué par la CI)
 et `qualified` (verdict humain).**
+
+- `reproduced` exige une confirmation par une **chaîne indépendante** (autre code, autre famille de modèles,
+  données traitées séparément) consignée dans `certificate.independent_reproduction`, en attendant le rejeu
+  CI public.
+- `withdrawn` : candidat retiré par une machine (détecteur corrigé, reproduction indépendante qui l'infirme),
+  avec `certificate.withdrawal = { reason, by, at }`. Il n'est jamais supprimé ni montré au cimetière.
+- `rejected` : verdict **humain** (`non_pertinent`, `erreur_nôtre`, `choix_assumé`), montré au cimetière
+  public avec son motif.
 
 ### 4.5 Marqueurs d'étalonnage du système
 
