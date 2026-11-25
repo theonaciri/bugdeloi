@@ -1,5 +1,6 @@
 import type { Handle, HandleServerError } from '@sveltejs/kit/hooks'
 import { closeDb } from '#lib/server/db.ts'
+import { guardDesk } from '#lib/server/desk-http.ts'
 import { CACHE, SECURITY_HEADERS } from '#lib/server/http.ts'
 import { closeAllStreams } from '#lib/server/stream.ts'
 import { dev } from '$app/env'
@@ -24,7 +25,9 @@ if (!dev) {
  *   statut (jamais de mise en cache d'une erreur serveur par Cloudflare).
  */
 export const handle: Handle = async ({ event, resolve }) => {
-  let response = await resolve(event)
+  const isDesk = event.url.pathname.startsWith('/desk/') || event.url.pathname === '/desk'
+  const deskResponse = isDesk ? guardDesk(event.getClientAddress) : null
+  let response = deskResponse ?? (await resolve(event))
   try {
     for (const [k, v] of Object.entries(SECURITY_HEADERS)) response.headers.set(k, v)
   } catch {
@@ -32,7 +35,9 @@ export const handle: Handle = async ({ event, resolve }) => {
     response = new Response(response.body, response)
     for (const [k, v] of Object.entries(SECURITY_HEADERS)) response.headers.set(k, v)
   }
-  if (!response.headers.has('cache-control')) {
+  if (isDesk) {
+    response.headers.set('cache-control', CACHE.none)
+  } else if (!response.headers.has('cache-control')) {
     const s = response.status
     response.headers.set(
       'cache-control',

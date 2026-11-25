@@ -29,6 +29,13 @@
       "when": 1795603866851,
       "tag": "0003_sweep_run",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1795644264488,
+      "tag": "0004_red_mercury",
+      "breakpoints": true
     }
   ]
 }

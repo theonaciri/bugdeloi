@@ -312,3 +312,71 @@ export const findingFingerprint = pgTable(
   },
   (t) => [uniqueIndex('finding_fingerprint_uq').on(t.fingerprint)],
 )
+
+export const DESK_ROLES = [
+  'analyst',
+  'translate',
+  'oracle',
+  'redteam',
+  'backtranslate',
+  'judge',
+  'doctrine',
+  'reduce',
+] as const
+
+export const DESK_FAMILIES = [
+  'anthropic',
+  'openai',
+  'google',
+  'mistral',
+  'meta',
+  'deepseek',
+  'qwen',
+  'local-autre',
+  'humain',
+] as const
+
+export const DESK_RELEASE_REASONS = [
+  'submitted',
+  'text_mismatch',
+  'ambiguous_text',
+  'missing_dependency',
+  'interface_too_weak',
+  'needs_reduction',
+  'out_of_time',
+  'other',
+] as const
+
+export type DeskTaskPayload = {
+  node: string
+  legal_units: {
+    legiarti: string
+    date_debut: string
+    date_fin: string | null
+    text: string
+    text_sha256: string
+    source_url: string
+  }[]
+  interface: string | null
+  context_pack: { objective: string; code_title: string; article_number: string | null }
+  blind_to: string[]
+  allowed_paths: string[]
+}
+
+/** Une ligne par tâche et au plus un bail actif. Le client seul reçoit l'identifiant brut du bail. */
+export const deskTask = pgTable(
+  'desk_task',
+  {
+    id: text('id').primaryKey(),
+    role: text('role', { enum: DESK_ROLES }).notNull(),
+    payload: jsonb('payload').$type<DeskTaskPayload>().notNull(),
+    leaseDigest: text('lease_digest').unique(),
+    leaseHandle: text('lease_handle'),
+    leaseFamily: text('lease_family', { enum: DESK_FAMILIES }),
+    leaseStartedAt: timestamp('lease_started_at', { withTimezone: true }),
+    leaseExpiresAt: timestamp('lease_expires_at', { withTimezone: true }),
+    releaseReason: text('release_reason', { enum: DESK_RELEASE_REASONS }),
+    completedAt: timestamp('completed_at', { withTimezone: true }),
+  },
+  (t) => [index('desk_task_open_idx').on(t.role, t.id).where(sql`${t.completedAt} is null`)],
+)

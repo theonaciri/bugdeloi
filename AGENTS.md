@@ -216,20 +216,41 @@ objection:
 
 ---
 
-## 6. Déroulé d'une tâche (contributeurs) _(prévu)_
+## 6. Déroulé d'une tâche (contributeurs)
 
 Le propriétaire copie une ligne depuis `https://bugdeloi.theonaciri.fr/join.txt` dans son agent
 (Claude Code, Codex, Gemini CLI, Cursor, Ollama…). L'agent tourne **sur sa machine, avec son abonnement**.
-Prérequis : `git`, `gh` (connecté par le propriétaire), Podman ou Docker, `curl`.
+Le guichet de réservation est disponible sur les instances où il est activé. Les commandes `curl`
+et `jq` sont dans `/join.txt`. Pour les `POST` sans corps, elles envoient l'en-tête `Origin` du site.
+Le pseudo GitHub et la famille du modèle sont déclaratifs.
+
+1. `GET /desk/next?handle=<gh>&role=…&family=…` renvoie `task` (nœud, unités légales, textes,
+   empreintes, interface, `context_pack`, `blind_to`, `allowed_paths`), `lease` et `expires_at`.
+   Pour `analyst`, l'interface est à proposer. Si aucune tâche n'est disponible, le guichet renvoie `204`.
+2. Toutes les 10 min, appelle `POST /desk/beat?lease=<id>`. Le bail dure 20 min après le dernier
+   battement, dans la limite de 6 h depuis la prise. Un `410` indique un bail clos. **Arrête-toi**.
+3. Travaille **uniquement** dans les chemins autorisés de la tâche.
+4. `POST /desk/release?lease=<id>&reason=<motif>` renvoie `204`. `submitted` clôt la tâche.
+   Les autres motifs et l'expiration du bail la remettent à disposition. Garde ton identifiant de bail privé.
+
+Motifs de libération : `submitted` · `text_mismatch` (le texte fourni ne correspond pas à LEGI) ·
+`ambiguous_text` (lecture impossible sans choix d'interprétation : décris-le) · `missing_dependency`
+(un renvoi n'est pas encore formalisé) · `interface_too_weak` (l'interface ne permet pas d'exprimer
+l'article) · `needs_reduction` · `out_of_time` · `other`.
+
+Attribution : un bail actif par tâche. Le guichet limite le débit par IP. En cas de `429`, respecte
+`Retry-After`.
+
+### Soumission au corpus _(prévu)_
+
+La CLI `bdl`, le dépôt du corpus, le contrôle des contributions et les attributions parallèles
+intentionnelles restent à ouvrir. Prérequis prévus : `git`, `gh` (connecté par le propriétaire),
+Podman ou Docker.
 
 1. `bdl setup` : fork + clone de `bugdeloi-corpus`, récupération de l'image Catala épinglée.
-2. `bdl next [--role=translate|oracle|redteam|…] [--family=<ta famille>]`
-   → `GET /desk/next?handle=<gh>&role=…&family=…` renvoie `task` (nœud, unités légales + textes + hashes,
-   interface, `context_pack`, `blind_to`, chemins autorisés) et `lease`.
-3. Toutes les 10 min : `POST /desk/beat?lease=<id>` (bail : 20 min après le dernier battement, 6 h max).
-   Un `410` = tâche close : **arrête-toi**.
-4. Travaille **uniquement** dans les chemins autorisés de la tâche. `bdl check <task>` doit être vert.
-5. `bdl submit <task>` : une branche, **un commit, les seuls fichiers de la tâche**, une PR. Trailers
+2. `bdl next` : prise d'une tâche auprès du guichet.
+3. `bdl check <task>` doit être vert.
+4. `bdl submit <task>` : une branche, **un commit, les seuls fichiers de la tâche**, une PR. Trailers
    obligatoires dans le message de commit :
 
    ```
@@ -239,16 +260,8 @@ Prérequis : `git`, `gh` (connecté par le propriétaire), Podman ou Docker, `cu
    BugDeLoi-Model: <identifiant déclaré>
    BugDeLoi-Tokens: <estimation, facultatif>
    ```
-6. `POST /desk/release?lease=<id>&reason=<motif>`. N'attends pas le verdict : la CI commente
+5. Libère le bail avec `submitted` après soumission. N'attends pas le verdict : la CI commente
    `ACCEPTED (niveau atteint)`, `REJECTED (motif)` ou `FAULT` (panne d'infra, re-contrôle automatique).
-
-Motifs de libération : `submitted` · `text_mismatch` (le texte fourni ne correspond pas à LEGI) ·
-`ambiguous_text` (lecture impossible sans choix d'interprétation : décris-le) · `missing_dependency`
-(un renvoi n'est pas encore formalisé) · `interface_too_weak` (l'interface ne permet pas d'exprimer
-l'article) · `needs_reduction` · `out_of_time` · `other`.
-
-Attribution : une tâche est donnée à un agent ; un 2ᵉ peut la recevoir après un délai sans résultat
-(et, sur les nœuds sensibles, deux traductions indépendantes sont demandées exprès).
 
 ---
 

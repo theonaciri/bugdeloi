@@ -1,6 +1,6 @@
 /**
  * Connexion du serveur web à Postgres — **en lecture seule** (`default_transaction_read_only`) :
- * le site affiche, il n'écrit jamais. Le LISTEN du flux temps réel reste autorisé.
+ * seules les transactions du desk demandent explicitement l'écriture. Le LISTEN reste autorisé.
  * Une seule instance par process (survit au rechargement à chaud en dev via globalThis).
  */
 import { createSql, databaseUrl, schema } from '@bugdeloi/db'

@@ -16,6 +16,7 @@
 | Balayage mécanique C0.2 (renvois morts…)          | claude-sonnet-5-5 (high)   | ✔ fait — 4 détecteurs déterministes, **1 128 candidats non qualifiés** (REF_MORTE 1 117, SYNTAXE 9, NUMEROTATION 2), certificats rejouables ; rapport `replications/c0.2/REPORT.md` | `packages/sweep`                                         |
 | Couverture Inria → ★ sur la carte                 | orchestrateur              | ✔ fait — **290 articles ★** (CGI 32, CSS 24, CCH 234) via `replications/c0.1/promote.ts`                                                                                            | `reference_coverage`                                     |
 | Pédagogie du site                                 | codex/gpt-6.2-sol (medium) | Fiches d’événement, parcours en trois étapes et frise des constats sur la branche de travail                                                                                        | `apps/web`, `docs/DESIGN.md`                             |
+| J3 · Première version du desk                     | codex/gpt-6.2-sol (medium) | API, tâches d'analyse et CI plateforme sur la branche de travail. L'ouverture du corpus et son contrôle automatique restent à faire.                                                | `apps/web`, migration `0004`, workflow `verify.yml`      |
 
 ## Journal des décisions
 
@@ -32,6 +33,7 @@
 | 2026-11-25 | Une suite de rejeu sans test = `no_tests`, jamais `passed` ; le compteur ne garde que le dernier rejeu par suite                                             | L'accueil affichait 10/10 dont 2 suites vides                                                                                       |
 | 2026-11-25 | Version `MODIFIE` à fin ouverte ≠ en vigueur                                                                                                                 | Confrontation avec Tricoteuses « La loi sous git » : seul écart (CSS R611-2) ; ensuite CGI 2 405 / CSS 7 419 / CCH 4 126 identiques |
 | 2026-11-25 | Site en lecture seule sur la base, CSP par empreintes, SSE coalescé via un seul `LISTEN`                                                                     | Le web ne doit jamais écrire ; pages cachables à l'edge                                                                             |
+| 2026-11-25 | Transactions du desk en lecture-écriture explicite. Le reste du web garde la lecture seule.                                                                  | La réservation, le renouvellement et la libération d'un bail sont atomiques.                                                        |
 
 ## Production
 
@@ -56,6 +58,17 @@
 - Seul le chantier d'ingestion peut modifier `packages/db/src/schema.ts` pendant J0-J1.
 
 ## Pièges connus
+
+- Desk : activer avec `DESK_ENABLED=1` après migration et amorçage. Pour préparer les tâches, cibler
+  explicitement une base avec `DATABASE_URL` puis lancer `bun apps/web/scripts/seed-desk.ts --dry-run`.
+  Sans `--dry-run`, le script ajoute jusqu'à trois tâches `analyst` sur des versions en vigueur marquées
+  ★. Il conserve les tâches déjà présentes et leur état.
+- Desk : pseudo GitHub et famille déclaratifs. La limite de 30 requêtes par minute et par IP est
+  locale au processus, avec une fenêtre fixe de 60 secondes et une remise à zéro au redémarrage.
+  Le motif `submitted` clôt la tâche sur déclaration du détenteur du bail.
+  Derrière le tunnel, `ADDRESS_HEADER=cf-connecting-ip` suppose une origine accessible seulement via
+  un proxy de confiance. La base conserve l'empreinte du bail. Éviter de journaliser les URL du desk,
+  qui portent l'identifiant brut nécessaire au battement et à la libération.
 
 - **Quotas des fournisseurs** : Claude (limite de 5 h), Antigravity/Gemini (quota individuel, plusieurs
   jours). Une tâche déléguée qui échoue sur quota peut **reprendre seule** à la réinitialisation : annuler
@@ -116,4 +129,5 @@
    confirmés → `reproduced`**, 2 indéterminés, 0 infirmé ; les 5 retraits retrouvés en contrôle négatif.
    Base : 1 119 `reproduced` (REF_MORTE 1 110, SYNTAXE 9), 2 `candidate`, 7 `withdrawn`.
 4. **Qualification humaine** (dossier prêt : 9 SYNTAXE reproduits, `qualifications/dossiers/2026-11-25-SYNTAXE.md`) d'un premier lot par le mainteneur ou un juriste → premiers findings publiés.
-5. J3 : desk + `join.txt` + CI de vérification.
+5. J3 : desk, `/join.txt` et CI plateforme en branche. Restent la CLI `bdl`, le dépôt du corpus, le
+   contrôle des contributions et l'ouverture à un premier agent externe.
