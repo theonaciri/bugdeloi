@@ -1,0 +1,103 @@
+/*
+ * Design system BugDeLoi — jetons (source unique des couleurs, polices, espacements).
+ * Sobre, lisible, sans imiter un site de l'État (pas de DSFR, pas de Marianne, pas de bleu-blanc-rouge).
+ * Contrastes vérifiés AA : texte ≥ 4,5:1 sur --bg et --surface, éléments graphiques ≥ 3:1.
+ *
+ * Niveaux de preuve : --level-n0 … --level-ref correspondent à `LEVEL_INFO[*].colorToken`
+ * (@bugdeloi/core). La couleur n'est jamais seule : chaque niveau a aussi un motif et un texte.
+ */
+:root {
+  color-scheme: light dark;
+
+  --font-sans:
+    system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", Ubuntu, Cantarell, "Helvetica Neue", Arial,
+    sans-serif;
+  --font-serif:
+    "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Charter, "Bitstream Charter", Georgia,
+    serif;
+  --font-mono:
+    ui-monospace, "SFMono-Regular", "Cascadia Mono", "DejaVu Sans Mono", Menlo, Consolas, monospace;
+
+  --bg: #f8f7f3;
+  --surface: #ffffff;
+  --surface-2: #f0eee8;
+  --ink: #1b1f24;
+  --ink-muted: #4a5260;
+  --line: #d6d2c8;
+  --line-strong: #8a8f98;
+  --brand: #047857;
+  --brand-strong: #065f46;
+  --brand-ink: #ffffff;
+  --brand-soft: #e3f3ec;
+  --focus: #b45309;
+  --banner-bg: #1b1f24;
+  --banner-ink: #f5f3ee;
+  --notice-bg: #fff4d6;
+  --notice-line: #b45309;
+  --notice-ink: #5c3209;
+  --ok: #166534;
+  --ko: #b91c1c;
+
+  --level-n0: #e4e2dc;
+  --level-n1: #c9d2dd;
+  --level-n2: #f2c94c;
+  --level-n3: #9cc7f0;
+  --level-n4: #2f6fd6;
+  --level-n5: #1f9d55;
+  --level-ref: #c9971c;
+  --level-n0-ink: #1b1f24;
+  --level-n1-ink: #1b1f24;
+  --level-n2-ink: #1b1f24;
+  --level-n3-ink: #1b1f24;
+  --level-n4-ink: #ffffff;
+  --level-n5-ink: #ffffff;
+  --level-ref-ink: #1b1f24;
+  --flag-contested: #c2410c;
+  --pattern-ink: rgb(27 31 36 / 0.55);
+  --tile-stroke: #f8f7f3;
+
+  --radius: 0.5rem;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.06), 0 1px 1px rgb(0 0 0 / 0.04);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121519;
+    --surface: #1a1e24;
+    --surface-2: #232831;
+    --ink: #ecebe6;
+    --ink-muted: #adb4bf;
+    --line: #353c47;
+    --line-strong: #7d8591;
+    --brand: #4ade9b;
+    --brand-strong: #86efbf;
+    --brand-ink: #062e22;
+    --brand-soft: #12302a;
+    --focus: #fbbf24;
+    --banner-bg: #000000;
+    --banner-ink: #ecebe6;
+    --notice-bg: #3a2a0c;
+    --notice-line: #f59e0b;
+    --notice-ink: #fde7b0;
+    --ok: #4ade80;
+    --ko: #f87171;
+
+    --level-n0: #3b4048;
+    --level-n1: #55606e;
+    --level-n2: #d9ad2f;
+    --level-n3: #5f9fd8;
+    --level-n4: #3c7fe0;
+    --level-n5: #2fa865;
+    --level-ref: #e0b341;
+    --level-n0-ink: #ecebe6;
+    --level-n1-ink: #ffffff;
+    --level-n2-ink: #1b1f24;
+    --level-n3-ink: #0b1420;
+    --level-n4-ink: #ffffff;
+    --level-n5-ink: #06210f;
+    --level-ref-ink: #1b1f24;
+    --flag-contested: #fb923c;
+    --pattern-ink: rgb(255 255 255 / 0.55);
+    --tile-stroke: #121519;
+  }
+}
