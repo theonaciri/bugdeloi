@@ -15,6 +15,7 @@ git archive HEAD replications/c0.3/task replications/c0.3/check.ts \
 bun replications/c0.3/generate-task.ts [/chemin/Freemium_legi_global_20261108-140000.tar.gz]
 bun replications/c0.3/check-leaks.ts
 bun replications/c0.3/evaluate.ts <pseudo> [commit]
+bun replications/c0.3/evaluate.ts --original-inputs <pseudo> [commit]
 C03_REPLAY=1 bun test replications/c0.3/harness.test.ts
 ```
 
@@ -28,15 +29,24 @@ C03_REPLAY=1 bun test replications/c0.3/harness.test.ts
   d’abord la soumission seule. Il copie ensuite les cas Inria dans un dossier temporaire et
   traduit leurs entrées et sorties par l’adaptateur. Le JSON écrit dans `results/<pseudo>.json`
   consigne le commit Inria, le commit évalué, le digest de l’image et les résultats détaillés.
-  Le champ `classification` reste à renseigner en revue.
-- Le score divise le nombre de réussites par les 32 entrées Clerk, dont 15 scopes d’assertions et
-  17 commandes CLI. Il conserve le doublon CLI et les deux contrôles structurels d’Inria.
+  Pour les écarts déjà audités, `classification` et `justification` accompagnent le diagnostic exact
+  de la remise concernée. Les autres écarts restent à examiner.
+- Le score divise le nombre de réussites par 17, soit les 15 scopes d’assertions et les deux contrôles
+  structurels d’Inria. Un bloc CLI qui réexécute un scope déclaré `#[test]` dans le même fichier est
+  contrôlé dans le rapport Clerk, puis retiré du compte. `Test13` a deux blocs CLI de ce type.
   Le test de fuite fait partie de `bun run verify`. Le rejeu d’intégration demande l’image locale
   et s’active avec `C03_REPLAY=1`.
+- Les 14 cas de montant du rejeu adapté posent explicitement les conditions générales d’ouverture
+  du droit comme remplies. Cette hypothèse des cas de montant complète les entrées dans le dossier
+  temporaire, pour le témoin comme pour la remise. L’interface v1 explicite cette responsabilité
+  de l’appelant. `--original-inputs` rejoue les entrées Inria telles quelles avec le même comptage
+  et écrit `results/<pseudo>.original-inputs.json`.
 - Le témoin adapte l’implémentation Inria d’origine et conserve ses barèmes internes. Les remises
   aveugles reçoivent les paramètres officiels sourcés dans [l’interface](task/interface.md).
   Les deux séries diffèrent sur le Smic de fin 2021 et les plafonds de ressources 2022.
   Ces écarts de données sont à examiner lors de la revue des échecs.
+
+[Audit de la première remise et historique du comptage](../../docs/audits/2026-11-25-c0.3-evaluation.md)
 
 Source épinglée par C0.1 à `9e251b932288cf5f4a74af072d203144a057494b`. Les allocations familiales
 et leurs dépendances de rejeu relèvent de la licence Apache-2.0 du dépôt. Le rejeu temporaire conserve

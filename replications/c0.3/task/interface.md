@@ -14,8 +14,10 @@ versions couvertes par la période du paquet et signalez les éventuelles lacune
   naissance, sa rémunération mensuelle, l’appréciation de sa charge, son droit antérieur aux allocations
   familiales et l’existence d’une aide personnelle au logement à son propre titre.
 - `appréciation_parent_en_charge` et `appréciation_conditions_générales` décrivent la qualité du parent
-  et l’appréciation des autres conditions générales d’ouverture du droit. L’information sur la charge
-  antérieure vise le régime transitoire de Mayotte décrit dans le décret du 29 mars 2002 et son annexe.
+  et l’appréciation des autres conditions générales d’ouverture du droit. L’appelant renseigne les
+  deux booléens explicitement. La qualité de parent ne détermine pas la valeur du second.
+  L’information sur la charge antérieure vise le régime transitoire de Mayotte décrit dans le décret
+  du 29 mars 2002 et son annexe.
 - `allocation_mensuelle` donne le total en euros pour le foyer, y compris les majorations, l’allocation
   forfaitaire et les compléments applicables.
 
