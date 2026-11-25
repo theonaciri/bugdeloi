@@ -92,15 +92,18 @@
 
 ## Vérifications indépendantes
 
-| Date       | Quoi                                                            | Par                     | Résultat                                                                                                                                |
-| ---------- | --------------------------------------------------------------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| 2026-11-25 | Relecture du site en ligne (vocabulaire, a11y, liens, chiffres) | codex/gpt-6.2-sol (low) | 0 bloquant, 6 corrections appliquées                                                                                                    |
-| 2026-11-25 | Données LEGI vs « La loi sous git » (Tricoteuses) + 17 textes   | codex/gpt-6.2-sol (low) | CGI et CCH identiques ; CSS +1 (R611-2, corrigé) ; textes identiques après normalisation ; Légifrance renvoie 403 aux accès automatisés |
+| Date       | Quoi                                                                                            | Par                        | Résultat                                                                                                                                                                                   |
+| ---------- | ----------------------------------------------------------------------------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 2026-11-25 | Relecture du site en ligne (vocabulaire, a11y, liens, chiffres)                                 | codex/gpt-6.2-sol (low)    | 0 bloquant, 6 corrections appliquées                                                                                                                                                       |
+| 2026-11-25 | Données LEGI vs « La loi sous git » (Tricoteuses) + 17 textes                                   | codex/gpt-6.2-sol (low)    | CGI et CCH identiques ; CSS +1 (R611-2, corrigé) ; textes identiques après normalisation ; Légifrance renvoie 403 aux accès automatisés                                                    |
+| 2026-11-25 | Reproduction indépendante des 1 128 candidats C0.2 sur Tricoteuses (code séparé, autre famille) | codex/gpt-6.2-sol (medium) | SYNTAXE 9/9 confirmés → `reproduced` ; 7 infirmés (5 REF_MORTE : numéro réattribué ; 2 NUMEROTATION : citation, III/III bis) ; 1 112 indéterminés (instantanés sans historique des cibles) |
 
 ## Prochaines étapes (ordre)
 
-1. Reproduction **indépendante** des candidats C0.2 sur une autre chaîne de données (Tricoteuses) → `reproduced`.
-2. Outils de qualification humaine (fichier de verdicts versionné + commande `qualify`) et page publique
-   `/anomalies` (qualifiées uniquement).
-3. **Qualification humaine** d'un premier lot par le mainteneur ou un juriste → premiers findings publiés.
-4. J3 : desk + `join.txt` + CI de vérification.
+1. En cours : correction des détecteurs (7 infirmations, retrait `withdrawn`) — codex/gpt-6.2-sol (medium).
+2. En cours : qualification humaine par fichiers de verdicts versionnés + `/anomalies` — codex/gpt-6.2-sol
+   (high) (la 1ʳᵉ tentative Claude Sonnet a échoué sur la limite d'usage).
+3. Reproduction indépendante n°2 depuis les **XML DILA bruts** (historique complet) pour trancher les 1 112
+   REF_MORTE indéterminés.
+4. **Qualification humaine** d'un premier lot par le mainteneur ou un juriste → premiers findings publiés.
+5. J3 : desk + `join.txt` + CI de vérification.
