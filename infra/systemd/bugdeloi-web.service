@@ -1,0 +1,46 @@
+# BugDeLoi — site web (SvelteKit / adapter-node, exécuté par Bun)
+# Installé par scripts/deploy.sh dans /etc/systemd/system/. Écoute uniquement 127.0.0.1:19069,
+# exposé publiquement par le tunnel Cloudflare (route bugdeloi.theonaciri.fr gérée à distance).
+[Unit]
+Description=BugDeLoi - site web
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/.local/share/bugdeloi/current/apps/web
+Environment=NODE_ENV=production
+Environment=HOST=127.0.0.1
+Environment=PORT=19069
+Environment=ORIGIN=https://bugdeloi.theonaciri.fr
+# Cloudflare transmet l'IP du client dans CF-Connecting-IP (adapter-node).
+Environment=ADDRESS_HEADER=cf-connecting-ip
+Environment=DATABASE_URL=postgres://ubuntu@localhost:5432/bugdeloi?host=/var/run/postgresql
+ExecStart=/home/ubuntu/.bun/bin/bun build/index.js
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=10
+
+# Ressources : machine partagée (4 cœurs, autres services).
+MemoryMax=768M
+CPUWeight=80
+Nice=5
+
+# Durcissement
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictRealtime=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+SystemCallArchitectures=native
+
+[Install]
+WantedBy=multi-user.target
