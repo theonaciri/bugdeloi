@@ -1,0 +1,1187 @@
+> Inclusion: interface.catala_fr
+
+# Allocations familiales
+
+Les dates de version suivent les bornes LEGI fournies. La période de calcul est celle du paquet.
+
+```catala
+déclaration dans_la_période contenu booléen
+  dépend de date_de_calcul contenu date
+  égal à
+    # Bornes inclusives de la tâche, champ « période » du paquet.
+    (date_de_calcul >= |2019-08-26|) et (date_de_calcul <= |2022-05-01|)
+```
+
+#### Article 7|LEGIARTI000036330048
+
+Version du 2018-01-01 inclus au 2999-01-01 exclu.
+
+Alinéas 1 à 5 codés pour le barème de Mayotte à compter de 2021, avec le maintien prévu par l'ordonnance.
+
+Les taux servant au calcul des allocations familiales sont fixés, en pourcentage de la base mensuelle de calcul des allocations familiales prévue à l'article L. 551-1 du code de la sécurité sociale, ainsi qu'il suit :
+1° 5,88 % pour un seul enfant à charge ;
+2° 32 % pour deux enfants à charge ;
+3° 16 % pour le troisième enfant à charge ;
+4° 4,63 % pour le quatrième enfant à charge et chacun des suivants.
+
+
+```catala
+# Article 7 du décret du 29 mars 2002, 1° à 4° ; annexe, dernière ligne.
+déclaration taux_mayotte_après_transition contenu décimal
+  dépend de effectif contenu entier
+  égal à
+    si effectif = 1 alors 5,88%
+    sinon si effectif = 2 alors 32%
+    sinon 32% + 16% + (décimal de (effectif - 3)) * 4,63%
+```
+
+
+
+#### Article Annexe|LEGIARTI000036326574
+
+Version du 2018-01-01 inclus au 2999-01-01 exclu.
+
+Introduction et lignes 2019, 2020 et « A compter de 2021 » codées. Lignes 2011 à 2018 hors_périmètre (antérieures à la période).
+
+ANNEXE
+TABLEAU D'ÉVOLUTION DES TAUX SERVANT AU CALCUL DES ALLOCATIONS FAMILIALES APPLICABLES DANS LE DÉPARTEMENT DE MAYOTTE POUR LA PÉRIODE DU 1ER JANVIER 2012 AU 1ER JANVIER 2021, FIXÉS EN APPLICATION DE L'ARTICLE 7 DE L'ORDONNANCE N° 2002-149 DU 7 FÉVRIER 2002 MODIFIÉE SUSVISÉE
+Les taux servant au calcul des allocations familiales (AF) sont fixés, dans le tableau ci-après, au 1er janvier de chaque année, en pourcentage de la base mensuelle de calcul des allocations familiales (BMAF) prévue à l'article L. 551-1 du code de la sécurité sociale.
+Année
+Montant AF pour les familles ayant un enfant à charge avant le 1er janvier 2012
+Taux BMAF pour les familles ayant un enfant à charge à compter du 1er janvier 2012
+Taux BMAF pour les familles ayant deux enfants à charge
+Taux BMAF pour les familles ayant trois enfants à charge
+Taux BMAF pour le 3e enfant à charge
+Taux BMAF par enfant supplémentaire à partir du 4e enfant à charge
+2011
+57,28 €
+14,50 %
+23,2 %
+27,83 %
+4,63 %
+4,63 %
+2012
+57,28 €
+13,93 %
+23,79 %
+29,18 %
+5,39 %
+4,63 %
+2013
+57,28 €
+13,35 %
+24,37 %
+30,52 %
+6,15 %
+4,63 %
+2014
+57,28 €
+12,78 %
+24,96 %
+31,86 %
+6,90 %
+4,63 %
+2015
+57,28 €
+12,20 %
+25,55 %
+33,21 %
+7,66 %
+4,63 %
+2016
+57,28 €
+11,63 %
+26,13 %
+34,55 %
+8,42 %
+4,63 %
+2017
+57,28 €
+11,05 %
+26,72 %
+35,90 %
+9,18 %
+4,63 %
+2018
+57,28 €
+9,76 %
+28,04 %
+38,93 %
+10,89 %
+4,63 %
+2019
+57,28 €
+8,47 %
+29,36 %
+41,95 %
+12,59 %
+4,63 %
+2020
+57,28 €
+7,17 %
+30,68 %
+44,98 %
+14,30 %
+4,63 %
+A compter de 2021
+57,28 €
+5,88 %
+32 %
+48 %
+16 %
+4,63 %
+.
+
+
+```catala
+déclaration taux_mayotte_pendant_transition contenu décimal
+  dépend de date_de_calcul contenu date, effectif contenu entier
+  égal à
+    # Annexe au décret du 29 mars 2002, lignes 2019, 2020 et « A compter de 2021 ».
+    si date_de_calcul < |2020-01-01| alors
+      si effectif = 1 alors 8,47%
+      sinon si effectif = 2 alors 29,36%
+      sinon 41,95% + (décimal de (effectif - 3)) * 4,63%
+    sinon si date_de_calcul < |2021-01-01| alors
+      si effectif = 1 alors 7,17%
+      sinon si effectif = 2 alors 30,68%
+      sinon 44,98% + (décimal de (effectif - 3)) * 4,63%
+    sinon taux_mayotte_après_transition de effectif
+```
+
+
+
+#### Article 7|LEGIARTI000034109930
+
+Version du 2018-01-01 inclus au 2028-01-01 exclu.
+
+Alinéas 1 et 5 codés. Alinéas 2 à 4 et 6 codés par renvoi aux valeurs annuelles du décret et de son annexe.
+
+Les allocations familiales sont attribuées en fonction du nombre des enfants à charge.
+A compter du 1er janvier 2012, le montant des allocations familiales pour un enfant évolue chaque année pour atteindre, au 1er janvier 2021 au plus tard, le même montant que celui applicable dans les autres collectivités régies par l'article 73 de la Constitution.
+Sur la même période que celle définie à l'alinéa qui précède, le montant des allocations familiales pour deux enfants augmente chaque année pour atteindre le même montant que celui applicable en métropole et dans les départements d'outre-mer pour deux enfants.
+Le montant attribué pour trois enfants augmente chaque année pendant la même période afin d'atteindre un montant égal à une fois et demie celui attribué pour deux enfants.
+Les personnes qui ouvrent droit pour le mois de décembre 2011 aux allocations familiales au titre d'un seul enfant conservent le bénéfice de ces allocations au montant perçu pour ce mois par dérogation au deuxième alinéa du présent article et à l'article L. 551-1 du code de la sécurité sociale aussi longtemps que cet enfant est le seul enfant à charge de l'allocataire.
+Les conditions d'application et les taux correspondant aux évolutions annuelles prévues aux deuxième, troisième et quatrième alinéas sont fixés par décret.
+
+
+```catala
+déclaration montant_mayotte contenu décimal
+  dépend de date_de_calcul contenu date, effectif contenu entier, base contenu décimal,
+    maintien contenu booléen
+  égal à
+    # Article 7 de l'ordonnance du 7 février 2002, alinéas 1 et 5 ;
+    # annexe au décret du 29 mars 2002, colonne du montant maintenu.
+    si effectif = 0 alors 0,0
+    sinon si (effectif = 1) et maintien alors décimal de 57,28 €
+    sinon base * (taux_mayotte_pendant_transition de date_de_calcul, effectif)
+```
+
+
+
+#### Article L131-1|LEGIARTI000006524422
+
+Version du 2000-06-22 inclus au 2019-09-02 exclu.
+
+Alinéa 1 codé. Alinéa 2 hors_périmètre (prescriptions particulières absentes du paquet et de l'interface mensuelle).
+
+L'instruction est obligatoire pour les enfants des deux sexes, français et étrangers, entre six ans et seize ans.
+La présente disposition ne fait pas obstacle à l'application des prescriptions particulières imposant une scolarité plus longue.
+
+#### Article L131-1|LEGIARTI000038901859
+
+Version du 2019-09-02 inclus au 2999-01-01 exclu.
+
+Alinéa 1 codé. Alinéa 2 hors_périmètre (prescriptions particulières absentes du paquet et de l'interface mensuelle).
+
+L'instruction est obligatoire pour chaque enfant dès l'âge de trois ans et jusqu'à l'âge de seize ans.
+
+
+```catala
+# L131-1, alinéa 1, dans les deux versions et borne LEGI du 2 septembre 2019.
+
+déclaration champ d'application ScolaritéSelonÂge:
+  entrée date_de_calcul contenu date
+  entrée naissance contenu date
+  résultat scolarité contenu Scolarité
+
+champ d'application ScolaritéSelonÂge:
+  date arrondi supérieur
+  définition scolarité égal à
+    soit début_obligation égal à
+      si date_de_calcul < |2019-09-02| alors 6 an sinon 3 an
+    dans
+    si date_de_calcul < naissance + début_obligation
+    alors PrécèdeObligation
+    sinon si date_de_calcul < naissance + 16 an
+    alors RelèveObligation
+    sinon SuitObligation
+```
+
+La présente disposition ne fait pas obstacle à l'application des prescriptions particulières imposant une scolarité plus longue.
+
+Nota LEGI
+
+Conformément à l'article 63 de la loi n° 2019-791 du 26 juillet 2019, ces dispositions entrent en vigueur à la rentrée scolaire 2019.
+
+#### Article D521-1|LEGIARTI000030680318
+
+Version du 2015-07-01 inclus au 2999-01-01 exclu.
+
+I, 1° à 3° (alinéas 1 à 13), et II (alinéas 14 à 15) codés.
+
+I.-Pour l'application de l'article L. 521-1, le montant des allocations familiales et de la majoration pour âge prévue à l'article L. 521-3 est défini selon le barème suivant :
+1° Lorsque le ménage ou la personne a disposé d'un montant de ressources inférieur ou égal au plafond défini au I de l'article D. 521-3, les taux servant au calcul des allocations familiales sont fixés, en pourcentage de la base mensuelle prévue à l'article L. 551-1, à :
+a) 32 % pour le deuxième enfant à charge ;
+b) 41 % pour le troisième enfant à charge et chacun des suivants.
+La majoration pour âge est fixée à 16 % de la base mensuelle de calcul des prestations familiales ;
+
+
+```catala
+# D521-1, I, 1°, a) et b) et alinéa relatif à la majoration.
+déclaration taux_première_tranche contenu (décimal, décimal, décimal)
+  égal à (32%, 41%, 16%)
+```
+
+2° Lorsque le ménage ou la personne a disposé d'un montant de ressources supérieur au plafond défini au I de l'article D. 521-3 et inférieur ou égal à celui défini au II du même article, les taux servant au calcul des allocations familiales sont fixés, en pourcentage de la base mensuelle prévue à l'article L. 551-1, à :
+a) 16 % pour le deuxième enfant à charge ;
+b) 20,5 % pour le troisième enfant à charge et chacun des suivants.
+La majoration pour âge est fixée à 8 % de la base mensuelle de calcul des prestations familiales ;
+
+
+```catala
+# D521-1, I, 2°, a) et b) et alinéa relatif à la majoration.
+déclaration taux_deuxième_tranche contenu (décimal, décimal, décimal)
+  égal à (16%, 20,5%, 8%)
+```
+
+3° Lorsque le ménage ou la personne a disposé d'un montant de ressources supérieur au plafond défini au II de l'article D. 521-3, les taux servant au calcul des allocations familiales sont fixés, en pourcentage de la base mensuelle prévue à l'article L. 551-1, à :
+a) 8 % pour le deuxième enfant à charge ;
+b) 10,25 % pour le troisième enfant à charge et chacun des suivants.
+La majoration pour âge est fixée à 4 % de la base mensuelle de calcul des prestations familiales.
+
+
+```catala
+# D521-1, I, 3°, a) et b) et alinéa relatif à la majoration.
+déclaration taux_troisième_tranche contenu (décimal, décimal, décimal)
+  égal à (8%, 10,25%, 4%)
+
+déclaration taux_droit_commun contenu (décimal, décimal, décimal)
+  dépend de ressources contenu décimal, premier contenu décimal, second contenu décimal
+  égal à
+    # D521-1, I, 1° à 3°, bornes des tranches.
+    si ressources <= premier alors taux_première_tranche
+    sinon si ressources <= second alors taux_deuxième_tranche
+    sinon taux_troisième_tranche
+
+déclaration base_droit_commun contenu décimal
+  dépend de effectif contenu entier, base contenu décimal,
+    taux contenu (décimal, décimal, décimal)
+  égal à
+    # D521-1, I, 1° à 3°, seuils des a) et b) ; L521-1, alinéa 1.
+    si effectif < 2 alors 0,0
+    sinon base * (taux.1 + (décimal de (effectif - 2)) * taux.2)
+```
+
+II.-En application du sixième alinéa de l'article L. 521-1, le montant mensuel des allocations familiales et, le cas échéant, de la majoration pour âge est majoré d'un complément dégressif, lorsque les ressources annuelles du ménage ou de la personne dépassent l'un des plafonds défini au I ou au II de l'article D. 521-3 d'une somme inférieure à douze fois le montant mensuel des allocations familiales augmenté, le cas échéant, de la ou des majorations pour âge.
+Ce complément dégressif est égal, pour chaque mois, au douzième de la différence entre, d'une part, ce plafond de ressources majoré de la somme définie à l'alinéa précédent et, d'autre part, le montant des ressources.
+
+
+```catala
+déclaration complément_mensuel contenu décimal
+  dépend de ressources contenu décimal, premier contenu décimal,
+    second contenu décimal, montant contenu décimal
+  égal à
+    # TODO juridique : D521-1 II et D521-2 II ne disent pas quel plafond
+    # retenir si les deux intervalles se recouvrent. Retenir le dernier franchi.
+    soit plafond égal à si ressources > second alors second sinon premier dans
+    soit dépassement égal à ressources - plafond dans
+    # D521-1, II, alinéas 1 et 2 ; D521-2, II, alinéas 1 et 2.
+    si (dépassement > 0,0) et (dépassement < 12,0 * montant)
+    alors (12,0 * montant - dépassement) / 12,0
+    sinon 0,0
+```
+
+
+
+#### Article D521-2|LEGIARTI000030680324
+
+Version du 2015-07-01 inclus au 2999-01-01 exclu.
+
+I, II et III (alinéas 1 à 7) codés.
+
+I.-Le montant mensuel de l'allocation forfaitaire prévue au deuxième alinéa de l'article L. 521-1 est défini selon le barème suivant :
+1° Lorsque le ménage ou la personne a disposé d'un montant de ressources inférieur ou égal au plafond défini au I de l'article D. 521-3, le montant mensuel de l'allocation forfaitaire est fixé à 20,234 % de la base mensuelle de calcul des allocations familiales par enfant ;
+2° Lorsque le ménage ou la personne a disposé d'un montant de ressources supérieur au plafond défini au I de l'article D. 521-3 et inférieur ou égal à celui défini au II du même article, le montant mensuel de l'allocation forfaitaire est fixé à 10,117 % de la base mensuelle de calcul des allocations familiales par enfant ;
+3° Lorsque le ménage ou la personne a disposé d'un montant de ressources supérieur au plafond défini au II de l'article D. 521-3, le montant mensuel de l'allocation forfaitaire est fixé à 5,059 % de la base mensuelle de calcul des allocations familiales par enfant.
+
+
+```catala
+déclaration forfait_unitaire contenu décimal
+  dépend de ressources contenu décimal, premier contenu décimal,
+    second contenu décimal, base contenu décimal
+  égal à
+    # D521-2, I, 1° à 3°.
+    base * (si ressources <= premier alors 20,234%
+            sinon si ressources <= second alors 10,117%
+            sinon 5,059%)
+```
+
+II.-En application du sixième alinéa de l'article L. 521-1, le montant mensuel de l'allocation forfaitaire est majoré d'un complément dégressif lorsque les ressources annuelles du ménage ou de la personne dépassent l'un des plafonds défini au I ou au II de l'article D. 521-3 d'une somme inférieure à douze fois le montant mensuel de l'allocation forfaitaire auquel l'enfant ouvre droit.
+Ce complément dégressif est égal, pour chaque mois, au douzième de la différence entre, d'une part, ce plafond de ressources majoré de la somme définie à l'alinéa précédent et, d'autre part, le montant des ressources.
+III.-Le nombre minimum d'enfants à charge mentionné au deuxième alinéa de l'article L. 521-1 est fixé à trois.
+
+
+```catala
+# D521-2, III.
+déclaration minimum_enfants_pour_forfait contenu entier égal à 3
+```
+
+
+
+#### Article D521-3|LEGIARTI000030678079
+
+Version du 2015-07-01 inclus au 2022-01-01 exclu.
+
+I et II codés pour la majoration par enfant. Montants nominaux des I et II et revalorisation du III hors_périmètre (paramètres revalorisés transmis en entrée).
+
+I.-Le plafond prévu au 1° du I des articles D. 521-1 et D. 521-2 est fixé à 55 950 euros. Il est majoré de 5 595 euros par enfant à charge.
+II.-Le plafond prévu au 2° du I des articles D. 521-1 et D. 521-2 est fixé à 78 300 euros. Il est majoré de 5 595 euros par enfant à charge.
+III.-Les montants des plafonds et de leur majoration respective fixés au présent article sont revalorisés au 1er janvier de chaque année, conformément à l'évolution en moyenne annuelle des prix à la consommation hors tabac de l'année civile de référence, par arrêté des ministres chargés de la sécurité sociale, du budget et de l'agriculture.
+
+#### Article D521-3|LEGIARTI000044809227
+
+Version du 2022-01-01 inclus au 2999-01-01 exclu.
+
+I et II codés pour la majoration par enfant. Montants nominaux des I et II et revalorisation du III hors_périmètre (paramètres revalorisés transmis en entrée).
+
+I.-Le plafond prévu au 1° du I des articles D. 521-1 et D. 521-2 est fixé à 55 950 euros. Il est majoré de 5 595 euros par enfant à charge.
+II.-Le plafond prévu au 2° du I des articles D. 521-1 et D. 521-2 est fixé à 78 300 euros. Il est majoré de 5 595 euros par enfant à charge.
+
+
+```catala
+déclaration plafond_majoré contenu décimal
+  dépend de plafond contenu argent, majoration contenu argent, effectif contenu entier
+  égal à
+    # D521-3, I et II, dans les deux versions, avec valeurs revalorisées fournies.
+    (décimal de plafond) + (décimal de majoration) * (décimal de effectif)
+```
+
+III.-Les montants des plafonds et de leur majoration respective fixés au présent article sont revalorisés au 1er janvier de chaque année, conformément à l'évolution en moyenne annuelle des prix à la consommation hors tabac de l'année civile de référence.
+
+#### Article D755-5|LEGIARTI000006738575
+
+Version du 1998-12-30 inclus au 2999-01-01 exclu.
+
+I et II (alinéas 1 à 3) codés.
+
+I.-Les taux servant au calcul des allocations familiales et de la majoration prévue à l'article L. 755-11 sont identiques à ceux mentionnés à l'article D. 521-1.
+II.-En application de l'article L. 755-11, 2e alinéa, le taux servant au calcul des allocations familiales servies pour un seul enfant à charge est fixé à 5,88 p. 100 de la base mensuelle prévue à l'article L. 755-3.
+La majoration des allocations familiales pour un seul enfant à charge est fixée à 3,69 p. 100 de la base mensuelle prévue à l'article L. 755-3 à partir de onze ans et à 5,67 p. 100 à partir de seize ans.
+
+
+```catala
+
+déclaration champ d'application TauxUniqueOutreMer:
+  entrée date_de_calcul contenu date
+  entrée naissance contenu date
+  résultat taux_base contenu décimal
+  résultat taux_majoration contenu décimal
+
+champ d'application TauxUniqueOutreMer:
+  date arrondi supérieur
+  # D755-5, II, premier alinéa.
+  définition taux_base égal à 5,88%
+  # D755-5, II, deuxième alinéa.
+  définition taux_majoration égal à
+    si date_de_calcul >= naissance + 16 an alors 5,67%
+    sinon si date_de_calcul >= naissance + 11 an alors 3,69%
+    sinon 0,0
+```
+
+
+
+#### Article L161-25|LEGIARTI000031781092
+
+Version du 2016-01-01 inclus au 2999-01-01 exclu.
+
+Alinéas 1 et 2 hors_périmètre (base revalorisée fournie en entrée).
+
+La revalorisation annuelle des montants de prestations dont les dispositions renvoient au présent article est effectuée sur la base d'un coefficient égal à l'évolution de la moyenne annuelle des prix à la consommation, hors tabac, calculée sur les douze derniers indices mensuels de ces prix publiés par l'Institut national de la statistique et des études économiques l'avant-dernier mois qui précède la date de revalorisation des prestations concernées.
+Si ce coefficient est inférieur à un, il est porté à cette valeur.
+
+#### Article L511-1|LEGIARTI000019869234
+
+Version du 2009-06-01 inclus au 2019-09-01 exclu.
+
+Alinéas 1 à 10 hors_périmètre (inventaire de prestations, sans règle de calcul pour les deux sorties).
+
+Les prestations familiales comprennent :
+1°) la prestation d'accueil du jeune enfant ;
+2°) les allocations familiales ;
+3°) le complément familial ;
+4°) l'allocation de logement ;
+5°) l'allocation d'éducation de l'enfant handicapé ;
+6°) l'allocation de soutien familial ;
+7°) l'allocation de rentrée scolaire ;
+8°) (Abrogé) ;
+9°) l'allocation journalière de présence parentale.
+
+#### Article L511-1|LEGIARTI000038834530
+
+Version du 2019-09-01 inclus au 2021-01-01 exclu.
+
+Alinéas 1 à 10 hors_périmètre (inventaire de prestations, sans règle de calcul pour les deux sorties).
+
+Les prestations familiales comprennent :
+1°) la prestation d'accueil du jeune enfant ;
+2°) les allocations familiales ;
+3°) le complément familial ;
+4°) L'allocation de logement régie par les dispositions du livre VIII du code de la construction et de l'habitation ;
+5°) l'allocation d'éducation de l'enfant handicapé ;
+6°) l'allocation de soutien familial ;
+7°) l'allocation de rentrée scolaire ;
+8°) (Abrogé) ;
+9°) l'allocation journalière de présence parentale.
+
+#### Article L511-1|LEGIARTI000041979747
+
+Version du 2021-01-01 inclus au 2999-01-01 exclu.
+
+Alinéas 1 à 10 hors_périmètre (inventaire de prestations, sans règle de calcul pour les deux sorties).
+
+Les prestations familiales comprennent :
+1°) la prestation d'accueil du jeune enfant ;
+2°) les allocations familiales ;
+3°) le complément familial ;
+4°) L'allocation de logement régie par les dispositions du livre VIII du code de la construction et de l'habitation ;
+5°) l'allocation d'éducation de l'enfant handicapé ;
+6°) l'allocation de soutien familial ;
+7°) l'allocation de rentrée scolaire ;
+8°) L'allocation forfaitaire versée en cas de décès d'un enfant ;
+9°) l'allocation journalière de présence parentale.
+
+Nota LEGI
+
+Conformément au IV de l'article 5 de la loi n° 2020-692 du 8 juin 2020, ces dispositions entrent en vigueur à une date fixée par décret, et au plus tard à compter du 1er janvier 2022, au titre des enfants dont le décès intervient à compter de cette date. Se reporter aux dispositions du V du même article en ce qui concerne le versement d'une l'allocation forfaitaire transitoire.
+
+#### Article L512-1|LEGIARTI000031686528
+
+Version du 2016-01-01 inclus au 2999-01-01 exclu.
+
+Alinéa 1 codé pour l'aide au logement à titre personnel et l'appréciation générale. Résidence, autres prestations individuelles et alinéa 2 hors_périmètre comme règles autonomes (l'interface mensuelle fournit une appréciation globale).
+
+Toute personne française ou étrangère résidant en France, au sens de l'article L. 111-2-3, ayant à sa charge un ou plusieurs enfants résidant en France, bénéficie pour ces enfants des prestations familiales dans les conditions prévues par le présent livre sous réserve que ce ou ces derniers ne soient pas bénéficiaires, à titre personnel, d'une ou plusieurs prestations familiales, de l'allocation de logement sociale ou de l'aide personnalisée au logement.
+Le précédent alinéa ne s'applique pas aux travailleurs détachés temporairement en France pour y exercer une activité professionnelle et exemptés d'affiliation au régime français de sécurité sociale en application d'une convention internationale de sécurité sociale ou d'un règlement communautaire ainsi qu'aux personnes à leur charge, sous réserve de stipulation particulière de cette convention.
+
+#### Article L512-2|LEGIARTI000037399299
+
+Version du 2019-03-01 inclus au 2021-05-01 exclu.
+
+Alinéas 1 à 11 hors_périmètre comme règles autonomes (conditions et justificatifs de séjour, couverts au niveau mensuel par l'appréciation générale).
+
+Bénéficient de plein droit des prestations familiales dans les conditions fixées par le présent livre les ressortissants des Etats membres de la Communauté européenne, des autres Etats parties à l'accord sur l'Espace économique européen et de la Confédération suisse qui remplissent les conditions exigées pour résider régulièrement en France, la résidence étant appréciée dans les conditions fixées pour l'application de l'article L. 512-1.
+Bénéficient également de plein droit des prestations familiales dans les conditions fixées par le présent livre les étrangers non ressortissants d'un Etat membre de la Communauté européenne, d'un autre Etat partie à l'accord sur l'Espace économique européen ou de la Confédération suisse, titulaires d'un titre exigé d'eux en vertu soit de dispositions législatives ou réglementaires, soit de traités ou accords internationaux pour résider régulièrement en France.
+Ces étrangers bénéficient des prestations familiales sous réserve qu'il soit justifié, pour les enfants qui sont à leur charge et au titre desquels les prestations familiales sont demandées, de l'une des situations suivantes :
+-leur naissance en France ;
+-leur entrée régulière dans le cadre de la procédure de regroupement familial visée au livre IV du code de l'entrée et du séjour des étrangers et du droit d'asile ;
+-leur qualité de membre de famille de réfugié ;
+-leur qualité d'enfant d'étranger titulaire de la carte de séjour mentionnée à l'article L. 313-26 du code de l'entrée et du séjour des étrangers et du droit d'asile ;
+-leur qualité d'enfant d'étranger titulaire de la carte de séjour mentionnée à l'article L. 313-25 du même code ;
+-leur qualité d'enfant d'étranger titulaire de l'une des cartes de séjour mentionnées au 4° de l'article L. 313-20 et à l'article L. 313-21 du même code ;
+-leur qualité d'enfant d'étranger titulaire de la carte de séjour mentionnée au 7° de l'article L. 313-11 du même code à la condition que le ou les enfants en cause soient entrés en France au plus tard en même temps que l'un de leurs parents titulaires de la carte susmentionnée.
+Un décret fixe la liste des titres et justifications attestant de la régularité de l'entrée et du séjour des bénéficiaires étrangers. Il détermine également la nature des documents exigés pour justifier que les enfants que ces étrangers ont à charge et au titre desquels des prestations familiales sont demandées remplissent les conditions prévues aux alinéas précédents.
+
+Nota LEGI
+
+Conformément à l'article 71 IV de la loi n° 2018-778 du 10 septembre 2018, les présentes dispositions entrent en vigueur à une date fixée par décret en Conseil d'Etat, et au plus tard le 1er mars 2019.
+
+#### Article L512-2|LEGIARTI000042920150
+
+Version du 2021-05-01 inclus au 2999-01-01 exclu.
+
+Alinéas 1 à 11 hors_périmètre comme règles autonomes (conditions et justificatifs de séjour, couverts au niveau mensuel par l'appréciation générale).
+
+Bénéficient de plein droit des prestations familiales dans les conditions fixées par le présent livre les ressortissants des Etats membres de la Communauté européenne, des autres Etats parties à l'accord sur l'Espace économique européen et de la Confédération suisse qui remplissent les conditions exigées pour résider régulièrement en France, la résidence étant appréciée dans les conditions fixées pour l'application de l'article L. 512-1.
+Bénéficient également de plein droit des prestations familiales dans les conditions fixées par le présent livre les étrangers non ressortissants d'un Etat membre de la Communauté européenne, d'un autre Etat partie à l'accord sur l'Espace économique européen ou de la Confédération suisse, titulaires d'un titre exigé d'eux en vertu soit de dispositions législatives ou réglementaires, soit de traités ou accords internationaux pour résider régulièrement en France.
+Ces étrangers bénéficient des prestations familiales sous réserve qu'il soit justifié, pour les enfants qui sont à leur charge et au titre desquels les prestations familiales sont demandées, de l'une des situations suivantes :
+-leur naissance en France ;
+-leur entrée régulière dans le cadre de la procédure de regroupement familial visée au chapitre IV du titre III du livre III du code de l'entrée et du séjour des étrangers et du droit d'asile ;
+-leur qualité de membre de famille de réfugié ;
+-leur qualité d'enfant d'étranger titulaire de la carte de séjour mentionnée à l'article L. 424-19 du code de l'entrée et du séjour des étrangers et du droit d'asile ;
+-leur qualité d'enfant d'étranger titulaire de la carte de séjour mentionnée à l'article L. 424-11 du même code ;
+-leur qualité d'enfant d'étranger titulaire de l'une des cartes de séjour mentionnées à l'article L. 421-14 et aux articles L. 421-22, L. 421-23 et L. 422-13 du même code ;
+-leur qualité d'enfant d'étranger titulaire de la carte de séjour mentionnée à l'article L. 423-23 du même code à la condition que le ou les enfants en cause soient entrés en France au plus tard en même temps que l'un de leurs parents titulaires de la carte susmentionnée.
+Un décret fixe la liste des titres et justifications attestant de la régularité de l'entrée et du séjour des bénéficiaires étrangers. Il détermine également la nature des documents exigés pour justifier que les enfants que ces étrangers ont à charge et au titre desquels des prestations familiales sont demandées remplissent les conditions prévues aux alinéas précédents.
+
+Nota LEGI
+
+Conformément à l'article 20 de l'ordonnance n° 2020-1733 du 16 décembre 2020, ces dispositions entrent en vigueur le 1er mai 2021.
+
+#### Article L512-3|LEGIARTI000006743277
+
+Version du 1999-12-30 inclus au 2019-09-01 exclu.
+
+Alinéas 1 à 3 codés par les mêmes règles que la version LEGIARTI000041979743. Alinéa 4 hors_périmètre (règles d'âge d'autres prestations).
+
+Sous réserve des règles particulières à chaque prestation, ouvre droit aux prestations familiales :
+1°) tout enfant jusqu'à la fin de l'obligation scolaire ;
+2°) après la fin de l'obligation scolaire, et jusqu'à un âge limite, tout enfant dont la rémunération éventuelle n'excède pas un plafond.
+Toutefois, pour l'attribution du complément familial et de l'allocation de logement mentionnés aux 3° et 4° de l'article L. 511-1 et à l'article L. 755-21, l'âge limite peut être différent de celui mentionné au 2° du présent article.
+
+#### Article L512-3|LEGIARTI000038834523
+
+Version du 2019-09-01 inclus au 2021-01-01 exclu.
+
+Alinéas 1 à 3 codés par les mêmes règles que la version LEGIARTI000041979743. Alinéa 4 hors_périmètre (règles d'âge d'autres prestations).
+
+Sous réserve des règles particulières à chaque prestation, ouvre droit aux prestations familiales :
+1°) tout enfant jusqu'à la fin de l'obligation scolaire ;
+2°) après la fin de l'obligation scolaire, et jusqu'à un âge limite, tout enfant dont la rémunération éventuelle n'excède pas un plafond.
+Toutefois, pour l'attribution du complément familial et de l'allocation de logement mentionnés aux 3° et 4° de l'article L. 511-1, l'âge limite peut être différent de celui mentionné au 2° du présent article.
+
+#### Article L512-3|LEGIARTI000041979743
+
+Version du 2021-01-01 inclus au 2999-01-01 exclu.
+
+Alinéas 1 à 3 codés. Alinéas 4 et 5 hors_périmètre (règles particulières d'autres prestations).
+
+Sous réserve des règles particulières à chaque prestation, ouvre droit aux prestations familiales :
+1°) tout enfant jusqu'à la fin de l'obligation scolaire ;
+2°) après la fin de l'obligation scolaire, et jusqu'à un âge limite, tout enfant dont la rémunération éventuelle n'excède pas un plafond.
+
+
+```catala
+champ d'application OuverturePourEnfant:
+  date arrondi supérieur
+  définition droit_individuel égal à
+    si non (dans_la_période de date_du_droit) alors
+      impossible # Date en dehors du paquet remis.
+    sinon si territoire_de_résidence sous forme CollectivitéPierreMiquelon alors
+      impossible # Le régime territorial manque dans le paquet.
+    sinon
+      # L512-1, alinéa 1, et L821-3, alinéa unique.
+      (situation_individuelle.naissance <= date_du_droit) et
+      non situation_individuelle.aide_logement_personnelle et
+      (selon état_de_scolarité sous forme
+       # L512-3, 1° : « jusqu'à la fin » inclut l'enfant avant l'obligation.
+       -- PrécèdeObligation: vrai
+       -- RelèveObligation: vrai
+       # L512-3, 2°, et R512-2, alinéas 1 et 2 ; R755-0-2, alinéa unique.
+       # TODO juridique : l'article 7 propre à Mayotte ne fixe pas ces
+       # conditions. Application provisoire du droit commun avec le Smic transmis.
+       -- SuitObligation:
+         (date_du_droit < situation_individuelle.naissance + âge_limite) et
+         (salaire_sous_plafond de situation_individuelle, salaire_minimum_horaire))
+```
+
+Toutefois, pour l'attribution du complément familial et de l'allocation de logement mentionnés aux 3° et 4° de l'article L. 511-1, l'âge limite peut être différent de celui mentionné au 2° du présent article.
+Pour l'attribution de l'allocation forfaitaire versée en cas de décès d'un enfant prévue à l'article L. 545-1, l'âge limite retenu peut être différent de celui fixé en application du 2° du présent article et la condition relative à la rémunération de l'enfant n'est pas exigée.
+
+Nota LEGI
+
+Conformément au IV de l'article 5 de la loi n° 2020-692 du 8 juin 2020, ces dispositions entrent en vigueur à une date fixée par décret, et au plus tard à compter du 1er janvier 2022, au titre des enfants dont le décès intervient à compter de cette date. Se reporter aux dispositions du V du même article en ce qui concerne le versement d'une l'allocation forfaitaire transitoire.
+
+#### Article L521-1|LEGIARTI000029963006
+
+Version du 2015-07-01 inclus au 2999-01-01 exclu.
+
+Alinéas 1 à 6 codés avec D521-1, D521-2 et D521-3. La revalorisation est fournie par l'appelant.
+
+Les allocations familiales sont dues à partir du deuxième enfant à charge.
+Une allocation forfaitaire par enfant d'un montant fixé par décret est versée pendant un an à la personne ou au ménage qui assume la charge d'un nombre minimum d'enfants également fixé par décret lorsque l'un ou plusieurs des enfants qui ouvraient droit aux allocations familiales atteignent l'âge limite mentionné au 2° de l'article L. 512-3. Cette allocation est versée à la condition que le ou les enfants répondent aux conditions autres que celles de l'âge pour l'ouverture du droit aux allocations familiales.
+
+
+```catala
+
+déclaration champ d'application OuvertureForfait:
+  entrée enfant contenu SituationEnfant
+  entrée date_de_calcul contenu date
+  entrée smic contenu argent
+  résultat droit_forfait contenu booléen
+
+champ d'application OuvertureForfait:
+  date arrondi supérieur
+  définition droit_forfait égal à
+    soit début_forfait égal à enfant.naissance + âge_limite dans
+    # L521-1, alinéa 2. R512-2, alinéas 1 et 2 (âge et rémunération).
+    enfant.droit_antérieur et (non enfant.aide_logement_personnelle) et
+    (date_de_calcul >= début_forfait) et (date_de_calcul < début_forfait + 1 an) et
+    (salaire_sous_plafond de enfant, smic)
+```
+
+Le montant des allocations mentionnées aux deux premiers alinéas du présent article, ainsi que celui des majorations mentionnées à l'article L. 521-3 varient en fonction des ressources du ménage ou de la personne qui a la charge des enfants, selon un barème défini par décret.
+Le montant des allocations familiales varie en fonction du nombre d'enfants à charge.
+Les niveaux des plafonds de ressources, qui varient en fonction du nombre d'enfants à charge, sont révisés conformément à l'évolution annuelle de l'indice des prix à la consommation, hors tabac.
+Un complément dégressif est versé lorsque les ressources du bénéficiaire dépassent l'un des plafonds, dans la limite de montants définis par décret. Les modalités de calcul de ces montants et celles du complément dégressif sont définies par décret.
+
+#### Article L521-2|LEGIARTI000052043015
+
+Version du 2015-03-22 inclus au 2021-09-30 exclu.
+
+Alinéas 1, 2 et 4 codés dans la mesure des catégories fournies, comme pour LEGIARTI000039099826. Alinéa 3 hors_périmètre (ordre d'ouverture entre parents sans entrées distinctes). Alinéas 5 à 9 hors_périmètre (cas et modalités réglementaires absents).
+
+Les allocations sont versées à la personne qui assume, dans quelques conditions que ce soit, la charge effective et permanente de l'enfant.
+En cas de résidence alternée de l'enfant au domicile de chacun des parents telle que prévue à l'article 373-2-9 du code civil, mise en oeuvre de manière effective, les parents désignent l'allocataire. Cependant, la charge de l'enfant pour le calcul des allocations familiales est partagée par moitié entre les deux parents soit sur demande conjointe des parents, soit si les parents sont en désaccord sur la désignation de l'allocataire. Un décret en Conseil d'Etat fixe les conditions d'application du présent alinéa.
+Lorsque la personne qui assume la charge effective et permanente de l'enfant ne remplit pas les conditions prévues au titre I du présent livre pour l'ouverture du droit aux allocations familiales, ce droit s'ouvre du chef du père ou, à défaut, du chef de la mère.
+Lorsqu'un enfant est confié au service d'aide sociale à l'enfance, les allocations familiales continuent d'être évaluées en tenant compte à la fois des enfants présents au foyer et du ou des enfants confiés au service de l'aide sociale à l'enfance. La part des allocations familiales dues à la famille pour cet enfant est versée à ce service. Toutefois, le juge peut décider, d'office ou sur saisine du président du conseil départemental, à la suite d'une mesure prise en application des articles 375-3 et 375-5 du code civil ou des articles 15,16,16 bis et 28 de l'ordonnance n° 45-174 du 2 février 1945 relative à l'enfance délinquante, de maintenir le versement des allocations à la famille, lorsque celle-ci participe à la prise en charge morale ou matérielle de l'enfant ou en vue de faciliter le retour de l'enfant dans son foyer.
+Un décret en Conseil d'Etat fixe les conditions d'application du présent article, notamment dans les cas énumérés ci-dessous :
+a) retrait total de l'autorité parentale des parents ou de l'un d'eux ;
+b) indignité des parents ou de l'un d'eux ;
+c) divorce, séparation de corps ou de fait des parents ;
+d) enfants confiés à un service public, à une institution privée, à un particulier.
+
+#### Article L521-2|LEGIARTI000039099826
+
+Version du 2021-09-30 inclus au 2999-01-01 exclu.
+
+Alinéas 1, 2 et 4 codés dans la mesure des catégories fournies. Alinéa 3 hors_périmètre (ordre d'ouverture entre parents sans entrées distinctes). Alinéas 5 à 9 hors_périmètre (cas et modalités réglementaires absents).
+
+Les allocations sont versées à la personne qui assume, dans quelques conditions que ce soit, la charge effective et permanente de l'enfant.
+En cas de résidence alternée de l'enfant au domicile de chacun des parents telle que prévue à l'article 373-2-9 du code civil, mise en oeuvre de manière effective, les parents désignent l'allocataire. Cependant, la charge de l'enfant pour le calcul des allocations familiales est partagée par moitié entre les deux parents soit sur demande conjointe des parents, soit si les parents sont en désaccord sur la désignation de l'allocataire. Un décret en Conseil d'Etat fixe les conditions d'application du présent alinéa.
+Lorsque la personne qui assume la charge effective et permanente de l'enfant ne remplit pas les conditions prévues au titre I du présent livre pour l'ouverture du droit aux allocations familiales, ce droit s'ouvre du chef du père ou, à défaut, du chef de la mère.
+Lorsqu'un enfant est confié au service d'aide sociale à l'enfance, les allocations familiales continuent d'être évaluées en tenant compte à la fois des enfants présents au foyer et du ou des enfants confiés au service de l'aide sociale à l'enfance. La part des allocations familiales dues à la famille pour cet enfant est versée à ce service. Toutefois, le juge peut décider, d'office ou sur saisine du président du conseil départemental, à la suite d'une mesure prise en application des articles 375-3 et 375-5 du code civil ou à l'article L. 323-1 du code de la justice pénale des mineurs, de maintenir le versement des allocations à la famille, lorsque celle-ci participe à la prise en charge morale ou matérielle de l'enfant ou en vue de faciliter le retour de l'enfant dans son foyer.
+
+
+```catala
+déclaration versement_à_la_famille contenu booléen
+  dépend de enfant contenu SituationEnfant
+  égal à non (enfant.appréciation_charge sous forme PlacementVersementService)
+```
+
+Un décret en Conseil d'Etat fixe les conditions d'application du présent article, notamment dans les cas énumérés ci-dessous :
+a) retrait total de l'autorité parentale des parents ou de l'un d'eux ;
+b) indignité des parents ou de l'un d'eux ;
+c) divorce, séparation de corps ou de fait des parents ;
+d) enfants confiés à un service public, à une institution privée, à un particulier.
+
+Nota LEGI
+
+Se reporter aux conditions d'application prévues à l'article 10 de l'ordonnance n° 2019-950 du 11 septembre 2019. Conformément à l'article 25 de la loi n°2020-734, l'ordonnance n°2019-950 entre en vigueur le 31 mars 2021. Cette date a été reportée au 30 septembre 2021 par l'article 2 de la loi n° 2021-218 du 26 février 2021.
+
+#### Article L521-3|LEGIARTI000006743289
+
+Version du 1985-12-21 inclus au 2999-01-01 exclu.
+
+Alinéas 1 et 2 codés avec les seuils de R521-1.
+
+Chacun des enfants à charge, à l'exception du plus âgé, ouvre droit à partir d'un âge minimum à une majoration des allocations familiales.
+Toutefois, les personnes ayant un nombre déterminé d'enfants à charge bénéficient de ladite majoration pour chaque enfant à charge à partir de l'âge mentionné au premier alinéa.
+
+
+```catala
+
+déclaration rang_ouvrant_droit_à_majoration contenu booléen
+  dépend de enfant contenu SituationEnfant, enfants contenu liste de SituationEnfant,
+    effectif contenu entier
+  égal à
+    # L521-3, alinéas 1 et 2 ; R521-1, alinéa 2 ; L521-1, alinéa 1.
+    (effectif >= 3) ou
+    ((effectif = 2) et
+     (existe autre parmi enfants tel que
+       # TODO juridique : L521-3 ne départage pas deux dates de naissance
+       # égales. Retenir le plus petit identifiant comme aîné à date égale.
+       (autre.naissance < enfant.naissance) ou
+       ((autre.naissance = enfant.naissance) et
+        (autre.numéro_dossier < enfant.numéro_dossier))))
+```
+
+
+
+#### Article L551-1|LEGIARTI000031688371
+
+Version du 2015-12-23 inclus au 2025-09-01 exclu.
+
+Alinéa unique hors_périmètre pour la revalorisation (base applicable fournie en entrée).
+
+Le montant des prestations familiales est déterminé d'après des bases mensuelles de calcul revalorisées au 1er avril de chaque année par application du coefficient mentionné à l'article L. 161-25.
+
+#### Article L751-1|LEGIARTI000031323778
+
+Version du 2015-10-16 inclus au 2028-01-01 exclu.
+
+Alinéa unique codé pour la liste des collectivités. Qualité de bénéficiaire et rattachement au régime hors_périmètre comme règles autonomes (appréciation générale fournie).
+
+Les dispositions du présent titre s'appliquent en Guadeloupe, en Guyane, en Martinique, à La Réunion, à Saint-Barthélemy et à Saint-Martin à l'ensemble des bénéficiaires de la législation générale de sécurité sociale, y compris les membres des professions agricoles.
+
+
+```catala
+déclaration territoire_du_régime_outre_mer contenu booléen
+  dépend de lieu contenu Territoire
+  égal à
+    selon lieu sous forme
+    -- DépartementGuadeloupe: vrai
+    -- DépartementGuyane: vrai
+    -- DépartementMartinique: vrai
+    -- DépartementRéunion: vrai
+    -- CollectivitéBarthélemy: vrai
+    -- CollectivitéMartin: vrai
+    -- n'importe quel: faux
+```
+
+
+
+#### Article L755-11|LEGIARTI000031323803
+
+Version du 2015-10-16 inclus au 2999-01-01 exclu.
+
+Alinéas 1 et 2 codés par application du régime de droit commun et de la dérogation L755-12.
+
+Les conditions d'attribution des allocations familiales et de leurs majorations fixées par les articles L. 521-1 et L. 521-3 sont applicables dans les collectivités mentionnées à l'article L. 751-1.
+Toutefois, les dispositions de l'article L. 755-12 restent en vigueur aussi longtemps que le présent chapitre V est applicable.
+
+#### Article L755-12|LEGIARTI000029962999
+
+Version du 2014-12-25 inclus au 2999-01-01 exclu.
+
+Alinéas 1 et 2 codés, avec la charge appréciée en entrée.
+
+Les allocations familiales sont dues, pour tout enfant, à la personne qui a effectivement la charge de celui-ci.
+Toutefois, les quatre derniers alinéas de l'article L. 521-1 ne sont pas applicables lorsque le ménage ou la personne a un seul enfant à charge.
+
+#### Article L755-3|LEGIARTI000033728786
+
+Version du 2018-04-01 inclus au 2022-01-01 exclu.
+
+Alinéa 1 codé pour les renvois utiles au calcul (L512-1, L512-3, L521-2). Les autres renvois sont hors_périmètre (autres conditions, calendrier de paiement et autres prestations). Alinéa 2 codé par emploi de la base commune fournie.
+
+Les dispositions des articles L. 512-1 à L. 512-4, L. 513-1, L. 521-2, L. 552-1, L. 553-1, L. 553-2, L. 553-4, L. 582-1, L. 582-2, L. 583-3 et L. 583-5 sont applicables aux collectivités mentionnées à l'article L. 751-1.
+La base de calcul des prestations familiales est la même que celle qui est fixée en application de l'article L. 551-1.
+
+#### Article L755-3|LEGIARTI000041979722
+
+Version du 2022-01-01 inclus au 2999-01-01 exclu.
+
+Alinéa 1 codé pour les renvois utiles au calcul (L512-1, L512-3, L521-2). Les autres renvois sont hors_périmètre (autres conditions, calendrier de paiement et autres prestations). Alinéa 2 codé par emploi de la base commune fournie.
+
+Les dispositions des articles L. 512-1 à L. 512-4, L. 513-1, L. 521-2, L. 552-1, L. 552-7, L. 553-1, L. 553-2, L. 553-4, L. 582-1, L. 582-2, L. 583-3 et L. 583-5 sont applicables aux collectivités mentionnées à l'article L. 751-1.
+La base de calcul des prestations familiales est la même que celle qui est fixée en application de l'article L. 551-1.
+
+Nota LEGI
+
+Conformément au IV de l'article 4 de la loi n° 2020-692 du 8 juin 2020, ces dispositions entrent en vigueur à une date fixée par décret, et au plus tard le 1er janvier 2022, pour les décès intervenant à compter de cette date.
+
+#### Article R512-2|LEGIARTI000006750602
+
+Version du 2000-01-29 inclus au 2999-01-01 exclu.
+
+Alinéas 1 et 2 codés en combinaison avec L512-3. Alinéa 3 hors_périmètre (salaire fourni en entrée et absence des barèmes des avantages en nature).
+
+Les enfants ouvrent droit aux prestations familiales jusqu'à l'âge de vingt ans sous réserve que leur rémunération n'excède pas le plafond fixé au deuxième alinéa du présent article.
+
+
+```catala
+# R512-2, alinéa 1.
+déclaration âge_limite contenu durée égal à 20 an
+
+
+# TODO juridique : les alinéas qui fixent un âge ou une durée ne règlent pas
+# le 29 février hors année bissextile. Les champs de calcul retiennent
+# le 1er mars avec le mode « date arrondi supérieur ».
+```
+
+Le plafond de rémunération mentionné au 2° de l'article L. 512-3 est égal, pour un mois, à 55 % du salaire minimum interprofessionnel de croissance défini aux articles L. 141-1 à L. 141-9 du code du travail, multiplié par 169.
+
+
+```catala
+déclaration salaire_sous_plafond contenu booléen
+  dépend de enfant contenu SituationEnfant, smic contenu argent
+  égal à
+    # R512-2, alinéa 2, et R755-0-2, alinéa unique.
+    # TODO juridique : le texte ne précise pas d'arrondi au centime du plafond.
+    (décimal de enfant.salaire_mensuel) <= (décimal de smic) * 55% * 169,0
+```
+
+Pour ceux des enfants qui bénéficient d'avantages en nature, l'évaluation de ces avantages devra être faite suivant les barèmes fixés pour l'application de la législation sur les assurances sociales.
+
+#### Article R521-1|LEGIARTI000018735853
+
+Version du 2008-04-30 inclus au 2026-03-01 exclu.
+
+Alinéas 1 et 2 codés. La cohorte transitoire du nota aurait déjà atteint vingt ans avant le début de la période.
+
+L'âge mentionné au premier alinéa de l'article L. 521-3 à partir duquel les enfants ouvrent droit à la majoration des allocations familiales est fixé à 14 ans.
+Le nombre minimum d'enfants à charge, mentionné au deuxième alinéa de l'article L. 521-3 ouvrant droit à ladite majoration pour chaque enfant est fixé à trois.
+
+Nota LEGI
+
+Décret n° 2008-409 du 28 avril 2008 JORF du 29 avril 2008 art. 2 : Les modifications induites par le décret n° 2008-409 s'appliquent aux enfants dont le onzième anniversaire est postérieur au 30 avril 2008.
+
+#### Article R521-2|LEGIARTI000006750608
+
+Version du 2007-05-01 inclus au 2999-01-01 exclu.
+
+Alinéas 1 à 3 représentés par les catégories de charge déjà appréciées. Alinéa 4 hors_périmètre (historique des décisions parentales et de résidence absent).
+
+Dans les situations visées au deuxième alinéa de l'article L. 521-2, l'allocataire est celui des deux parents qu'ils désignent d'un commun accord. A défaut d'accord sur la désignation d'un allocataire unique, chacun des deux parents peut se voir reconnaître la qualité d'allocataire :
+1° Lorsque les deux parents en ont fait la demande conjointe ;
+2° Lorsque les deux parents n'ont ni désigné un allocataire unique, ni fait une demande conjointe de partage.
+Lorsque les parents ont désigné un allocataire unique ou fait une demande conjointe de partage, ils ne peuvent remettre en cause les modalités ainsi choisies qu'au bout d'un an, sauf modification des modalités de résidence du ou des enfants.
+
+#### Article R521-3|LEGIARTI000006750610
+
+Version du 2007-05-01 inclus au 2999-01-01 exclu.
+
+Alinéas 1 à 5 codés pour le montant de base, avec R521-4 pour la majoration.
+
+Sous réserve de l'article R. 521-4, dans les situations visées aux 1° et 2° de l'article R. 521-2, la prestation due à chacun des parents est égale au montant des allocations familiales dues pour le total des enfants à charge, multiplié par un coefficient résultant du rapport entre le nombre moyen d'enfants et le nombre total d'enfants.
+Le nombre moyen d'enfants, pour chaque foyer, est obtenu en faisant la somme du nombre d'enfants à charge dans les conditions suivantes :
+1° Chaque enfant en résidence alternée compte pour 0,5 ;
+2° Les autres enfants à charge comptent pour 1.
+Le nombre total d'enfants, pour chaque foyer, est obtenu en faisant la somme du ou des enfants en résidence alternée et, le cas échéant, du ou des autres enfants à charge.
+
+
+```catala
+déclaration poids_enfant contenu décimal
+  dépend de enfant contenu SituationEnfant
+  égal à
+    # R521-3, alinéas 2 à 4. La résidence alternée sans partage reste entière.
+    si enfant.appréciation_charge sous forme RésidenceAlternéePartagée
+    alors 0,5 sinon 1,0
+
+déclaration somme_des_charges contenu décimal
+  dépend de enfants contenu liste de SituationEnfant
+  égal à
+    combine tout enfant parmi enfants dans total initialement 0,0
+    avec total + (poids_enfant de enfant)
+```
+
+
+
+#### Article R521-4|LEGIARTI000006750613
+
+Version du 2007-05-01 inclus au 2999-01-01 exclu.
+
+Alinéas 1 et 2 codés.
+
+Pour l'ouverture du droit à la majoration prévue à l'article L. 521-3, le nombre d'enfants à charge est évalué dans les conditions prévues au premier alinéa de l'article R. 521-3.
+Lorsque le ou les enfants ouvrant droit à ladite majoration sont en résidence alternée, le montant servi au titre de cette majoration est réduit de moitié.
+
+
+```catala
+déclaration champ d'application MontantDroitCommun:
+  entrée enfants contenu liste de SituationEnfant
+  entrée forfaits contenu liste de SituationEnfant
+  entrée date_de_calcul contenu date
+  entrée outre_mer contenu booléen
+  entrée ressources contenu décimal
+  entrée base contenu décimal
+  entrée premier contenu argent
+  entrée second contenu argent
+  entrée majoration_plafond contenu argent
+  résultat montant_mensuel contenu décimal
+
+champ d'application MontantDroitCommun:
+  date arrondi supérieur
+  définition montant_mensuel égal à
+    soit effectif égal à nombre de enfants dans
+    # TODO juridique : D521-3 ne distingue pas la résidence alternée ni
+    # l'enfant n'ouvrant plus droit qu'au forfait. Retenir l'effectif entier
+    # de R521-3 pour l'allocation ordinaire et y ajouter les enfants au forfait
+    # pour les plafonds propres à ce forfait.
+    soit plafond_bas égal à plafond_majoré de premier, majoration_plafond, effectif dans
+    soit plafond_haut égal à plafond_majoré de second, majoration_plafond, effectif dans
+    soit taux égal à taux_droit_commun de ressources, plafond_bas, plafond_haut dans
+    # L755-11 et L755-12, alinéas 1 et 2 ; D755-5, II.
+    soit enfant_unique_outre_mer égal à outre_mer et (effectif = 1) dans
+    soit allocation_théorique égal à
+      si enfant_unique_outre_mer alors
+        combine tout enfant parmi enfants dans total initialement 0,0
+        avec total + base * (résultat de TauxUniqueOutreMer avec {
+          -- date_de_calcul: date_de_calcul
+          -- naissance: enfant.naissance
+        }).taux_base
+      sinon base_droit_commun de effectif, base, taux
+    dans
+    soit enfants_majorés égal à
+      si enfant_unique_outre_mer alors enfants
+      sinon liste de enfant parmi enfants tel que
+        # R521-1, alinéa 1.
+        (date_de_calcul >= enfant.naissance + 14 an) et
+        (rang_ouvrant_droit_à_majoration de enfant, enfants, effectif)
+    dans
+    soit majoration_enfant_unique égal à
+      si enfant_unique_outre_mer alors
+        combine tout enfant parmi enfants_majorés dans total initialement 0,0
+        avec total + base * (résultat de TauxUniqueOutreMer avec {
+          -- date_de_calcul: date_de_calcul
+          -- naissance: enfant.naissance
+        }).taux_majoration
+      sinon 0,0
+    dans
+    # R521-3, alinéa 1 : coefficient sur l'allocation de base.
+    soit charge_pondérée égal à somme_des_charges de enfants dans
+    soit allocation_due égal à
+      si effectif = 0 alors 0,0
+      sinon allocation_théorique * charge_pondérée / (décimal de effectif)
+    dans
+    # R521-4, alinéas 1 et 2 : réduction individuelle des majorations partagées.
+    soit majorations_dues égal à
+      si enfant_unique_outre_mer alors majoration_enfant_unique * charge_pondérée
+      sinon base * taux.3 * (somme_des_charges de enfants_majorés)
+    dans
+    # L521-2, alinéa 4. TODO juridique : faute de modalité de ventilation
+    # dans les textes fournis, répartir le montant de base au prorata des charges,
+    # puis affecter chaque majoration à l'enfant qui la déclenche.
+    soit enfants_versés_à_la_famille égal à
+      liste de enfant parmi enfants tel que versement_à_la_famille de enfant
+    dans
+    soit majorés_versés_à_la_famille égal à
+      liste de enfant parmi enfants_majorés tel que versement_à_la_famille de enfant
+    dans
+    soit allocation_famille égal à
+      si effectif = 0 alors 0,0
+      sinon allocation_théorique * (somme_des_charges de enfants_versés_à_la_famille) /
+        (décimal de effectif)
+    dans
+    soit majorations_famille égal à
+      si enfant_unique_outre_mer alors
+        majoration_enfant_unique * (somme_des_charges de majorés_versés_à_la_famille)
+      sinon base * taux.3 * (somme_des_charges de majorés_versés_à_la_famille)
+    dans
+    soit montant_dû égal à allocation_due + majorations_dues dans
+    soit montant_famille égal à allocation_famille + majorations_famille dans
+    # D521-1, II ; L755-12, alinéa 2. TODO juridique : calculer le complément
+    # sur le montant après partage et avant ventilation entre famille et service,
+    # puis le répartir selon la part du montant revenant à la famille.
+    soit complément_famille égal à
+      si enfant_unique_outre_mer ou (montant_dû = 0,0) alors 0,0
+      sinon (complément_mensuel de ressources, plafond_bas, plafond_haut, montant_dû)
+        * montant_famille / montant_dû
+    dans
+    # D521-2, I à III ; L521-1, alinéa 2. TODO juridique : interpréter le
+    # minimum comme incluant les enfants dont le droit ordinaire vient de cesser.
+    # Les règles fournies ne précisent pas le partage du forfait. Appliquer
+    # provisoirement les mêmes catégories individuelles de versement.
+    soit effectif_forfait égal à effectif + (nombre de forfaits) dans
+    soit montant_forfaits égal à
+      si (effectif_forfait < minimum_enfants_pour_forfait) ou ((nombre de forfaits) = 0)
+      alors 0,0
+      sinon
+        soit plafond_forfait_bas égal à
+          plafond_majoré de premier, majoration_plafond, effectif_forfait
+        dans
+        soit plafond_forfait_haut égal à
+          plafond_majoré de second, majoration_plafond, effectif_forfait
+        dans
+        soit montant égal à forfait_unitaire de ressources, plafond_forfait_bas, plafond_forfait_haut, base
+        dans
+        soit complément égal à
+          complément_mensuel de ressources, plafond_forfait_bas, plafond_forfait_haut, montant
+        dans
+        soit forfaits_famille égal à
+          liste de enfant parmi forfaits tel que versement_à_la_famille de enfant
+        dans
+        (montant + complément) * (somme_des_charges de forfaits_famille)
+    dans
+    montant_famille + complément_famille + montant_forfaits
+```
+
+
+
+#### Article R532-1|LEGIARTI000028880550
+
+Version du 2014-04-27 inclus au 2022-01-31 exclu.
+
+Tous les alinéas hors_périmètre (prestations visées aux L531-2 et L531-3 et appréciation des ressources en amont de l'interface).
+
+Pour l'ouverture du droit à la prime et à l'allocation prévues aux articles L. 531-2 et L. 531-3, la condition de ressources est appréciée pour chaque période de douze mois débutant le 1er janvier, en fonction des revenus de l'année civile de référence tels que définis aux articles R. 532-3 à R. 532-8.
+Toutefois, en cas de modification de la situation de famille en cours de période de paiement, cette condition est appréciée au premier jour du mois civil au cours duquel est intervenue la modification s'il y a diminution du nombre des enfants à charge, au premier jour du mois civil suivant si ce nombre a augmenté.
+
+#### Article R532-1|LEGIARTI000045087786
+
+Version du 2022-01-31 inclus au 2999-01-01 exclu.
+
+Tous les alinéas hors_périmètre (prestations visées aux L531-2 et L531-3 et appréciation des ressources en amont de l'interface).
+
+Pour l'ouverture du droit à la prime et à l'allocation prévues aux articles L. 531-2 et L. 531-3, la condition de ressources est appréciée pour chaque période de douze mois débutant le 1er janvier, en fonction des revenus de l'année civile de référence tels que définis aux articles R. 532-3 à R. 532-8.
+Toutefois, en cas de modification de la situation de famille en cours de période de paiement, cette condition est appréciée :
+1° Au premier jour du mois civil au cours duquel est intervenue la diminution du nombre des enfants à charge ;
+2° Au premier jour du quatrième mois civil qui suit le décès de l'enfant à charge, pour les prestations prévues à l'article L. 552-7 ;
+3° Au premier jour du mois civil suivant l'augmentation du nombre des enfants à charge.
+
+#### Article R532-2|LEGIARTI000019077507
+
+Version du 2008-06-28 inclus au 2999-01-01 exclu.
+
+Tous les alinéas hors_périmètre (prestations visées aux L531-2 et L531-3 et appréciation des ressources en amont de l'interface).
+
+Il est procédé, dans les conditions prévues à l'article R. 532-1, à une appréciation spécifique des ressources perçues au cours de l'année civile de référence en cas de modification de la situation familiale ou professionnelle pendant la période de paiement, due notamment au chômage, à l'invalidité, à l'admission à la retraite ou à l'exercice d'une première activité professionnelle en France.
+
+#### Article R532-3|LEGIARTI000020986711
+
+Version du 2009-08-22 inclus au 2021-01-01 exclu.
+
+Tous les alinéas hors_périmètre (ressources annuelles déjà déterminées et transmises par l'appelant).
+
+Les ressources retenues sont celles perçues pendant l'année civile de référence.L'année civile de référence est l'avant-dernière année précédant la période de paiement.
+Sous réserve des dispositions des articles R. 532-4 à R. 532-8 et des alinéas suivants du présent article, les ressources prises en considération s'entendent du total des revenus nets catégoriels retenus pour l'établissement de l'impôt sur le revenu d'après le barème des revenus taxés à un taux proportionnel ou soumis à un prélèvement libératoire de l'impôt sur le revenu, ainsi que les revenus perçus hors de France ou versés par une organisation internationale, à l'exclusion des revenus des enfants ayant fait l'objet d'une imposition commune et après :
+a) La déduction au titre des créances alimentaires mentionnée au 2° du II de l'article 156 du code général des impôts et majorées dans les conditions prévues au 7 de l'article 158 du code général des impôts ;
+b) L'abattement mentionné à l'article 157 bis du code général des impôts en faveur des personnes âgées ou invalides.
+Sont également prises en considération :
+1° Après application de la déduction correspondant à celle visée au deuxième alinéa du 3° de l'article 83 du code général des impôts, l'indemnité journalière mentionnée au 2° de l'article L. 431-1 ;
+2° Les rémunérations mentionnées à l'article 81 quater du code général des impôts ;
+Sont exclus du décompte des ressources les arrérages des rentes viagères constituées en faveur d'une personne handicapée et mentionnées à l'article 199 septies (2°) du code général des impôts.
+Il est fait abstraction des déductions opérées en vertu de l'article 156-I du code général des impôts au titre des reports des déficits constatés au cours d'une année antérieure à celle qui est prise en considération.
+Lorsque les ressources de l'année de référence de l'allocataire ou de son conjoint ou concubin ne proviennent pas d'une activité salariée et que ces ressources ne sont pas connues au moment de la demande ou du réexamen des droits, il est tenu compte des dernières ressources connues et déterminées dans les conditions prévues aux alinéas précédents. Ces ressources sont revalorisées par application du taux d'évolution en moyenne annuelle de l'indice général des prix à la consommation des ménages pour l'année civile de référence figurant dans le rapport économique et financier annexé au projet de loi de finances.
+En cas de concubinage, il est tenu compte du total des ressources perçues par chacun des concubins durant l'année de référence ; ces ressources sont déterminées dans les conditions prévues aux alinéas précédents.
+
+#### Article R532-3|LEGIARTI000041419421
+
+Version du 2021-01-01 inclus au 2999-01-01 exclu.
+
+Tous les alinéas hors_périmètre (ressources annuelles déjà déterminées et transmises par l'appelant).
+
+Les ressources retenues sont celles perçues pendant l'année civile de référence.L'année civile de référence est l'avant-dernière année précédant la période de paiement.
+Sous réserve des dispositions des articles R. 532-4 à R. 532-8 et des alinéas suivants du présent article, les ressources prises en considération s'entendent du total des revenus nets catégoriels retenus pour l'établissement de l'impôt sur le revenu d'après le barème des revenus taxés à un taux proportionnel ou soumis à un prélèvement libératoire de l'impôt sur le revenu, ainsi que les revenus perçus hors de France ou versés par une organisation internationale, à l'exclusion des revenus des enfants ayant fait l'objet d'une imposition commune et après :
+a) La déduction au titre des créances alimentaires mentionnée au 2° du II de l'article 156 du code général des impôts et majorées dans les conditions prévues au 7 de l'article 158 du code général des impôts ;
+b) L'abattement mentionné à l'article 157 bis du code général des impôts en faveur des personnes âgées ou invalides.
+Sont également prises en considération :
+1° Après application de la déduction correspondant à celle visée au deuxième alinéa du 3° de l'article 83 du code général des impôts, l'indemnité journalière mentionnée au 2° de l'article L. 431-1 ;
+2° Les rémunérations mentionnées à l'article 81 quater du code général des impôts ;
+Sont exclus du décompte des ressources les arrérages des rentes viagères constituées en faveur d'une personne handicapée et mentionnées à l'article 199 septies du code général des impôts.
+Il est fait abstraction des déductions opérées en vertu de l'article 156-I du code général des impôts au titre des reports des déficits constatés au cours d'une année antérieure à celle qui est prise en considération.
+Lorsque les ressources de l'année de référence de l'allocataire ou de son conjoint ou concubin ne proviennent pas d'une activité salariée et que ces ressources ne sont pas connues au moment de la demande ou du réexamen des droits, il est tenu compte des dernières ressources connues et déterminées dans les conditions prévues aux alinéas précédents. Ces ressources sont revalorisées par application du taux d'évolution en moyenne annuelle de l'indice général des prix à la consommation des ménages pour l'année civile de référence figurant dans le rapport économique et financier annexé au projet de loi de finances.
+En cas de concubinage, il est tenu compte du total des ressources perçues par chacun des concubins durant l'année de référence ; ces ressources sont déterminées dans les conditions prévues aux alinéas précédents.
+
+Nota LEGI
+
+Se reporter aux conditions d'application prévues à l'article 25 du décret n° 2019-1574 du 30 décembre 2019. Conformément à l'article 1 du décret n° 2020-451 du 20 avril 2020 l'article susvisé a été modifié : Ces dispositions sont applicables au calcul des droits, d'une part, à l'aide personnalisée au logement prévue pour les accédants à la propriété par l'article L. 831-1 du code de la construction et de l'habitation, d'autre part, aux autres aides personnelles au logement prévues par le même code, à compter des mois respectifs fixés par arrêté des ministres en charge du logement, de la santé et du budget et, au plus tard, du 1er janvier 2021.
+
+#### Article R532-4|LEGIARTI000006750907
+
+Version du 2004-07-17 inclus au 2999-01-01 exclu.
+
+Tous les alinéas hors_périmètre (ressources annuelles déjà déterminées et transmises par l'appelant).
+
+Il n'est pas tenu compte des revenus d'activité professionnelle ni des indemnités de chômage perçus pendant l'année civile de référence par le conjoint ou concubin :
+1°) soit cessant toute activité professionnelle pour se consacrer à un enfant de moins de trois ans ou à plusieurs enfants ;
+2°) soit détenu, à moins que l'intéressé ne soit placé sous le régime de semi-liberté.
+En cas de décès de l'un des conjoints ou concubins, il n'est pas tenu compte des ressources perçues par lui avant le décès.
+En cas de divorce, de séparation légale ou de fait ou de cessation de la vie commune des concubins, il n'est tenu compte que des ressources perçues au cours de l'année civile de référence par le conjoint ou concubin conservant la charge du ou des enfants ; ces ressources sont déterminées dans les conditions prévues à l'article R. 532-3.
+Les dispositions du présent article sont applicables à compter du premier jour du mois civil suivant celui au cours duquel intervient le changement de situation et jusqu'au dernier jour du mois civil précédant celui au cours duquel prend fin la situation considérée.
+
+#### Article R532-5|LEGIARTI000006750910
+
+Version du 2004-01-01 inclus au 2999-01-01 exclu.
+
+Tous les alinéas hors_périmètre (ressources annuelles déjà déterminées et transmises par l'appelant).
+
+Lorsque la personne ou l'un des conjoints ou concubins cesse toute activité professionnelle et est admis au bénéfice d'une pension de retraite ou d'invalidité ou d'une rente d'accident du travail ou se voit reconnaître un droit à prestation en application des dispositions du titre II du livre VIII du présent code, il est procédé, à compter du premier jour du mois civil suivant celui au cours duquel est intervenu le changement de situation, à un abattement de 30 % sur les revenus d'activité professionnelle et les indemnités de chômage perçus par l'intéressé au cours de l'année civile de référence.
+Cette mesure est applicable jusqu'à la fin de la période de paiement en cours et, éventuellement, jusqu'à la fin de la période suivante si le changement de situation se situe au cours du second semestre d'une période.
+
+#### Article R532-6|LEGIARTI000006750915
+
+Version du 2004-01-01 inclus au 2999-01-01 exclu.
+
+Tous les alinéas hors_périmètre (ressources annuelles déjà déterminées et transmises par l'appelant).
+
+Lorsque la personne ou l'un des conjoints ou concubins justifie d'une interruption de travail supérieure à six mois dans les conditions mentionnées à l'article R. 324-1 du code de la sécurité sociale, il est procédé, à compter du premier jour du mois civil suivant celui au cours duquel est intervenu le changement de situation, à un abattement de 30 % sur les revenus d'activité professionnelle et les indemnités de chômage perçus par l'intéressé au cours de l'année civile de référence.
+Cette mesure est applicable jusqu'au dernier jour du mois civil précédant celui au cours duquel la situation considérée prend fin.
+
+#### Article R532-7|LEGIARTI000034644009
+
+Version du 2017-09-01 inclus au 2020-01-01 exclu.
+
+Tous les alinéas hors_périmètre (ressources annuelles déjà déterminées et transmises par l'appelant).
+
+Lorsque, depuis deux mois consécutifs, la personne ou l'un des conjoints ou concubins se trouve en chômage total et perçoit l'allocation d'assurance prévue à l'article L. 5422-1 du code du travail ou se trouve en chômage partiel et perçoit l'allocation spécifique prévue à l'article L. 5122-1 du code du travail, les revenus d'activité professionnelle perçus par l'intéressé pendant l'année civile de référence sont, affectés d'un abattement de 30 %.
+La rémunération perçue par les personnes relevant des conventions conclues en application de l'article L. 1233-68 du code du travail est assimilée, pendant la durée de la formation et pour l'application des dispositions de l'alinéa précédent, à l'allocation de chômage à laquelle elle s'est substituée lors de l'entrée en formation.
+Cette mesure s'applique à compter du premier jour du deuxième mois civil suivant celui au cours duquel est intervenu le changement de situation et jusqu'au dernier jour du mois civil précédant celui au cours duquel l'intéressé reprend une activité professionnelle lui faisant perdre le bénéfice des allocations ou rémunération prévues aux alinéas précédents.
+Lorsque la personne ou l'un des conjoints ou concubins, en chômage total depuis au moins deux mois consécutifs, ne bénéficie pas ou ne bénéficie plus d'une indemnisation dans les conditions fixées au premier alinéa ci-dessus, ou si l'indemnisation a atteint le montant minimum prévu par l'accord mentionné à l'article L. 5422-20 du code du travail, après application du taux dégressif prévu à l'article L. 5422-3 du même code, il n'est pas tenu compte des revenus d'activité professionnelle ni des indemnités de chômage perçus par l'intéressé durant l'année civile de référence. Les droits sont examinés sur cette nouvelle base à compter du premier jour du mois civil suivant celui au cours duquel sont intervenus le changement de situation, la cessation du versement ou la diminution du montant de l'allocation d'assurance, ou l'admission à l'allocation de solidarité spécifique prévue aux articles L. 5423-1 à L. 5423-3 du code du travail et jusqu'au dernier jour du mois civil précédant celui au cours duquel l'intéressé reprend une activité professionnelle lui faisant perdre le bénéfice desdites allocations.
+Lorsque la personne ou l'un des conjoints ou concubins perçoit le revenu de solidarité active mentionné à l'article L. 262-2 du code de l'action sociale et des familles, il n'est tenu compte ni des revenus d'activité professionnelle ni des indemnités de chômage perçus par l'intéressé durant l'année civile de référence. Les droits sont examinés sur cette nouvelle base à compter du premier jour du mois civil suivant celui au cours duquel ces conditions sont réunies et jusqu'au dernier jour du mois civil au cours duquel ces conditions cessent d'être réunies.
+
+#### Article R532-7|LEGIARTI000041419439
+
+Version du 2020-01-01 inclus au 2999-01-01 exclu.
+
+Tous les alinéas hors_périmètre (ressources annuelles déjà déterminées et transmises par l'appelant).
+
+Lorsque, depuis deux mois consécutifs, la personne ou l'un des conjoints ou concubins se trouve en chômage total et perçoit l'allocation d'assurance prévue à l'article L. 5422-1 du code du travail ou se trouve en chômage partiel et perçoit l'allocation spécifique prévue à l'article L. 5122-1 du code du travail, ou lorsqu'il bénéficie de l'allocation des travailleurs indépendants mentionnée à l'article L. 5424-25 du même code, les revenus d'activité professionnelle perçus par l'intéressé pendant l'année civile de référence sont, affectés d'un abattement de 30 %.
+La rémunération perçue par les personnes relevant des conventions conclues en application de l'article L. 1233-68 du code du travail est assimilée, pendant la durée de la formation et pour l'application des dispositions de l'alinéa précédent, à l'allocation de chômage à laquelle elle s'est substituée lors de l'entrée en formation.
+Cette mesure s'applique à compter du premier jour du deuxième mois civil suivant celui au cours duquel est intervenu le changement de situation et jusqu'au dernier jour du mois civil précédant celui au cours duquel l'intéressé reprend une activité professionnelle lui faisant perdre le bénéfice des allocations ou rémunération prévues aux alinéas précédents.
+Lorsque la personne ou l'un des conjoints ou concubins, en chômage total depuis au moins deux mois consécutifs, ne bénéficie pas ou ne bénéficie plus d'une indemnisation dans les conditions fixées au premier alinéa ci-dessus, ou si l'indemnisation a atteint le montant minimum prévu par l'accord mentionné à l'article L. 5422-20 du code du travail, après application du taux dégressif prévu à l'article L. 5422-3 du même code, il n'est pas tenu compte des revenus d'activité professionnelle ni des indemnités de chômage perçus par l'intéressé durant l'année civile de référence. Les droits sont examinés sur cette nouvelle base à compter du premier jour du mois civil suivant celui au cours duquel sont intervenus le changement de situation, la cessation du versement ou la diminution du montant de l'allocation d'assurance, ou l'admission à l'allocation de solidarité spécifique prévue aux articles L. 5423-1 à L. 5423-3 du code du travail et jusqu'au dernier jour du mois civil précédant celui au cours duquel l'intéressé reprend une activité professionnelle lui faisant perdre le bénéfice desdites allocations.
+Lorsque la personne ou l'un des conjoints ou concubins perçoit le revenu de solidarité active mentionné à l'article L. 262-2 du code de l'action sociale et des familles, il n'est tenu compte ni des revenus d'activité professionnelle ni des indemnités de chômage perçus par l'intéressé durant l'année civile de référence. Les droits sont examinés sur cette nouvelle base à compter du premier jour du mois civil suivant celui au cours duquel ces conditions sont réunies et jusqu'au dernier jour du mois civil au cours duquel ces conditions cessent d'être réunies.
+
+Nota LEGI
+
+Conformément à l'article 25 du décret n° 2019-1574 du 30 décembre 2019, ces dispositions sont applicables au calcul des droits à l'aide personnelle au logement à compter du mois fixé par arrêté des ministres en charge du logement, de la santé et du budget et, au plus tard, à compter du mois d'avril 2020 ou, pour le calcul des droits à l'aide personnalisée au logement prévue pour les accédants à la propriété par l'article L. 831-1 du code de la construction et de l'habitation, à compter du mois de juin 2020.
+
+#### Article R755-0-2|LEGIARTI000006752633
+
+Version du 1986-02-14 inclus au 2999-01-01 exclu.
+
+Alinéa unique codé par le même multiplicateur que R512-2, appliqué au Smic territorial transmis.
+
+Le plafond de rémunération des enfants à charge mentionnés à l'article L. 512-3 est égal, pour un mois, à 55 % du salaire minimum de croissance en vigueur dans chacun des départements mentionnés à l'article L. 751-1, multiplié par 169.
+
+#### Article L821-3|LEGIARTI000038814972
+
+Version du 2019-09-01 inclus au 2999-01-01 exclu.
+
+Alinéa unique codé, avec la même exclusion que L512-1 au regard de l'aide au logement personnelle.
+
+Lorsqu'un enfant est bénéficiaire, à titre personnel, de l'aide personnelle au logement, il n'est pas pris en compte, comme enfant à charge, pour le bénéfice des prestations familiales.
+
+# Calcul du foyer
+
+L'assemblage applique l'ouverture individuelle, puis la règle territoriale au nombre d'enfants
+ouvrant droit. Les situations de charge et les conditions générales sont appréciées par l'appelant.
+
+```catala
+champ d'application CalculMensuel:
+  # TODO juridique : le renvoi à L552-1 ne donne pas les règles de prise
+  # d'effet dans le paquet. Apprécier la situation à la date fournie.
+  définition allocation_mensuelle égal à
+    si non (dans_la_période de jour_de_droit) alors
+      impossible # Date en dehors du paquet remis.
+    sinon si territoire_du_foyer sous forme CollectivitéPierreMiquelon alors
+      impossible # Le régime territorial manque dans le paquet.
+    # L512-1, alinéa 1 ; L521-2, alinéa 1 ; L755-12, alinéa 1.
+    sinon si non (appréciation_parent_en_charge et appréciation_conditions_générales) alors 0 €
+    sinon
+      soit enfants égal à
+        liste de enfant parmi personnes_à_charge tel que
+          (résultat de OuverturePourEnfant avec {
+            -- date_du_droit: jour_de_droit
+            -- territoire_de_résidence: territoire_du_foyer
+            -- situation_individuelle: enfant
+            -- état_de_scolarité: (résultat de ScolaritéSelonÂge avec {
+              -- date_de_calcul: jour_de_droit
+              -- naissance: enfant.naissance
+            }).scolarité
+            -- salaire_minimum_horaire: minimum_horaire_brut
+          }).droit_individuel
+      dans
+      soit base égal à décimal de base_mensuelle_de_calcul dans
+      soit montant égal à
+        si territoire_du_foyer sous forme DépartementMayotte alors
+          # Article 7 de l'ordonnance du 7 février 2002 et décret du 29 mars
+          # 2002. TODO juridique : le paquet ne donne pas de règles propres
+          # à Mayotte sur les majorations, le forfait et le partage du versement.
+          montant_mayotte de jour_de_droit, (nombre de enfants), base,
+            charge_antérieure_au_régime_transitoire
+        sinon
+          soit forfaits égal à liste de enfant parmi personnes_à_charge tel que
+            (résultat de OuvertureForfait avec {
+              -- enfant: enfant
+              -- date_de_calcul: jour_de_droit
+              -- smic: minimum_horaire_brut
+            }).droit_forfait
+          dans
+          (résultat de MontantDroitCommun avec {
+            -- enfants: enfants
+            -- forfaits: forfaits
+            -- date_de_calcul: jour_de_droit
+            -- outre_mer: territoire_du_régime_outre_mer de territoire_du_foyer
+            -- ressources: décimal de revenu_annuel_de_référence
+            -- base: base
+            -- premier: premier_plafond_hors_enfants
+            -- second: second_plafond_hors_enfants
+            -- majoration_plafond: majoration_plafonds_par_enfant
+          }).montant_mensuel
+      dans
+      # TODO juridique : les textes fournis ne prescrivent pas de placement
+      # de l'arrondi monétaire. Convertir une seule fois au centime le plus proche.
+      argent de montant
+```
