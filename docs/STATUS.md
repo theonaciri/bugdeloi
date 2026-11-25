@@ -11,8 +11,8 @@
 | Base Postgres `bugdeloi` + migration 0000         | orchestrateur              | ✔ fait                                                                              | `packages/db/migrations`                                 |
 | Image Catala 1.3.2 multi-arch + C0.1 rejeu Inria  | codex/gpt-6.2-sol (medium) | ✔ fait — **171/171 tests Inria verts** (ARM64), 473 LEGIARTI de couverture importés | `infra/catala/`, `packages/runner`, `replications/c0.1/` |
 | Ingestion LEGI (CGI, CSS, CCH)                    | codex/gpt-6.2-sol (high)   | en cours                                                                            | `packages/ingest`                                        |
-| Site web (accueil, carte, article, méthode, join) | claude-opus-5-5 (high)     | en cours                                                                            | `apps/web`                                               |
-| Service systemd + mise en ligne sur 19069         | orchestrateur              | unité + script prêts, mise en ligne après fusion du web                             | `infra/systemd/`                                         |
+| Site web (accueil, carte, article, méthode, join) | claude-opus-5-5 (high)     | ✔ fait — en ligne sur https://bugdeloi.theonaciri.fr                                | `apps/web`                                               |
+| Service systemd + mise en ligne sur 19069         | orchestrateur              | ✔ fait — `scripts/deploy.sh` (révisions + retour arrière)                           | `infra/systemd/`                                         |
 | Balayage mécanique C0.2 (renvois morts…)          | —                          | à faire (après ingestion)                                                           | `packages/sweep`                                         |
 | Couverture Inria (LEGIARTI cités) → carte         | —                          | données importées (`reference_coverage`) ; affichage ★ après ingestion              | `reference_coverage`                                     |
 
@@ -27,6 +27,16 @@
 | 2026-11-25 | Corpus et rejeux dans ce dépôt jusqu'à J3                                                              | Moins de dépôts tant qu'il n'y a pas de contributeurs externes                                          |
 | 2026-11-25 | Versions : TS 7.0.2, SvelteKit 3.4, Svelte 5.59, Vite 8.3, Drizzle 0.45.4, postgres 4.1.1, Biome 2.6.9 | Dernières stables au 25/11/2026                                                                         |
 
+## Production
+
+- Service `bugdeloi-web` (systemd, utilisateur `ubuntu`) : `bun serve.ts` dans
+  `~/.local/share/bugdeloi/current/apps/web`, écoute `127.0.0.1:19069`, base `bugdeloi` en **lecture seule**.
+- Déployer : `scripts/deploy.sh [ref]` (construit la révision à part, migre, bascule, contrôle
+  `/api/status.json`, revient en arrière sinon). Journaux : `journalctl -u bugdeloi-web`.
+- **À faire côté Cloudflare (tableau de bord, hors de portée des agents)** : une règle de cache
+  « Eligible for cache » sur `bugdeloi.theonaciri.fr` pour que les en-têtes `s-maxage` soient honorés
+  (aujourd'hui `cf-cache-status: DYNAMIC` sur le HTML).
+
 ## Méthode d'orchestration
 
 - L'orchestrateur (Claude Opus 5.5) découpe en chantiers à répertoires disjoints, chacun délégué dans un
@@ -38,6 +48,14 @@
 - Seul le chantier d'ingestion peut modifier `packages/db/src/schema.ts` pendant J0-J1.
 
 ## Pièges connus
+
+- svelte-check exige l'API JS de **TypeScript 6** (TS 7 natif ne la fournit pas) : `typescript@6.0.3` en
+  devDependency de `apps/web` uniquement.
+- SvelteKit 3 : pas de `svelte.config.js`, alias `#lib` (imports Node) au lieu de `$lib`.
+- adapter-node écoute 0.0.0.0 par défaut → toujours lancer via `apps/web/serve.ts`.
+- CSP par empreintes : pas d'attribut `style=` dans les templates.
+- Le site importe `@bugdeloi/core/levels` (et non `@bugdeloi/core`) côté client : l'entrée principale tire
+  `node:crypto`.
 
 - Clerk 1.3.2 en conteneur `--read-only` : `CLERK_BUILD_DIR` et `CLERK_TARGET_DIR` doivent pointer vers le
   tmpfs (`/build`), sinon échec d'écriture. Détails : `docs/notes/catala.md`.
@@ -56,7 +74,6 @@
 
 ## Prochaines étapes (ordre)
 
-1. Fusionner les trois chantiers J0 ; mettre en ligne le site sur 19069 (systemd).
 2. C0.2 balayage mécanique du CGI → premier rapport (candidats, pas encore qualifiés).
 3. Couverture Inria sur la carte (★ seulement pour les sous-arbres dont la suite de tests est verte en C0.1).
 4. J3 : desk + `join.txt` + CI de vérification.

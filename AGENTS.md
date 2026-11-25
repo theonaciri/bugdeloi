@@ -289,7 +289,7 @@ pour la sandbox · GitHub Actions pour la vérification de référence.
 ### 9.2 Organisation
 
 ```
-apps/web        SvelteKit : pages SSR, /desk/*, /api/*, SSE (/api/stream)            (J0-J1)
+apps/web        SvelteKit : pages SSR, /api/*, SSE (/api/stream) ; /desk/* au J3     ✔
 apps/worker     pg-boss : ingestion LEGI/BOFiP, pré-check sandbox, oracles, agrégats  (prévu)
 packages/core   échelle de preuve, types de findings, normalisation/empreinte LEGI   ✔
 packages/db     schéma Drizzle (contrat partagé), client, migrations               ✔
@@ -313,6 +313,9 @@ bun run lint                # Biome (bun run format pour corriger)
 bun test                    # tests
 bun run db:generate         # après modification de packages/db/src/schema.ts
 bun run db:migrate          # applique les migrations
+bun run --filter @bugdeloi/web dev      # site en dev sur 127.0.0.1:19070
+bun run --filter @bugdeloi/web seed:dev # données FICTIVES, base bugdeloi_webdev uniquement
+scripts/deploy.sh [ref]     # mise en production (127.0.0.1:19069), retour arrière automatique
 ```
 
 - **Base** : `bugdeloi` (et `bugdeloi_test` pour les tests) sur le cluster Postgres 18 `main` (port 5432),
