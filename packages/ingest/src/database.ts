@@ -94,7 +94,8 @@ export function readStates(db: Db, scope: string[]) {
   return db.select().from(legiState).where(inArray(legiState.textId, scope))
 }
 
-export type ArchiveInput = { archive: Archive; sha256: string; asOf: string }
+/** `reproject` force le recalcul de l'arbre daté même si le lot et la date sont inchangés (changement de règle). */
+export type ArchiveInput = { archive: Archive; sha256: string; asOf: string; reproject?: boolean }
 type JournalRun = Omit<ArchiveInput, 'sha256'> & { scope: string[] }
 
 export function describeError(error: unknown): string {
@@ -191,7 +192,13 @@ export async function applyCode(
     }
     const alreadyApplied = state && archiveFromName(state.archive).stamp >= input.archive.stamp
     if (alreadyApplied) {
-      return projectAndSummarize(tx, textId, input.asOf, runId, state.asOf !== input.asOf)
+      return projectAndSummarize(
+        tx,
+        textId,
+        input.asOf,
+        runId,
+        state.asOf !== input.asOf || input.reproject === true,
+      )
     }
 
     const global = input.archive.kind === 'global'
@@ -334,6 +341,7 @@ async function projectAndSummarize(tx: Tx, textId: string, asOf: string, runId: 
     new Map(structures.map((entry) => [entry.id, entry])),
     new Set(articles.map(({ id }) => id)),
     asOf,
+    new Map(articles.map((article) => [article.id, article])),
   )
   if (refresh) {
     for (const batch of batches(tree.sections.values())) {

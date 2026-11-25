@@ -14,6 +14,12 @@ export function projectTree(
   structures: Map<string, Structure>,
   knownArticles: Set<string>,
   asOf: string,
+  /**
+   * Métadonnées propres des versions d'articles. Si fournies, une version n'est placée dans l'arbre
+   * que si elle est elle-même en vigueur (`isInForce`), même quand le lien de sa section la dit en
+   * vigueur : l'arbre et les compteurs suivent alors exactement la même règle (cas CSS R611-2).
+   */
+  articleMeta?: Map<string, Dated>,
 ) {
   const sections = new Map<string, Section>()
   const placements = new Map<string, Placement>()
@@ -30,6 +36,10 @@ export function projectTree(
     let position = 0
     for (const child of node.children) {
       if (!isInForce(child, asOf)) continue
+      if (child.kind === 'article') {
+        const meta = articleMeta?.get(child.id)
+        if (meta && !isInForce(meta, asOf)) continue
+      }
       ++position
       if (child.kind === 'article') {
         if (!knownArticles.has(child.id)) {

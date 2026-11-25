@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-25T11:10:31.034Z",
-  "sweepRunId": 5,
+  "generatedAt": "2026-11-25T11:15:29.591Z",
+  "sweepRunId": 7,
   "projection": [
     {
       "code": "CCH",
@@ -27,19 +27,19 @@
   "versionsLoaded": 71884,
   "articlesChecked": {
     "CGI": 2405,
-    "CSS": 7420,
+    "CSS": 7419,
     "CCH": 4126
   },
-  "durationMs": 3819,
-  "totalMs": 5108,
-  "contextMs": 3004,
+  "durationMs": 4003,
+  "totalMs": 5236,
+  "contextMs": 3051,
   "scanMs": {
-    "ref-morte-liens@1.0.0": 145,
-    "ref-morte-texte@1.0.0": 288,
-    "numerotation@1.0.0": 94,
-    "syntaxe@1.0.0": 655
+    "ref-morte-liens@1.0.0": 111,
+    "ref-morte-texte@1.0.0": 281,
+    "numerotation@1.0.0": 90,
+    "syntaxe@1.0.0": 651
   },
-  "peakRssMb": 975,
+  "peakRssMb": 974,
   "detectors": [
     {
       "detector": "ref-morte-liens@1.0.0",
@@ -54,15 +54,15 @@
         "autre:MODIFIE": 1
       },
       "stats": {
-        "articles_controles": 13951,
+        "articles_controles": 13950,
         "articles_par_code": {
           "CGI": 2405,
-          "CSS": 7420,
+          "CSS": 7419,
           "CCH": 4126
         },
-        "liens_citation_sortants": 27581,
+        "liens_citation_sortants": 27578,
         "liens_par_classe": {
-          "vivante": 18968,
+          "vivante": 18965,
           "hors_codes_ingeres": 6105,
           "texte_ou_section": 1346,
           "sans_cible": 109,
@@ -70,9 +70,9 @@
           "inconnue_dans_nos_codes": 13,
           "a_venir": 2
         },
-        "liens_resolus": 20008,
+        "liens_resolus": 20005,
         "resolution_par": {
-          "version": 16835,
+          "version": 16832,
           "numero": 3160,
           "version_ids": 13
         },
@@ -99,14 +99,14 @@
         "autre:MODIFIE": 1
       },
       "stats": {
-        "articles_controles": 13951,
-        "citations_extraites": 47228,
+        "articles_controles": 13950,
+        "citations_extraites": 47224,
         "ecartees_autre_norme": 11345,
         "ecartees_prefixe": 436,
-        "citations_jugees": 35012,
+        "citations_jugees": 35008,
         "couples_inconnus_de_la_base": 397,
-        "couples_resolus": 27718,
-        "couples_vivants": 27049,
+        "couples_resolus": 27715,
+        "couples_vivants": 27046,
         "couples_a_venir": 1,
         "couples_morts": 668,
         "candidats_par_sous_type": {
@@ -132,8 +132,8 @@
         "subdivision_dupliquee": 2
       },
       "stats": {
-        "articles_controles": 13951,
-        "groupes_de_numero_multiples_meme_lignee": 1,
+        "articles_controles": 13950,
+        "groupes_de_numero_multiples_meme_lignee": 0,
         "numeros_dupliques": 0,
         "subdivisions_dupliquees": 2
       }
@@ -149,7 +149,7 @@
         "parenthese_non_fermee": 1
       },
       "stats": {
-        "articles_controles": 13951,
+        "articles_controles": 13950,
         "articles_avec_defaut": 9,
         "annexes_ecartees": 221,
         "exclusions": {

@@ -28,7 +28,7 @@ import { projectTree, type Summary, summarize } from './project.ts'
 import { parseDate } from './xml.ts'
 
 const usage =
-  'bun packages/ingest/src/cli.ts legi [--codes CGI,CSS,CCH] [--date YYYY-MM-DD] [--archive <chemin>] [--incremental] [--dry-run]'
+  'bun packages/ingest/src/cli.ts legi [--codes CGI,CSS,CCH] [--date YYYY-MM-DD] [--archive <chemin>] [--incremental] [--dry-run] [--reproject]'
 const codeNames = Object.keys(CODES) as Code[]
 
 function argumentsFrom(args: string[]) {
@@ -41,6 +41,7 @@ function argumentsFrom(args: string[]) {
       archive: { type: 'string' },
       incremental: { type: 'boolean' },
       'dry-run': { type: 'boolean' },
+      reproject: { type: 'boolean' },
       help: { type: 'boolean', short: 'h' },
     },
   })
@@ -55,7 +56,14 @@ function argumentsFrom(args: string[]) {
     : undefined
   if (archive?.kind === 'increment' && !values.incremental)
     throw new Error('Archive LEGI_* : ajouter --incremental')
-  return { codes: codes as Code[], asOf, archive, incremental: values.incremental, dryRun: values['dry-run'] }
+  return {
+    codes: codes as Code[],
+    asOf,
+    archive,
+    incremental: values.incremental,
+    dryRun: values['dry-run'],
+    reproject: values.reproject,
+  }
 }
 
 type Options = NonNullable<ReturnType<typeof argumentsFrom>>
@@ -189,6 +197,7 @@ async function applyPlan(db: Db, options: Options, plan: Archive[]) {
               archive,
               sha256: state.archiveSha256,
               asOf: options.asOf,
+              reproject: options.reproject === true,
             },
             0,
           )

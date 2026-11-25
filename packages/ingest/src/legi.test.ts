@@ -156,6 +156,12 @@ test('tar en flux : périmètre, sections imbriquées et suppressions DILA', asy
     expect(tree.placements.get(rootArticle)).toEqual({ id: rootArticle, sectionId: null, position: 1 })
     expect(tree.placements.has(previous)).toBe(false)
     expect(tree.duplicatePlacements).toBe(1)
+    // Une version dont les métadonnées propres la disent hors vigueur (ex. MODIFIE à fin ouverte,
+    // cas CSS R611-2) n'est pas placée, même si le lien de sa section la dit en vigueur.
+    const stale = new Map([[current, { etat: 'MODIFIE', dateDebut: '2020-01-01', dateFin: '2999-01-01' }]])
+    const strict = projectTree(textId, files.structures, new Set(files.articles.keys()), '2024-01-01', stale)
+    expect(strict.placements.has(current)).toBe(false)
+    expect(strict.placements.get(rootArticle)).toEqual({ id: rootArticle, sectionId: null, position: 1 })
     const entries = await Array.fromAsync(stagedArticles(files.articleFile))
     expect(entries.find(({ article }) => article.id === rootArticle)?.article.articleKey).toBeNull()
 

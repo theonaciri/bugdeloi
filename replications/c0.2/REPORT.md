@@ -4,7 +4,7 @@
 > langage) signalent dans les articles en vigueur. Aucun candidat n'est qualifié : seuls un rejeu par la CI
 > et un verdict humain feraient entrer un résultat dans un compteur public (AGENTS.md §4.4).
 
-Balayage n° 5 · 2026-11-25.
+Balayage n° 7 · 2026-11-25.
 
 ## Périmètre et données
 
@@ -12,9 +12,9 @@ Balayage n° 5 · 2026-11-25.
 | ---- | ------------------------------ | ------------------ | ----------------------------- | ------------------- |
 | CCH  | 4 126                          | 2026-11-25         | `LEGI_20261124-221545.tar.gz` | `48367a251f52d5db…` |
 | CGI  | 2 405                          | 2026-11-25         | `LEGI_20261124-221545.tar.gz` | `48367a251f52d5db…` |
-| CSS  | 7 420                          | 2026-11-25         | `LEGI_20261124-221545.tar.gz` | `48367a251f52d5db…` |
+| CSS  | 7 419                          | 2026-11-25         | `LEGI_20261124-221545.tar.gz` | `48367a251f52d5db…` |
 
-Total : 13 951 versions d'articles en vigueur. « En vigueur » suit la règle unique du dépôt
+Total : 13 950 versions d'articles en vigueur. « En vigueur » suit la règle unique du dépôt
 (`isInForce` de `@bugdeloi/core` ≡ `articleInForce()` de `@bugdeloi/db`) à la date de projection de chaque
 code ; le balayage s'arrête si les deux règles divergent. Un article est un **groupe de versions** (composante
 connexe des blocs `VERSIONS` de LEGI) : un renvoi vers une version `MODIFIE` dont l'article a une version
@@ -56,7 +56,7 @@ Total par type : NUMEROTATION 2 · REF_MORTE 1 117 · SYNTAXE 9.
 Par détecteur : `numerotation@1.0.0` 2 · `ref-morte-liens@1.0.0` 449 · `ref-morte-texte@1.0.0` 668 · `syntaxe@1.0.0` 9.
 
 - NUMEROTATION : aucun numéro d'article dupliqué entre deux articles distincts en vigueur (0).
-  1 cas où **deux versions d'un même article** sont en vigueur à la fois (CSS R611-2 : la version
+  0 cas où **deux versions d'un même article** sont en vigueur à la fois (CSS R611-2 : la version
   `MODIFIE` du 2018-01-01 garde une fin ouverte alors que celle du 2023-01-01 est entrée en vigueur) : anomalie de dates DILA,
   notée mais pas candidate.
 - Recoupement : sur 668 candidats textuels, 443 désignent le même couple
@@ -64,12 +64,12 @@ Par détecteur : `numerotation@1.0.0` 2 · `ref-morte-liens@1.0.0` 449 · `ref-m
 
 ## Couverture
 
-**Liens LEGI.** 27 581 liens `CITATION` sortants des versions en vigueur ; 20 008 (72,5 %) sont résolubles
+**Liens LEGI.** 27 578 liens `CITATION` sortants des versions en vigueur ; 20 005 (72,5 %) sont résolubles
 dans les trois codes ingérés et donc jugés. Le reste n'est pas jugé :
 
 | Classe du lien                                       | Liens  | Part    |
 | ---------------------------------------------------- | ------ | ------- |
-| résolu, article en vigueur                           | 18 968 | 68,8 %  |
+| résolu, article en vigueur                           | 18 965 | 68,8 %  |
 | cible hors des trois codes (autre code, loi, décret) | 6 105  | 22,1 %  |
 | cible = texte entier ou section                      | 1 346  | 4,9 %   |
 | résolu, **aucune version en vigueur**                | 1 038  | 3,8 %   |
@@ -77,14 +77,14 @@ dans les trois codes ingérés et donc jugés. Le reste n'est pas jugé :
 | code ingéré mais numéro inconnu de la base           | 13     | < 0,1 % |
 | résolu, entrée en vigueur annoncée                   | 2      | < 0,1 % |
 
-Rattachement des liens résolus : version connue 16 835 · numéro et code du lien (la version citée n’est pas dans le stock) 3 160 · identifiant listé par un bloc VERSIONS 13.
+Rattachement des liens résolus : version connue 16 832 · numéro et code du lien (la version citée n’est pas dans le stock) 3 160 · identifiant listé par un bloc VERSIONS 13.
 
-**Citations textuelles.** 47 228 numéros d'articles extraits du texte (occurrences) ; 11 345 écartés
+**Citations textuelles.** 47 224 numéros d'articles extraits du texte (occurrences) ; 11 345 écartés
 parce que la norme visée est une autre (loi, décret, autre code…) et 436 par la règle des préfixes L/R/D. Les autres sont regroupés en
-28 115 couples (article citant, numéro cité) : 27 718 se résolvent dans la base
-(27 049 vers un article en vigueur, 668 vers un article sans version en vigueur, 1 à venir) et
-397 portent un numéro absent de la base (non jugés). **Taux de couverture** : 35 012 occurrences jugées
-sur 47 228 extraites (74,1 %).
+28 112 couples (article citant, numéro cité) : 27 715 se résolvent dans la base
+(27 046 vers un article en vigueur, 668 vers un article sans version en vigueur, 1 à venir) et
+397 portent un numéro absent de la base (non jugés). **Taux de couverture** : 35 008 occurrences jugées
+sur 47 224 extraites (74,1 %).
 
 ## Écarts entre lien LEGI et texte
 
@@ -151,15 +151,15 @@ une note, voir plus haut).
 
 | Étape                                                                              | Durée (ms) |
 | ---------------------------------------------------------------------------------- | ---------- |
-| Chargement du contexte (71 884 versions, 27 581 liens de citation sortants)        | 3 004      |
-| Détecteur `ref-morte-liens@1.0.0`                                                  | 145        |
-| Détecteur `ref-morte-texte@1.0.0`                                                  | 288        |
-| Détecteur `numerotation@1.0.0`                                                     | 94         |
-| Détecteur `syntaxe@1.0.0`                                                          | 655        |
-| Balayage complet (contexte, détecteurs, insertion ou reconnaissance des candidats) | 3 819      |
-| `run.ts` en entier (écriture des fichiers comprise)                                | 5 108      |
+| Chargement du contexte (71 884 versions, 27 578 liens de citation sortants)        | 3 051      |
+| Détecteur `ref-morte-liens@1.0.0`                                                  | 111        |
+| Détecteur `ref-morte-texte@1.0.0`                                                  | 281        |
+| Détecteur `numerotation@1.0.0`                                                     | 90         |
+| Détecteur `syntaxe@1.0.0`                                                          | 651        |
+| Balayage complet (contexte, détecteurs, insertion ou reconnaissance des candidats) | 4 003      |
+| `run.ts` en entier (écriture des fichiers comprise)                                | 5 236      |
 
-Mémoire résidente de pointe de `run.ts` : 975 Mio (aarch64, 4 cœurs partagés, lancé sous `nice`) ;
+Mémoire résidente de pointe de `run.ts` : 974 Mio (aarch64, 4 cœurs partagés, lancé sous `nice`) ;
 la commande `sweep run --dry-run` seule, qui ne charge qu'un contexte, a été mesurée à environ 930 Mio le 25/11/2026. La première exécution, qui insère les
 candidats, est plus longue que les suivantes, qui les reconnaissent par empreinte.
 
