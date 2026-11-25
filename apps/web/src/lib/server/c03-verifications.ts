@@ -41,7 +41,21 @@ function verdictFor(test: Test, content: string) {
   const found = new Set(
     rows.flatMap((line) => [...line.matchAll(verdictPattern)].map(([match]) => match.toLowerCase())),
   )
-  if (found.size !== 1) return null
+  if (found.size !== 1) {
+    // Repli : rapport rédigé par sections « ## TestN » contenant une ligne « Verdict ».
+    const section = new RegExp(`^##\\s+${test}\\b[^\\n]*\\n([\\s\\S]*?)(?=^##\\s|(?![\\s\\S]))`, 'mu').exec(
+      content.normalize('NFC'),
+    )?.[1]
+    const inSection = new Set(
+      (section ?? '')
+        .split(/\r?\n/u)
+        .filter((line) => /verdict/iu.test(line))
+        .flatMap((line) => [...line.matchAll(verdictPattern)].map(([match]) => match.toLowerCase())),
+    )
+    if (inSection.size !== 1) return null
+    const [sectionVerdict] = inSection
+    return verdicts[sectionVerdict as Verdict]
+  }
   const [verdict] = found
   return verdicts[verdict as Verdict]
 }
