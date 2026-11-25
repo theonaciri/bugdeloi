@@ -5,6 +5,7 @@ import type { PageProps } from './$types'
 
 let { data }: PageProps = $props()
 const h = $derived(data.health)
+const sweepTotal = $derived(Object.values(h.lastSweep?.articlesChecked ?? {}).reduce((a, b) => a + b, 0))
 const runLabel: Record<string, string> = {
   running: 'en cours',
   success: 'réussie',
@@ -71,6 +72,35 @@ const runLabel: Record<string, string> = {
           <p class="mono break-all text-xs text-muted">{h.lastReplication.subject}</p>
         {:else if h.database.ok}
           <EmptyState title="Aucun rejeu enregistré." />
+        {:else}
+          <span class="text-muted">Inconnu (base injoignable).</span>
+        {/if}
+      </dd>
+    </div>
+
+    <div class="card p-4">
+      <dt class="font-semibold">Dernier balayage mécanique</dt>
+      <dd class="mt-1">
+        {#if h.lastSweep}
+          <p>
+            <span class="font-semibold">{runLabel[h.lastSweep.status] ?? h.lastSweep.status}</span>
+            · démarré le {formatDateTime(h.lastSweep.startedAt)}
+            {#if h.lastSweep.finishedAt}, terminé le {formatDateTime(h.lastSweep.finishedAt)}{/if}
+          </p>
+          <p class="mt-1 text-sm">
+            {formatInt(sweepTotal)} articles en vigueur contrôlés
+            <span class="text-muted">
+              ({#each h.lastSweep.codes as code, i (code)}{i > 0 ? ', ' : ''}{code} {formatInt(h.lastSweep.articlesChecked[code] ?? 0)}, projection au {h.lastSweep.asOf[code] ?? '?'}{/each})
+            </span>
+          </p>
+          <ul class="mt-1 flex flex-wrap gap-x-4 text-sm text-muted">
+            {#each Object.entries(h.lastSweep.detectors) as [name, version] (name)}<li class="mono">{name}@{version}</li>{/each}
+          </ul>
+          <p class="mt-1 text-xs text-muted">
+            Les résultats de ce balayage sont des candidats non qualifiés : ils ne figurent dans aucun compteur public.
+          </p>
+        {:else if h.database.ok}
+          <EmptyState title="Aucun balayage enregistré." />
         {:else}
           <span class="text-muted">Inconnu (base injoignable).</span>
         {/if}

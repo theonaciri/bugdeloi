@@ -1,0 +1,199 @@
+{
+  "generatedAt": "2026-11-25T11:10:31.034Z",
+  "sweepRunId": 5,
+  "projection": [
+    {
+      "code": "CCH",
+      "textId": "LEGITEXT000006074096",
+      "asOf": "2026-11-25",
+      "archive": "LEGI_20261124-221545.tar.gz",
+      "archiveSha256": "48367a251f52d5dbc3e988904ed5ba094ccc157252b289ee6a30e35cc438bb55"
+    },
+    {
+      "code": "CGI",
+      "textId": "LEGITEXT000006069577",
+      "asOf": "2026-11-25",
+      "archive": "LEGI_20261124-221545.tar.gz",
+      "archiveSha256": "48367a251f52d5dbc3e988904ed5ba094ccc157252b289ee6a30e35cc438bb55"
+    },
+    {
+      "code": "CSS",
+      "textId": "LEGITEXT000006073189",
+      "asOf": "2026-11-25",
+      "archive": "LEGI_20261124-221545.tar.gz",
+      "archiveSha256": "48367a251f52d5dbc3e988904ed5ba094ccc157252b289ee6a30e35cc438bb55"
+    }
+  ],
+  "versionsLoaded": 71884,
+  "articlesChecked": {
+    "CGI": 2405,
+    "CSS": 7420,
+    "CCH": 4126
+  },
+  "durationMs": 3819,
+  "totalMs": 5108,
+  "contextMs": 3004,
+  "scanMs": {
+    "ref-morte-liens@1.0.0": 145,
+    "ref-morte-texte@1.0.0": 288,
+    "numerotation@1.0.0": 94,
+    "syntaxe@1.0.0": 655
+  },
+  "peakRssMb": 975,
+  "detectors": [
+    {
+      "detector": "ref-morte-liens@1.0.0",
+      "candidates": 449,
+      "new": 0,
+      "alreadyKnown": 449,
+      "bySubtype": {
+        "abrogé": 380,
+        "transféré": 65,
+        "annulé": 1,
+        "périmé": 2,
+        "autre:MODIFIE": 1
+      },
+      "stats": {
+        "articles_controles": 13951,
+        "articles_par_code": {
+          "CGI": 2405,
+          "CSS": 7420,
+          "CCH": 4126
+        },
+        "liens_citation_sortants": 27581,
+        "liens_par_classe": {
+          "vivante": 18968,
+          "hors_codes_ingeres": 6105,
+          "texte_ou_section": 1346,
+          "sans_cible": 109,
+          "morte": 1038,
+          "inconnue_dans_nos_codes": 13,
+          "a_venir": 2
+        },
+        "liens_resolus": 20008,
+        "resolution_par": {
+          "version": 16835,
+          "numero": 3160,
+          "version_ids": 13
+        },
+        "candidats_par_sous_type": {
+          "abrogé": 380,
+          "transféré": 65,
+          "annulé": 1,
+          "périmé": 2,
+          "autre:MODIFIE": 1
+        },
+        "liens_morts_non_confirmes_par_le_texte": 589
+      }
+    },
+    {
+      "detector": "ref-morte-texte@1.0.0",
+      "candidates": 668,
+      "new": 0,
+      "alreadyKnown": 668,
+      "bySubtype": {
+        "abrogé": 552,
+        "périmé": 12,
+        "transféré": 102,
+        "annulé": 1,
+        "autre:MODIFIE": 1
+      },
+      "stats": {
+        "articles_controles": 13951,
+        "citations_extraites": 47228,
+        "ecartees_autre_norme": 11345,
+        "ecartees_prefixe": 436,
+        "citations_jugees": 35012,
+        "couples_inconnus_de_la_base": 397,
+        "couples_resolus": 27718,
+        "couples_vivants": 27049,
+        "couples_a_venir": 1,
+        "couples_morts": 668,
+        "candidats_par_sous_type": {
+          "abrogé": 552,
+          "périmé": 12,
+          "transféré": 102,
+          "annulé": 1,
+          "autre:MODIFIE": 1
+        },
+        "candidats_par_designation": {
+          "none": 590,
+          "code": 54,
+          "self": 24
+        }
+      }
+    },
+    {
+      "detector": "numerotation@1.0.0",
+      "candidates": 2,
+      "new": 0,
+      "alreadyKnown": 2,
+      "bySubtype": {
+        "subdivision_dupliquee": 2
+      },
+      "stats": {
+        "articles_controles": 13951,
+        "groupes_de_numero_multiples_meme_lignee": 1,
+        "numeros_dupliques": 0,
+        "subdivisions_dupliquees": 2
+      }
+    },
+    {
+      "detector": "syntaxe@1.0.0",
+      "candidates": 9,
+      "new": 0,
+      "alreadyKnown": 9,
+      "bySubtype": {
+        "guillemet_droit_non_apparie": 7,
+        "parenthese_non_ouverte": 1,
+        "parenthese_non_fermee": 1
+      },
+      "stats": {
+        "articles_controles": 13951,
+        "articles_avec_defaut": 9,
+        "annexes_ecartees": 221,
+        "exclusions": {
+          "enumeration_closers": 4935,
+          "continued_quotes": 65
+        },
+        "candidats_par_sous_type": {
+          "guillemet_droit_non_apparie": 7,
+          "parenthese_non_ouverte": 1,
+          "parenthese_non_fermee": 1
+        }
+      }
+    }
+  ],
+  "candidatesByTypeAndSubtype": {
+    "NUMEROTATION / subdivision_dupliquee": 2,
+    "REF_MORTE / abrogé": 932,
+    "REF_MORTE / annulé": 2,
+    "REF_MORTE / autre:MODIFIE": 2,
+    "REF_MORTE / périmé": 14,
+    "REF_MORTE / transféré": 167,
+    "SYNTAXE / guillemet_droit_non_apparie": 7,
+    "SYNTAXE / parenthese_non_fermee": 1,
+    "SYNTAXE / parenthese_non_ouverte": 1
+  },
+  "candidatesByDetector": {
+    "numerotation@1.0.0": 2,
+    "ref-morte-liens@1.0.0": 449,
+    "ref-morte-texte@1.0.0": 668,
+    "syntaxe@1.0.0": 9
+  },
+  "refMorteTexteAvecLienLegi": 417,
+  "refMorteTexteRecoupeLesLiens": 443,
+  "refMorteTexteTotal": 668,
+  "refMorteLiensTotal": 449,
+  "ecartsLienTexte": 589,
+  "triage": {
+    "size": 30,
+    "byStratumAndVerdict": {
+      "liens / probablement réel": 8,
+      "numerotation / probablement légitime": 2,
+      "syntaxe / probablement réel": 8,
+      "texte / probablement légitime": 1,
+      "texte / probablement réel": 11
+    }
+  }
+}

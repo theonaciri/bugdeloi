@@ -1,0 +1,272 @@
+[
+  {
+    "n": 1,
+    "fingerprint": "190be476cf2eea1fe3e963c2255bae14b1fd72f5a9666582e53850a8739d998a",
+    "stratum": "liens",
+    "detector": "ref-morte-liens@1.0.0",
+    "subtype": "transféré",
+    "verdict": "probablement réel",
+    "reason": "Cible R. 331-1 transférée le 2019-09-01 (décret 2019-873) ; le texte la cite toujours, sans indice de rédaction antérieure."
+  },
+  {
+    "n": 2,
+    "fingerprint": "7acb7419041bcc28c6f9017212e56bb3f71d38966627f214fa49c2972ecf4284",
+    "stratum": "liens",
+    "detector": "ref-morte-liens@1.0.0",
+    "subtype": "abrogé",
+    "verdict": "probablement réel",
+    "reason": "L. 111-1-1 abrogé le 2021-07-01 (ordonnance 2020-71) ; la version citante (2020) le cite sans indice."
+  },
+  {
+    "n": 3,
+    "fingerprint": "a16d1a016e3d753c004cf787c475ed84652acd0eae23443558a091e1ad32205e",
+    "stratum": "liens",
+    "detector": "ref-morte-liens@1.0.0",
+    "subtype": "transféré",
+    "verdict": "probablement réel",
+    "reason": "L. 322-3 transféré le 2016-01-01 (loi 2015-1702) ; renvoi aux 3° et 4° de cet article resté tel quel."
+  },
+  {
+    "n": 4,
+    "fingerprint": "551afd21aa3755129460566ae13d7c87b8caedb866a5693e81aed1deea931940",
+    "stratum": "liens",
+    "detector": "ref-morte-liens@1.0.0",
+    "subtype": "abrogé",
+    "verdict": "probablement réel",
+    "reason": "Plage « L. 432-5 à L. 432-10 » dont la borne L. 432-5 est abrogée depuis 2008 ; citation sans indice."
+  },
+  {
+    "n": 5,
+    "fingerprint": "246f647f572ccb846cc673d12742241f8a2467ec97aaf5d3467aa87da386da15",
+    "stratum": "liens",
+    "detector": "ref-morte-liens@1.0.0",
+    "subtype": "abrogé",
+    "verdict": "probablement réel",
+    "reason": "Annexe-modèle citant L. 422-4-1 du code, abrogé le 2008-01-01 ; trois occurrences, aucun indice."
+  },
+  {
+    "n": 6,
+    "fingerprint": "7d41578fd3bef56f26ead96db946f25e1e196b44c117ad50c2aeb5c8e3f0fe2d",
+    "stratum": "liens",
+    "detector": "ref-morte-liens@1.0.0",
+    "subtype": "abrogé",
+    "verdict": "probablement réel",
+    "reason": "L. 421-19 abrogé le 2021-01-01 ; renvoi aux 5° et 6° de cet article dans un article réglementaire encore en vigueur."
+  },
+  {
+    "n": 7,
+    "fingerprint": "9c873106b4c57850f4d87d6d05d57db005e92a89e3a04f82980fb4ea56d7f333",
+    "stratum": "liens",
+    "detector": "ref-morte-liens@1.0.0",
+    "subtype": "abrogé",
+    "verdict": "probablement réel",
+    "reason": "D. 811-10 abrogé le 2007-01-13 ; liste d’articles « applicables » restée inchangée, confirmée par le texte."
+  },
+  {
+    "n": 8,
+    "fingerprint": "d30e02babbd9bdc58cd790484486ecb666c9c6c7e9384399fbe6021fa0bdd139",
+    "stratum": "liens",
+    "detector": "ref-morte-liens@1.0.0",
+    "subtype": "transféré",
+    "verdict": "probablement réel",
+    "reason": "Annexe type citant R. 353-16, transféré le 2019-09-01 ; pas d’indice de rédaction antérieure."
+  },
+  {
+    "n": 9,
+    "fingerprint": "4db159d7a7db00fbad254986af5b745408f2b0cc098a3d3e52286663e1aaad49",
+    "stratum": "numerotation",
+    "detector": "numerotation@1.0.0",
+    "subtype": "subdivision_dupliquee",
+    "verdict": "probablement légitime",
+    "reason": "Deux « 2. » parallèles (plan, contrat) dans des sous-sections que le détecteur ne distingue pas : structure probablement voulue."
+  },
+  {
+    "n": 10,
+    "fingerprint": "04a362176b91a4d95c744c45c7977717f98a1e22f1e51f52a3a6c7a53a7fda6a",
+    "stratum": "numerotation",
+    "detector": "numerotation@1.0.0",
+    "subtype": "subdivision_dupliquee",
+    "verdict": "probablement légitime",
+    "reason": "Article de modification : deux séries distinctes de « c) » (années, puis seizième alinéa) ; répétition apparente seulement."
+  },
+  {
+    "n": 11,
+    "fingerprint": "1a0988f6c6b2fb2940f556543973c76dfd6c58ac2cd37bc3d037dec2f68abcf7",
+    "stratum": "syntaxe",
+    "detector": "syntaxe@1.0.0",
+    "subtype": "parenthese_non_ouverte",
+    "verdict": "probablement réel",
+    "reason": "« l2°) » (lettre l) au lieu de « 12°) » : coquille de saisie, la parenthèse fermante n’a pas d’ouvrante."
+  },
+  {
+    "n": 12,
+    "fingerprint": "a0917fc07003dfd6721972ed0859d28d6dad109abf3c23f441f0624e69141e2a",
+    "stratum": "syntaxe",
+    "detector": "syntaxe@1.0.0",
+    "subtype": "parenthese_non_fermee",
+    "verdict": "probablement réel",
+    "reason": "Parenthèse « (régime de l’imposition… » jamais fermée dans l’alinéa 1 de l’article 223."
+  },
+  {
+    "n": 13,
+    "fingerprint": "f1f4e9b81801621b6b933f2909e187c6c42441784dea7bb87c66d99ad62853d4",
+    "stratum": "syntaxe",
+    "detector": "syntaxe@1.0.0",
+    "subtype": "guillemet_droit_non_apparie",
+    "verdict": "probablement réel",
+    "reason": "Définition « 10° » ouverte par un guillemet droit sans fermant, alors que les définitions voisines sont fermées."
+  },
+  {
+    "n": 14,
+    "fingerprint": "f8b7e387c09e62f261430e8bc675315212db8870b06570234177531c40c1a820",
+    "stratum": "syntaxe",
+    "detector": "syntaxe@1.0.0",
+    "subtype": "guillemet_droit_non_apparie",
+    "verdict": "probablement réel",
+    "reason": "Dernier alinéa cité (« Art. R. 822-24… ») précédé d’un guillemet droit jamais refermé."
+  },
+  {
+    "n": 15,
+    "fingerprint": "c6ab7ebc5b5c4449570697f6e3d05887960f5ec87128bc3e7fd3c96befbbb892",
+    "stratum": "syntaxe",
+    "detector": "syntaxe@1.0.0",
+    "subtype": "guillemet_droit_non_apparie",
+    "verdict": "probablement réel",
+    "reason": "Guillemet fermant écrit avec U+02EE au lieu d’un guillemet usuel : le guillemet droit ouvert n’a pas de pendant."
+  },
+  {
+    "n": 16,
+    "fingerprint": "9663515a49d66496e01f5d600e1644e6c13de991c7d918144afd083da75d9623",
+    "stratum": "syntaxe",
+    "detector": "syntaxe@1.0.0",
+    "subtype": "guillemet_droit_non_apparie",
+    "verdict": "probablement réel",
+    "reason": "Guillemet ouvrant absent avant « par les autorités compétentes… » (le fermant est présent)."
+  },
+  {
+    "n": 17,
+    "fingerprint": "27fed6ddbe3774fbcc8d7a92f86d84a9ae5cce29cc4db3bcb070a87799803a1f",
+    "stratum": "syntaxe",
+    "detector": "syntaxe@1.0.0",
+    "subtype": "guillemet_droit_non_apparie",
+    "verdict": "probablement réel",
+    "reason": "Citation ouverte à l’alinéa 17 (« Cet encadré… ») jamais refermée dans cet arrêté."
+  },
+  {
+    "n": 18,
+    "fingerprint": "9ca52364300eef96ea5bc8f2ce019702279338b64941649d77197b157e2b9bd1",
+    "stratum": "syntaxe",
+    "detector": "syntaxe@1.0.0",
+    "subtype": "guillemet_droit_non_apparie",
+    "verdict": "probablement réel",
+    "reason": "Même schéma que D863-5 : dernier alinéa cité (« Art. … ») sans guillemet fermant."
+  },
+  {
+    "n": 19,
+    "fingerprint": "9e7f082f5a86cd49be5b8084f96b85748c325a1883889f98d43a6120a8433a32",
+    "stratum": "texte",
+    "detector": "ref-morte-texte@1.0.0",
+    "subtype": "abrogé",
+    "verdict": "probablement réel",
+    "reason": "Article 1791 abrogé le 2026-05-01 ; « le 1° de l’article 1791 » cité par 1791 bis sans indice de rédaction antérieure."
+  },
+  {
+    "n": 20,
+    "fingerprint": "3ed61c69374ba26b23b7ce0cb54e539e5b304db2fcc7d7fd15ef5286bca71e5f",
+    "stratum": "texte",
+    "detector": "ref-morte-texte@1.0.0",
+    "subtype": "abrogé",
+    "verdict": "probablement réel",
+    "reason": "R. 111-18-2 abrogé le 2021-07-01 (recodification du livre I) ; liste citée sans indice, lien LEGI concordant."
+  },
+  {
+    "n": 21,
+    "fingerprint": "a2a2ffe22bcddfc1e5ff4fe65e065ff3bd8b2d71bbcc12cb6439b5d495166bbb",
+    "stratum": "texte",
+    "detector": "ref-morte-texte@1.0.0",
+    "subtype": "abrogé",
+    "verdict": "probablement réel",
+    "reason": "R. 215-2 abrogé le 2010-04-01 ; cité par un article de 2010 sans indice."
+  },
+  {
+    "n": 22,
+    "fingerprint": "91e58ea7c0d8405ae5bc7e746c74e12213f04f6cad07d54f6126e9225330450c",
+    "stratum": "texte",
+    "detector": "ref-morte-texte@1.0.0",
+    "subtype": "abrogé",
+    "verdict": "probablement réel",
+    "reason": "L. 251-1 abrogé le 2001-01-01 (loi 2000-1257) et toujours cité dans la liste des recettes du fonds."
+  },
+  {
+    "n": 23,
+    "fingerprint": "50ec5f4042eefb20f9f0e59d8da0d2780a90c9229bdc64ed16a9dcd40fc14b9e",
+    "stratum": "texte",
+    "detector": "ref-morte-texte@1.0.0",
+    "subtype": "abrogé",
+    "verdict": "probablement réel",
+    "reason": "Annexe-modèle de contrat citant « L. 111-1-1 du code de la construction » (2 occ.), abrogé le 2021-07-01."
+  },
+  {
+    "n": 24,
+    "fingerprint": "db3cb2d2f8fd3b413b8cbab9c5cac73dea9a7d6b2656b9d400a0c30f660f8fc7",
+    "stratum": "texte",
+    "detector": "ref-morte-texte@1.0.0",
+    "subtype": "abrogé",
+    "verdict": "probablement légitime",
+    "reason": "Article d’adaptation qui cite mot pour mot un autre article (« …second alinéa de l’article R. 111-24 du présent code » sont supprimés) : citation d’un état antérieur."
+  },
+  {
+    "n": 25,
+    "fingerprint": "31a23a1b5f1acd3ffc5a9584c21072556541f6a1f3f67168cf4a81622fc56de7",
+    "stratum": "texte",
+    "detector": "ref-morte-texte@1.0.0",
+    "subtype": "transféré",
+    "verdict": "probablement réel",
+    "reason": "R. 442-19 transféré le 2010-01-01 ; D442-20 y renvoie encore (« premier alinéa de l’article R. 442-19 »)."
+  },
+  {
+    "n": 26,
+    "fingerprint": "3b453ef6ca78092dd42b01e472fa578c4d3a7fc690469e6d01bedc581c9e1dec",
+    "stratum": "texte",
+    "detector": "ref-morte-texte@1.0.0",
+    "subtype": "transféré",
+    "verdict": "probablement réel",
+    "reason": "R. 331-63 transféré le 2019-09-01 ; renvoi sans indice, lien LEGI absent mais citation claire."
+  },
+  {
+    "n": 27,
+    "fingerprint": "7dc55b2adbcdfe25c9d4eec84595f694c1e86b0d7995ea45b8761ee2dc4841fd",
+    "stratum": "texte",
+    "detector": "ref-morte-texte@1.0.0",
+    "subtype": "abrogé",
+    "verdict": "probablement réel",
+    "reason": "L. 811-14 abrogé le 2006-01-01 ; « l’article L. 811-14 est applicable… » sans indice."
+  },
+  {
+    "n": 28,
+    "fingerprint": "1f4d83a947e4e30c01b90563cdf12f952435447054665bf07f069818d56f4f95",
+    "stratum": "texte",
+    "detector": "ref-morte-texte@1.0.0",
+    "subtype": "abrogé",
+    "verdict": "probablement réel",
+    "reason": "L. 381-4 abrogé le 2018-09-01 ; cité au titre des assurés concernés sans indice de rédaction antérieure."
+  },
+  {
+    "n": 29,
+    "fingerprint": "60c66d9dff57c8766acce85546d99435c49e46d5b2db5ad0df4acce65f7dffeb",
+    "stratum": "texte",
+    "detector": "ref-morte-texte@1.0.0",
+    "subtype": "transféré",
+    "verdict": "probablement réel",
+    "reason": "R. 242-5 transféré le 2019-10-14 ; « par dérogation au I de l’article R. 242-5 » sans indice."
+  },
+  {
+    "n": 30,
+    "fingerprint": "dfaeb3bbed88990c1814311b6f148cf338e50af6067cfc7fb33344a4d0a161d0",
+    "stratum": "texte",
+    "detector": "ref-morte-texte@1.0.0",
+    "subtype": "abrogé",
+    "verdict": "probablement réel",
+    "reason": "Annexe d’un article R. 611-21 lui-même abrogé le 2018-01-01 : annexe orpheline citant son article parent."
+  }
+]

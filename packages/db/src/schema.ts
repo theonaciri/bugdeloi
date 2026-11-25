@@ -239,6 +239,37 @@ export const replicationRun = pgTable('replication_run', {
   logUrl: text('log_url'),
 })
 
+/**
+ * Balayage mécanique (C0.2, `@bugdeloi/sweep`) : un lancement des détecteurs déterministes.
+ * Distinct de `replication_run` (rejeux de référence) pour ne pas mêler deux natures de contrôle.
+ * `stats` contient des dénombrements de candidats **non qualifiés** : le site public ne le lit jamais
+ * (il n'affiche que date, détecteurs, périmètre et nombre d'articles contrôlés).
+ */
+export const sweepRun = pgTable(
+  'sweep_run',
+  {
+    id: bigserial('id', { mode: 'number' }).primaryKey(),
+    startedAt: timestamp('started_at', { withTimezone: true }).notNull().defaultNow(),
+    finishedAt: timestamp('finished_at', { withTimezone: true }),
+    status: text('status').notNull().default('running'), // running | success | failed
+    codes: text('codes').array().notNull().default(sql`'{}'::text[]`), // sigles balayés (CGI, CSS, CCH)
+    detectors: jsonb('detectors').$type<Record<string, string>>().notNull().default({}), // nom → version
+    /** code → date de projection (`legi_state.as_of`) au moment du balayage. */
+    asOf: jsonb('as_of').$type<Record<string, string>>().notNull().default({}),
+    /** code → { archive, sha256 } : dernier lot DILA appliqué au moment du balayage. */
+    archives: jsonb('archives')
+      .$type<Record<string, { archive: string; sha256: string }>>()
+      .notNull()
+      .default({}),
+    /** code → nombre de versions en vigueur contrôlées. */
+    articlesChecked: jsonb('articles_checked').$type<Record<string, number>>().notNull().default({}),
+    stats: jsonb('stats').$type<Record<string, unknown>>().notNull().default({}),
+    durationMs: integer('duration_ms'),
+    error: text('error'),
+  },
+  (t) => [index('sweep_run_started_idx').on(t.startedAt)],
+)
+
 /** Anomalie (finding). Types et statuts : @bugdeloi/core, définitions AGENTS.md §4.4. */
 export const finding = pgTable(
   'finding',
