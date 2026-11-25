@@ -339,11 +339,13 @@ describe('numerotation', () => {
   })
 
   test('deux versions simultanées du même article : pas un numéro dupliqué', () => {
+    // Anomalie de dates DILA hypothétique : deux versions VIGUEUR d'une même lignée. (Le cas réel
+    // CSS R611-2, version MODIFIE à fin ouverte, n'est plus « en vigueur » : voir isInForce.)
     const ctx = ctxOf([
       {
         id: 'LEGIARTI000000000001',
         num: 'R611-2',
-        etat: 'MODIFIE',
+        etat: 'VIGUEUR',
         debut: '2018-01-01',
         versionIds: ['LEGIARTI000000000001', 'LEGIARTI000000000002'],
       },
