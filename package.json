@@ -17,7 +17,8 @@
     "format": "biome check --write .",
     "test": "bun test",
     "db:generate": "bun run --filter @bugdeloi/db generate",
-    "db:migrate": "bun run --filter @bugdeloi/db migrate"
+    "db:migrate": "bun run --filter @bugdeloi/db migrate",
+    "verify": "bun run check && biome check . && bun test"
   },
   "devDependencies": {
     "@biomejs/biome": "2.6.9",

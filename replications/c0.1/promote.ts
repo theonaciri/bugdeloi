@@ -14,7 +14,15 @@
  * - on ne touche qu'aux articles au niveau N0 (jamais de rétrogradation d'un niveau BugDeLoi) ;
  * - idempotent ; un article qui ne remplit plus les conditions redescend à N0.
  */
-import { articleInForce, articleStatus, createDb, event, legalArticle, referenceCoverage, replicationRun } from '@bugdeloi/db'
+import {
+  articleInForce,
+  articleStatus,
+  createDb,
+  event,
+  legalArticle,
+  referenceCoverage,
+  replicationRun,
+} from '@bugdeloi/db'
 import { and, desc, eq, inArray, sql } from 'drizzle-orm'
 import { source, sourceCommit } from './source.ts'
 
@@ -39,10 +47,15 @@ try {
     .map((r) => ({ folder: r.subject.slice(SUBJECT_PREFIX.length), runId: r.id }))
     .sort((a, b) => b.folder.length - a.folder.length) // dossier le plus spécifique d'abord (asp/bcae7 avant asp)
 
-  const folderOf = (file: string) => passedFolders.find((f) => file === f.folder || file.startsWith(`${f.folder}/`))
+  const folderOf = (file: string) =>
+    passedFolders.find((f) => file === f.folder || file.startsWith(`${f.folder}/`))
 
   const coverage = await db
-    .select({ legiarti: referenceCoverage.legiarti, file: referenceCoverage.file, line: referenceCoverage.line })
+    .select({
+      legiarti: referenceCoverage.legiarti,
+      file: referenceCoverage.file,
+      line: referenceCoverage.line,
+    })
     .from(referenceCoverage)
     .where(and(eq(referenceCoverage.source, source), eq(referenceCoverage.sourceCommit, sourceCommit)))
 
@@ -71,7 +84,12 @@ try {
   const current = await db
     .select({ id: articleStatus.articleId })
     .from(articleStatus)
-    .where(and(eq(articleStatus.level, 'REF'), sql`${articleStatus.evidence} -> 'reference' ->> 'source' = ${source}`))
+    .where(
+      and(
+        eq(articleStatus.level, 'REF'),
+        sql`${articleStatus.evidence} -> 'reference' ->> 'source' = ${source}`,
+      ),
+    )
   const toDemote = current.map((c) => c.id).filter((id) => !eligibleIds.has(id))
 
   console.log(

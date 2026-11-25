@@ -308,6 +308,7 @@ Service : un process web sur **`127.0.0.1:19069`** (jamais `0.0.0.0`), exposé p
 
 ```bash
 bun install                 # dépendances de tout le monorepo
+bun run verify              # typecheck + lint + tests : OBLIGATOIRE avant chaque commit
 bun run check               # typecheck de tous les paquets (tsc 7)
 bun run lint                # Biome (bun run format pour corriger)
 bun test                    # tests
