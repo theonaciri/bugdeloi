@@ -23,3 +23,4 @@ replications/**/raw/
 # C0.2 : listes complètes de candidats non qualifiés (régénérées par replications/c0.2/run.ts)
 replications/c0.2/candidates.json
 replications/c0.2/ecarts-lien-texte.json
+replications/c0.2-independent/results.json
