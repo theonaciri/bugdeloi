@@ -1,0 +1,20 @@
+{
+  "name": "@bugdeloi/ingest",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "ingest": "bun src/cli.ts",
+    "check": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@bugdeloi/core": "workspace:*",
+    "@bugdeloi/db": "workspace:*",
+    "drizzle-orm": "0.45.4",
+    "saxes": "6.0.0",
+    "tar-stream": "3.2.0"
+  },
+  "devDependencies": {
+    "@types/tar-stream": "3.1.4"
+  }
+}

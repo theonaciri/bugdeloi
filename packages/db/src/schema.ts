@@ -39,6 +39,7 @@ export const ingestRun = pgTable('ingest_run', {
   archive: text('archive').notNull(), // ex. 'Freemium_legi_global_20261108-140000.tar.gz'
   archiveSha256: text('archive_sha256'),
   scope: text('scope').array().notNull().default(sql`'{}'::text[]`), // LEGITEXT ingérés
+  asOf: date('as_of'), // date de projection de l’arbre LEGI
   startedAt: timestamp('started_at', { withTimezone: true }).notNull().defaultNow(),
   finishedAt: timestamp('finished_at', { withTimezone: true }),
   status: text('status').notNull().default('running'), // running | success | failed
@@ -57,6 +58,39 @@ export const legalText = pgTable('legal_text', {
   dateFin: date('date_fin'),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 })
+
+/** Dernier lot DILA appliqué par code, avancé dans la même transaction que son contenu. */
+export const legiState = pgTable('legi_state', {
+  textId: text('text_id')
+    .primaryKey()
+    .references(() => legalText.id),
+  archive: text('archive').notNull(),
+  archiveSha256: text('archive_sha256').notNull(),
+  asOf: date('as_of').notNull(),
+})
+
+export type LegiChild = {
+  kind: 'article' | 'section'
+  id: string
+  etat: string | null
+  dateDebut: string | null
+  dateFin: string | null
+  title: string | null
+}
+
+/** Documents de structure LEGI, y compris les sections hors de l'arbre projeté. */
+export const legiStructure = pgTable(
+  'legi_structure',
+  {
+    textId: text('text_id')
+      .notNull()
+      .references(() => legalText.id),
+    id: text('id').notNull(), // LEGITEXT pour le document racine, LEGISCTA pour une section
+    title: text('title'),
+    children: jsonb('children').$type<LegiChild[]>().notNull().default([]),
+  },
+  (t) => [primaryKey({ columns: [t.textId, t.id] })],
+)
 
 /**
  * Section (LEGISCTA) dans l'arbre en vigueur à la date d'ingestion.
@@ -141,6 +175,7 @@ export const legalLink = pgTable(
     targetNum: text('target_num'), // numéro d'article cité
     targetTextNum: text('target_text_num'), // numtexte
     targetNature: text('target_nature'),
+    targetNor: text('target_nor'), // nortexte
     targetDate: date('target_date'), // datesignatexte
     label: text('label'), // contenu textuel du lien
   },
