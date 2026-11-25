@@ -1,0 +1,38 @@
+{
+  "name": "@bugdeloi/web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "AGPL-3.0-or-later",
+  "imports": {
+    "#lib": "./src/lib/index.ts",
+    "#lib/*": "./src/lib/*"
+  },
+  "scripts": {
+    "dev": "vite dev --host 127.0.0.1 --port 19070 --strictPort",
+    "build": "vite build",
+    "preview": "PORT=19070 bun serve.ts",
+    "start": "bun serve.ts",
+    "seed:dev": "bun scripts/seed-dev.ts",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --fail-on-warnings"
+  },
+  "dependencies": {
+    "@bugdeloi/core": "workspace:*",
+    "@bugdeloi/db": "workspace:*",
+    "d3-hierarchy": "3.1.3",
+    "drizzle-orm": "0.45.4",
+    "postgres": "4.1.1"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-node": "6.0.5",
+    "@sveltejs/kit": "3.4.0",
+    "@sveltejs/vite-plugin-svelte": "7.3.2",
+    "@tailwindcss/vite": "4.3.5",
+    "@types/d3-hierarchy": "3.1.7",
+    "svelte": "5.59.1",
+    "svelte-check": "4.7.8",
+    "tailwindcss": "4.3.5",
+    "typescript": "6.0.3",
+    "vite": "8.3.7"
+  }
+}
