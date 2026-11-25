@@ -1,7 +1,7 @@
 /**
  * `ref-morte-liens` — REF_MORTE par liens LEGI.
  *
- * Sens des liens (établi sur les données, vérifié par symétrie et sur le texte de CSS L521-1) :
+ * Sens des liens (établi sur les données, contrôlé par symétrie et sur le texte de CSS L521-1) :
  * pour un lien `CITATION`, `sens = 'source'` signifie « CET article cite la cible » ;
  * `sens = 'cible'` signifie « la cible cite cet article ». Seuls les `source` sont lus.
  *

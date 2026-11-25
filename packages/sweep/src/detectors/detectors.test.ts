@@ -254,7 +254,7 @@ describe('ref-morte-texte', () => {
     const ctx = ctxOf([src("l'article L. 999-1"), live])
     const { candidates, stats } = scanTexte(ctx)
     expect(candidates).toHaveLength(0)
-    expect(stats.inconnues_de_la_base).toBe(1)
+    expect(stats.couples_inconnus_de_la_base).toBe(1)
   })
 
   test('CGI : un numéro à préfixe sans désignation ne vise pas le CGI', () => {

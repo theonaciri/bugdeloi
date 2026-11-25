@@ -15,6 +15,9 @@ export interface RunOptions {
   detectors?: string[]
   /** Calcule tout, n'écrit rien en base. */
   dryRun?: boolean
+  /** Contexte déjà chargé (évite un second chargement d'environ 500 Mio) et le temps qu'il a pris. */
+  context?: SweepContext
+  contextMs?: number
 }
 
 export interface DetectorOutcome {
@@ -69,7 +72,7 @@ export function collectCandidates(ctx: SweepContext, detectors: Detector[], code
 export async function runSweep(db: Db, options: RunOptions = {}): Promise<RunSummary> {
   const started = performance.now()
   const detectors = selectDetectors(options.detectors)
-  const ctx = await loadContext(db)
+  const ctx = options.context ?? (await loadContext(db))
   const codes = (options.codes?.length ? options.codes : ctx.codes.map((c) => c.code)).map((c) =>
     c.toUpperCase(),
   )
@@ -126,7 +129,7 @@ export async function runSweep(db: Db, options: RunOptions = {}): Promise<RunSum
       asOf,
       codes,
       articlesChecked,
-      durationMs: Math.round(performance.now() - started),
+      durationMs: Math.round(performance.now() - started) + (options.context ? (options.contextMs ?? 0) : 0),
       outcomes,
     }
     if (!options.dryRun && runId !== null) {

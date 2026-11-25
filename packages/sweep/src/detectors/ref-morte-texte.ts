@@ -50,16 +50,18 @@ export function targetTextId(ctx: SweepContext, source: Version, c: TextCitation
 export function scan(ctx: SweepContext, options: ScanOptions = {}): ScanResult {
   const candidates: Candidate[] = []
   const asOfByText = new Map(ctx.codes.map((c) => [c.textId, c.asOf]))
+  // Compteurs d'occurrences (citations_*) et de couples (article citant, numéro cité) distincts (couples_*).
   const stats = {
     articles_controles: 0,
     citations_extraites: 0,
     ecartees_autre_norme: 0,
     ecartees_prefixe: 0,
-    inconnues_de_la_base: 0,
-    resolues: 0,
-    vivantes: 0,
-    a_venir: 0,
-    mortes: 0,
+    citations_jugees: 0,
+    couples_inconnus_de_la_base: 0,
+    couples_resolus: 0,
+    couples_vivants: 0,
+    couples_a_venir: 0,
+    couples_morts: 0,
   }
   const subtypes: Record<string, number> = {}
   const designations: Record<string, number> = {}
@@ -85,15 +87,16 @@ export function scan(ctx: SweepContext, options: ScanOptions = {}): ScanResult {
     for (const g of groups.values()) {
       const lineages = lineagesWithNum(ctx, g.textId, g.num)
       if (lineages.length === 0) {
-        stats.inconnues_de_la_base++
+        stats.couples_inconnus_de_la_base++
         continue
       }
-      stats.resolues++
+      stats.couples_resolus++
+      stats.citations_jugees += g.cits.length
       const st = statusOf(lineages)
-      if (st.cls === 'vivante') stats.vivantes++
-      else if (st.cls === 'a_venir') stats.a_venir++
+      if (st.cls === 'vivante') stats.couples_vivants++
+      else if (st.cls === 'a_venir') stats.couples_a_venir++
       else {
-        stats.mortes++
+        stats.couples_morts++
         const sub = deadSubtype(st.lineage)
         subtypes[sub] = (subtypes[sub] ?? 0) + 1
         const k = g.cits[0]?.designation.kind ?? 'none'

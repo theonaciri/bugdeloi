@@ -6,21 +6,54 @@
  *
  * Lance le balayage (idempotent : une anomalie déjà connue garde son identifiant), puis écrit
  * `candidates.json`, `ecarts-lien-texte.json`, `results.json` et `REPORT.md`. L'échantillon de triage
- * (`triage.json`) est un tri par LLM, non probant : `bun replications/c0.2/triage-input.ts` le retire.
+ * (`triage.json`) est un tri par LLM, non probant : `bun replications/c0.2/triage-input.ts` en retire les entrées.
+ * `--report-only` régénère les fichiers depuis le dernier balayage sans en lancer un nouveau.
  */
-import { createDb, finding } from '@bugdeloi/db'
-import { collectCandidates, loadContext, runSweep, selectDetectors } from '@bugdeloi/sweep'
-import { inArray } from 'drizzle-orm'
+import { createDb, finding, sweepRun } from '@bugdeloi/db'
+import {
+  collectCandidates,
+  type DetectorOutcome,
+  loadContext,
+  type RunSummary,
+  runSweep,
+  selectDetectors,
+} from '@bugdeloi/sweep'
+import { desc, eq, inArray } from 'drizzle-orm'
 import { renderReport, type TriageEntry } from './report.ts'
 import { buildResults, summarizeFinding } from './results.ts'
 
 const here = new URL('.', import.meta.url).pathname
 const { db, sql } = createDb()
+const started = performance.now()
+
+async function lastRun(): Promise<RunSummary> {
+  const [row] = await db
+    .select()
+    .from(sweepRun)
+    .where(eq(sweepRun.status, 'success'))
+    .orderBy(desc(sweepRun.id))
+    .limit(1)
+  if (!row) throw new Error('Aucun balayage enregistré : lancer sans --report-only.')
+  return {
+    runId: row.id,
+    asOf: row.asOf,
+    codes: row.codes,
+    articlesChecked: row.articlesChecked,
+    durationMs: row.durationMs ?? 0,
+    outcomes: (row.stats.detectors ?? []) as DetectorOutcome[],
+  }
+}
+
 try {
   const detectors = selectDetectors()
+  const t1 = performance.now()
   const ctx = await loadContext(db)
+  const contextMs = Math.round(performance.now() - t1)
   const { results: scans } = collectCandidates(ctx, detectors)
-  const summary = await runSweep(db, {})
+  // --report-only : ne relance pas le balayage, relit le dernier (régénère seulement les fichiers).
+  const summary = Bun.argv.includes('--report-only')
+    ? await lastRun()
+    : await runSweep(db, { context: ctx, contextMs })
 
   const rows = await db
     .select()
@@ -40,7 +73,17 @@ try {
   const triage = JSON.parse(await Bun.file(`${here}triage.json`).text()) as TriageEntry[]
   const ids = new Map(candidates.map((c) => [c.fingerprint, c.id]))
 
-  const results = buildResults({ summary, ctx, candidates, ecartsCount: ecarts.length, triage })
+  const results = buildResults({
+    summary,
+    ctx,
+    candidates,
+    ecartsCount: ecarts.length,
+    triage,
+    contextMs,
+    scanMs: Object.fromEntries(scans.map((s) => [`${s.detector.name}@${s.detector.version}`, s.durationMs])),
+    totalMs: Math.round(performance.now() - started),
+    peakRssMb: Math.round(process.resourceUsage().maxRSS / 1024),
+  })
   await Bun.write(`${here}candidates.json`, `${JSON.stringify(candidates, null, 1)}\n`)
   await Bun.write(`${here}ecarts-lien-texte.json`, `${JSON.stringify(ecarts, null, 1)}\n`)
   await Bun.write(`${here}results.json`, `${JSON.stringify(results, null, 2)}\n`)

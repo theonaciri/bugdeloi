@@ -31,6 +31,7 @@ import {
   legalText,
   referenceCoverage,
   replicationRun,
+  sweepRun,
 } from '@bugdeloi/db/schema'
 import { and, asc, count, desc, eq, inArray, isNull, or, type SQL, sql } from 'drizzle-orm'
 import { asLevel, countAtLeast, emptyLevelCounts, type Level } from '../levels.ts'
@@ -222,10 +223,27 @@ export interface IngestInfo {
   stats: Record<string, number>
 }
 
+/**
+ * Dernier balayage mécanique (`sweep_run`). Volontairement **sans aucun nombre de candidats** : les
+ * candidats ne sont pas qualifiés, donc absents de tout compteur public (AGENTS.md §4.4). Seules les
+ * colonnes de périmètre sont lues (jamais `stats`).
+ */
+export interface SweepInfo {
+  id: number
+  status: string
+  startedAt: string
+  finishedAt: string | null
+  codes: string[]
+  detectors: Record<string, string>
+  asOf: Record<string, string>
+  articlesChecked: Record<string, number>
+}
+
 export interface Health {
   database: { ok: boolean; latencyMs: number | null; error: string | null }
   lastIngest: IngestInfo | null
   lastReplication: RunInfo | null
+  lastSweep: SweepInfo | null
 }
 
 /** Santé : base joignable (SELECT 1 chronométré), dernier `ingest_run`, dernier `replication_run`. */
@@ -240,13 +258,29 @@ export async function health(): Promise<Health> {
       database: { ok: false, latencyMs: null, error: 'database_unavailable' },
       lastIngest: null,
       lastReplication: null,
+      lastSweep: null,
     }
   }
   const latencyMs = Math.round((performance.now() - t0) * 10) / 10
-  const [ing, rep] = await Promise.all([
+  const [ing, rep, swp] = await Promise.all([
     db().select().from(ingestRun).orderBy(desc(ingestRun.startedAt)).limit(1),
     db().select().from(replicationRun).orderBy(desc(replicationRun.startedAt)).limit(1),
+    db()
+      .select({
+        id: sweepRun.id,
+        status: sweepRun.status,
+        startedAt: sweepRun.startedAt,
+        finishedAt: sweepRun.finishedAt,
+        codes: sweepRun.codes,
+        detectors: sweepRun.detectors,
+        asOf: sweepRun.asOf,
+        articlesChecked: sweepRun.articlesChecked,
+      })
+      .from(sweepRun)
+      .orderBy(desc(sweepRun.startedAt))
+      .limit(1),
   ])
+  const w = swp[0]
   const i = ing[0]
   return {
     database: { ok: true, latencyMs, error: null },
@@ -262,6 +296,18 @@ export async function health(): Promise<Health> {
         }
       : null,
     lastReplication: toRunInfo(rep[0]),
+    lastSweep: w
+      ? {
+          id: w.id,
+          status: w.status,
+          startedAt: ISO(w.startedAt) as string,
+          finishedAt: ISO(w.finishedAt),
+          codes: w.codes,
+          detectors: w.detectors,
+          asOf: w.asOf,
+          articlesChecked: w.articlesChecked,
+        }
+      : null,
   }
 }
 

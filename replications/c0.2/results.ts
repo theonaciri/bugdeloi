@@ -71,6 +71,10 @@ export function buildResults(input: {
   candidates: CandidateSummary[]
   ecartsCount: number
   triage: TriageEntry[]
+  totalMs: number
+  contextMs: number
+  scanMs: Record<string, number>
+  peakRssMb: number
 }) {
   const { summary, ctx, candidates } = input
   const liens = input.summary.outcomes.find((o) => o.detector.startsWith('ref-morte-liens'))
@@ -95,14 +99,18 @@ export function buildResults(input: {
         archive: c.archive,
         archiveSha256: c.archiveSha256,
       })),
+    versionsLoaded: ctx.versions.size,
     articlesChecked: summary.articlesChecked,
     durationMs: summary.durationMs,
+    totalMs: input.totalMs,
+    contextMs: input.contextMs,
+    scanMs: input.scanMs,
+    peakRssMb: input.peakRssMb,
     detectors: summary.outcomes.map((o) => ({
       detector: o.detector,
       candidates: o.candidates,
       new: o.new,
       alreadyKnown: o.alreadyKnown,
-      durationMs: o.durationMs,
       bySubtype: o.bySubtype,
       stats: o.stats,
     })),

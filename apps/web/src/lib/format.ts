@@ -69,6 +69,7 @@ const EVENT_LABEL: Record<string, string> = {
   'replication.finished': 'Rejeu de référence terminé',
   'level.changed': 'Niveau de preuve modifié',
   'coverage.recorded': 'Couverture de référence enregistrée',
+  'sweep.finished': 'Balayage mécanique terminé',
   'finding.qualified': 'Anomalie qualifiée par un humain',
   'finding.published': 'Anomalie publiée',
   'site.deployed': 'Site déployé',

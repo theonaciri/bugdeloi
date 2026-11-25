@@ -20,7 +20,11 @@ const rec = (v: unknown): Record<string, number> =>
   v && typeof v === 'object' ? (v as Record<string, number>) : {}
 const fmt = (n: number) => n.toLocaleString('fr-FR').replaceAll(' ', ' ')
 const pct = (a: number, b: number) =>
-  b === 0 ? 'n.d.' : `${((100 * a) / b).toLocaleString('fr-FR', { maximumFractionDigits: 1 })} %`
+  b === 0
+    ? 'n.d.'
+    : (100 * a) / b < 0.1
+      ? '< 0,1 %'
+      : `${((100 * a) / b).toLocaleString('fr-FR', { maximumFractionDigits: 1 })} %`
 const table = (head: string[], rows: Array<Array<string | number>>) =>
   [
     `| ${head.join(' | ')} |`,
@@ -57,7 +61,7 @@ export function renderReport(results: Results, triage: TriageEntry[], ids: Map<s
 > langage) signalent dans les articles en vigueur. Aucun candidat n'est qualifié : seuls un rejeu par la CI
 > et un verdict humain feraient entrer un résultat dans un compteur public (AGENTS.md §4.4).
 
-Balayage n° ${results.sweepRunId} · ${results.generatedAt.slice(0, 10)} · durée ${fmt(results.durationMs)} ms.
+Balayage n° ${results.sweepRunId} · ${results.generatedAt.slice(0, 10)}.
 
 ## Périmètre et données
 
@@ -105,7 +109,7 @@ ${results.detectors
       numerotation:
         'Deux versions en vigueur de **lignées différentes** portant le même numéro normalisé dans le même code ; deux marqueurs de subdivision identiques à la suite (« …, 2°, 3°, 3° »), même niveau, sans niveau supérieur intercalé, en milieu de suite croissante, articles dont le numéro commence par « Annexe » exclus. Pas de recherche de « trous ».',
       syntaxe:
-        "Parenthèse, crochet ou guillemet français non apparié sur l'article entier ; citation à guillemets droits laissée ouverte. Exclusions : énumérations « a) », « 1) », « i) », « 1°) », « a bis) » ; « en tête d'alinéa dans une citation sur plusieurs alinéas ; annexes.",
+        "Parenthèse, crochet ou guillemet français non apparié sur l'article entier ; citation à guillemets droits laissée ouverte. Exclusions : énumérations « a) », « 1) », « i) », « 1°) », « a bis) » ; « ou \" en tête d'alinéa qui poursuit une citation déjà ouverte (citation sur plusieurs alinéas) ; articles d'annexes.",
     }
     const key = Object.keys(def).find((k) => name.startsWith(k)) ?? ''
     return `| \`${name}\` | ${t} | ${def[key] ?? ''} |`
@@ -125,6 +129,16 @@ ${table(
   ['Type / sous-type', 'Candidats'],
   Object.entries(results.candidatesByTypeAndSubtype).map(([k, v]) => [k, fmt(v)]),
 )}
+
+Total par type : ${Object.entries(
+    Object.entries(results.candidatesByTypeAndSubtype).reduce<Record<string, number>>((acc, [k, v]) => {
+      const t = k.split(' / ')[0] ?? k
+      acc[t] = (acc[t] ?? 0) + v
+      return acc
+    }, {}),
+  )
+    .map(([k, v]) => `${k} ${fmt(v)}`)
+    .join(' · ')}.
 
 Par détecteur : ${Object.entries(results.candidatesByDetector)
     .map(([k, v]) => `\`${k}\` ${fmt(v)}`)
@@ -168,9 +182,12 @@ Rattachement des liens résolus : ${Object.entries(rec(ls.resolution_par))
     )
     .join(' · ')}.
 
-**Citations textuelles.** ${fmt(num(ts.citations_extraites))} numéros d'articles extraits ; ${fmt(num(ts.resolues))} (${pct(num(ts.resolues), num(ts.citations_extraites))}) résolus
-(${fmt(num(ts.vivantes))} en vigueur, ${fmt(num(ts.mortes))} sans version en vigueur) ; ${fmt(num(ts.ecartees_autre_norme))} écartés parce que la norme visée
-est une autre (loi, décret, autre code…), ${fmt(num(ts.ecartees_prefixe))} par la règle des préfixes L/R/D, ${fmt(num(ts.inconnues_de_la_base))} absents de la base (non jugés).
+**Citations textuelles.** ${fmt(num(ts.citations_extraites))} numéros d'articles extraits du texte (occurrences) ; ${fmt(num(ts.ecartees_autre_norme))} écartés
+parce que la norme visée est une autre (loi, décret, autre code…) et ${fmt(num(ts.ecartees_prefixe))} par la règle des préfixes L/R/D. Les autres sont regroupés en
+${fmt(num(ts.couples_resolus) + num(ts.couples_inconnus_de_la_base))} couples (article citant, numéro cité) : ${fmt(num(ts.couples_resolus))} se résolvent dans la base
+(${fmt(num(ts.couples_vivants))} vers un article en vigueur, ${fmt(num(ts.couples_morts))} vers un article sans version en vigueur, ${fmt(num(ts.couples_a_venir))} à venir) et
+${fmt(num(ts.couples_inconnus_de_la_base))} portent un numéro absent de la base (non jugés). **Taux de couverture** : ${fmt(num(ts.citations_jugees))} occurrences jugées
+sur ${fmt(num(ts.citations_extraites))} extraites (${pct(num(ts.citations_jugees), num(ts.citations_extraites))}).
 
 ## Écarts entre lien LEGI et texte
 
@@ -215,12 +232,24 @@ ${table(
 ## Temps d'exécution
 
 ${table(
-  ['Détecteur', 'Durée (ms)'],
-  results.detectors.map((d) => [`\`${d.detector}\``, fmt(d.durationMs)]),
+  ['Étape', 'Durée (ms)'],
+  [
+    [
+      `Chargement du contexte (${fmt(results.versionsLoaded)} versions, ${fmt(total)} liens de citation sortants)`,
+      fmt(results.contextMs),
+    ],
+    ...Object.entries(results.scanMs).map(([d, ms]) => [`Détecteur \`${d}\``, fmt(ms)]),
+    [
+      'Balayage complet (contexte, détecteurs, insertion ou reconnaissance des candidats)',
+      fmt(results.durationMs),
+    ],
+    ['`run.ts` en entier (écriture des fichiers comprise)', fmt(results.totalMs)],
+  ],
 )}
 
-Balayage complet, chargement du contexte compris (72 000 versions, 14 000 en vigueur) : ${fmt(results.durationMs)} ms,
-sous \`nice\`, mémoire de pointe d'environ 550 Mio (aarch64, 4 cœurs partagés).
+Mémoire résidente de pointe de \`run.ts\` : ${fmt(results.peakRssMb)} Mio (aarch64, 4 cœurs partagés, lancé sous \`nice\`) ;
+la commande \`sweep run --dry-run\` seule, qui ne charge qu'un contexte, a été mesurée à environ 930 Mio le 25/11/2026. La première exécution, qui insère les
+candidats, est plus longue que les suivantes, qui les reconnaissent par empreinte.
 
 ## Rejouer
 
