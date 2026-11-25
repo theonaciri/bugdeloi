@@ -51,6 +51,30 @@ export function legalTextHash(rawHtmlOrText: string): string {
   return sha256Hex(normalizeLegalText(rawHtmlOrText))
 }
 
+/** Convention DILA : une date de fin 2999-01-01 signifie « pas de fin connue ». */
+export const LEGI_OPEN_END = '2999-01-01'
+
+/** États LEGI jamais comptés « en vigueur », quelles que soient les dates. */
+export const NEVER_IN_FORCE_ETATS = ['ANNULE', 'NON_VIGUEUR', 'MODIFIE_MORT_NE'] as const
+
+/**
+ * Règle unique « en vigueur à la date `asOf` » (AAAA-MM-JJ), partagée par l'ingestion (arbre daté)
+ * et par le site (compteurs) : intervalle [début, fin[ qui contient `asOf`, état non exclu.
+ * Inclut donc `ABROGE_DIFF` (abrogation programmée mais pas encore effective).
+ * Équivalent SQL : `articleInForce()` dans @bugdeloi/db/predicates.
+ */
+export function isInForce(
+  unit: { etat?: string | null; dateDebut?: string | null; dateFin?: string | null },
+  asOf: string,
+): boolean {
+  const { etat, dateDebut, dateFin } = unit
+  return (
+    !(NEVER_IN_FORCE_ETATS as readonly string[]).includes(etat ?? '') &&
+    Boolean(dateDebut && dateDebut <= asOf) &&
+    (!dateFin || dateFin === LEGI_OPEN_END || asOf < dateFin)
+  )
+}
+
 export function legifranceArticleUrl(legiarti: string): string {
   return `https://www.legifrance.gouv.fr/codes/article_lc/${legiarti}`
 }

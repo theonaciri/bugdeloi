@@ -4,7 +4,9 @@
  * la page /methode#compteurs reprend ces définitions en français.
  *
  * Conventions :
- * - « en vigueur » = `legal_article.etat = 'VIGUEUR'` (état LEGI à la date d'ingestion) ;
+ * - « en vigueur » = `articleInForce()` (@bugdeloi/db/predicates) : intervalle de dates DILA qui contient
+ *   la date de projection du code et état non exclu — même règle que l'arbre de la carte (ingestion) ;
+ *   inclut `ABROGE_DIFF` (abrogation programmée, pas encore effective) ;
  * - un article sans ligne dans `article_status` est au niveau N0 (ingéré = N0 par définition) ;
  * - les anomalies ne sont comptées qu'aux statuts publics (`qualified`, `published`), jamais
  *   au stade `candidate` ou `reproduced` (AGENTS.md §4.4) ;
@@ -17,6 +19,7 @@
 
 import { PUBLIC_FINDING_STATUSES } from '@bugdeloi/core/findings'
 import { CODES, LEGIARTI_RE, LEGISCTA_RE } from '@bugdeloi/core/legi'
+import { articleInForce } from '@bugdeloi/db/predicates'
 import {
   articleStatus,
   event,
@@ -75,7 +78,7 @@ export async function latestEvents(limit = 10): Promise<PublicEvent[]> {
 /**
  * Avancement par code du périmètre (CGI, CSS, CCH) :
  * - `versions` : nombre de lignes `legal_article` du code (chaque LEGIARTI est une version datée) ;
- * - `inForce` : versions dont l'état est `VIGUEUR` ;
+ * - `inForce` : versions en vigueur à la date de projection (`articleInForce()`) ;
  * - `byLevel` : articles en vigueur groupés par `article_status.level` (absent = N0) ;
  * - `atLeastN2` : articles en vigueur au niveau N2, N3, N4, N5 ou ★.
  */
@@ -95,7 +98,7 @@ export async function codeProgress(): Promise<CodeProgress[]> {
       })
       .from(legalArticle)
       .leftJoin(articleStatus, eq(articleStatus.articleId, legalArticle.id))
-      .where(and(inArray(legalArticle.textId, ids), eq(legalArticle.etat, 'VIGUEUR')))
+      .where(and(inArray(legalArticle.textId, ids), articleInForce()))
       .groupBy(legalArticle.textId, sql`2`),
     db()
       .select({ id: legalText.id, title: legalText.title })
@@ -362,7 +365,7 @@ export async function mapData(code: CodeKey, sectionId: string | null): Promise<
       .where(
         and(
           eq(legalArticle.textId, textId),
-          eq(legalArticle.etat, 'VIGUEUR'),
+          articleInForce(),
           sql`${legalSection.path} <@ ${focusPath}`,
           sql`nlevel(${legalSection.path}) > nlevel(${focusPath})`,
         ),
@@ -380,7 +383,7 @@ export async function mapData(code: CodeKey, sectionId: string | null): Promise<
           })
           .from(legalArticle)
           .leftJoin(articleStatus, eq(articleStatus.articleId, legalArticle.id))
-          .where(and(eq(legalArticle.sectionId, focus.id), eq(legalArticle.etat, 'VIGUEUR')))
+          .where(and(eq(legalArticle.sectionId, focus.id), articleInForce()))
           .orderBy(asc(legalArticle.position), asc(legalArticle.num))
           .limit(MAX_DIRECT_ARTICLES + 1),
     db().select({ id: legalArticle.id }).from(legalArticle).where(eq(legalArticle.textId, textId)).limit(1),
@@ -388,13 +391,7 @@ export async function mapData(code: CodeKey, sectionId: string | null): Promise<
       ? db()
           .select({ n: count() })
           .from(legalArticle)
-          .where(
-            and(
-              eq(legalArticle.textId, textId),
-              eq(legalArticle.etat, 'VIGUEUR'),
-              isNull(legalArticle.sectionId),
-            ),
-          )
+          .where(and(eq(legalArticle.textId, textId), articleInForce(), isNull(legalArticle.sectionId)))
       : Promise.resolve([{ n: 0 }]),
   ])
   return {

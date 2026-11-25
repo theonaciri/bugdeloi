@@ -111,9 +111,10 @@ const lifecycle = [
       <div id="compteur-articles">
         <dt class="font-semibold">Articles en vigueur ingérés</dt>
         <dd>
-          Nombre de versions d’articles (identifiants LEGIARTI) des codes suivis (CGI, CSS, CCH) dont l’état LEGI est
-          « VIGUEUR » à la date de la dernière ingestion. Les versions anciennes ou abrogées sont ingérées mais pas comptées
-          ici.
+          Nombre de versions d’articles (identifiants LEGIARTI) des codes suivis (CGI, CSS, CCH) en vigueur à la date de
+          projection du code : la période de validité indiquée par la DILA contient cette date et l’état n’est ni
+          « annulé », ni « non en vigueur », ni « modifié mort-né ». Les articles dont l’abrogation est programmée mais
+          pas encore effective sont comptés. Les versions anciennes ou abrogées sont ingérées mais pas comptées ici.
         </dd>
       </div>
       <div id="compteur-avancement">

@@ -13,7 +13,7 @@ export interface CodeProgress {
   ingested: boolean
   /** Versions d'articles ingérées (toutes dates, tous états). */
   versions: number
-  /** Articles dont l'état LEGI est `VIGUEUR`. */
+  /** Articles en vigueur à la date de projection du code (`articleInForce()`). */
   inForce: number
   /** Répartition des articles en vigueur par niveau de preuve (sans statut = N0). */
   byLevel: LevelCounts

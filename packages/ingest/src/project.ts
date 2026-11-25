@@ -1,3 +1,4 @@
+import { isInForce } from '@bugdeloi/core/legi'
 import type { legalSection } from '@bugdeloi/db/schema'
 import type { Article, Structure } from './xml.ts'
 
@@ -5,16 +6,8 @@ export type Section = Omit<typeof legalSection.$inferInsert, 'lastRunId'>
 export type Placement = { id: string; sectionId: string | null; position: number }
 export type Dated = Pick<Article, 'etat' | 'dateDebut' | 'dateFin'>
 
-export function isInForce(unit: Dated, asOf: string): boolean {
-  const { etat, dateDebut, dateFin } = unit
-  return (
-    etat !== 'ANNULE' &&
-    etat !== 'NON_VIGUEUR' &&
-    etat !== 'MODIFIE_MORT_NE' &&
-    Boolean(dateDebut && dateDebut <= asOf) &&
-    (!dateFin || dateFin === '2999-01-01' || asOf < dateFin)
-  )
-}
+/** Règle partagée avec le site : voir @bugdeloi/core/legi. */
+export { isInForce }
 
 export function projectTree(
   textId: string,
