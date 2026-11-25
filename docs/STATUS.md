@@ -5,27 +5,29 @@
 
 ## Jalon courant : J0 Fondations (+ début J1)
 
-| Chantier                                          | Responsable                | État                                                                                | Livrable                                                 |
-| ------------------------------------------------- | -------------------------- | ----------------------------------------------------------------------------------- | -------------------------------------------------------- |
-| Monorepo Bun, Biome, TS 7, licences               | orchestrateur              | ✔ fait                                                                              | racine, `packages/core`, `packages/db`                   |
-| Base Postgres `bugdeloi` + migration 0000         | orchestrateur              | ✔ fait                                                                              | `packages/db/migrations`                                 |
-| Image Catala 1.3.2 multi-arch + C0.1 rejeu Inria  | codex/gpt-6.2-sol (medium) | ✔ fait — **171/171 tests Inria verts** (ARM64), 473 LEGIARTI de couverture importés | `infra/catala/`, `packages/runner`, `replications/c0.1/` |
-| Ingestion LEGI (CGI, CSS, CCH)                    | codex/gpt-6.2-sol (high)   | en cours                                                                            | `packages/ingest`                                        |
-| Site web (accueil, carte, article, méthode, join) | claude-opus-5-5 (high)     | ✔ fait — en ligne sur https://bugdeloi.theonaciri.fr                                | `apps/web`                                               |
-| Service systemd + mise en ligne sur 19069         | orchestrateur              | ✔ fait — `scripts/deploy.sh` (révisions + retour arrière)                           | `infra/systemd/`                                         |
-| Balayage mécanique C0.2 (renvois morts…)          | —                          | à faire (après ingestion)                                                           | `packages/sweep`                                         |
-| Couverture Inria (LEGIARTI cités) → carte         | —                          | données importées (`reference_coverage`) ; affichage ★ après ingestion              | `reference_coverage`                                     |
+| Chantier                                          | Responsable                | État                                                                                                                                 | Livrable                                                 |
+| ------------------------------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------- |
+| Monorepo Bun, Biome, TS 7, licences               | orchestrateur              | ✔ fait                                                                                                                               | racine, `packages/core`, `packages/db`                   |
+| Base Postgres `bugdeloi` + migration 0000         | orchestrateur              | ✔ fait                                                                                                                               | `packages/db/migrations`                                 |
+| Image Catala 1.3.2 multi-arch + C0.1 rejeu Inria  | codex/gpt-6.2-sol (medium) | ✔ fait — **171/171 tests Inria verts** (ARM64), 473 LEGIARTI de couverture importés                                                  | `infra/catala/`, `packages/runner`, `replications/c0.1/` |
+| Ingestion LEGI (CGI, CSS, CCH)                    | codex/gpt-6.2-sol (high)   | ✔ fait — stock du 08/11 + incréments au 24/11/2026 ; 71 884 versions, 1 210 052 liens ; en vigueur : CGI 2 405, CSS 7 420, CCH 4 126 | `packages/ingest`                                        |
+| Site web (accueil, carte, article, méthode, join) | claude-opus-5-5 (high)     | ✔ fait — en ligne sur https://bugdeloi.theonaciri.fr                                                                                 | `apps/web`                                               |
+| Service systemd + mise en ligne sur 19069         | orchestrateur              | ✔ fait — `scripts/deploy.sh` (révisions + retour arrière)                                                                            | `infra/systemd/`                                         |
+| Balayage mécanique C0.2 (renvois morts…)          | —                          | à faire (après ingestion)                                                                                                            | `packages/sweep`                                         |
+| Couverture Inria (LEGIARTI cités) → carte         | —                          | données importées (`reference_coverage`) ; affichage ★ après ingestion                                                               | `reference_coverage`                                     |
 
 ## Journal des décisions
 
-| Date       | Décision                                                                                               | Raison                                                                                                  |
-| ---------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
-| 2026-11-25 | Nom public **BugDeLoi**, dépôt `theonaciri/bugdeloi` (GitHub personnel)                                | Choix du mainteneur                                                                                     |
-| 2026-11-25 | Dépôt créé **privé** au départ                                                                         | Réversible ; passage en public quand le site est présentable (nécessaire pour la CI gratuite illimitée) |
-| 2026-11-25 | Licence plateforme AGPL-3.0-or-later                                                                   | Défaut du PLAN §14, non contesté                                                                        |
-| 2026-11-25 | Postgres en socket Unix + auth peer (rôle `ubuntu`)                                                    | Aucun secret à stocker                                                                                  |
-| 2026-11-25 | Corpus et rejeux dans ce dépôt jusqu'à J3                                                              | Moins de dépôts tant qu'il n'y a pas de contributeurs externes                                          |
-| 2026-11-25 | Versions : TS 7.0.2, SvelteKit 3.4, Svelte 5.59, Vite 8.3, Drizzle 0.45.4, postgres 4.1.1, Biome 2.6.9 | Dernières stables au 25/11/2026                                                                         |
+| Date       | Décision                                                                                                                                                     | Raison                                                                                                  |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
+| 2026-11-25 | Nom public **BugDeLoi**, dépôt `theonaciri/bugdeloi` (GitHub personnel)                                                                                      | Choix du mainteneur                                                                                     |
+| 2026-11-25 | Dépôt créé **privé** au départ                                                                                                                               | Réversible ; passage en public quand le site est présentable (nécessaire pour la CI gratuite illimitée) |
+| 2026-11-25 | Licence plateforme AGPL-3.0-or-later                                                                                                                         | Défaut du PLAN §14, non contesté                                                                        |
+| 2026-11-25 | Postgres en socket Unix + auth peer (rôle `ubuntu`)                                                                                                          | Aucun secret à stocker                                                                                  |
+| 2026-11-25 | Corpus et rejeux dans ce dépôt jusqu'à J3                                                                                                                    | Moins de dépôts tant qu'il n'y a pas de contributeurs externes                                          |
+| 2026-11-25 | Versions : TS 7.0.2, SvelteKit 3.4, Svelte 5.59, Vite 8.3, Drizzle 0.45.4, postgres 4.1.1, Biome 2.6.9                                                       | Dernières stables au 25/11/2026                                                                         |
+| 2026-11-25 | Une seule règle « en vigueur » : `isInForce` (core) ≡ `articleInForce()` (db), dates DILA [début, fin[ à la date de projection du code, inclut `ABROGE_DIFF` | Le site comptait `etat = VIGUEUR` seul (CGI 2 030 au lieu de 2 405) ; test d'invariant SQL ≡ JS         |
+| 2026-11-25 | Site en lecture seule sur la base, CSP par empreintes, SSE coalescé via un seul `LISTEN`                                                                     | Le web ne doit jamais écrire ; pages cachables à l'edge                                                 |
 
 ## Production
 
@@ -48,6 +50,11 @@
 - Seul le chantier d'ingestion peut modifier `packages/db/src/schema.ts` pendant J0-J1.
 
 ## Pièges connus
+
+- LEGI : chaque `LEGIARTI` est une **version** ; les liens pointent vers une version précise. Un renvoi vers
+  une version `MODIFIE` n'est pas mort : il faut regarder si l'**article** (groupe de versions) a encore
+  une version en vigueur. Détails de l'archive : `docs/notes/legi.md`.
+- Drizzle : deux `.where()` chaînés → seul le dernier compte. Toujours `and(...)`.
 
 - svelte-check exige l'API JS de **TypeScript 6** (TS 7 natif ne la fournit pas) : `typescript@6.0.3` en
   devDependency de `apps/web` uniquement.
@@ -74,6 +81,6 @@
 
 ## Prochaines étapes (ordre)
 
-2. C0.2 balayage mécanique du CGI → premier rapport (candidats, pas encore qualifiés).
-3. Couverture Inria sur la carte (★ seulement pour les sous-arbres dont la suite de tests est verte en C0.1).
-4. J3 : desk + `join.txt` + CI de vérification.
+1. C0.2 balayage mécanique du CGI → premier rapport (candidats, pas encore qualifiés).
+2. Couverture Inria sur la carte (★ seulement pour les sous-arbres dont la suite de tests est verte en C0.1).
+3. J3 : desk + `join.txt` + CI de vérification.

@@ -293,7 +293,7 @@ apps/web        SvelteKit : pages SSR, /api/*, SSE (/api/stream) ; /desk/* au J3
 apps/worker     pg-boss : ingestion LEGI/BOFiP, pré-check sandbox, oracles, agrégats  (prévu)
 packages/core   échelle de preuve, types de findings, normalisation/empreinte LEGI   ✔
 packages/db     schéma Drizzle (contrat partagé), client, migrations               ✔
-packages/ingest parseur LEGI (XML) → Postgres                                       (J1)
+packages/ingest stock + incréments LEGI → Postgres (reprise et date de projection par code) ✔
 packages/runner exécution Catala sandboxée (Podman rootless, image par digest)      ✔
 packages/cli    bdl (setup, next, check, submit, replay)                           (prévu)
 infra/          image Catala (infra/catala, verrou image.lock.json), systemd       ✔
@@ -315,6 +315,7 @@ bun run db:generate         # après modification de packages/db/src/schema.ts
 bun run db:migrate          # applique les migrations
 bun run --filter @bugdeloi/web dev      # site en dev sur 127.0.0.1:19070
 bun run --filter @bugdeloi/web seed:dev # données FICTIVES, base bugdeloi_webdev uniquement
+bun packages/ingest/src/cli.ts legi --incremental   # applique les nouveaux lots DILA
 scripts/deploy.sh [ref]     # mise en production (127.0.0.1:19069), retour arrière automatique
 ```
 
@@ -322,6 +323,8 @@ scripts/deploy.sh [ref]     # mise en production (127.0.0.1:19069), retour arri�
   connexion par **socket Unix en authentification peer** (rôle `ubuntu`) : aucun mot de passe.
   URL par défaut : `postgres://ubuntu@localhost:5432/bugdeloi?host=/var/run/postgresql`
   (surchargable par `DATABASE_URL`). Extensions : `ltree`, `pg_trgm`, `unaccent`.
+- **« En vigueur »** : une seule règle, `isInForce` (`@bugdeloi/core/legi`) et son équivalent SQL
+  `articleInForce()` (`@bugdeloi/db/predicates`). Ne jamais filtrer sur `etat = 'VIGUEUR'` seul.
 - **Schéma** : `packages/db/src/schema.ts` est le contrat entre ingestion, worker et web. On ne le
   modifie que par migration générée (`db:generate`), jamais à la main en SQL.
 - **Hôte** : aarch64, 4 cœurs, ~14 Go RAM libres partagés avec d'autres services. Pas de build qui
