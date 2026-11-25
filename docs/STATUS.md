@@ -19,6 +19,7 @@
 | Accueil centré sur le droit calculable            | codex/gpt-6.2-sol (medium) | Exemple ★ issu du rejeu Inria, compte de travail avant relecture et contrôles regroupés dans le journal                                                                             | `apps/web`                                               |
 | J3 · Première version du desk                     | codex/gpt-6.2-sol (medium) | API, tâches d'analyse et CI plateforme sur la branche de travail. L'ouverture du corpus et son contrôle automatique restent à faire.                                                | `apps/web`, migration `0004`, workflow `verify.yml`      |
 | Harnais C0.3 · allocations familiales             | codex/gpt-6.2-sol (medium) | Audit de la première remise : 8/32 brut, 5/17 après dédoublonnage, 12/17 avec entrées complétées. Témoin Inria 17/17. Résultats de travail.                                         | [Audit C0.3](audits/2026-11-25-c0.3-evaluation.md)       |
+| Site · expérience C0.3                            | codex/gpt-6.2-sol (medium) | Pages de l’expérience et résultats provisoires sur la branche de travail.                                                                                                           | `apps/web`, `replications/c0.3`                          |
 
 ## Journal des décisions
 
