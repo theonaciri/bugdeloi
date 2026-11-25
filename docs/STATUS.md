@@ -93,5 +93,4 @@
 
 1. C0.2 balayage mécanique → premier rapport (candidats, pas encore qualifiés).
 2. Après C0.2 : `ingest legi --incremental` pour reprojeter l'arbre avec la règle `MODIFIE` (la carte du CSS place encore R611-2 en double : 7 420 vs 7 419) puis relancer le balayage.
-3. Couverture Inria sur la carte (★ seulement pour les sous-arbres dont la suite de tests est verte en C0.1).
-4. J3 : desk + `join.txt` + CI de vérification.
+3. J3 : desk + `join.txt` + CI de vérification.
