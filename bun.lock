@@ -67,6 +67,15 @@
       "name": "@bugdeloi/runner",
       "version": "0.0.0",
     },
+    "packages/sweep": {
+      "name": "@bugdeloi/sweep",
+      "version": "0.0.0",
+      "dependencies": {
+        "@bugdeloi/core": "workspace:*",
+        "@bugdeloi/db": "workspace:*",
+        "drizzle-orm": "0.45.4",
+      },
+    },
     "replications/c0.1": {
       "name": "@bugdeloi/c0.1",
       "version": "0.0.0",
@@ -109,6 +118,8 @@
     "@bugdeloi/ingest": ["@bugdeloi/ingest@workspace:packages/ingest"],
 
     "@bugdeloi/runner": ["@bugdeloi/runner@workspace:packages/runner"],
+
+    "@bugdeloi/sweep": ["@bugdeloi/sweep@workspace:packages/sweep"],
 
     "@bugdeloi/web": ["@bugdeloi/web@workspace:apps/web"],
 
