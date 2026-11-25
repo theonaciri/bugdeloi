@@ -6,6 +6,7 @@
 export function joinText(origin: string): string {
   return `BugDeLoi — join.txt
 ===================
+Site citoyen indépendant · pas un service officiel · pas un conseil juridique
 
 STATUT : BROUILLON. PAS ENCORE OUVERT (jalon J3).
 

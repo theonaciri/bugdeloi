@@ -141,7 +141,7 @@ const lifecycle = [
         </dd>
       </div>
       <div id="compteur-couverture">
-        <dt class="font-semibold">Articles couverts par la recherche</dt>
+        <dt class="font-semibold">Identifiants d’articles cités par la recherche</dt>
         <dd>
           Nombre d’identifiants LEGIARTI distincts cités par une formalisation de référence (par exemple
           <span class="mono">CatalaLang/catala-examples</span>), et combien d’entre eux correspondent à une version

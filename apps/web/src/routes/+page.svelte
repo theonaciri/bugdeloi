@@ -176,7 +176,7 @@ $effect(() => {
           </dd>
         </div>
         <div class="card p-4">
-          <dt class="text-sm text-muted">Articles couverts par la recherche</dt>
+          <dt class="text-sm text-muted">Identifiants d’articles cités par la recherche</dt>
           <dd class="mt-1 text-3xl font-semibold">{formatInt(snap.coverage.cited)}</dd>
           <dd class="mt-1 text-sm text-muted">
             {#if snap.coverage.cited === 0}Pas encore relevé.{:else}Identifiants cités par {plural(snap.coverage.sources, 'formalisation')}

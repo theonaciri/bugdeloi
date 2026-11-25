@@ -40,14 +40,16 @@ export const LEVEL_INFO: Record<Level, LevelInfo> = {
   N2: {
     level: 'N2',
     label: 'Compilé',
-    meaning: 'Le code Catala compile et ses tests passent avec la version épinglée du compilateur.',
+    meaning:
+      'Le code Catala compile et tous ses tests passent avec la version épinglée du compilateur ; les constructions interdites sont absentes et chaque constante cite l’alinéa qui la fixe.',
     colorToken: '--level-n2',
     pattern: 'dots',
   },
   N3: {
     level: 'N3',
     label: 'Testé',
-    meaning: 'Passe les cas d’au moins deux sources indépendantes, dont une non issue d’un LLM.',
+    meaning:
+      'Tous les cas d’oracle passent, issus d’au moins deux sources indépendantes dont une non issue d’un LLM ; aucun auteur d’oracle n’est de la famille de modèles du traducteur ; aucun conflit d’exceptions ni cas non couvert.',
     colorToken: '--level-n3',
     pattern: 'hatch',
   },
@@ -55,14 +57,15 @@ export const LEVEL_INFO: Record<Level, LevelInfo> = {
     level: 'N4',
     label: 'Éprouvé',
     meaning:
-      'Différentiel massif sans divergence inexpliquée, mutations détectées, relecture aveugle, red team.',
+      'Au moins 10 000 entrées générées (dont chaque seuil ± 1 €) comparées à une implémentation indépendante sans divergence inexpliquée ; au moins 80 % des mutations détectées ; relecture aveugle jugée équivalente par une troisième famille de modèles ; 7 jours de red team sans contre-exemple accepté.',
     colorToken: '--level-n4',
     pattern: 'solid',
   },
   N5: {
     level: 'N5',
     label: 'Certifié',
-    meaning: 'Revue humaine signée par un relecteur juriste identifié.',
+    meaning:
+      'Tous les contrôles précédents, plus une revue humaine signée par un relecteur juriste identifié.',
     colorToken: '--level-n5',
     pattern: 'cross',
   },
@@ -70,7 +73,7 @@ export const LEVEL_INFO: Record<Level, LevelInfo> = {
     level: 'REF',
     label: 'Référence',
     meaning:
-      'Article formalisé par des chercheurs ou une administration (Inria, DGFiP, CNAF) dont la suite de tests est rejouée chez nous.',
+      'Résultats identiques à ceux d’une formalisation de chercheurs ou d’une administration (Inria, DGFiP, CNAF) sur sa propre suite de tests, rejouée chez nous.',
     colorToken: '--level-ref',
     pattern: 'star',
   },

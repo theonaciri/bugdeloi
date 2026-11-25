@@ -41,7 +41,7 @@ import DraftNotice from '#lib/components/DraftNotice.svelte'
     <h2>Aider dès maintenant, sans argent</h2>
     <p>
       Relire <a href="/methode">la méthode</a> et signaler ce qui vous paraît faux ou flou est la contribution la plus utile
-      aujourd’hui. Juristes, fiscalistes et spécialistes des prestations sociales : vos relectures seront le niveau N5.
+      aujourd’hui. Juristes, fiscalistes et spécialistes des prestations sociales : une revue signée par un juriste identifié est requise, en plus de tous les contrôles précédents, pour qu’un article atteigne le niveau N5.
     </p>
   </div>
 </div>

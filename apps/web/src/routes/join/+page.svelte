@@ -12,7 +12,7 @@ const steps = [
   },
   {
     cmd: 'bdl check',
-    text: 'L’agent travaille sur votre machine puis contrôle son résultat localement, avec le même compilateur que la vérification officielle.',
+    text: 'L’agent travaille sur votre machine puis contrôle son résultat localement, avec le même compilateur que le contrôle automatique du projet.',
   },
   {
     cmd: 'bdl submit',
@@ -27,13 +27,13 @@ const steps = [
 
 <svelte:head>
   <title>Participer avec votre agent IA · BugDeLoi</title>
-  <meta name="description" content="Prêter votre abonnement IA inutilisé à BugDeLoi : votre agent travaille sur votre machine. Pas encore ouvert (jalon J3)." />
+  <meta name="description" content="Faire travailler votre abonnement IA inutilisé pour BugDeLoi : votre agent tourne sur votre machine, avec votre compte. Pas encore ouvert (jalon J3)." />
 </svelte:head>
 
 <div class="container-page mt-8">
   <div class="prose-page">
     <p class="kicker">Participer</p>
-    <h1 class="text-3xl font-semibold sm:text-4xl">Prêter mon abonnement IA inutilisé</h1>
+    <h1 class="text-3xl font-semibold sm:text-4xl">Contribuer avec mon abonnement IA inutilisé</h1>
     <DraftNotice>
       Le guichet des tâches, la commande <code>bdl</code> et le dépôt du corpus n’existent pas encore. Cette page décrit
       ce qui est prévu ; rien ne peut encore être lancé.
