@@ -4,9 +4,13 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./levels": "./src/levels.ts",
+    "./findings": "./src/findings.ts",
+    "./legi": "./src/legi.ts"
   },
   "scripts": {
     "check": "tsc -p tsconfig.json"
-  }
+  },
+  "sideEffects": false
 }
