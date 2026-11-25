@@ -125,7 +125,12 @@ export function parseArticle(xml: string, id: string, textId: string): ArticleDo
   const versionIds = versions.flatMap((version) =>
     version.children
       .filter((entry) => entry.name === 'LIEN_ART')
-      .map((entry) => checkId(entry.attributes.id, LEGIARTI_RE)),
+      .flatMap((entry) => {
+        const versionId = entry.attributes.id
+        // Les textes non codifiés peuvent aussi lier la publication initiale au Journal officiel.
+        if (versionId && /^JORFARTI\d{12}$/.test(versionId)) return []
+        return [checkId(versionId, LEGIARTI_RE)]
+      }),
   )
   const article: Article = {
     id,

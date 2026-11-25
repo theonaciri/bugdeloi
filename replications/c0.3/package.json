@@ -1,0 +1,14 @@
+{
+  "name": "@bugdeloi/c0.3",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@bugdeloi/core": "workspace:*",
+    "@bugdeloi/db": "workspace:*",
+    "drizzle-orm": "0.45.4"
+  }
+}

@@ -94,7 +94,10 @@ async function incrementFixture(path: string) {
 }
 
 test('XML LEGI : contenu brut, versions, normalisation et attributs des liens', async () => {
-  const xml = await fixture('article')
+  const xml = (await fixture('article')).replace(
+    '<VERSIONS>',
+    '<VERSIONS><VERSION etat="INITIALE"><LIEN_ART id="JORFARTI999990000001"/></VERSION>',
+  )
   const { article, links } = parseArticle(xml, current, textId)
   expect(article).toMatchObject({
     id: current,

@@ -1,0 +1,55 @@
+```catala-metadata
+déclaration énumération Territoire:
+  -- FranceMétropolitaine
+  -- DépartementGuadeloupe
+  -- DépartementGuyane
+  -- DépartementMartinique
+  -- DépartementRéunion
+  -- DépartementMayotte
+  -- CollectivitéBarthélemy
+  -- CollectivitéMartin
+  -- CollectivitéPierreMiquelon
+
+déclaration énumération ChargeEnfant:
+  -- ChargePermanente
+  -- RésidenceAlternéePartagée
+  -- RésidenceAlternéeUnique
+  -- PlacementVersementFamille
+  -- PlacementVersementService
+
+déclaration énumération Scolarité:
+  -- PrécèdeObligation
+  -- RelèveObligation
+  -- SuitObligation
+
+déclaration structure SituationEnfant:
+  donnée numéro_dossier contenu entier
+  donnée naissance contenu date
+  donnée salaire_mensuel contenu argent
+  donnée appréciation_charge contenu ChargeEnfant
+  donnée droit_antérieur contenu booléen
+  donnée aide_logement_personnelle contenu booléen
+
+déclaration champ d'application CalculMensuel:
+  entrée jour_de_droit contenu date
+  entrée territoire_du_foyer contenu Territoire
+  entrée personnes_à_charge contenu liste de SituationEnfant
+  entrée revenu_annuel_de_référence contenu argent
+  entrée appréciation_parent_en_charge contenu booléen
+  entrée appréciation_conditions_générales contenu booléen
+  entrée charge_antérieure_au_régime_transitoire contenu booléen
+  entrée base_mensuelle_de_calcul contenu argent
+  entrée minimum_horaire_brut contenu argent
+  entrée premier_plafond_hors_enfants contenu argent
+  entrée second_plafond_hors_enfants contenu argent
+  entrée majoration_plafonds_par_enfant contenu argent
+  résultat allocation_mensuelle contenu argent
+
+déclaration champ d'application OuverturePourEnfant:
+  entrée date_du_droit contenu date
+  entrée territoire_de_résidence contenu Territoire
+  entrée situation_individuelle contenu SituationEnfant
+  entrée état_de_scolarité contenu Scolarité
+  entrée salaire_minimum_horaire contenu argent
+  résultat droit_individuel contenu booléen
+```
