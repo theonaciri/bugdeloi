@@ -54,6 +54,10 @@
 
 ## Pièges connus
 
+- **Quotas des fournisseurs** : Claude (limite de 5 h), Antigravity/Gemini (quota individuel, plusieurs
+  jours). Une tâche déléguée qui échoue sur quota peut **reprendre seule** à la réinitialisation : annuler
+  explicitement (`task_cancel`) toute tâche remplacée pour éviter deux implémentations concurrentes.
+
 - C0.2 : les blocs `VERSIONS` des anciennes versions sont incomplets (lignée = composante connexe) ;
   11 % des liens `CITATION` pointent vers une version absente du stock (rattachement par numéro) ;
   `\b` JS ne coupe pas après une lettre accentuée ; `normalizeLegalText` transforme « » en `"`.
@@ -105,6 +109,7 @@
 2. En cours : qualification humaine par fichiers de verdicts versionnés + `/anomalies` — codex/gpt-6.2-sol
    (high) (la 1ʳᵉ tentative Claude Sonnet a échoué sur la limite d'usage).
 3. En cours : reproduction indépendante n° 2 depuis les **XML DILA bruts** (historique complet) pour
-   trancher les 1 112 REF_MORTE — antigravity/gemini-4-hydrogen (high), 3ᵉ famille de modèles.
+   trancher les 1 112 REF_MORTE — claude-opus-5-5 (high) ; la tentative Gemini (antigravity) a échoué sur
+   quota (réinitialisation ~131 h).
 4. **Qualification humaine** d'un premier lot par le mainteneur ou un juriste → premiers findings publiés.
 5. J3 : desk + `join.txt` + CI de vérification.
