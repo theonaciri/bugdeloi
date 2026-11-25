@@ -5,16 +5,16 @@
 
 ## Jalon courant : J0 Fondations (+ début J1)
 
-| Chantier                                          | Responsable                | État                                                                                                                                 | Livrable                                                 |
-| ------------------------------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------- |
-| Monorepo Bun, Biome, TS 7, licences               | orchestrateur              | ✔ fait                                                                                                                               | racine, `packages/core`, `packages/db`                   |
-| Base Postgres `bugdeloi` + migration 0000         | orchestrateur              | ✔ fait                                                                                                                               | `packages/db/migrations`                                 |
-| Image Catala 1.3.2 multi-arch + C0.1 rejeu Inria  | codex/gpt-6.2-sol (medium) | ✔ fait — **171/171 tests Inria verts** (ARM64), 473 LEGIARTI de couverture importés                                                  | `infra/catala/`, `packages/runner`, `replications/c0.1/` |
-| Ingestion LEGI (CGI, CSS, CCH)                    | codex/gpt-6.2-sol (high)   | ✔ fait — stock du 08/11 + incréments au 24/11/2026 ; 71 884 versions, 1 210 052 liens ; en vigueur : CGI 2 405, CSS 7 420, CCH 4 126 | `packages/ingest`                                        |
-| Site web (accueil, carte, article, méthode, join) | claude-opus-5-5 (high)     | ✔ fait — en ligne sur https://bugdeloi.theonaciri.fr                                                                                 | `apps/web`                                               |
-| Service systemd + mise en ligne sur 19069         | orchestrateur              | ✔ fait — `scripts/deploy.sh` (révisions + retour arrière)                                                                            | `infra/systemd/`                                         |
-| Balayage mécanique C0.2 (renvois morts…)          | claude-sonnet-5-5 (high)   | en cours                                                                                                                             | `packages/sweep`                                         |
-| Couverture Inria → ★ sur la carte                 | orchestrateur              | ✔ fait — **290 articles ★** (CGI 32, CSS 24, CCH 234) via `replications/c0.1/promote.ts`                                             | `reference_coverage`                                     |
+| Chantier                                          | Responsable                | État                                                                                                                                                                                | Livrable                                                 |
+| ------------------------------------------------- | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| Monorepo Bun, Biome, TS 7, licences               | orchestrateur              | ✔ fait                                                                                                                                                                              | racine, `packages/core`, `packages/db`                   |
+| Base Postgres `bugdeloi` + migration 0000         | orchestrateur              | ✔ fait                                                                                                                                                                              | `packages/db/migrations`                                 |
+| Image Catala 1.3.2 multi-arch + C0.1 rejeu Inria  | codex/gpt-6.2-sol (medium) | ✔ fait — **171/171 tests Inria verts** (ARM64), 473 LEGIARTI de couverture importés                                                                                                 | `infra/catala/`, `packages/runner`, `replications/c0.1/` |
+| Ingestion LEGI (CGI, CSS, CCH)                    | codex/gpt-6.2-sol (high)   | ✔ fait — stock du 08/11 + incréments au 24/11/2026 ; 71 884 versions, 1 210 052 liens ; en vigueur : CGI 2 405, CSS 7 420, CCH 4 126                                                | `packages/ingest`                                        |
+| Site web (accueil, carte, article, méthode, join) | claude-opus-5-5 (high)     | ✔ fait — en ligne sur https://bugdeloi.theonaciri.fr                                                                                                                                | `apps/web`                                               |
+| Service systemd + mise en ligne sur 19069         | orchestrateur              | ✔ fait — `scripts/deploy.sh` (révisions + retour arrière)                                                                                                                           | `infra/systemd/`                                         |
+| Balayage mécanique C0.2 (renvois morts…)          | claude-sonnet-5-5 (high)   | ✔ fait — 4 détecteurs déterministes, **1 128 candidats non qualifiés** (REF_MORTE 1 117, SYNTAXE 9, NUMEROTATION 2), certificats rejouables ; rapport `replications/c0.2/REPORT.md` | `packages/sweep`                                         |
+| Couverture Inria → ★ sur la carte                 | orchestrateur              | ✔ fait — **290 articles ★** (CGI 32, CSS 24, CCH 234) via `replications/c0.1/promote.ts`                                                                                            | `reference_coverage`                                     |
 
 ## Journal des décisions
 
@@ -54,6 +54,14 @@
 
 ## Pièges connus
 
+- C0.2 : les blocs `VERSIONS` des anciennes versions sont incomplets (lignée = composante connexe) ;
+  11 % des liens `CITATION` pointent vers une version absente du stock (rattachement par numéro) ;
+  `\b` JS ne coupe pas après une lettre accentuée ; `normalizeLegalText` transforme « » en `"`.
+  Détails : `docs/notes/sweep.md`.
+- Ingestion : l'arbre daté est construit depuis les liens des sections ; une version n'y est placée que
+  si **ses propres** métadonnées la disent en vigueur. Après un changement de règle :
+  `ingest legi --incremental --reproject`.
+
 - LEGI : chaque `LEGIARTI` est une **version** ; les liens pointent vers une version précise. Un renvoi vers
   une version `MODIFIE` n'est pas mort : il faut regarder si l'**article** (groupe de versions) a encore
   une version en vigueur. Détails de l'archive : `docs/notes/legi.md`.
@@ -91,6 +99,8 @@
 
 ## Prochaines étapes (ordre)
 
-1. C0.2 balayage mécanique → premier rapport (candidats, pas encore qualifiés).
-2. Après C0.2 : `ingest legi --incremental` pour reprojeter l'arbre avec la règle `MODIFIE` (la carte du CSS place encore R611-2 en double : 7 420 vs 7 419) puis relancer le balayage.
-3. J3 : desk + `join.txt` + CI de vérification.
+1. Reproduction **indépendante** des candidats C0.2 sur une autre chaîne de données (Tricoteuses) → `reproduced`.
+2. Outils de qualification humaine (fichier de verdicts versionné + commande `qualify`) et page publique
+   `/anomalies` (qualifiées uniquement).
+3. **Qualification humaine** d'un premier lot par le mainteneur ou un juriste → premiers findings publiés.
+4. J3 : desk + `join.txt` + CI de vérification.
