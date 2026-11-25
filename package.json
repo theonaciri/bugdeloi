@@ -5,7 +5,8 @@
   "license": "AGPL-3.0-or-later",
   "workspaces": [
     "apps/*",
-    "packages/*"
+    "packages/*",
+    "replications/*"
   ],
   "engines": {
     "bun": ">=1.4.0"

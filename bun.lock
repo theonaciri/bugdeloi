@@ -25,6 +25,19 @@
         "drizzle-kit": "0.31.11",
       },
     },
+    "packages/runner": {
+      "name": "@bugdeloi/runner",
+      "version": "0.0.0",
+    },
+    "replications/c0.1": {
+      "name": "@bugdeloi/c0.1",
+      "version": "0.0.0",
+      "dependencies": {
+        "@bugdeloi/db": "workspace:*",
+        "@bugdeloi/runner": "workspace:*",
+        "drizzle-orm": "0.45.4",
+      },
+    },
   },
   "packages": {
     "@biomejs/biome": ["@biomejs/biome@2.6.9", "", { "optionalDependencies": { "@biomejs/cli-android-arm64": "2.6.9", "@biomejs/cli-android-x64": "2.6.9", "@biomejs/cli-darwin-arm64": "2.6.9", "@biomejs/cli-darwin-x64": "2.6.9", "@biomejs/cli-linux-arm64": "2.6.9", "@biomejs/cli-linux-arm64-musl": "2.6.9", "@biomejs/cli-linux-x64": "2.6.9", "@biomejs/cli-linux-x64-musl": "2.6.9", "@biomejs/cli-win32-arm64": "2.6.9", "@biomejs/cli-win32-x64": "2.6.9" }, "bin": { "biome": "bin/biome" } }, "sha512-RelCBDzTXu4DBU8c35P4iMrDO80SUjW0OgjDA7CT1z3UcCU5IclWTZ2XnMelI4frQL//xg2K2BQxAhcOKxdPQA=="],
@@ -49,9 +62,13 @@
 
     "@biomejs/cli-win32-x64": ["@biomejs/cli-win32-x64@2.6.9", "", { "os": "win32", "cpu": "x64" }, "sha512-mwarNc4GEg5JknsRaJDyJDFr4kICD7snsGM8yYFOoIHimSU1ekWNbcZ44QDa6/30fUZC9077wbBpXE8fp03aug=="],
 
+    "@bugdeloi/c0.1": ["@bugdeloi/c0.1@workspace:replications/c0.1"],
+
     "@bugdeloi/core": ["@bugdeloi/core@workspace:packages/core"],
 
     "@bugdeloi/db": ["@bugdeloi/db@workspace:packages/db"],
+
+    "@bugdeloi/runner": ["@bugdeloi/runner@workspace:packages/runner"],
 
     "@drizzle-team/brocli": ["@drizzle-team/brocli@0.10.2", "", {}, "sha512-z33Il7l5dKjUgGULTqBsQBQwckHh5AbIuxhdsIxDDiZAzBOrZO6q9ogcWC65kU382AfynTfgNumVcNIjuIua6w=="],
 
