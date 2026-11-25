@@ -128,11 +128,11 @@ const lifecycle = [
         </dd>
       </div>
       <div id="compteur-avancement">
-        <dt class="font-semibold">Avancement par code</dt>
+        <dt class="font-semibold">Articles de référence ★</dt>
         <dd>
-          Part des articles en vigueur d’un code qui ont atteint au moins le niveau N2 (N2, N3, N4, N5 ou ★), sur le nombre
-          d’articles en vigueur de ce code. Un article sans niveau enregistré est compté N0. Si le code n’est pas ingéré,
-          nous l’écrivons au lieu d’afficher 0 %.
+          L’accueil compte les versions en vigueur portant le marqueur ★. Pour chaque code, la barre rapporte
+          ce nombre à l’ensemble des articles en vigueur. L’exemple vient de cette liste et présente une règle
+          décrite dans le programme source. Le nombre de tests affiché concerne la suite du programme.
         </dd>
       </div>
       <div id="compteur-formalisations">
@@ -144,6 +144,14 @@ const lifecycle = [
         <dd>
           Nombre d’anomalies au statut « qualifié » ou « publié ». Une chaîne indépendante a reproduit le constat et un
           humain a conclu à un défaut du texte ou à une lacune.
+        </dd>
+      </div>
+      <div id="compteur-relecture">
+        <dt class="font-semibold">Signalements à examiner</dt>
+        <dd>
+          Ce compte de travail additionne les signalements candidats et ceux déjà reproduits qui attendent un
+          verdict humain. Les premiers passent encore par un contrôle indépendant. Les fiches d’anomalies
+          publiées ont reçu un verdict humain favorable.
         </dd>
       </div>
       <div id="compteur-rejeux">
@@ -166,8 +174,10 @@ const lifecycle = [
       <div id="compteur-journal">
         <dt class="font-semibold">Derniers événements</dt>
         <dd>
-          Les entrées les plus récentes du journal public, qui conserve son historique. Pour les anomalies, il présente
-          les événements de qualification favorable et de publication. Pour un contrôle automatique, la fiche compte les articles en vigueur examinés par code à sa date de projection, à partir du résultat enregistré dans le journal.
+          Les contrôles, les chargements de textes et les mises à jour des articles ★ sont regroupés par type
+          et par jour civil, à l’heure de Paris. Chaque groupe donne accès à ses fiches. L’accueil affiche les
+          trois entrées ou groupes les plus récents. Pour les anomalies, le journal présente les événements de qualification
+          favorable et de publication.
         </dd>
       </div>
     </dl>

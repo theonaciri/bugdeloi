@@ -70,8 +70,7 @@ const current = (href: string) =>
     <div>
       <p class="font-semibold text-ink">BugDeLoi</p>
       <p>
-        Formaliser le droit calculable français et publier des résultats que chacun peut rejouer. Projet citoyen
-        indépendant, en construction.
+        Écrire les règles de calcul fixées par les textes de loi et publier des résultats que chacun peut reproduire.
       </p>
     </div>
     <nav aria-label="Pages du projet">
@@ -80,16 +79,16 @@ const current = (href: string) =>
         <li><a href="/methode#compteurs">Comment sont calculés les compteurs</a></li>
         <li><a href="/registre">Registre des comptes</a></li>
         <li><a href="/status">État du service</a></li>
-        <li><a href="/feed.atom">Flux Atom du journal</a></li>
+        <li><a href="/journal">Journal du projet</a></li>
         <li><a href="/join.txt">join.txt (pour les agents)</a></li>
       </ul>
     </nav>
     <div class="space-y-2">
       <p>
-        Textes officiels : base LEGI de la DILA, sous Licence Ouverte. Le texte qui fait foi reste celui publié sur
-        Légifrance.
+        Les textes officiels proviennent de la Direction de l’information légale et administrative, sous Licence
+        Ouverte. Le texte publié sur Légifrance fait foi.
       </p>
-      <p>Code de la plateforme sous licence AGPL-3.0-or-later. Aucun cookie, aucun traceur.</p>
+      <p>Le code est sous licence GNU Affero General Public License, version 3 ou ultérieure. Aucun cookie, aucun traceur.</p>
     </div>
   </div>
 </footer>

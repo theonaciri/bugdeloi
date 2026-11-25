@@ -30,6 +30,26 @@ export interface PublicEvent {
   summary: string | null
 }
 
+export interface JournalEntry {
+  id: number
+  type: string
+  events: { id: number; ts: string }[]
+}
+
+export interface ReferenceExample {
+  id: string
+  num: string | null
+  codeTitle: string
+  versionDate: string | null
+  textHtml: string
+  legifranceUrl: string
+  sourceUrl: string
+  title: string
+  description: string
+  tests: number
+  replayDate: string
+}
+
 export interface RunInfo {
   id: number
   kind: string
@@ -44,8 +64,10 @@ export interface Snapshot {
   /** Vrai si la base contient les données fictives de `scripts/seed-dev.ts`. */
   fictional: boolean
   codes: CodeProgress[]
-  findings: { public: number }
+  findings: { public: number; pendingReview: number }
   replications: { passed: number; total: number; last: RunInfo | null }
   coverage: { sources: number; cited: number; matched: number }
   events: PublicEvent[]
+  journal: JournalEntry[]
+  referenceExample: ReferenceExample | null
 }

@@ -6,6 +6,8 @@ const TZ = 'Europe/Paris'
 const intFmt = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 })
 const pctFmt = new Intl.NumberFormat('fr-FR', { style: 'percent', maximumFractionDigits: 1 })
 const dateFmt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'long', timeZone: TZ })
+const timeFmt = new Intl.DateTimeFormat('fr-FR', { timeStyle: 'short', timeZone: TZ })
+const dayFmt = new Intl.DateTimeFormat('sv-SE', { dateStyle: 'short', timeZone: TZ })
 const dateTimeFmt = new Intl.DateTimeFormat('fr-FR', {
   dateStyle: 'medium',
   timeStyle: 'short',
@@ -34,6 +36,15 @@ export function formatDateTime(iso: string | null | undefined): string {
   if (!iso) return '—'
   const parsed = new Date(iso)
   return Number.isNaN(parsed.getTime()) ? iso : dateTimeFmt.format(parsed)
+}
+
+export function formatTime(iso: string): string {
+  return timeFmt.format(new Date(iso))
+}
+
+/** Jour civil de Paris au format AAAA-MM-JJ pour un élément `time`. */
+export function formatParisDay(iso: string): string {
+  return dayFmt.format(new Date(iso))
 }
 
 /** Pluriel simple : `plural(2, 'article')` → « 2 articles ». */

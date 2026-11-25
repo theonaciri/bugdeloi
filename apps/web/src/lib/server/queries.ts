@@ -27,7 +27,7 @@ import {
   qualifiedStatus,
   REJECTED_VERDICTS,
 } from '@bugdeloi/core/findings'
-import { CODES, LEGIARTI_RE, LEGISCTA_RE } from '@bugdeloi/core/legi'
+import { CODES, LEGIARTI_RE, LEGISCTA_RE, legifranceArticleUrl } from '@bugdeloi/core/legi'
 import { articleInForce } from '@bugdeloi/db/predicates'
 import {
   articleStatus,
@@ -43,9 +43,18 @@ import {
   sweepRun,
 } from '@bugdeloi/db/schema'
 import { and, asc, count, desc, eq, inArray, isNull, or, type SQL, sql } from 'drizzle-orm'
+import { journalGroupLabels } from '../events.ts'
 import { asLevel, countAtLeast, emptyLevelCounts, type Level } from '../levels.ts'
 import { MAP_WINDOW, type MapArticleRow, type MapCountRow, type MapSectionRow } from '../map-tree.ts'
-import type { CodeProgress, PublicEvent, RunInfo, Snapshot } from '../snapshot.ts'
+import { sanitizeLegalHtml } from '../sanitize.ts'
+import type {
+  CodeProgress,
+  JournalEntry,
+  PublicEvent,
+  ReferenceExample,
+  RunInfo,
+  Snapshot,
+} from '../snapshot.ts'
 import { db } from './db.ts'
 
 const publicFindingFilter = inArray(finding.status, PUBLIC_FINDING_STATUSES)
@@ -90,6 +99,29 @@ function publicEvent(r: typeof event.$inferSelect): PublicEvent {
 export async function latestEvents(limit = 10): Promise<PublicEvent[]> {
   const rows = await db().select().from(event).where(publicEventFilter).orderBy(desc(event.id)).limit(limit)
   return rows.map(publicEvent)
+}
+
+/** Opérations répétitives regroupées par type et par jour à Paris, par dernier événement. */
+export async function journalEntries(limit: number, before?: number): Promise<JournalEntry[]> {
+  const repeatable = inArray(event.type, Object.keys(journalGroupLabels))
+  return db()
+    .select({
+      id: sql<number>`max(${event.id})`.mapWith(Number),
+      type: event.type,
+      events: sql<
+        JournalEntry['events']
+      >`jsonb_agg(jsonb_build_object('id', ${event.id}, 'ts', ${event.ts}) order by ${event.ts} desc, ${event.id} desc)`,
+    })
+    .from(event)
+    .where(publicEventFilter)
+    .groupBy(
+      event.type,
+      sql`case when ${repeatable} then (${event.ts} at time zone 'Europe/Paris')::date end`,
+      sql`case when not ${repeatable} then ${event.id} end`,
+    )
+    .having(before === undefined ? undefined : sql`max(${event.id}) < ${before}`)
+    .orderBy(sql`max(${event.id}) desc`)
+    .limit(limit)
 }
 
 /** Le détail applique le filtre du journal et ne transmet pas le payload brut. */
@@ -209,6 +241,128 @@ export async function publicFindingCount(): Promise<number> {
   return Number(r?.n ?? 0)
 }
 
+/** Charge de relecture : signalements encore candidats ou reproduits, sans identifier les cas. */
+async function pendingReviewCount(): Promise<number> {
+  const [r] = await db()
+    .select({ n: count() })
+    .from(finding)
+    .where(inArray(finding.status, ['candidate', 'reproduced']))
+  return r?.n ?? 0
+}
+
+const referenceCommit = '9e251b932288cf5f4a74af072d203144a057494b'
+// Les explications portent sur les versions datées et le code du commit ci-dessus.
+// Une citation seule dans reference_coverage ne suffit pas à expliquer ce que le programme fait.
+const referenceExplanations = [
+  {
+    id: 'LEGIARTI000038814858',
+    title: 'Une allocation de logement pour devenir propriétaire ?',
+    description:
+      'Le programme lit la date de signature du prêt immobilier et écarte la demande si le prêt a été signé après la date limite fixée par l’article.',
+  },
+  {
+    id: 'LEGIARTI000038878698',
+    title: 'Pendant combien de temps cette allocation de logement est-elle due ?',
+    description:
+      'Le programme utilise la durée de cinq ans fixée par cet article pour déterminer si le foyer peut encore toucher l’allocation dans le cas prévu par l’article L. 841-1.',
+  },
+]
+
+const referenceArticleFilter = and(
+  eq(articleStatus.level, 'REF'),
+  articleInForce(),
+  inArray(
+    legalArticle.textId,
+    CODE_KEYS.map((key) => CODES[key].id),
+  ),
+)
+
+export function referenceArticles(exclude?: string) {
+  return db()
+    .select({ id: legalArticle.id, num: legalArticle.num, code: legalText.title })
+    .from(articleStatus)
+    .innerJoin(legalArticle, eq(legalArticle.id, articleStatus.articleId))
+    .innerJoin(legalText, eq(legalText.id, legalArticle.textId))
+    .where(and(referenceArticleFilter, exclude ? sql`${legalArticle.id} <> ${exclude}` : undefined))
+    .orderBy(legalText.title, legalArticle.num, legalArticle.id)
+}
+
+/** Un article ★ bien documenté, couvert par une suite dont le dernier rejeu a réussi. */
+async function referenceExample(): Promise<ReferenceExample | null> {
+  const latest = db()
+    .selectDistinctOn([replicationRun.subject], {
+      subject: replicationRun.subject,
+      status: replicationRun.status,
+      finishedAt: replicationRun.finishedAt,
+      summary: replicationRun.summary,
+    })
+    .from(replicationRun)
+    .where(and(eq(replicationRun.kind, 'C0.1-inria-replay'), sql`${replicationRun.status} <> 'running'`))
+    .orderBy(replicationRun.subject, desc(replicationRun.startedAt), desc(replicationRun.id))
+    .as('example_latest')
+
+  const rows = await db()
+    .select({
+      id: legalArticle.id,
+      num: legalArticle.num,
+      codeTitle: legalText.title,
+      versionDate: legalArticle.dateDebut,
+      contentHtml: legalArticle.contentHtml,
+      file: referenceCoverage.file,
+      line: referenceCoverage.line,
+      tests: sql<unknown>`${latest.summary}->'tests'`,
+      finishedAt: latest.finishedAt,
+    })
+    .from(articleStatus)
+    .innerJoin(legalArticle, eq(legalArticle.id, articleStatus.articleId))
+    .innerJoin(legalText, eq(legalText.id, legalArticle.textId))
+    .innerJoin(referenceCoverage, eq(referenceCoverage.legiarti, legalArticle.id))
+    .innerJoin(latest, eq(latest.subject, `catala-examples@${referenceCommit}/aides_logement`))
+    .where(
+      and(
+        referenceArticleFilter,
+        inArray(
+          legalArticle.id,
+          referenceExplanations.map(({ id }) => id),
+        ),
+        eq(referenceCoverage.source, 'inria/catala-examples'),
+        eq(referenceCoverage.sourceCommit, referenceCommit),
+        sql`starts_with(${referenceCoverage.file}, 'aides_logement/')`,
+        eq(latest.status, 'passed'),
+      ),
+    )
+    .orderBy(referenceCoverage.file, referenceCoverage.line)
+
+  for (const { id, title, description } of referenceExplanations) {
+    const row = rows.find((candidate) => candidate.id === id)
+    if (
+      !row?.contentHtml ||
+      !row.finishedAt ||
+      typeof row.tests !== 'number' ||
+      !Number.isSafeInteger(row.tests) ||
+      row.tests < 1
+    )
+      continue
+    const file = row.file.split('/').map(encodeURIComponent).join('/')
+    return {
+      id,
+      num: row.num,
+      codeTitle: row.codeTitle,
+      versionDate: row.versionDate,
+      textHtml: sanitizeLegalHtml(row.contentHtml)
+        .trim()
+        .replace(/^(<p>\s*)<br>\s*/, '$1'),
+      legifranceUrl: legifranceArticleUrl(id),
+      sourceUrl: `https://github.com/CatalaLang/catala-examples/blob/${referenceCommit}/${file}${row.line ? `#L${row.line}` : ''}`,
+      title,
+      description,
+      tests: row.tests,
+      replayDate: row.finishedAt.toISOString(),
+    }
+  }
+  return null
+}
+
 function toRunInfo(r: typeof replicationRun.$inferSelect | undefined): RunInfo | null {
   if (!r) return null
   return {
@@ -279,22 +433,28 @@ export async function hasFictionalData(): Promise<boolean> {
 
 /** Instantané complet de l'accueil (servi aussi par /api/snapshot.json et /api/stream). */
 export async function snapshot(): Promise<Snapshot> {
-  const [codes, findings, replications, coverage, events, fictional] = await Promise.all([
-    codeProgress(),
-    publicFindingCount(),
-    replicationStats(),
-    coverageStats(),
-    latestEvents(10),
-    hasFictionalData(),
-  ])
+  const [codes, findings, pendingReview, replications, coverage, events, journal, example, fictional] =
+    await Promise.all([
+      codeProgress(),
+      publicFindingCount(),
+      pendingReviewCount(),
+      replicationStats(),
+      coverageStats(),
+      latestEvents(10),
+      journalEntries(3),
+      referenceExample(),
+      hasFictionalData(),
+    ])
   return {
     generatedAt: new Date().toISOString(),
     fictional,
     codes,
-    findings: { public: findings },
+    findings: { public: findings, pendingReview },
     replications,
     coverage,
     events,
+    journal,
+    referenceExample: example,
   }
 }
 

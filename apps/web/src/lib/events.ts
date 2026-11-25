@@ -182,6 +182,19 @@ export function eventHref(id: number) {
   return `/evenement/${id}`
 }
 
+export const journalGroupLabels = {
+  'sweep.finished': 'contrôles automatiques',
+  'reproduction.finished': 'contrôles indépendants',
+  'ingest.finished': 'chargements de textes officiels',
+  'reference.promoted': 'mises à jour des articles ★',
+} as const
+
+export function journalGroupLabel(type: string): string {
+  return Object.hasOwn(journalGroupLabels, type)
+    ? journalGroupLabels[type as keyof typeof journalGroupLabels]
+    : 'événements'
+}
+
 export function replayStatus(status: string) {
   switch (status) {
     case 'running':
