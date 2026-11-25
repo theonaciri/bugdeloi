@@ -13,21 +13,24 @@
 | Ingestion LEGI (CGI, CSS, CCH)                    | codex/gpt-6.2-sol (high)   | ✔ fait — stock du 08/11 + incréments au 24/11/2026 ; 71 884 versions, 1 210 052 liens ; en vigueur : CGI 2 405, CSS 7 420, CCH 4 126 | `packages/ingest`                                        |
 | Site web (accueil, carte, article, méthode, join) | claude-opus-5-5 (high)     | ✔ fait — en ligne sur https://bugdeloi.theonaciri.fr                                                                                 | `apps/web`                                               |
 | Service systemd + mise en ligne sur 19069         | orchestrateur              | ✔ fait — `scripts/deploy.sh` (révisions + retour arrière)                                                                            | `infra/systemd/`                                         |
-| Balayage mécanique C0.2 (renvois morts…)          | —                          | à faire (après ingestion)                                                                                                            | `packages/sweep`                                         |
-| Couverture Inria (LEGIARTI cités) → carte         | —                          | données importées (`reference_coverage`) ; affichage ★ après ingestion                                                               | `reference_coverage`                                     |
+| Balayage mécanique C0.2 (renvois morts…)          | claude-sonnet-5-5 (high)   | en cours                                                                                                                             | `packages/sweep`                                         |
+| Couverture Inria → ★ sur la carte                 | orchestrateur              | ✔ fait — **290 articles ★** (CGI 32, CSS 24, CCH 234) via `replications/c0.1/promote.ts`                                             | `reference_coverage`                                     |
 
 ## Journal des décisions
 
-| Date       | Décision                                                                                                                                                     | Raison                                                                                                  |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
-| 2026-11-25 | Nom public **BugDeLoi**, dépôt `theonaciri/bugdeloi` (GitHub personnel)                                                                                      | Choix du mainteneur                                                                                     |
-| 2026-11-25 | Dépôt créé **privé** au départ                                                                                                                               | Réversible ; passage en public quand le site est présentable (nécessaire pour la CI gratuite illimitée) |
-| 2026-11-25 | Licence plateforme AGPL-3.0-or-later                                                                                                                         | Défaut du PLAN §14, non contesté                                                                        |
-| 2026-11-25 | Postgres en socket Unix + auth peer (rôle `ubuntu`)                                                                                                          | Aucun secret à stocker                                                                                  |
-| 2026-11-25 | Corpus et rejeux dans ce dépôt jusqu'à J3                                                                                                                    | Moins de dépôts tant qu'il n'y a pas de contributeurs externes                                          |
-| 2026-11-25 | Versions : TS 7.0.2, SvelteKit 3.4, Svelte 5.59, Vite 8.3, Drizzle 0.45.4, postgres 4.1.1, Biome 2.6.9                                                       | Dernières stables au 25/11/2026                                                                         |
-| 2026-11-25 | Une seule règle « en vigueur » : `isInForce` (core) ≡ `articleInForce()` (db), dates DILA [début, fin[ à la date de projection du code, inclut `ABROGE_DIFF` | Le site comptait `etat = VIGUEUR` seul (CGI 2 030 au lieu de 2 405) ; test d'invariant SQL ≡ JS         |
-| 2026-11-25 | Site en lecture seule sur la base, CSP par empreintes, SSE coalescé via un seul `LISTEN`                                                                     | Le web ne doit jamais écrire ; pages cachables à l'edge                                                 |
+| Date       | Décision                                                                                                                                                     | Raison                                                                                                                              |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-11-25 | Nom public **BugDeLoi**, dépôt `theonaciri/bugdeloi` (GitHub personnel)                                                                                      | Choix du mainteneur                                                                                                                 |
+| 2026-11-25 | Dépôt créé **privé** au départ                                                                                                                               | Réversible ; passage en public quand le site est présentable (nécessaire pour la CI gratuite illimitée)                             |
+| 2026-11-25 | Licence plateforme AGPL-3.0-or-later                                                                                                                         | Défaut du PLAN §14, non contesté                                                                                                    |
+| 2026-11-25 | Postgres en socket Unix + auth peer (rôle `ubuntu`)                                                                                                          | Aucun secret à stocker                                                                                                              |
+| 2026-11-25 | Corpus et rejeux dans ce dépôt jusqu'à J3                                                                                                                    | Moins de dépôts tant qu'il n'y a pas de contributeurs externes                                                                      |
+| 2026-11-25 | Versions : TS 7.0.2, SvelteKit 3.4, Svelte 5.59, Vite 8.3, Drizzle 0.45.4, postgres 4.1.1, Biome 2.6.9                                                       | Dernières stables au 25/11/2026                                                                                                     |
+| 2026-11-25 | Une seule règle « en vigueur » : `isInForce` (core) ≡ `articleInForce()` (db), dates DILA [début, fin[ à la date de projection du code, inclut `ABROGE_DIFF` | Le site comptait `etat = VIGUEUR` seul (CGI 2 030 au lieu de 2 405) ; test d'invariant SQL ≡ JS                                     |
+| 2026-11-25 | ★ = marqueur **externe** : version en vigueur formalisée par Inria/DGFiP/CNAF + leur suite de tests verte chez nous (≥ 1 test)                               | Clarification de l'échelle (AGENTS §4.1) ; une version antérieure formalisée ne compte pas                                          |
+| 2026-11-25 | Une suite de rejeu sans test = `no_tests`, jamais `passed` ; le compteur ne garde que le dernier rejeu par suite                                             | L'accueil affichait 10/10 dont 2 suites vides                                                                                       |
+| 2026-11-25 | Version `MODIFIE` à fin ouverte ≠ en vigueur                                                                                                                 | Confrontation avec Tricoteuses « La loi sous git » : seul écart (CSS R611-2) ; ensuite CGI 2 405 / CSS 7 419 / CCH 4 126 identiques |
+| 2026-11-25 | Site en lecture seule sur la base, CSP par empreintes, SSE coalescé via un seul `LISTEN`                                                                     | Le web ne doit jamais écrire ; pages cachables à l'edge                                                                             |
 
 ## Production
 
@@ -79,8 +82,16 @@
   Cloudflare, pas dans un fichier local. La route `bugdeloi.theonaciri.fr` existe déjà (502 tant que
   rien n'écoute sur 19069).
 
+## Vérifications indépendantes
+
+| Date       | Quoi                                                            | Par                     | Résultat                                                                                                                                |
+| ---------- | --------------------------------------------------------------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-11-25 | Relecture du site en ligne (vocabulaire, a11y, liens, chiffres) | codex/gpt-6.2-sol (low) | 0 bloquant, 6 corrections appliquées                                                                                                    |
+| 2026-11-25 | Données LEGI vs « La loi sous git » (Tricoteuses) + 17 textes   | codex/gpt-6.2-sol (low) | CGI et CCH identiques ; CSS +1 (R611-2, corrigé) ; textes identiques après normalisation ; Légifrance renvoie 403 aux accès automatisés |
+
 ## Prochaines étapes (ordre)
 
-1. C0.2 balayage mécanique du CGI → premier rapport (candidats, pas encore qualifiés).
-2. Couverture Inria sur la carte (★ seulement pour les sous-arbres dont la suite de tests est verte en C0.1).
-3. J3 : desk + `join.txt` + CI de vérification.
+1. C0.2 balayage mécanique → premier rapport (candidats, pas encore qualifiés).
+2. Après C0.2 : `ingest legi --incremental` pour reprojeter l'arbre avec la règle `MODIFIE` (la carte du CSS place encore R611-2 en double : 7 420 vs 7 419) puis relancer le balayage.
+3. Couverture Inria sur la carte (★ seulement pour les sous-arbres dont la suite de tests est verte en C0.1).
+4. J3 : desk + `join.txt` + CI de vérification.
