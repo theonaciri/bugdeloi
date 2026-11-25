@@ -4,7 +4,8 @@
  * Précision avant rappel : on ne retient que « article <numéro> » (ou une liste) dont la norme visée
  * est certaine — « du présent code », un des trois codes nommés, ou rien (même code que le texte).
  * Tout ce qui peut viser une autre norme (loi, décret, directive, annexe, sigle, « du même code »,
- * « précité ») est écarté et compté. Un numéro sans préfixe L/R/D n'est jamais cherché dans le CSS ou
+ * « précité ») est écarté et compté. L'article « 1er » sans désignation explicite est écarté aussi (c'est
+ * presque toujours l'article 1er d'une loi). Un numéro sans préfixe L/R/D n'est jamais cherché dans le CSS ou
  * le CCH, et un numéro à préfixe jamais dans le CGI sans désignation explicite : le préfixe suffit à
  * trancher la norme et évite les faux positifs d'un numéro cité d'un autre code.
  * Un numéro absent de la base n'est pas jugé (il peut s'agir d'une version antérieure à LEGI).
@@ -33,6 +34,8 @@ const MAX_OCCURRENCES = 8
 export function targetTextId(ctx: SweepContext, source: Version, c: TextCitation): string | null {
   const d = c.designation
   if (d.kind === 'other') return null
+  // « l'article 1er » désigne presque toujours l'article 1er d'une loi : jamais jugé sans désignation explicite.
+  if (c.num === '1' && d.kind === 'none') return null
   const prefixed = PREFIXED.test(c.num)
   if (d.kind === 'code') return ctx.codes.find((k) => k.code === d.code)?.textId ?? null
   // self ou aucune désignation : même code que le texte

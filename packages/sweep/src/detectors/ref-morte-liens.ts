@@ -10,6 +10,11 @@
  * vigueur à la date de projection de son code et qu'aucune n'est annoncée pour plus tard.
  * Les cibles hors des codes ingérés ne sont pas résolues : elles sont comptées (couverture), jamais
  * jugées.
+ *
+ * Écart lien / texte : beaucoup de liens LEGI pointent vers un article que le texte actuel de la version
+ * ne cite pas (liens hérités d'une rédaction antérieure). Si le numéro de la cible mort ne figure pas
+ * dans le texte, il n'y a pas de renvoi mort à lire : le constat est une note (`notes.ecarts_lien_texte`),
+ * pas un finding.
  */
 import { legifranceArticleUrl } from '@bugdeloi/core/legi'
 import { hintsAround, legalUnit, lineageRef, versionRef } from '../certificate.ts'
@@ -26,9 +31,6 @@ import type {
   SweepContext,
   Version,
 } from '../types.ts'
-
-/** Lien LEGI vers un article mort, mais numéro absent du texte : le lien et le texte divergent. */
-export const GAP_SUBTYPE = 'écart_lien_texte'
 
 export const NAME = 'ref-morte-liens'
 export const VERSION = '1.0.0'
@@ -92,6 +94,7 @@ const linkRef = (l: LinkRow) => ({
 
 export function scan(ctx: SweepContext, options: ScanOptions = {}): ScanResult {
   const candidates: Candidate[] = []
+  const gaps: Array<Record<string, unknown>> = []
   const classes: Record<string, number> = {}
   const subtypes: Record<string, number> = {}
   const perCode: Record<string, number> = {}
@@ -123,16 +126,32 @@ export function scan(ctx: SweepContext, options: ScanOptions = {}): ScanResult {
         ctx,
         asOfByText.get(source.textId) ?? '',
       )
+      if (candidate === null) {
+        // Lien vers un article mort, mais le numéro n'est pas dans le texte : écart de métadonnées DILA,
+        // pas une anomalie du texte. Publié en note, jamais en finding.
+        gaps.push({
+          source_id: source.id,
+          source_num: source.num,
+          code: source.code,
+          target_lineage: lineage.id,
+          target_num: lineage.last.num,
+          target_code: lineage.last.code,
+          dead_subtype: deadSubtype(lineage),
+          last_version_etat: lineage.last.etat,
+          last_version_end: lineage.last.dateFin,
+          labels: links.map((l) => l.link.label),
+        })
+        continue
+      }
       candidates.push(candidate)
-      const key =
-        candidate.subtype === GAP_SUBTYPE ? `${GAP_SUBTYPE}:${deadSubtype(lineage)}` : candidate.subtype
-      subtypes[key] = (subtypes[key] ?? 0) + 1
+      subtypes[candidate.subtype] = (subtypes[candidate.subtype] ?? 0) + 1
     }
   }
   const resolved = (classes.vivante ?? 0) + (classes.a_venir ?? 0) + (classes.morte ?? 0)
   const total = Object.values(classes).reduce((a, b) => a + b, 0)
   return {
     candidates,
+    notes: { ecarts_lien_texte: gaps },
     stats: {
       articles_controles: articles,
       articles_par_code: perCode,
@@ -141,6 +160,7 @@ export function scan(ctx: SweepContext, options: ScanOptions = {}): ScanResult {
       liens_resolus: resolved,
       resolution_par: via,
       candidats_par_sous_type: subtypes,
+      liens_morts_non_confirmes_par_le_texte: gaps.length,
     },
   }
 }
@@ -152,14 +172,15 @@ function buildCandidate(
   subtype: string,
   ctx: SweepContext,
   asOf: string,
-): Candidate {
+): Candidate | null {
   const wanted = new Set<string>(lineage.nums)
   for (const { link } of links) if (link.targetNum) wanted.add(normalizeNum(link.targetNum))
   const mentions = citationsOf(source)
     .filter((c) => wanted.has(c.num) && c.designation.kind !== 'other')
     .map((c) => ({ ...excerptAround(source.contentText, c.start, c.end), designation: c.designation }))
   const first = mentions[0]
-  const hints = first ? hintsAround(source.contentText, first.start, first.end) : []
+  if (!first) return null
+  const hints = hintsAround(source.contentText, first.start, first.end)
   const endedBefore =
     lineage.last.dateFin && source.dateDebut
       ? lineage.last.dateFin <= source.dateDebut
@@ -182,8 +203,7 @@ function buildCandidate(
     target_lineage: lineageRef(lineage),
     target_versions_in_force: 0,
     outcome: {
-      dead_subtype: subtype,
-      confirmed_by_text: mentions.length > 0,
+      subtype,
       last_version_etat: lineage.last.etat,
       last_version_end: lineage.last.dateFin,
     },
@@ -191,20 +211,17 @@ function buildCandidate(
     order_of_dates: endedBefore,
     text_mentions: {
       count: mentions.length,
-      first: first
-        ? {
-            start: first.start,
-            end: first.end,
-            cited: first.cited,
-            excerpt: first.text,
-            excerpt_offset: first.offset,
-            designation: first.designation,
-          }
-        : null,
+      first: {
+        start: first.start,
+        end: first.end,
+        cited: first.cited,
+        excerpt: first.text,
+        excerpt_offset: first.offset,
+        designation: first.designation,
+      },
     },
     hints: {
       near_citation: hints,
-      target_not_cited_in_text: mentions.length === 0,
       source_etat: source.etat,
     },
     urls: {
@@ -215,18 +232,14 @@ function buildCandidate(
   const num = (v: Version) => v.num ?? '(sans numéro)'
   const end =
     lineage.last.dateFin && lineage.last.dateFin !== '2999-01-01' ? ` ; fin le ${lineage.last.dateFin}` : ''
-  const confirmed = mentions.length > 0
   return {
     type: 'REF_MORTE',
-    subtype: confirmed ? subtype : GAP_SUBTYPE,
+    subtype,
     fingerprintParts: ['liens', source.id, lineage.id],
     claim:
       `Au ${asOf}, l'article ${num(source)} du ${source.code} (${source.id}) a un lien de citation vers ` +
       `l'article ${num(lineage.last)} du ${lineage.last.code} (${lineage.last.id}) : aucune version de cet article n'est en vigueur, ` +
-      `la dernière a l'état ${lineage.last.etat ?? 'inconnu'}${end}. ` +
-      (confirmed
-        ? 'Le texte de la version cite ce numéro.'
-        : 'Le texte normalisé de la version ne cite pas ce numéro sous une forme reconnue : écart entre le lien et le texte.'),
+      `la dernière a l'état ${lineage.last.etat ?? 'inconnu'}${end}. Le texte de la version cite ce numéro.`,
     legalUnits: [legalUnit(source), legalUnit(lineage.last)],
     sourceId: source.id,
     proof,

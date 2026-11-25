@@ -9,9 +9,12 @@
  * - `)` fermant sans `(` ouvrant et précédé d'un marqueur d'énumération (« a) », « 1) », « i) », « 1°) »,
  *   « a bis) », « a sexies-0) ») au début d'un alinéa ou après une espace, une virgule ou un point-virgule ;
  * - `«` en début d'alinéa alors qu'une citation est déjà ouverte : usage français des citations sur
- *   plusieurs alinéas (chaque alinéa rouvre « et seul le dernier ferme ») ;
+ *   plusieurs alinéas (chaque alinéa rouvre « et seul le dernier ferme) ;
  * - articles dont le numéro commence par « Annexe » (tableaux et formules).
- * Le guillemet droit `"` (issu de `"` ou de “ ”) n'a pas de sens : seule la parité est contrôlée.
+ * Le guillemet droit `"` (issu de `"` ou de “ ”) n'a pas de sens : on suit une citation « ouverte ». Un
+ * alinéa à nombre impair de `"` l'ouvre ou la ferme ; un `"` en tête d'alinéa pendant qu'une citation est
+ * ouverte la poursuit (usage des citations sur plusieurs alinéas) et n'est pas compté. Une citation
+ * encore ouverte à la fin de l'article est signalée (`guillemet_droit_non_apparie`).
  */
 import { legifranceArticleUrl } from '@bugdeloi/core/legi'
 import { legalUnit, versionRef } from '../certificate.ts'
@@ -37,7 +40,7 @@ export interface Imbalance {
     | 'crochet_non_ouvert'
     | 'guillemet_non_ferme'
     | 'guillemet_non_ouvert'
-    | 'guillemet_droit_impair'
+    | 'guillemet_droit_non_apparie'
   locations: Location[]
 }
 
@@ -55,11 +58,14 @@ function excerptIn(paragraph: string, offset: number, radius = 80) {
 export function checkBalance(paragraphs: string[]): {
   imbalances: Imbalance[]
   exclusions: SyntaxExclusions
+  /** Nombre d'alinéas qui commencent par un guillemet droit (citation sur plusieurs alinéas ?). */
+  leadingStraight: number
 } {
   const open = { paren: [] as Location[], bracket: [] as Location[], quote: [] as Location[] }
   const stray: Record<'paren' | 'bracket' | 'quote', Location[]> = { paren: [], bracket: [], quote: [] }
-  const straight: Location[] = []
+  let straightOpen: Location | null = null
   const exclusions: SyntaxExclusions = { enumeration_closers: 0, continued_quotes: 0 }
+  let leadingStraight = 0
 
   paragraphs.forEach((p, pi) => {
     for (let i = 0; i < p.length; i++) {
@@ -80,7 +86,20 @@ export function checkBalance(paragraphs: string[]): {
       } else if (ch === '»') {
         if (open.quote.length > 0) open.quote.pop()
         else stray.quote.push(loc())
-      } else if (ch === '"') straight.push(loc())
+      }
+    }
+    // Guillemets droits : suivi d'une citation ouverte, alinéa par alinéa.
+    const quotes: number[] = []
+    for (let i = p.indexOf('"'); i !== -1; i = p.indexOf('"', i + 1)) quotes.push(i)
+    if (quotes.length === 0) return
+    const leading = quotes[0] === 0
+    const effective = straightOpen !== null && leading ? quotes.length - 1 : quotes.length
+    if (straightOpen !== null && leading) exclusions.continued_quotes++
+    if (leading) leadingStraight++
+    if (effective % 2 === 1) {
+      const at = straightOpen !== null && leading ? (quotes[1] ?? 0) : (quotes[0] ?? 0)
+      straightOpen =
+        straightOpen === null ? { paragraph: pi + 1, offset: at, excerpt: excerptIn(p, at) } : null
     }
   })
 
@@ -94,8 +113,8 @@ export function checkBalance(paragraphs: string[]): {
   add('crochet_non_ouvert', stray.bracket)
   add('guillemet_non_ferme', open.quote)
   add('guillemet_non_ouvert', stray.quote)
-  if (straight.length % 2 === 1) add('guillemet_droit_impair', straight)
-  return { imbalances, exclusions }
+  if (straightOpen !== null) add('guillemet_droit_non_apparie', [straightOpen])
+  return { imbalances, exclusions, leadingStraight }
 }
 
 const FLAGS: Record<string, string> = {
@@ -105,7 +124,8 @@ const FLAGS: Record<string, string> = {
   crochet_non_ouvert: "un « ] » n'a pas de « [ » correspondant",
   guillemet_non_ferme: 'un « « » reste ouvert à la fin du texte',
   guillemet_non_ouvert: "un « » » n'a pas de « « » correspondant",
-  guillemet_droit_impair: 'le nombre de guillemets droits (") est impair',
+  guillemet_droit_non_apparie:
+    'une citation entre guillemets droits (") reste ouverte à la fin du texte, ou un guillemet droit n\'a pas de pendant',
 }
 
 export function scan(ctx: SweepContext, options: ScanOptions = {}): ScanResult {
@@ -123,19 +143,19 @@ export function scan(ctx: SweepContext, options: ScanOptions = {}): ScanResult {
       stats.annexes_ecartees++
       continue
     }
-    const { imbalances, exclusions } = checkBalance(source.paragraphs)
+    const { imbalances, exclusions, leadingStraight } = checkBalance(source.paragraphs)
     excl.enumeration_closers += exclusions.enumeration_closers
     excl.continued_quotes += exclusions.continued_quotes
     if (imbalances.length > 0) stats.articles_avec_defaut++
     for (const im of imbalances) {
       subtypes[im.subtype] = (subtypes[im.subtype] ?? 0) + 1
-      candidates.push(buildCandidate(source, im, asOfByText.get(source.textId) ?? ''))
+      candidates.push(buildCandidate(source, im, asOfByText.get(source.textId) ?? '', leadingStraight))
     }
   }
   return { candidates, stats: { ...stats, exclusions: { ...excl }, candidats_par_sous_type: subtypes } }
 }
 
-function buildCandidate(source: Version, im: Imbalance, asOf: string): Candidate {
+function buildCandidate(source: Version, im: Imbalance, asOf: string, leadingStraight: number): Candidate {
   const proof = {
     method: `${NAME}@${VERSION}`,
     reading: "Appariement sur l'article entier ; alinéas numérotés à partir de 1 dans l'ordre du texte LEGI.",
@@ -143,7 +163,7 @@ function buildCandidate(source: Version, im: Imbalance, asOf: string): Candidate
     source: { ...versionRef(source), text_sha256: source.textSha256 },
     defect: { subtype: im.subtype, description: FLAGS[im.subtype], locations: im.locations },
     paragraph_count: source.paragraphs.length,
-    hints: { source_etat: source.etat },
+    hints: { source_etat: source.etat, leading_straight_quotes: leadingStraight },
     urls: { source: legifranceArticleUrl(source.id) },
   }
   const first = im.locations[0] as Location

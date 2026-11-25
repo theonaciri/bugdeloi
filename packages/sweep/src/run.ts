@@ -46,6 +46,26 @@ export function selectDetectors(names?: string[]): Detector[] {
   })
 }
 
+export interface Collected {
+  detector: Detector
+  candidate: Candidate
+  fingerprint: string
+}
+
+/** Exécute les détecteurs en mémoire (aucune écriture) : base du balayage, de l'échantillon de triage et des tests. */
+export function collectCandidates(ctx: SweepContext, detectors: Detector[], codes?: ReadonlySet<string>) {
+  const out: Collected[] = []
+  const results: Array<{ detector: Detector; result: ScanResult; durationMs: number }> = []
+  for (const detector of detectors) {
+    const t0 = performance.now()
+    const result = detector.scan(ctx, { codes })
+    results.push({ detector, result, durationMs: Math.round(performance.now() - t0) })
+    for (const candidate of result.candidates)
+      out.push({ detector, candidate, fingerprint: fingerprintOf(detector, candidate) })
+  }
+  return { collected: out, results }
+}
+
 export async function runSweep(db: Db, options: RunOptions = {}): Promise<RunSummary> {
   const started = performance.now()
   const detectors = selectDetectors(options.detectors)

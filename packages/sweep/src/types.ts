@@ -98,6 +98,8 @@ export interface ScanResult {
   candidates: Candidate[]
   /** Dénombrements propres au détecteur (couverture, exclusions…). */
   stats: Record<string, number | Record<string, number>>
+  /** Constats qui ne sont pas des findings (jamais insérés en base), p. ex. écarts lien LEGI / texte. */
+  notes?: Record<string, Array<Record<string, unknown>>>
 }
 
 export interface Detector {

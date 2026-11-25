@@ -112,11 +112,11 @@ describe('sweep sur bugdeloi_test', async () => {
         expect(same.verdict).toBe('identique')
         expect(same.legiState.same).toBe(true)
 
-        // la base change (le texte ne cite plus l'article) → le rejeu le dit
+        // la base change (l'article cité a une autre date de fin) → le rejeu le dit
         await tx
           .update(legalArticle)
-          .set({ contentHtml: '<p>Plus de citation.</p>', contentText: 'Plus de citation.' })
-          .where(eq(legalArticle.id, 'LEGIARTI999999999801'))
+          .set({ dateFin: '2019-01-01' })
+          .where(eq(legalArticle.id, 'LEGIARTI999999999802'))
         const changed = await replayFinding(t, (target as { id: string }).id)
         expect(changed.verdict).toBe('différente')
         expect(changed.differences.length).toBeGreaterThan(0)

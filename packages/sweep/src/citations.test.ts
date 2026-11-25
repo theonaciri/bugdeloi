@@ -47,6 +47,15 @@ describe('extractCitations', () => {
   test("« art. » (notes d'annexes) n'est pas une citation", () => {
     expect(nums('(1) Annexe III, art. 48.')).toEqual([])
   })
+  test('lettre de suffixe accentuée ou point suscrit (« İ ») : numéro complet, diacritique ignoré', () => {
+    expect(nums('des articles 31 bis, 199 decies İ, 199 undecies A et 199 septvicies')).toEqual([
+      '31 bis',
+      '199 decies i',
+      '199 undecies a',
+      '199 septvicies',
+    ])
+    expect(normalizeNum('199 decies İ')).toBe('199 decies i')
+  })
   test('subdivisions (I, II, 2°) ne sont pas des suffixes', () => {
     expect(nums("au 2° du I de l'article 156 est applicable")).toEqual(['156'])
     expect(nums("de l'article 200 A II est applicable")).toEqual(['200 a'])
@@ -73,6 +82,7 @@ describe('désignation de la norme visée', () => {
   })
   test('incise « premier alinéa, » et désignation plus loin dans la proposition', () => {
     expect(kind("visés à l'article 1er, premier alinéa, de ladite loi mais se rattachant")).toBe('other')
+    expect(kind("mentionnés à l'article 1er modifié de la même loi, figurent au bilan")).toBe('other')
     expect(kind("prévue à l'article L. 200-1 et conformément au code civil")).toBe('other')
     expect(kind("prévue à l'article L. 200-1 et à l'article L. 5 du code civil")).toBe('none') // désignation de la citation suivante
   })

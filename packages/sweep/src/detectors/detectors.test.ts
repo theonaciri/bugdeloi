@@ -101,7 +101,7 @@ describe('ref-morte-liens', () => {
     ).toHaveLength(1)
   })
 
-  test('numéro de la cible absent du texte : sous-type « écart_lien_texte »', () => {
+  test('numéro de la cible absent du texte : pas un finding, une note « écart lien / texte »', () => {
     const ctx = ctxOf(
       [
         {
@@ -115,9 +115,11 @@ describe('ref-morte-liens', () => {
       ],
       [link('LEGIARTI000000000001', 'LEGIARTI000000000020', 'L200-1')],
     )
-    const [c] = scanLiens(ctx).candidates
-    expect(c?.subtype).toBe('écart_lien_texte')
-    expect(proofOf<{ outcome: { dead_subtype: string } }>(c).outcome.dead_subtype).toBe('abrogé')
+    const r = scanLiens(ctx)
+    expect(r.candidates).toHaveLength(0)
+    expect(r.notes?.ecarts_lien_texte).toHaveLength(1)
+    expect(r.notes?.ecarts_lien_texte?.[0]?.dead_subtype).toBe('abrogé')
+    expect(r.stats.liens_morts_non_confirmes_par_le_texte).toBe(1)
   })
 
   test('indice « dans sa rédaction antérieure » signalé sans écarter le candidat', () => {
@@ -280,6 +282,28 @@ describe('ref-morte-texte', () => {
     expect(candidates[0]?.claim).toContain('« 40 »')
   })
 
+  test("« article 1er » sans désignation explicite n'est pas jugé", () => {
+    const ctx = ctxOf([
+      {
+        id: 'LEGIARTI000000000100',
+        num: '39',
+        etat: 'VIGUEUR',
+        debut: '2000-01-01',
+        textId: TEXT_B,
+        html: p("les titres visés à l'article 1er de la loi"),
+      },
+      {
+        id: 'LEGIARTI000000000101',
+        num: '1',
+        etat: 'ABROGE',
+        debut: '2000-01-01',
+        fin: '2010-01-01',
+        textId: TEXT_B,
+      },
+    ])
+    expect(scanTexte(ctx).candidates).toHaveLength(0)
+  })
+
   test('même numéro cité deux fois : un seul candidat, deux occurrences', () => {
     const ctx = ctxOf([src("l'article L. 200-1 puis encore l'article L. 200-1 du présent code"), dead])
     const { candidates } = scanTexte(ctx)
@@ -348,6 +372,15 @@ describe('numerotation', () => {
     expect(d[0]?.marker.value).toBe('3°')
   })
 
+  test("marqueur composé « B. 1° » : le « 1° » compte, une suite 1° 2° sous B. n'est pas une répétition", () => {
+    expect(duplicateMarkers(['A. Titre', '1° x', '2° y', 'B. 1° z', '2° t', '3° u'])).toHaveLength(0)
+    expect(duplicateMarkers(['B. 1° z', '2° t', '3° u', '3° v'])).toHaveLength(1)
+  })
+
+  test('marqueurs romains composés « IV.- A.- » (tiret collé) : pas de répétition de « B. »', () => {
+    expect(duplicateMarkers(['III. - A.-Un', 'B. - Deux', 'IV.- A.-Trois', 'B.-Quatre'])).toHaveLength(0)
+  })
+
   test('restart légitime, sous-liste, bis, tableau : rien', () => {
     expect(duplicateMarkers(['I. - A', '1° x', '2° y', 'II. - B', '1° z', '2° t'])).toHaveLength(0)
     expect(duplicateMarkers(['1° x', 'a) un', 'b) deux', '2° y', 'a) un', 'b) deux'])).toHaveLength(0)
@@ -407,12 +440,24 @@ describe('syntaxe', () => {
     expect(r.exclusions.continued_quotes).toBe(2)
   })
 
-  test('guillemets français non fermés ; guillemets droits impairs', () => {
+  test('citation à guillemets droits sur plusieurs alinéas (chaque alinéa rouvre ") : pas de défaut', () => {
+    const r = checkBalance(['Il est ajouté :', '" a) Premier', '" b) Suite', '" c) Fin. "'])
+    expect(r.imbalances).toEqual([])
+    expect(r.exclusions.continued_quotes).toBe(2)
+  })
+
+  test('citation à guillemets droits jamais refermée : signalée à l’alinéa qui l’ouvre', () => {
+    const r = checkBalance(['Intro.', '" Premier alinéa', '" Deuxième alinéa'])
+    expect(r.imbalances.map((i) => i.subtype)).toEqual(['guillemet_droit_non_apparie'])
+    expect(r.imbalances[0]?.locations[0]?.paragraph).toBe(2)
+  })
+
+  test('guillemets français non fermés ; guillemet droit non apparié', () => {
     expect(checkBalance(['Les mots « abc sont remplacés']).imbalances.map((i) => i.subtype)).toEqual([
       'guillemet_non_ferme',
     ])
     expect(checkBalance(['Les mots " abc sont remplacés']).imbalances.map((i) => i.subtype)).toEqual([
-      'guillemet_droit_impair',
+      'guillemet_droit_non_apparie',
     ])
     expect(checkBalance(['Les mots " abc " sont remplacés']).imbalances).toEqual([])
   })

@@ -53,7 +53,7 @@ const ADVERBS = [
 ]
 const ADVERB = `(?:${[...ADVERBS].sort((a, b) => b.length - a.length).join('|')})(?![\\p{L}\\d])(?:-\\d+)?`
 /** Lettre(s) majuscule(s) de suffixe : « A », « VU », « EB ». Les chiffres romains à plusieurs lettres (II, III, IV…) sont des subdivisions. */
-const LETTERS = '(?!(?:II|III|IV|VI|VII|VIII|IX|XI|XII)(?![\\p{L}\\d]))[A-Z]{1,3}(?![\\p{L}\\d])'
+const LETTERS = '(?!(?:II|III|IV|VI|VII|VIII|IX|XI|XII)(?![\\p{L}\\d]))\\p{Lu}{1,3}(?![\\p{L}\\d])'
 /** Numéro de type CGI : 199 undecies B, 150-0 A, 1649 quater B bis, 223 VU sexies, 1er. */
 const CGI_NUM = `\\d+(?:er)?(?:-\\d+)*(?:[ ](?:${ADVERB}|${LETTERS}))*`
 /** Numéro de type CSS/CCH : L. 521-1, R. 111-9, D. 331-53-1, R*111-9 (la lettre peut être suivie d'un point). */
@@ -93,7 +93,7 @@ export function designationAfter(text: string, end: number): Designation {
   }
   // Incises « (1) », « (abrogé) » sautées pour lire la suite immédiate seulement.
   const m =
-    /^(?:[ ]?\([^)]{0,30}\))?(?:,?[ ](?:[\p{L}]+[ ])?alinéas?,?)?([ ,]*)(du|de la|de l'|des|dudit|de ce|de cette)[ ]?([^;]{0,70})/u.exec(
+    /^(?:[ ]?\([^)]{0,30}\))?(?:,?[ ](?:[\p{L}]+[ ])?alinéas?,?|[ ]modifiée?s?)?([ ,]*)(du|de la|de l'|des|dudit|de ce|de cette)[ ]?([^;]{0,70})/u.exec(
       window,
     )
   if (!m) return laterDesignation(text, end)
@@ -139,7 +139,8 @@ function laterDesignation(text: string, end: number): Designation {
 export function normalizeNum(raw: string): string {
   return raw
     .toLowerCase()
-    .normalize('NFC')
+    .normalize('NFD')
+    .replace(/\p{M}/gu, '') // diacritiques parasites (« İ » de certains textes LEGI)
     .replace(/(^|[ ])1er\b/g, '$11')
     .replace(/^([ldra])\*?\.?\s*(?=\d)/, '$1')
     .replace(/\s+/g, ' ')

@@ -48,15 +48,15 @@ const intOrd = (v: string) => (/^\d{1,2}$/.test(v) ? Number(v) : null)
 const LEVELS: Level[] = [
   {
     id: 'romain',
-    re: new RegExp(`^([IVX]{1,5})\\.(?=[ -]\\S)(?![ -]*(?:${ADV})\\b)`),
+    re: new RegExp(`^([IVX]{1,5})\\.(?=[ -]+\\S)(?![ -]*(?:${ADV})\\b)`),
     ordinal: (v) => ROMAN[v] ?? null,
   },
   {
     id: 'majuscule',
-    re: new RegExp(`^([A-Z])\\.(?=[ -]\\S)(?!\\s?\\d)(?![ -]*(?:${ADV})\\b)`),
+    re: new RegExp(`^([A-Z])\\.(?=[ -]+\\S)(?!\\s?\\d{1,4}-\\d)(?![ -]*(?:${ADV})\\b)`),
     ordinal: letterOrd,
   },
-  { id: 'chiffre', re: new RegExp(`^(\\d{1,2})\\.(?=[ -][^\\d])(?![ -]*(?:${ADV})\\b)`), ordinal: intOrd },
+  { id: 'chiffre', re: new RegExp(`^(\\d{1,2})\\.(?=[ -]+[^\\d -])(?![ -]*(?:${ADV})\\b)`), ordinal: intOrd },
   { id: 'degre', re: new RegExp(`^(\\d{1,2})°(?= (?!${ADV}\\b)[^\\d-])`), ordinal: intOrd },
   { id: 'lettre', re: /^([a-z])\)(?= \S)/, ordinal: letterOrd },
 ]
@@ -69,17 +69,34 @@ export interface Marker {
   paragraph: number
 }
 
-/** Marqueur de début d'alinéa, éventuellement précédé d'un tiret. */
-export function markerOf(paragraph: string, index: number): Marker | null {
-  const p = paragraph.replace(/^[-–—]\s*/, '')
-  for (const [level, l] of LEVELS.entries()) {
-    const m = l.re.exec(p)
-    if (m?.[1]) {
-      const suffix = l.id === 'degre' ? '°' : l.id === 'lettre' ? ')' : '.'
-      return { level, levelId: l.id, value: `${m[1]}${suffix}`, ordinal: l.ordinal(m[1]), paragraph: index }
+/**
+ * Marqueurs de début d'alinéa, éventuellement composés (« B. 1° Le taux… » porte « B. » puis « 1° »),
+ * du plus haut niveau au plus bas. Un tiret initial est ignoré.
+ */
+export function markersOf(paragraph: string, index: number): Marker[] {
+  const out: Marker[] = []
+  let rest = paragraph.replace(/^[-–—]\s*/, '')
+  let guard = 0
+  while (rest && guard++ < 4) {
+    let hit: Marker | null = null
+    let consumed = 0
+    for (const [level, l] of LEVELS.entries()) {
+      const m = l.re.exec(rest)
+      if (m?.[1]) {
+        const suffix = l.id === 'degre' ? '°' : l.id === 'lettre' ? ')' : '.'
+        hit = { level, levelId: l.id, value: `${m[1]}${suffix}`, ordinal: l.ordinal(m[1]), paragraph: index }
+        consumed = m[0].length
+        break
+      }
     }
+    if (!hit) break
+    // Un marqueur composé descend d'un niveau à chaque fois.
+    const previous = out[out.length - 1]
+    if (previous && hit.level <= previous.level) break
+    out.push(hit)
+    rest = rest.slice(consumed).replace(/^[\s.-]+/, '')
   }
-  return null
+  return out
 }
 
 export interface Duplicate {
@@ -96,22 +113,22 @@ export function duplicateMarkers(paragraphs: string[]): Duplicate[] {
   const history: Marker[][] = LEVELS.map(() => [])
   const out: Duplicate[] = []
   paragraphs.forEach((p, i) => {
-    const marker = markerOf(p, i)
-    if (!marker) return
-    const hist = history[marker.level] as Marker[]
-    const prev = hist[hist.length - 1]
-    const before = hist[hist.length - 2]
-    if (
-      prev &&
-      before &&
-      marker.ordinal !== null &&
-      prev.ordinal === marker.ordinal &&
-      before.ordinal === marker.ordinal - 1
-    ) {
-      out.push({ marker, previous: prev })
+    for (const marker of markersOf(p, i)) {
+      const hist = history[marker.level] as Marker[]
+      const prev = hist[hist.length - 1]
+      const before = hist[hist.length - 2]
+      if (
+        prev &&
+        before &&
+        marker.ordinal !== null &&
+        prev.ordinal === marker.ordinal &&
+        before.ordinal === marker.ordinal - 1
+      ) {
+        out.push({ marker, previous: prev })
+      }
+      hist.push(marker)
+      for (let k = marker.level + 1; k < LEVELS.length; k++) history[k] = []
     }
-    hist.push(marker)
-    for (let k = marker.level + 1; k < LEVELS.length; k++) history[k] = []
   })
   return out
 }
