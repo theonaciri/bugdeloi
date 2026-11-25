@@ -1,0 +1,207 @@
+{
+  "checker": "c0.2-dila-xml@1.0.0",
+  "agent": "claude/claude-opus-5-5",
+  "reference_date": "2026-11-25",
+  "source": "dila/legi-xml",
+  "archives": [
+    {
+      "name": "Freemium_legi_global_20261108-140000.tar.gz",
+      "sha256": "90c9dc4a0a362943eef055881f00a727ac5d5f08fb9b4ec472e9da6da572bda2"
+    },
+    {
+      "name": "LEGI_20261108-210452.tar.gz",
+      "sha256": "43b7f7726c232e5ad6088f297ce8cf915633ad87281f29af4b8d975bd2a837e5"
+    },
+    {
+      "name": "LEGI_20261109-212854.tar.gz",
+      "sha256": "b1ed8ae19727e8dd5793d00f018e891db4928bedf61bde9b90faf16ecf27070f"
+    },
+    {
+      "name": "LEGI_20261110-213159.tar.gz",
+      "sha256": "7a8c8a2fb109f33bd6c7dab5ffc9769becd51693aefc080b45ffbf307ae34cd9"
+    },
+    {
+      "name": "LEGI_20261111-211545.tar.gz",
+      "sha256": "7fec19a8d5d18e6d8d3ed831fc2c3eaec5d33db11f931541481b597579ec8539"
+    },
+    {
+      "name": "LEGI_20261112-210355.tar.gz",
+      "sha256": "5ebdc1df108f747e75d7abf2f2aa284c492c398ea3bfb501057a45286bb3411c"
+    },
+    {
+      "name": "LEGI_20261113-215108.tar.gz",
+      "sha256": "dad9a39105d58d9faea3153ea02e828255b4c5324f9e4221187e637ebb2b970b"
+    },
+    {
+      "name": "LEGI_20261114-210430.tar.gz",
+      "sha256": "8222412a7f24f6f9f62178785c5a1a8fb6cdc674ba2ce9b3a3395e3c91b8b916"
+    },
+    {
+      "name": "LEGI_20261115-205552.tar.gz",
+      "sha256": "c00eb0c3fccca6779fb66b2e6f91fc25032c04892b37d4e71fd82b8a903e5686"
+    },
+    {
+      "name": "LEGI_20261116-104909.tar.gz",
+      "sha256": "5326caac1a7cfb22fa3bc81c2dad4efec65ae9d5f3bfec8869e077501e52359e"
+    },
+    {
+      "name": "LEGI_20261116-212357.tar.gz",
+      "sha256": "f0937ab12111eea7eae52f5f4bd5c88707d90b93e86684eea4dac8d8074d1296"
+    },
+    {
+      "name": "LEGI_20261117-212708.tar.gz",
+      "sha256": "4b4f8310164a307d7bd9ea7406260ab2d014c30a7488e2e4651ab4839c0658e6"
+    },
+    {
+      "name": "LEGI_20261118-214555.tar.gz",
+      "sha256": "dd8714e5ce638550358a02583711ac95d8b86fac80d0e61196cb2b6069c774e7"
+    },
+    {
+      "name": "LEGI_20261119-214726.tar.gz",
+      "sha256": "9975590ada1a7c495213d8638bd4a2c1359a59bc3f5febde918c0586f4679179"
+    },
+    {
+      "name": "LEGI_20261120-222218.tar.gz",
+      "sha256": "a83f756d2c6b6850afe6bf58e645fb53c1a920651d8f2a31d1befaa4c3748d32"
+    },
+    {
+      "name": "LEGI_20261121-212437.tar.gz",
+      "sha256": "acf12e52a1d580f88eff2760ebeda749bf25a0e27180b23b1ce691b9d477c921"
+    },
+    {
+      "name": "LEGI_20261122-205652.tar.gz",
+      "sha256": "f2d283668adfa0503194e6d431373424c0f02aeb96a8e701de66da6b3761472e"
+    },
+    {
+      "name": "LEGI_20261123-101912.tar.gz",
+      "sha256": "8daecca70ba1b4e22d0a95c646414ca26e25168ec2fabb49ee92dbeb42e056d8"
+    },
+    {
+      "name": "LEGI_20261123-213608.tar.gz",
+      "sha256": "64c91089575952ca298256d63e59bb9a2017b5f8ce6b5272ef97f506d466d7aa"
+    },
+    {
+      "name": "LEGI_20261124-221545.tar.gz",
+      "sha256": "48367a251f52d5dbc3e988904ed5ba094ccc157252b289ee6a30e35cc438bb55"
+    }
+  ],
+  "corpus": {
+    "article_versions": 71884,
+    "by_code": {
+      "CGI": 23355,
+      "CSS": 34201,
+      "CCH": 14328
+    },
+    "by_etat": {
+      "MODIFIE": 46000,
+      "PERIME": 440,
+      "TRANSFERE": 2191,
+      "VIGUEUR": 13433,
+      "ABROGE": 7937,
+      "MODIFIE_MORT_NE": 940,
+      "DISJOINT": 29,
+      "ABROGE_DIFF": 516,
+      "VIGUEUR_DIFF": 363,
+      "ANNULE": 33,
+      "DEPLACE": 2
+    },
+    "versions_meta_conflicts": 0,
+    "ids_under_two_paths": 0,
+    "deletions_in_codes": 24,
+    "deletions_applied": 2,
+    "deleted_and_written_same_archive": 0,
+    "dir_deletions_in_codes": 0,
+    "parse_failures": 0,
+    "state_date_inconsistencies": {
+      "vigueur_fin_echue": 0,
+      "vigueur_diff_debut_passe": 0,
+      "modifie_fin_ouverte": 1,
+      "terminal_fin_future": 1
+    },
+    "deleted_ids_distinct": 20,
+    "deleted_ids_still_in_versions_blocks": 0,
+    "candidates_touching_deleted_ids": 0
+  },
+  "negative_controls": [
+    {
+      "id": "F-2026-0103",
+      "verdict": "infirmé",
+      "reason": "la cible a une version en vigueur au 2026-11-25 (article du même numéro, autre lignée) : LEGIARTI000043818263 (n° R111-2, VIGUEUR, 2021-07-01 → 2999-01-01, fichier article)"
+    },
+    {
+      "id": "F-2026-0238",
+      "verdict": "infirmé",
+      "reason": "la cible a une version en vigueur au 2026-11-25 (article du même numéro, autre lignée) : LEGIARTI000043818263 (n° R111-2, VIGUEUR, 2021-07-01 → 2999-01-01, fichier article)"
+    },
+    {
+      "id": "F-2026-0241",
+      "verdict": "infirmé",
+      "reason": "la cible a une version en vigueur au 2026-11-25 (article du même numéro, autre lignée) : LEGIARTI000043818263 (n° R111-2, VIGUEUR, 2021-07-01 → 2999-01-01, fichier article)"
+    },
+    {
+      "id": "F-2026-0286",
+      "verdict": "infirmé",
+      "reason": "la cible a une version en vigueur au 2026-11-25 (article du même numéro, autre lignée) : LEGIARTI000043818263 (n° R111-2, VIGUEUR, 2021-07-01 → 2999-01-01, fichier article)"
+    },
+    {
+      "id": "F-2026-0430",
+      "verdict": "infirmé",
+      "reason": "la cible a une version en vigueur au 2026-11-25 (article du même numéro, autre lignée) : LEGIARTI000043565221 (n° D136-1, VIGUEUR, 2021-06-01 → 2999-01-01, fichier article)"
+    }
+  ],
+  "candidates": 1112,
+  "unreadable_certificates": 0,
+  "totals": {
+    "confirmé": 1110,
+    "infirmé": 0,
+    "indéterminé": 2
+  },
+  "by_subtype": {
+    "abrogé": {
+      "confirmé": 928,
+      "infirmé": 0,
+      "indéterminé": 0
+    },
+    "annulé": {
+      "confirmé": 2,
+      "infirmé": 0,
+      "indéterminé": 0
+    },
+    "autre:MODIFIE": {
+      "confirmé": 0,
+      "infirmé": 0,
+      "indéterminé": 2
+    },
+    "périmé": {
+      "confirmé": 14,
+      "infirmé": 0,
+      "indéterminé": 0
+    },
+    "transféré": {
+      "confirmé": 166,
+      "infirmé": 0,
+      "indéterminé": 0
+    }
+  },
+  "by_detector": {
+    "ref-morte-liens@1.1.0": {
+      "confirmé": 443,
+      "infirmé": 0,
+      "indéterminé": 1
+    },
+    "ref-morte-texte@1.1.0": {
+      "confirmé": 667,
+      "infirmé": 0,
+      "indéterminé": 1
+    }
+  },
+  "excerpt_match": {
+    "exact": 1110,
+    "sans_espaces": 2
+  },
+  "source_legi_link_to_target": {
+    "present": 444,
+    "absent": 0,
+    "sans_objet": 668
+  }
+}
