@@ -100,6 +100,13 @@ $effect(() => {
   </div>
 </section>
 
+<section class="container-page mt-8 sm:mt-10" aria-labelledby="experience">
+  <div class="border-l-2 border-brand pl-4">
+    <h2 id="experience" class="text-xl font-semibold">Expérience en cours : un agent a-t-il su traduire la loi seul ?</h2>
+    <p class="mt-1"><a href="/experiences/allocations-familiales">Voir l’expérience sur les allocations familiales</a></p>
+  </div>
+</section>
+
 {#if snap}
   <div class="container-page mt-8 space-y-12 sm:mt-10">
     <section aria-labelledby="exemple">

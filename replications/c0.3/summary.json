@@ -1,0 +1,157 @@
+{
+  "inriaCommit": "9e251b932288cf5f4a74af072d203144a057494b",
+  "submissionCommit": "028d1c4b09debc96e201b9be78699dbda178080c",
+  "handle": "codex-gpt-6.2-sol",
+  "scores": {
+    "raw": {
+      "passed": 8,
+      "total": 32
+    },
+    "original": {
+      "passed": 5,
+      "total": 17
+    },
+    "completed": {
+      "passed": 12,
+      "total": 17
+    }
+  },
+  "cases": [
+    {
+      "id": "allocations_familiales/Allocations_familiales.catala_fr:Typecheck --check-invariants",
+      "status": "passed",
+      "name": "Contrôle des types et de cohérence",
+      "expected": "Les types et les règles internes du langage sont respectés.",
+      "actual": "Contrôle réussi.",
+      "classification": null
+    },
+    {
+      "id": "allocations_familiales/tests/tests_allocations_familiales.catala_fr:Test1",
+      "status": "failed",
+      "name": "Test1",
+      "expected": 28524,
+      "actual": 28525,
+      "classification": "ambiguïté"
+    },
+    {
+      "id": "allocations_familiales/tests/tests_allocations_familiales.catala_fr:Test2",
+      "status": "passed",
+      "name": "Test2",
+      "expected": 21646,
+      "actual": 21646,
+      "classification": null
+    },
+    {
+      "id": "allocations_familiales/tests/tests_allocations_familiales.catala_fr:Test3",
+      "status": "failed",
+      "name": "Test3",
+      "expected": 2437,
+      "actual": 3966,
+      "classification": "erreur_oracle"
+    },
+    {
+      "id": "allocations_familiales/tests/tests_allocations_familiales.catala_fr:Test4",
+      "status": "passed",
+      "name": "Test4",
+      "expected": 9946,
+      "actual": 9946,
+      "classification": null
+    },
+    {
+      "id": "allocations_familiales/tests/tests_allocations_familiales.catala_fr:Test5",
+      "status": "passed",
+      "name": "Test5",
+      "expected": 0,
+      "actual": 0,
+      "classification": null
+    },
+    {
+      "id": "allocations_familiales/tests/tests_allocations_familiales.catala_fr:Test6",
+      "status": "passed",
+      "name": "Test6",
+      "expected": 6630,
+      "actual": 6630,
+      "classification": null
+    },
+    {
+      "id": "allocations_familiales/tests/tests_allocations_familiales.catala_fr:Test7",
+      "status": "failed",
+      "name": "Test7",
+      "expected": 35154,
+      "actual": 35155,
+      "classification": "ambiguïté"
+    },
+    {
+      "id": "allocations_familiales/tests/tests_allocations_familiales.catala_fr:Test8",
+      "status": "failed",
+      "name": "Test8",
+      "expected": 19790,
+      "actual": 19791,
+      "classification": "ambiguïté"
+    },
+    {
+      "id": "allocations_familiales/tests/tests_allocations_familiales.catala_fr:Test9",
+      "status": "passed",
+      "name": "Test9",
+      "expected": 0,
+      "actual": 0,
+      "classification": null
+    },
+    {
+      "id": "allocations_familiales/tests/tests_allocations_familiales.catala_fr:Test10",
+      "status": "passed",
+      "name": "Test10",
+      "expected": 9946,
+      "actual": 9946,
+      "classification": null
+    },
+    {
+      "id": "allocations_familiales/tests/tests_allocations_familiales.catala_fr:Test11",
+      "status": "passed",
+      "name": "Test11",
+      "expected": 43555,
+      "actual": 43555,
+      "classification": null
+    },
+    {
+      "id": "allocations_familiales/tests/tests_allocations_familiales.catala_fr:Test12",
+      "status": "failed",
+      "name": "Test12",
+      "expected": 31584,
+      "actual": 19245,
+      "classification": "erreur_oracle"
+    },
+    {
+      "id": "allocations_familiales/tests/tests_allocations_familiales.catala_fr:Test13",
+      "status": "passed",
+      "name": "Test13",
+      "expected": 3499,
+      "actual": 3499,
+      "classification": null
+    },
+    {
+      "id": "allocations_familiales/tests/tests_allocations_familiales.catala_fr:Test14",
+      "status": "passed",
+      "name": "Test14",
+      "expected": 4877,
+      "actual": 4877,
+      "classification": null
+    },
+    {
+      "id": "allocations_familiales/tests/tests_allocations_familiales.catala_fr:Typecheck",
+      "status": "passed",
+      "name": "Contrôle des types",
+      "expected": "Les types des données sont compatibles.",
+      "actual": "Contrôle réussi.",
+      "classification": null
+    },
+    {
+      "id": "allocations_familiales/tests/tests_ouverture_droits.catala_fr:Test1",
+      "status": "passed",
+      "name": "Test1 · Ouverture du droit",
+      "expected": "Enfant 1 : droit ouvert · Enfant 2 : droit fermé · Enfant 3 : droit ouvert · Enfant 4 : droit fermé",
+      "actual": "Enfant 1 : droit ouvert · Enfant 2 : droit fermé · Enfant 3 : droit ouvert · Enfant 4 : droit fermé",
+      "classification": null
+    }
+  ]
+}

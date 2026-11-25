@@ -53,3 +53,20 @@ et leurs dépendances de rejeu relèvent de la licence Apache-2.0 du dépôt. Le
 la licence d’origine. Les textes du paquet viennent de la DILA, sous Licence Ouverte 2.0.
 [Licence Inria](https://github.com/CatalaLang/catala-examples/blob/9e251b932288cf5f4a74af072d203144a057494b/LICENSE.txt)
 · [Provenance LEGI](../../docs/notes/legi.md)
+
+## Données de la page d’expérience
+
+Les rejeux détaillés sous `results/` sont ignorés par Git. Pour régénérer le fichier versionné
+`summary.json`, lancez les deux rejeux de la remise indiqués dans l’audit, qui écrivent
+`results/codex-gpt-6.2-sol.json` et `results/codex-gpt-6.2-sol.original-inputs.json`. Rejouez
+aussi au commit du harnais brut indiqué dans l’audit et copiez son résultat dans
+`results/codex-gpt-6.2-sol.raw.json`.
+
+```sh
+bun replications/c0.3/generate-summary.ts
+```
+
+Le script extrait les attentes du commit Inria épinglé. Pour les assertions de montant réussies,
+la valeur obtenue est identique à l’attente. Pour les écarts, le script lit le montant observé
+dans le diagnostic du rejeu. Le site lit le résumé lors de sa construction. Les rapports ajoutés à
+`docs/audits/verifications/2026-11-25-c0.3-*.md` sont pris en compte à la construction suivante.
