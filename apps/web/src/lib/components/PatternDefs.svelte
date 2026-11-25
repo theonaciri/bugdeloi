@@ -14,6 +14,9 @@
     <pattern id="bdl-pat-hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
       <line x1="0" y1="0" x2="0" y2="7" class="bdl-pat-stroke" stroke-width="1.6" />
     </pattern>
+    <pattern id="bdl-pat-cross" width="8" height="8" patternUnits="userSpaceOnUse">
+      <path d="M4 1.5v5M1.5 4h5" class="bdl-pat-stroke" stroke-width="1.4" fill="none" />
+    </pattern>
     <pattern id="bdl-pat-star" width="14" height="14" patternUnits="userSpaceOnUse">
       <path
         d="M7 2.2l1.4 2.9 3.2.4-2.3 2.2.6 3.1L7 9.3l-2.9 1.5.6-3.1-2.3-2.2 3.2-.4z"

@@ -18,7 +18,7 @@ export interface LevelInfo {
   /** Jeton de couleur CSS (défini dans le design system web). */
   colorToken: string
   /** Motif de repli pour ne pas dépendre de la couleur seule (accessibilité). */
-  pattern: 'none' | 'ring' | 'dots' | 'hatch' | 'solid' | 'star'
+  pattern: 'none' | 'ring' | 'dots' | 'hatch' | 'solid' | 'cross' | 'star'
 }
 
 export const LEVEL_INFO: Record<Level, LevelInfo> = {
@@ -64,7 +64,7 @@ export const LEVEL_INFO: Record<Level, LevelInfo> = {
     label: 'Certifié',
     meaning: 'Revue humaine signée par un relecteur juriste identifié.',
     colorToken: '--level-n5',
-    pattern: 'solid',
+    pattern: 'cross',
   },
   REF: {
     level: 'REF',

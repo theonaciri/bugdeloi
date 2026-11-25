@@ -18,7 +18,7 @@ Environment=ORIGIN=https://bugdeloi.theonaciri.fr
 # Cloudflare transmet l'IP du client dans CF-Connecting-IP (adapter-node).
 Environment=ADDRESS_HEADER=cf-connecting-ip
 Environment=DATABASE_URL=postgres://ubuntu@localhost:5432/bugdeloi?host=/var/run/postgresql
-ExecStart=/home/ubuntu/.bun/bin/bun build/index.js
+ExecStart=/home/ubuntu/.bun/bin/bun serve.ts
 Restart=on-failure
 RestartSec=3
 TimeoutStopSec=10
