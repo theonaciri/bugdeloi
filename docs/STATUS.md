@@ -100,10 +100,11 @@
 
 ## Prochaines étapes (ordre)
 
-1. En cours : correction des détecteurs (7 infirmations, retrait `withdrawn`) — codex/gpt-6.2-sol (medium).
+1. ✔ Détecteurs C0.2 en 1.1.0 : les 7 infirmés sont `withdrawn` (balayage n° 8). Base : 1 112 REF_MORTE
+   `candidate`, 9 SYNTAXE `reproduced`, 7 `withdrawn`.
 2. En cours : qualification humaine par fichiers de verdicts versionnés + `/anomalies` — codex/gpt-6.2-sol
    (high) (la 1ʳᵉ tentative Claude Sonnet a échoué sur la limite d'usage).
-3. Reproduction indépendante n°2 depuis les **XML DILA bruts** (historique complet) pour trancher les 1 112
-   REF_MORTE indéterminés.
+3. En cours : reproduction indépendante n° 2 depuis les **XML DILA bruts** (historique complet) pour
+   trancher les 1 112 REF_MORTE — antigravity/gemini-4-hydrogen (high), 3ᵉ famille de modèles.
 4. **Qualification humaine** d'un premier lot par le mainteneur ou un juriste → premiers findings publiés.
 5. J3 : desk + `join.txt` + CI de vérification.
