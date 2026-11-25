@@ -1,0 +1,12 @@
+{
+  "name": "@bugdeloi/c0.2-dila-xml",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@bugdeloi/db": "workspace:*"
+  }
+}

@@ -94,6 +94,13 @@
         "drizzle-orm": "0.45.4",
       },
     },
+    "replications/c0.2-dila-xml": {
+      "name": "@bugdeloi/c0.2-dila-xml",
+      "version": "1.0.0",
+      "dependencies": {
+        "@bugdeloi/db": "workspace:*",
+      },
+    },
     "replications/c0.2-independent": {
       "name": "@bugdeloi/c0.2-independent",
       "version": "1.0.0",
@@ -129,6 +136,8 @@
     "@bugdeloi/c0.1": ["@bugdeloi/c0.1@workspace:replications/c0.1"],
 
     "@bugdeloi/c0.2": ["@bugdeloi/c0.2@workspace:replications/c0.2"],
+
+    "@bugdeloi/c0.2-dila-xml": ["@bugdeloi/c0.2-dila-xml@workspace:replications/c0.2-dila-xml"],
 
     "@bugdeloi/c0.2-independent": ["@bugdeloi/c0.2-independent@workspace:replications/c0.2-independent"],
 
