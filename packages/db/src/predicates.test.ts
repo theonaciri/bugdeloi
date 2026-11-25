@@ -23,6 +23,7 @@ const CASES: Array<{ etat: string | null; dateDebut: string | null; dateFin: str
   { etat: 'ABROGE_DIFF', dateDebut: '2020-01-01', dateFin: AS_OF }, // fin exclue
   { etat: 'VIGUEUR_DIFF', dateDebut: '2027-01-01', dateFin: '2999-01-01' }, // pas encore
   { etat: 'MODIFIE', dateDebut: '2010-01-01', dateFin: '2020-01-01' },
+  { etat: 'MODIFIE', dateDebut: '2018-01-01', dateFin: '2999-01-01' }, // fin ouverte laissée par la DILA
   { etat: 'MODIFIE_MORT_NE', dateDebut: '2020-01-01', dateFin: '2999-01-01' },
   { etat: 'ANNULE', dateDebut: '2020-01-01', dateFin: '2999-01-01' },
   { etat: 'ABROGE', dateDebut: '2010-01-01', dateFin: '2222-02-22' }, // incohérence DILA réelle

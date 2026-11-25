@@ -73,7 +73,7 @@ export const LEVEL_INFO: Record<Level, LevelInfo> = {
     level: 'REF',
     label: 'Référence',
     meaning:
-      'Résultats identiques à ceux d’une formalisation de chercheurs ou d’une administration (Inria, DGFiP, CNAF) sur sa propre suite de tests, rejouée chez nous.',
+      'La version en vigueur de l’article est formalisée par des chercheurs ou une administration (Inria, DGFiP, CNAF), et leur suite de tests réussit quand nous la rejouons. Ce n’est pas une formalisation BugDeLoi.',
     colorToken: '--level-ref',
     pattern: 'star',
   },

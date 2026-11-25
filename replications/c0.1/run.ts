@@ -47,12 +47,14 @@ async function replay(workdir: string, folder: string, raw: string) {
   let files: ReturnType<typeof parseClerkReport>
   let hasReport = false
   let diagnostic: string | undefined
-  let status: 'passed' | 'failed' | 'error'
+  let status: 'passed' | 'failed' | 'error' | 'no_tests'
   try {
     files = parseClerkReport(run.stdout)
     hasReport = true
     const hasFailures = files.some((file) => file.failed > 0)
-    status = hasFailures ? 'failed' : 'passed'
+    // Une suite sans aucun test n'a rien démontré : statut distinct, jamais compté comme réussi.
+    const total = files.reduce((n, file) => n + file.passed + file.failed, 0)
+    status = hasFailures ? 'failed' : total === 0 ? 'no_tests' : 'passed'
     if (run.timedOut || run.exitCode !== Number(hasFailures)) {
       status = 'error'
       diagnostic = firstDiagnostic(output) ?? 'Le code de sortie diverge du résultat Clerk.'
@@ -152,7 +154,7 @@ const notes = results.flatMap((result) => {
 })
 const header = ['Dossier', 'État', 'Tests comptés', 'Réussis', 'Échoués', 'Durée (s)']
 const rows = results.map(({ folder, status, tests, passed, failed, durationMs }) => {
-  const state = { passed: tests === 0 ? 'Aucun test' : 'Réussi', failed: 'Échec', error: 'Erreur' }[status]
+  const state = { passed: 'Réussi', no_tests: 'Aucun test', failed: 'Échec', error: 'Erreur' }[status]
   return [
     `\`${folder}\``,
     state,
@@ -203,4 +205,4 @@ const report = [
   '',
 ].join('\n')
 await Bun.write(join(import.meta.dir, 'REPORT.md'), report)
-if (results.some((result) => result.status !== 'passed')) process.exitCode = 1
+if (results.some((result) => result.status === 'failed' || result.status === 'error')) process.exitCode = 1

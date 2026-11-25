@@ -18,7 +18,9 @@ export function articleInForce(asOf?: string): SQL {
     NEVER_IN_FORCE_ETATS.map((e) => sql`${e}`),
     sql`, `,
   )
+  const openEnd = sql`(${legalArticle.dateFin} is null or ${legalArticle.dateFin} = ${LEGI_OPEN_END}::date)`
   return sql`(coalesce(${legalArticle.etat}, '') not in (${excluded})
+    and not (coalesce(${legalArticle.etat}, '') = 'MODIFIE' and ${openEnd})
     and ${legalArticle.dateDebut} <= ${date}
     and (${legalArticle.dateFin} is null or ${legalArticle.dateFin} = ${LEGI_OPEN_END}::date or ${date} < ${legalArticle.dateFin}))`
 }

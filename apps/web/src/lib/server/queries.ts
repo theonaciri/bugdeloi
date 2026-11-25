@@ -145,15 +145,29 @@ function toRunInfo(r: typeof replicationRun.$inferSelect | undefined): RunInfo |
   }
 }
 
-/** Rejeux de référence : nombre de `replication_run` au statut `passed`, total terminé, dernier. */
+/**
+ * Rejeux de référence : pour chaque suite (`subject`), on ne retient que son **dernier** rejeu terminé.
+ * `passed` = suites dont le dernier rejeu est `passed` ; `total` = suites dont le dernier rejeu est
+ * `passed`, `failed` ou `error`. Les suites sans aucun test (`no_tests`) ne sont comptées ni d'un côté
+ * ni de l'autre : elles n'ont rien démontré.
+ */
 export async function replicationStats(): Promise<Snapshot['replications']> {
+  const latest = db()
+    .selectDistinctOn([replicationRun.subject], {
+      subject: replicationRun.subject,
+      status: replicationRun.status,
+    })
+    .from(replicationRun)
+    .where(sql`${replicationRun.status} <> 'running'`)
+    .orderBy(replicationRun.subject, desc(replicationRun.startedAt))
+    .as('latest')
   const [agg, last] = await Promise.all([
     db()
       .select({
-        passed: sql<number>`count(*) filter (where ${replicationRun.status} = 'passed')`,
-        total: sql<number>`count(*) filter (where ${replicationRun.status} <> 'running')`,
+        passed: sql<number>`count(*) filter (where ${latest.status} = 'passed')`,
+        total: sql<number>`count(*) filter (where ${latest.status} in ('passed', 'failed', 'error'))`,
       })
-      .from(replicationRun),
+      .from(latest),
     db().select().from(replicationRun).orderBy(desc(replicationRun.startedAt)).limit(1),
   ])
   return { passed: Number(agg[0]?.passed ?? 0), total: Number(agg[0]?.total ?? 0), last: toRunInfo(last[0]) }

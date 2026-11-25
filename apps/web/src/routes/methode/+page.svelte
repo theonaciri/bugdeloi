@@ -136,9 +136,10 @@ const lifecycle = [
       <div id="compteur-rejeux">
         <dt class="font-semibold">Rejeux de référence réussis</dt>
         <dd>
-          Nombre d’exécutions terminées avec succès de suites de tests écrites par des chercheurs ou une administration (par
-          exemple les exemples Catala d’Inria), rejouées dans notre image épinglée du compilateur, sur le nombre
-          d’exécutions terminées (réussies ou non).
+          Nombre de suites de tests écrites par des chercheurs ou une administration (par exemple les exemples Catala
+          d’Inria) dont le <strong>dernier</strong> rejeu dans notre image épinglée du compilateur a réussi, sur le nombre de
+          suites rejouées (réussies, en échec ou en erreur). Une suite qui ne contient aucun test n’est pas comptée : elle
+          ne démontre rien.
         </dd>
       </div>
       <div id="compteur-couverture">

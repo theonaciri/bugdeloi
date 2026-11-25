@@ -61,6 +61,14 @@ export const NEVER_IN_FORCE_ETATS = ['ANNULE', 'NON_VIGUEUR', 'MODIFIE_MORT_NE']
  * Règle unique « en vigueur à la date `asOf` » (AAAA-MM-JJ), partagée par l'ingestion (arbre daté)
  * et par le site (compteurs) : intervalle [début, fin[ qui contient `asOf`, état non exclu.
  * Inclut donc `ABROGE_DIFF` (abrogation programmée mais pas encore effective).
+ *
+ * Exception : une version `MODIFIE` (remplacée par une version ultérieure) a nécessairement une fin ;
+ * si la DILA lui laisse une fin ouverte, on ne la compte pas. Cas réel : CSS R611-2,
+ * LEGIARTI000036704272 (2018-01-01 → 2999-01-01) alors que LEGIARTI000043292679 est en vigueur depuis
+ * 2023. Les versions `MODIFIE` à fin datée restent en vigueur sur leur période (projections
+ * historiques). Règle confrontée au dataset « La loi sous git » (Tricoteuses) le 25/11/2026 :
+ * comptes identiques sur CGI, CSS et CCH.
+ *
  * Équivalent SQL : `articleInForce()` dans @bugdeloi/db/predicates.
  */
 export function isInForce(
@@ -68,10 +76,12 @@ export function isInForce(
   asOf: string,
 ): boolean {
   const { etat, dateDebut, dateFin } = unit
+  const openEnd = !dateFin || dateFin === LEGI_OPEN_END
   return (
     !(NEVER_IN_FORCE_ETATS as readonly string[]).includes(etat ?? '') &&
+    !(etat === 'MODIFIE' && openEnd) &&
     Boolean(dateDebut && dateDebut <= asOf) &&
-    (!dateFin || dateFin === LEGI_OPEN_END || asOf < dateFin)
+    (openEnd || asOf < (dateFin as string))
   )
 }
 
