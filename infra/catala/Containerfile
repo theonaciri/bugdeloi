@@ -1,0 +1,21 @@
+FROM docker.io/library/debian:trixie-slim
+
+ENV OPAMROOT=/opt/opam \
+    OPAMJOBS=2 \
+    OPAMYES=1
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+       build-essential ca-certificates curl git libgmp-dev ninja-build opam pkg-config python3 unzip \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN opam init -c 4.14.2 --disable-sandboxing --no-setup \
+    && opam install catala.1.3.2 \
+    && opam clean --all
+
+ENV PATH=/opt/opam/4.14.2/bin:$PATH \
+    OCAMLPATH=/opt/opam/4.14.2/lib \
+    CAML_LD_LIBRARY_PATH=/opt/opam/4.14.2/lib/stublibs \
+    HOME=/tmp
+RUN catala --version && clerk --version && mkdir -p /work /build
+WORKDIR /work
+USER 65534:65534

@@ -1,0 +1,456 @@
+{
+  "source": "inria/catala-examples",
+  "sourceCommit": "9e251b932288cf5f4a74af072d203144a057494b",
+  "catalaVersion": "1.3.2",
+  "imageDigest": "sha256:d62905c562db64c7ad8d7aebc0ae7032e035e0f41594b8b05be107fd8c63e26b",
+  "arch": "arm64",
+  "rawDirectory": "raw/run-WVwSYU",
+  "limits": {
+    "timeoutMs": 300000,
+    "memoryMb": 1536,
+    "cpus": 2,
+    "network": false
+  },
+  "results": [
+    {
+      "folder": "allocations_familiales",
+      "command": [
+        "clerk",
+        "test",
+        "--json",
+        "--color=never",
+        "--backend=interpret",
+        "--makeflags=-j2",
+        "--build-dir=/build",
+        "--target-dir=/build/targets",
+        "allocations_familiales"
+      ],
+      "startedAt": "2026-11-25T08:20:10.479Z",
+      "finishedAt": "2026-11-25T08:20:15.120Z",
+      "durationMs": 3868,
+      "status": "passed",
+      "exitCode": 0,
+      "timedOut": false,
+      "tests": 32,
+      "passed": 32,
+      "failed": 0,
+      "files": [
+        {
+          "file": "allocations_familiales/Allocations_familiales.catala_fr",
+          "tests": 1,
+          "passed": 1,
+          "failed": 0,
+          "errors": [],
+          "failedCases": []
+        },
+        {
+          "file": "allocations_familiales/tests/tests_allocations_familiales.catala_fr",
+          "tests": 29,
+          "passed": 29,
+          "failed": 0,
+          "errors": [],
+          "failedCases": []
+        },
+        {
+          "file": "allocations_familiales/tests/tests_ouverture_droits.catala_fr",
+          "tests": 2,
+          "passed": 2,
+          "failed": 0,
+          "errors": [],
+          "failedCases": []
+        }
+      ]
+    },
+    {
+      "folder": "aides_logement",
+      "command": [
+        "clerk",
+        "test",
+        "--json",
+        "--color=never",
+        "--backend=interpret",
+        "--makeflags=-j2",
+        "--build-dir=/build",
+        "--target-dir=/build/targets",
+        "aides_logement"
+      ],
+      "startedAt": "2026-11-25T08:20:15.121Z",
+      "finishedAt": "2026-11-25T08:20:34.800Z",
+      "durationMs": 18926,
+      "status": "passed",
+      "exitCode": 0,
+      "timedOut": false,
+      "tests": 68,
+      "passed": 68,
+      "failed": 0,
+      "files": [
+        {
+          "file": "aides_logement/Aides_logement.catala_fr",
+          "tests": 1,
+          "passed": 1,
+          "failed": 0,
+          "errors": [],
+          "failedCases": []
+        },
+        {
+          "file": "aides_logement/tests/tests_calcul_al_accession_propriete.catala_fr",
+          "tests": 5,
+          "passed": 5,
+          "failed": 0,
+          "errors": [],
+          "failedCases": []
+        },
+        {
+          "file": "aides_logement/tests/tests_calcul_al_locatif.catala_fr",
+          "tests": 9,
+          "passed": 9,
+          "failed": 0,
+          "errors": [],
+          "failedCases": []
+        },
+        {
+          "file": "aides_logement/tests/tests_calcul_al_logement_foyer.catala_fr",
+          "tests": 3,
+          "passed": 3,
+          "failed": 0,
+          "errors": [],
+          "failedCases": []
+        },
+        {
+          "file": "aides_logement/tests/tests_calcul_apl_accession_propriete.catala_fr",
+          "tests": 8,
+          "passed": 8,
+          "failed": 0,
+          "errors": [],
+          "failedCases": []
+        },
+        {
+          "file": "aides_logement/tests/tests_calcul_apl_locatif.catala_fr",
+          "tests": 18,
+          "passed": 18,
+          "failed": 0,
+          "errors": [],
+          "failedCases": []
+        },
+        {
+          "file": "aides_logement/tests/tests_calcul_apl_logement_foyer.catala_fr",
+          "tests": 10,
+          "passed": 10,
+          "failed": 0,
+          "errors": [],
+          "failedCases": []
+        },
+        {
+          "file": "aides_logement/tests/tests_calculette_globale.catala_fr",
+          "tests": 4,
+          "passed": 4,
+          "failed": 0,
+          "errors": [],
+          "failedCases": []
+        },
+        {
+          "file": "aides_logement/tests/tests_couverture_temporelle.catala_fr",
+          "tests": 3,
+          "passed": 3,
+          "failed": 0,
+          "errors": [],
+          "failedCases": []
+        },
+        {
+          "file": "aides_logement/tests/tests_eligibilite_apl.catala_fr",
+          "tests": 7,
+          "passed": 7,
+          "failed": 0,
+          "errors": [],
+          "failedCases": []
+        }
+      ]
+    },
+    {
+      "folder": "impot_revenu",
+      "command": [
+        "clerk",
+        "test",
+        "--json",
+        "--color=never",
+        "--backend=interpret",
+        "--makeflags=-j2",
+        "--build-dir=/build",
+        "--target-dir=/build/targets",
+        "impot_revenu"
+      ],
+      "startedAt": "2026-11-25T08:20:34.801Z",
+      "finishedAt": "2026-11-25T08:20:40.897Z",
+      "durationMs": 5328,
+      "status": "passed",
+      "exitCode": 0,
+      "timedOut": false,
+      "tests": 54,
+      "passed": 54,
+      "failed": 0,
+      "files": [
+        {
+          "file": "impot_revenu/tests/benefices_industriels_commerciaux.catala_fr",
+          "tests": 6,
+          "passed": 6,
+          "failed": 0,
+          "errors": [],
+          "failedCases": []
+        },
+        {
+          "file": "impot_revenu/tests/benefices_non_commerciaux.catala_fr",
+          "tests": 8,
+          "passed": 8,
+          "failed": 0,
+          "errors": [],
+          "failedCases": []
+        },
+        {
+          "file": "impot_revenu/tests/deficits_anterieurs.catala_fr",
+          "tests": 2,
+          "passed": 2,
+          "failed": 0,
+          "errors": [],
+          "failedCases": []
+        },
+        {
+          "file": "impot_revenu/tests/nombre_de_parts.catala_fr",
+          "tests": 10,
+          "passed": 10,
+          "failed": 0,
+          "errors": [],
+          "failedCases": []
+        },
+        {
+          "file": "impot_revenu/tests/prorata.catala_fr",
+          "tests": 6,
+          "passed": 6,
+          "failed": 0,
+          "errors": [],
+          "failedCases": []
+        },
+        {
+          "file": "impot_revenu/tests/traitements_salaires.catala_fr",
+          "tests": 22,
+          "passed": 22,
+          "failed": 0,
+          "errors": [],
+          "failedCases": []
+        }
+      ]
+    },
+    {
+      "folder": "prestations_familiales",
+      "command": [
+        "clerk",
+        "test",
+        "--json",
+        "--color=never",
+        "--backend=interpret",
+        "--makeflags=-j2",
+        "--build-dir=/build",
+        "--target-dir=/build/targets",
+        "prestations_familiales"
+      ],
+      "startedAt": "2026-11-25T08:20:40.898Z",
+      "finishedAt": "2026-11-25T08:20:43.157Z",
+      "durationMs": 1531,
+      "status": "passed",
+      "exitCode": 0,
+      "timedOut": false,
+      "tests": 2,
+      "passed": 2,
+      "failed": 0,
+      "files": [
+        {
+          "file": "prestations_familiales/tests/tests_ouverture_droits.catala_fr",
+          "tests": 2,
+          "passed": 2,
+          "failed": 0,
+          "errors": [],
+          "failedCases": []
+        }
+      ]
+    },
+    {
+      "folder": "smic",
+      "command": [
+        "clerk",
+        "test",
+        "--json",
+        "--color=never",
+        "--backend=interpret",
+        "--makeflags=-j2",
+        "--build-dir=/build",
+        "--target-dir=/build/targets",
+        "smic"
+      ],
+      "startedAt": "2026-11-25T08:20:43.157Z",
+      "finishedAt": "2026-11-25T08:20:44.194Z",
+      "durationMs": 329,
+      "status": "passed",
+      "exitCode": 0,
+      "timedOut": false,
+      "tests": 0,
+      "passed": 0,
+      "failed": 0,
+      "files": []
+    },
+    {
+      "folder": "base_mensuelle_allocations_familiales",
+      "command": [
+        "clerk",
+        "test",
+        "--json",
+        "--color=never",
+        "--backend=interpret",
+        "--makeflags=-j2",
+        "--build-dir=/build",
+        "--target-dir=/build/targets",
+        "base_mensuelle_allocations_familiales"
+      ],
+      "startedAt": "2026-11-25T08:20:44.195Z",
+      "finishedAt": "2026-11-25T08:20:45.355Z",
+      "durationMs": 398,
+      "status": "passed",
+      "exitCode": 0,
+      "timedOut": false,
+      "tests": 0,
+      "passed": 0,
+      "failed": 0,
+      "files": []
+    },
+    {
+      "folder": "droit_successions",
+      "command": [
+        "clerk",
+        "test",
+        "--json",
+        "--color=never",
+        "--backend=interpret",
+        "--makeflags=-j2",
+        "--build-dir=/build",
+        "--target-dir=/build/targets",
+        "droit_successions"
+      ],
+      "startedAt": "2026-11-25T08:20:45.355Z",
+      "finishedAt": "2026-11-25T08:20:47.515Z",
+      "durationMs": 1406,
+      "status": "passed",
+      "exitCode": 0,
+      "timedOut": false,
+      "tests": 8,
+      "passed": 8,
+      "failed": 0,
+      "files": [
+        {
+          "file": "droit_successions/tests/tests_droit_succession.catala_fr",
+          "tests": 8,
+          "passed": 8,
+          "failed": 0,
+          "errors": [],
+          "failedCases": []
+        }
+      ]
+    },
+    {
+      "folder": "asp/aide_fibre",
+      "command": [
+        "clerk",
+        "test",
+        "--json",
+        "--color=never",
+        "--backend=interpret",
+        "--makeflags=-j2",
+        "--build-dir=/build",
+        "--target-dir=/build/targets",
+        "asp/aide_fibre"
+      ],
+      "startedAt": "2026-11-25T08:20:47.518Z",
+      "finishedAt": "2026-11-25T08:20:49.653Z",
+      "durationMs": 1420,
+      "status": "passed",
+      "exitCode": 0,
+      "timedOut": false,
+      "tests": 1,
+      "passed": 1,
+      "failed": 0,
+      "files": [
+        {
+          "file": "asp/aide_fibre/tests/test_aide_fibre.catala_fr",
+          "tests": 1,
+          "passed": 1,
+          "failed": 0,
+          "errors": [],
+          "failedCases": []
+        }
+      ]
+    },
+    {
+      "folder": "asp/bcae7",
+      "command": [
+        "clerk",
+        "test",
+        "--json",
+        "--color=never",
+        "--backend=interpret",
+        "--makeflags=-j2",
+        "--build-dir=/build",
+        "--target-dir=/build/targets",
+        "asp/bcae7"
+      ],
+      "startedAt": "2026-11-25T08:20:49.654Z",
+      "finishedAt": "2026-11-25T08:20:52.328Z",
+      "durationMs": 1919,
+      "status": "passed",
+      "exitCode": 0,
+      "timedOut": false,
+      "tests": 5,
+      "passed": 5,
+      "failed": 0,
+      "files": [
+        {
+          "file": "asp/bcae7/tests/tests_bcae7.catala_fr",
+          "tests": 5,
+          "passed": 5,
+          "failed": 0,
+          "errors": [],
+          "failedCases": []
+        }
+      ]
+    },
+    {
+      "folder": "asp/fonpeps",
+      "command": [
+        "clerk",
+        "test",
+        "--json",
+        "--color=never",
+        "--backend=interpret",
+        "--makeflags=-j2",
+        "--build-dir=/build",
+        "--target-dir=/build/targets",
+        "asp/fonpeps"
+      ],
+      "startedAt": "2026-11-25T08:20:52.329Z",
+      "finishedAt": "2026-11-25T08:20:54.637Z",
+      "durationMs": 1577,
+      "status": "passed",
+      "exitCode": 0,
+      "timedOut": false,
+      "tests": 1,
+      "passed": 1,
+      "failed": 0,
+      "files": [
+        {
+          "file": "asp/fonpeps/tests/test_fonseps.catala_fr",
+          "tests": 1,
+          "passed": 1,
+          "failed": 0,
+          "errors": [],
+          "failedCases": []
+        }
+      ]
+    }
+  ]
+}

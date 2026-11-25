@@ -1,0 +1,74 @@
+{
+  "source": "inria/catala-examples",
+  "sourceCommit": "9e251b932288cf5f4a74af072d203144a057494b",
+  "distinctLegiarti": 473,
+  "rows": 478,
+  "folders": [
+    {
+      "folder": "NSW_community_gaming",
+      "distinctLegiarti": 0,
+      "rows": 0,
+      "files": 0
+    },
+    {
+      "folder": "aides_logement",
+      "distinctLegiarti": 391,
+      "rows": 391,
+      "files": 6
+    },
+    {
+      "folder": "allocations_familiales",
+      "distinctLegiarti": 23,
+      "rows": 23,
+      "files": 6
+    },
+    {
+      "folder": "asp",
+      "distinctLegiarti": 0,
+      "rows": 0,
+      "files": 0
+    },
+    {
+      "folder": "base_mensuelle_allocations_familiales",
+      "distinctLegiarti": 0,
+      "rows": 0,
+      "files": 0
+    },
+    {
+      "folder": "droit_successions",
+      "distinctLegiarti": 6,
+      "rows": 6,
+      "files": 1
+    },
+    {
+      "folder": "impot_revenu",
+      "distinctLegiarti": 52,
+      "rows": 52,
+      "files": 2
+    },
+    {
+      "folder": "prestations_familiales",
+      "distinctLegiarti": 5,
+      "rows": 5,
+      "files": 2
+    },
+    {
+      "folder": "prologue_france",
+      "distinctLegiarti": 0,
+      "rows": 0,
+      "files": 0
+    },
+    {
+      "folder": "smic",
+      "distinctLegiarti": 1,
+      "rows": 1,
+      "files": 1
+    },
+    {
+      "folder": "us_tax_code",
+      "distinctLegiarti": 0,
+      "rows": 0,
+      "files": 0
+    }
+  ]
+}
