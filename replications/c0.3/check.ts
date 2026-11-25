@@ -8,7 +8,7 @@ export const task = join(import.meta.dir, 'task')
 export const limits = { timeoutMs: 60_000, cpus: 2, memoryMb: 1536, network: false } as const
 
 export function checkHandle(handle: string) {
-  if (!/^[a-zA-Z0-9][a-zA-Z0-9-]{0,38}$/.test(handle)) throw new Error('Pseudo invalide.')
+  if (!/^[a-zA-Z0-9][a-zA-Z0-9.-]{0,38}$/.test(handle)) throw new Error('Pseudo invalide.')
   return handle
 }
 
@@ -27,6 +27,8 @@ export async function submissionFiles(directory: string) {
   if (!(await lstat(directory)).isDirectory()) throw new Error('Dossier de soumission invalide.')
   const files = new Map<string, string>()
   for (const item of await readdir(directory, { withFileTypes: true })) {
+    // La déclaration de l'auteur (famille, modèle, sources consultées) accompagne la remise sans être compilée.
+    if (item.isFile() && item.name === 'DECLARATION.md') continue
     if (
       !item.isFile() ||
       !/^[A-Za-z0-9_-]+\.catala_fr$/.test(item.name) ||
