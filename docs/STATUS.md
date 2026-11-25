@@ -48,8 +48,10 @@
   **worktree** séparé ; il est seul à écrire `AGENTS.md`, `docs/PLAN.md` et ce fichier (pas de conflit).
 - Chaque sous-agent consigne ses apprentissages dans `docs/notes/<chantier>.md` et termine par un rapport
   (branche, SHA, vérifications). L'orchestrateur relit, fusionne dans `j0-fondations`, met à jour ce fichier.
-- Modèles : tâches rapides et vérifications → `codex/gpt-6.2-sol` effort bas ; chantiers difficiles →
-  effort élevé ou Claude Opus/Sonnet 5.5. La diversité des familles de modèles sert aussi de relecture croisée.
+- Modèles (règle du mainteneur, 25/11) : **par défaut `codex/gpt-6.2-sol`**, effort `low` (rapide,
+  vérifications) ou `medium` (implémentation) ; `high` seulement si justifié. **Pas de sous-agent Claude**
+  sauf demande explicite : le quota Claude (5 h) sert à l'orchestrateur. La diversité des familles reste
+  souhaitable pour les relectures croisées, dans ces limites.
 - Seul le chantier d'ingestion peut modifier `packages/db/src/schema.ts` pendant J0-J1.
 
 ## Pièges connus
@@ -109,8 +111,8 @@
 2. ✔ Qualification humaine par verdicts commités (`dossier`, `qualify`, `publish`) + pages `/anomalies`,
    `/anomalies/[id]`, `/anomalies/cimetiere` — codex/gpt-6.2-sol (high), en ligne. (Une 2ᵉ implémentation par
    claude-sonnet-5-5, reprise seule après quota, existe sur `t3/qualification-workflow-pages` : non fusionnée.)
-3. En cours : reproduction indépendante n° 2 depuis les **XML DILA bruts** (historique complet) pour
-   trancher les 1 112 REF_MORTE — claude-opus-5-5 (high) ; la tentative Gemini (antigravity) a échoué sur
-   quota (réinitialisation ~131 h).
+3. ✔ Reproduction indépendante n° 2 depuis les **XML DILA bruts** (claude-opus-5-5) : **1 110 REF_MORTE
+   confirmés → `reproduced`**, 2 indéterminés, 0 infirmé ; les 5 retraits retrouvés en contrôle négatif.
+   Base : 1 119 `reproduced` (REF_MORTE 1 110, SYNTAXE 9), 2 `candidate`, 7 `withdrawn`.
 4. **Qualification humaine** (dossier prêt : 9 SYNTAXE reproduits, `qualifications/dossiers/2026-11-25-SYNTAXE.md`) d'un premier lot par le mainteneur ou un juriste → premiers findings publiés.
 5. J3 : desk + `join.txt` + CI de vérification.
