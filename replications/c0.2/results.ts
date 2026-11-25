@@ -65,10 +65,22 @@ const count = <T>(items: T[], key: (t: T) => string) => {
   return Object.fromEntries(Object.entries(out).sort(([a], [b]) => a.localeCompare(b)))
 }
 
+interface WithdrawalSummary {
+  id: string
+  type: string
+  reason: string
+  by: string
+  at: string
+  note: string
+}
+
 export function buildResults(input: {
   summary: RunSummary
   ctx: SweepContext
   candidates: CandidateSummary[]
+  reproduced: string[]
+  withdrawals: WithdrawalSummary[]
+  reassignedCount: number
   ecartsCount: number
   triage: TriageEntry[]
   totalMs: number
@@ -116,6 +128,9 @@ export function buildResults(input: {
     })),
     candidatesByTypeAndSubtype: count(candidates, (c) => `${c.type} / ${c.subtype}`),
     candidatesByDetector: count(candidates, (c) => c.detector),
+    reproducedByType: count(input.reproduced, (type) => type),
+    withdrawals: input.withdrawals,
+    numerosReattribues: input.reassignedCount,
     refMorteTexteAvecLienLegi: candidates.filter(
       (c) => c.detector.startsWith('ref-morte-texte') && c.lien_legi,
     ).length,

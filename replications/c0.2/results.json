@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-25T11:15:29.591Z",
-  "sweepRunId": 7,
+  "generatedAt": "2026-11-25T12:39:25.297Z",
+  "sweepRunId": 8,
   "projection": [
     {
       "code": "CCH",
@@ -30,25 +30,25 @@
     "CSS": 7419,
     "CCH": 4126
   },
-  "durationMs": 4003,
-  "totalMs": 5236,
-  "contextMs": 3051,
+  "durationMs": 4030,
+  "totalMs": 5330,
+  "contextMs": 3056,
   "scanMs": {
-    "ref-morte-liens@1.0.0": 111,
-    "ref-morte-texte@1.0.0": 281,
-    "numerotation@1.0.0": 90,
-    "syntaxe@1.0.0": 651
+    "ref-morte-liens@1.1.0": 114,
+    "ref-morte-texte@1.1.0": 365,
+    "numerotation@1.1.0": 127,
+    "syntaxe@1.0.0": 611
   },
-  "peakRssMb": 974,
+  "peakRssMb": 952,
   "detectors": [
     {
-      "detector": "ref-morte-liens@1.0.0",
-      "candidates": 449,
+      "detector": "ref-morte-liens@1.1.0",
+      "candidates": 444,
       "new": 0,
-      "alreadyKnown": 449,
+      "alreadyKnown": 444,
       "bySubtype": {
-        "abrogé": 380,
-        "transféré": 65,
+        "abrogé": 376,
+        "transféré": 64,
         "annulé": 1,
         "périmé": 2,
         "autre:MODIFIE": 1
@@ -66,8 +66,9 @@
           "hors_codes_ingeres": 6105,
           "texte_ou_section": 1346,
           "sans_cible": 109,
-          "morte": 1038,
+          "morte": 1031,
           "inconnue_dans_nos_codes": 13,
+          "numero_reattribue": 7,
           "a_venir": 2
         },
         "liens_resolus": 20005,
@@ -77,17 +78,17 @@
           "version_ids": 13
         },
         "candidats_par_sous_type": {
-          "abrogé": 380,
-          "transféré": 65,
+          "abrogé": 376,
+          "transféré": 64,
           "annulé": 1,
           "périmé": 2,
           "autre:MODIFIE": 1
         },
-        "liens_morts_non_confirmes_par_le_texte": 589
+        "liens_morts_non_confirmes_par_le_texte": 587
       }
     },
     {
-      "detector": "ref-morte-texte@1.0.0",
+      "detector": "ref-morte-texte@1.1.0",
       "candidates": 668,
       "new": 0,
       "alreadyKnown": 668,
@@ -124,18 +125,16 @@
       }
     },
     {
-      "detector": "numerotation@1.0.0",
-      "candidates": 2,
+      "detector": "numerotation@1.1.0",
+      "candidates": 0,
       "new": 0,
-      "alreadyKnown": 2,
-      "bySubtype": {
-        "subdivision_dupliquee": 2
-      },
+      "alreadyKnown": 0,
+      "bySubtype": {},
       "stats": {
         "articles_controles": 13950,
         "groupes_de_numero_multiples_meme_lignee": 0,
         "numeros_dupliques": 0,
-        "subdivisions_dupliquees": 2
+        "subdivisions_dupliquees": 0
       }
     },
     {
@@ -165,27 +164,83 @@
     }
   ],
   "candidatesByTypeAndSubtype": {
-    "NUMEROTATION / subdivision_dupliquee": 2,
-    "REF_MORTE / abrogé": 932,
+    "REF_MORTE / abrogé": 928,
     "REF_MORTE / annulé": 2,
     "REF_MORTE / autre:MODIFIE": 2,
     "REF_MORTE / périmé": 14,
-    "REF_MORTE / transféré": 167,
-    "SYNTAXE / guillemet_droit_non_apparie": 7,
-    "SYNTAXE / parenthese_non_fermee": 1,
-    "SYNTAXE / parenthese_non_ouverte": 1
+    "REF_MORTE / transféré": 166
   },
   "candidatesByDetector": {
-    "numerotation@1.0.0": 2,
-    "ref-morte-liens@1.0.0": 449,
-    "ref-morte-texte@1.0.0": 668,
-    "syntaxe@1.0.0": 9
+    "ref-morte-liens@1.1.0": 444,
+    "ref-morte-texte@1.1.0": 668
   },
+  "reproducedByType": {
+    "SYNTAXE": 9
+  },
+  "withdrawals": [
+    {
+      "id": "F-2026-0103",
+      "type": "REF_MORTE",
+      "at": "2026-11-25T12:39:25.133Z",
+      "by": "ref-morte-liens@1.1.0",
+      "note": "Empreinte produite par ref-morte-liens@1.0.0, absente du balayage de ref-morte-liens@1.1.0.",
+      "reason": "detector_fix"
+    },
+    {
+      "id": "F-2026-0238",
+      "type": "REF_MORTE",
+      "at": "2026-11-25T12:39:25.133Z",
+      "by": "ref-morte-liens@1.1.0",
+      "note": "Empreinte produite par ref-morte-liens@1.0.0, absente du balayage de ref-morte-liens@1.1.0.",
+      "reason": "detector_fix"
+    },
+    {
+      "id": "F-2026-0241",
+      "type": "REF_MORTE",
+      "at": "2026-11-25T12:39:25.133Z",
+      "by": "ref-morte-liens@1.1.0",
+      "note": "Empreinte produite par ref-morte-liens@1.0.0, absente du balayage de ref-morte-liens@1.1.0.",
+      "reason": "detector_fix"
+    },
+    {
+      "id": "F-2026-0286",
+      "type": "REF_MORTE",
+      "at": "2026-11-25T12:39:25.133Z",
+      "by": "ref-morte-liens@1.1.0",
+      "note": "Empreinte produite par ref-morte-liens@1.0.0, absente du balayage de ref-morte-liens@1.1.0.",
+      "reason": "detector_fix"
+    },
+    {
+      "id": "F-2026-0430",
+      "type": "REF_MORTE",
+      "at": "2026-11-25T12:39:25.133Z",
+      "by": "ref-morte-liens@1.1.0",
+      "note": "Empreinte produite par ref-morte-liens@1.0.0, absente du balayage de ref-morte-liens@1.1.0.",
+      "reason": "detector_fix"
+    },
+    {
+      "id": "F-2026-1118",
+      "type": "NUMEROTATION",
+      "at": "2026-11-25T12:39:25.218Z",
+      "by": "numerotation@1.1.0",
+      "note": "Empreinte produite par numerotation@1.0.0, absente du balayage de numerotation@1.1.0.",
+      "reason": "detector_fix"
+    },
+    {
+      "id": "F-2026-1119",
+      "type": "NUMEROTATION",
+      "at": "2026-11-25T12:39:25.218Z",
+      "by": "numerotation@1.1.0",
+      "note": "Empreinte produite par numerotation@1.0.0, absente du balayage de numerotation@1.1.0.",
+      "reason": "detector_fix"
+    }
+  ],
+  "numerosReattribues": 7,
   "refMorteTexteAvecLienLegi": 417,
   "refMorteTexteRecoupeLesLiens": 443,
   "refMorteTexteTotal": 668,
-  "refMorteLiensTotal": 449,
-  "ecartsLienTexte": 589,
+  "refMorteLiensTotal": 444,
+  "ecartsLienTexte": 587,
   "triage": {
     "size": 30,
     "byStratumAndVerdict": {

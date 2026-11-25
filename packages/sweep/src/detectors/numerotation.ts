@@ -6,8 +6,8 @@
  *    même lignée n'en font pas partie (anomalie de dates DILA, comptée à part). Pas de recherche de
  *    « trous » : une numérotation discontinue est normale.
  * 2. `subdivision_dupliquee` : deux marqueurs identiques et consécutifs de même niveau dans un même
- *    article (« 3° » puis « 3° »), sans marqueur de niveau supérieur entre eux. Marqueurs lus seulement
- *    en début d'alinéa, hiérarchie : I. › A. › 1. › 1° › a).
+ *    article (« 3° » puis « 3° »), sous le même parent. Marqueurs lus hors citation en début d'alinéa,
+ *    selon la hiérarchie I. › A. › 1. › 1° › a).
  */
 import { legifranceArticleUrl } from '@bugdeloi/core/legi'
 import { hintsAround, legalUnit, versionRef } from '../certificate.ts'
@@ -15,7 +15,7 @@ import { normalizeNum } from '../citations.ts'
 import type { Candidate, Detector, ScanOptions, ScanResult, SweepContext, Version } from '../types.ts'
 
 export const NAME = 'numerotation'
-export const VERSION = '1.0.0'
+export const VERSION = '1.1.0'
 
 const ADV = '(?:bis|ter|quater|quinquies|sexies|septies|octies|nonies|novies|decies)'
 
@@ -48,7 +48,7 @@ const intOrd = (v: string) => (/^\d{1,2}$/.test(v) ? Number(v) : null)
 const LEVELS: Level[] = [
   {
     id: 'romain',
-    re: new RegExp(`^([IVX]{1,5})\\.(?=[ -]+\\S)(?![ -]*(?:${ADV})\\b)`),
+    re: new RegExp(`^([IVX]{1,5})(?: (${ADV})\\.|\\.(?:[ –—-]+(${ADV})\\.?)?)(?=[ –—-]+\\S)`),
     ordinal: (v) => ROMAN[v] ?? null,
   },
   {
@@ -84,7 +84,15 @@ export function markersOf(paragraph: string, index: number): Marker[] {
       const m = l.re.exec(rest)
       if (m?.[1]) {
         const suffix = l.id === 'degre' ? '°' : l.id === 'lettre' ? ')' : '.'
-        hit = { level, levelId: l.id, value: `${m[1]}${suffix}`, ordinal: l.ordinal(m[1]), paragraph: index }
+        const extension = m[2] ?? m[3]
+        const value = extension ? `${m[1]} ${extension}` : m[1]
+        hit = {
+          level,
+          levelId: l.id,
+          value: `${value}${suffix}`,
+          ordinal: l.ordinal(value),
+          paragraph: index,
+        }
         consumed = m[0].length
         break
       }
@@ -94,7 +102,7 @@ export function markersOf(paragraph: string, index: number): Marker[] {
     const previous = out[out.length - 1]
     if (previous && hit.level <= previous.level) break
     out.push(hit)
-    rest = rest.slice(consumed).replace(/^[\s.-]+/, '')
+    rest = rest.slice(consumed).replace(/^[\s.–—-]+/, '')
   }
   return out
 }
@@ -112,7 +120,17 @@ export interface Duplicate {
 export function duplicateMarkers(paragraphs: string[]): Duplicate[] {
   const history: Marker[][] = LEVELS.map(() => [])
   const out: Duplicate[] = []
+  let frenchDepth = 0
+  let straightOpen = false
   paragraphs.forEach((p, i) => {
+    const outsideQuote = frenchDepth === 0 && !straightOpen
+    for (const { 0: quote, index } of p.matchAll(/[«»"]/g)) {
+      // Un guillemet ouvrant repris en tête d'alinéa continue la citation.
+      if (quote === '«' && (index !== 0 || frenchDepth === 0)) frenchDepth++
+      if (quote === '»' && frenchDepth > 0) frenchDepth--
+      if (quote === '"' && (index !== 0 || !straightOpen)) straightOpen = !straightOpen
+    }
+    if (!outsideQuote) return
     for (const marker of markersOf(p, i)) {
       const hist = history[marker.level] as Marker[]
       const prev = hist[hist.length - 1]

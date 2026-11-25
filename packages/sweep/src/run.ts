@@ -4,7 +4,7 @@
  * L'événement ne porte **aucun** nombre de candidats (rien de non qualifié dans un compteur public).
  */
 import { type Db, event, finding, findingFingerprint, sweepRun } from '@bugdeloi/db'
-import { eq, inArray, sql } from 'drizzle-orm'
+import { and, eq, inArray, like, ne, sql } from 'drizzle-orm'
 import { buildCertificate, fingerprintOf } from './certificate-builder.ts'
 import { loadContext } from './context.ts'
 import { DETECTORS } from './detectors/index.ts'
@@ -102,38 +102,41 @@ export async function runSweep(db: Db, options: RunOptions = {}): Promise<RunSum
     for (const v of ctx.inForce)
       if (codeSet.has(v.code)) articlesChecked[v.code] = (articlesChecked[v.code] ?? 0) + 1
 
-    const outcomes: DetectorOutcome[] = []
-    for (const detector of detectors) {
+    const scans = detectors.map((detector) => {
       const t0 = performance.now()
       const result = detector.scan(ctx, { codes: codeSet })
       const durationMs = Math.round(performance.now() - t0)
       const bySubtype: Record<string, number> = {}
       for (const c of result.candidates) bySubtype[c.subtype] = (bySubtype[c.subtype] ?? 0) + 1
-      const persisted = options.dryRun
-        ? { added: 0, known: 0 }
-        : await persistCandidates(db, ctx, detector, result.candidates, runId)
-      outcomes.push({
+      const outcome: DetectorOutcome = {
         detector: detectorId(detector),
         candidates: result.candidates.length,
-        new: persisted.added,
-        alreadyKnown: persisted.known,
+        new: 0,
+        alreadyKnown: 0,
         durationMs,
         stats: result.stats,
         bySubtype,
-      })
-    }
+      }
+      return { detector, result, outcome }
+    })
 
     const asOf = Object.fromEntries(ctx.codes.filter((c) => codeSet.has(c.code)).map((c) => [c.code, c.asOf]))
-    const summary: RunSummary = {
-      runId,
-      asOf,
-      codes,
-      articlesChecked,
-      durationMs: Math.round(performance.now() - started) + (options.context ? (options.contextMs ?? 0) : 0),
-      outcomes,
-    }
-    if (!options.dryRun && runId !== null) {
+    const elapsed = () =>
+      Math.round(performance.now() - started) + (options.context ? (options.contextMs ?? 0) : 0)
+    const outcomes = scans.map(({ outcome }) => outcome)
+    const summary: RunSummary = { runId, asOf, codes, articlesChecked, durationMs: elapsed(), outcomes }
+    if (runId !== null) {
+      const id = runId
       await db.transaction(async (tx) => {
+        await lockFindings(tx)
+        for (const { detector, result, outcome } of scans) {
+          const withFp = prepareCandidates(detector, result.candidates)
+          await reconcileVersion(tx, ctx, detector, new Set(withFp.map(({ fp }) => fp)), codeSet)
+          const persisted = await insertCandidates(tx, ctx, detector, withFp, id)
+          outcome.new = persisted.added
+          outcome.alreadyKnown = persisted.known
+        }
+        summary.durationMs = elapsed()
         await tx
           .update(sweepRun)
           .set({
@@ -143,7 +146,7 @@ export async function runSweep(db: Db, options: RunOptions = {}): Promise<RunSum
             durationMs: summary.durationMs,
             stats: { detectors: outcomes },
           })
-          .where(eq(sweepRun.id, runId as number))
+          .where(eq(sweepRun.id, id))
         const total = Object.values(articlesChecked).reduce((a, b) => a + b, 0)
         await tx.insert(event).values({
           type: 'sweep.finished',
@@ -177,6 +180,94 @@ export async function runSweep(db: Db, options: RunOptions = {}): Promise<RunSum
 }
 
 const BATCH = 200
+type SweepTransaction = Parameters<Parameters<Db['transaction']>[0]>[0]
+
+function lockFindings(tx: SweepTransaction) {
+  return tx.execute(sql`select pg_advisory_xact_lock(hashtext('bugdeloi.finding.id'))`)
+}
+
+/** Réconcilie uniquement les versions antérieures et les sources du périmètre balayé. */
+async function reconcileVersion(
+  tx: SweepTransaction,
+  ctx: SweepContext,
+  detector: Detector,
+  produced: ReadonlySet<string>,
+  codes: ReadonlySet<string>,
+) {
+  const current = detectorId(detector)
+  const prefix = `${detector.name}@`
+  const rows = await tx
+    .select({ row: finding, fp: findingFingerprint.fingerprint })
+    .from(finding)
+    .innerJoin(findingFingerprint, eq(findingFingerprint.findingId, finding.id))
+    .where(and(like(finding.detector, `${prefix}%`), ne(finding.detector, current)))
+    .for('update', { of: finding })
+  const at = new Date()
+  const protectedMissing: string[] = []
+  const retained: string[] = []
+  for (const { row, fp } of rows) {
+    const version = row.detector.slice(prefix.length)
+    if (!/^\d+\.\d+\.\d+$/.test(version) || Bun.semver.order(version, detector.version) >= 0) continue
+    const sourceId = row.certificate.source_id
+    const source = typeof sourceId === 'string' ? ctx.versions.get(sourceId) : undefined
+    // La version source peut être absente du stock courant. Le certificat en conserve le code.
+    const proof = row.certificate.proof as
+      | { source?: { code?: string }; versions?: { code?: string }[] }
+      | undefined
+    const code = source?.code ?? proof?.source?.code ?? proof?.versions?.[0]?.code
+    if (!code || !codes.has(code)) continue
+
+    const present = produced.has(fp)
+    if (row.status === 'qualified' || row.status === 'published' || row.status === 'rejected') {
+      if (!present) protectedMissing.push(`${row.id} (${row.status})`)
+      continue
+    }
+    if (row.status !== 'candidate' && row.status !== 'reproduced') continue
+    if (present) {
+      retained.push(row.id)
+      continue
+    }
+    await tx
+      .update(finding)
+      .set({
+        status: 'withdrawn',
+        updatedAt: at,
+        certificate: {
+          ...row.certificate,
+          withdrawal: {
+            reason: 'detector_fix',
+            by: current,
+            at: at.toISOString(),
+            note: `Empreinte produite par ${row.detector}, absente du balayage de ${current}.`,
+          },
+        },
+      })
+      .where(eq(finding.id, row.id))
+  }
+  if (protectedMissing.length > 0) {
+    throw new Error(
+      `Balayage bloqué : ${current} ne reproduit plus les findings protégés suivants : ${protectedMissing.sort().join(', ')}.`,
+    )
+  }
+  for (let i = 0; i < retained.length; i += 1000) {
+    await tx
+      .update(finding)
+      .set({ detector: current, updatedAt: at })
+      .where(inArray(finding.id, retained.slice(i, i + 1000)))
+  }
+}
+
+function prepareCandidates(detector: Detector, candidates: Candidate[]) {
+  return candidates
+    .map((c) => ({ c, fp: fingerprintOf(detector, c) }))
+    .sort(
+      (a, b) =>
+        a.c.type.localeCompare(b.c.type) ||
+        a.c.subtype.localeCompare(b.c.subtype) ||
+        a.c.sourceId.localeCompare(b.c.sourceId) ||
+        a.fp.localeCompare(b.fp),
+    )
+}
 
 /**
  * Insère les candidats absents de `finding_fingerprint`. Numérotation F-AAAA-NNNN attribuée sous
@@ -189,55 +280,55 @@ export async function persistCandidates(
   candidates: Candidate[],
   runId: number | null,
 ): Promise<{ added: number; known: number }> {
-  const withFp = candidates
-    .map((c) => ({ c, fp: fingerprintOf(detector, c) }))
-    .sort(
-      (a, b) =>
-        a.c.type.localeCompare(b.c.type) ||
-        a.c.subtype.localeCompare(b.c.subtype) ||
-        a.c.sourceId.localeCompare(b.c.sourceId) ||
-        a.fp.localeCompare(b.fp),
-    )
-  if (withFp.length === 0) return { added: 0, known: 0 }
+  return db.transaction(async (tx) => {
+    await lockFindings(tx)
+    return insertCandidates(tx, ctx, detector, prepareCandidates(detector, candidates), runId)
+  })
+}
+
+async function insertCandidates(
+  tx: SweepTransaction,
+  ctx: SweepContext,
+  detector: Detector,
+  withFp: ReturnType<typeof prepareCandidates>,
+  runId: number | null,
+): Promise<{ added: number; known: number }> {
   const known = new Set<string>()
   for (let i = 0; i < withFp.length; i += 1000) {
     const slice = withFp.slice(i, i + 1000).map((x) => x.fp)
-    const rows = await db
+    const rows = await tx
       .select({ fingerprint: findingFingerprint.fingerprint })
       .from(findingFingerprint)
       .where(inArray(findingFingerprint.fingerprint, slice))
     for (const r of rows) known.add(r.fingerprint)
   }
   const fresh = withFp.filter((x) => !known.has(x.fp))
-  if (fresh.length === 0) return { added: 0, known: withFp.length }
+  if (fresh.length === 0) return { added: 0, known: known.size }
 
   const year = new Date().getUTCFullYear()
-  await db.transaction(async (tx) => {
-    await tx.execute(sql`select pg_advisory_xact_lock(hashtext('bugdeloi.finding.id'))`)
-    const [row] = await tx.execute<{ n: number }>(
-      sql`select coalesce(max(substring(id from '^F-[0-9]+-([0-9]+)$')::int), 0) as n from finding where id like ${`F-${year}-%`}`,
+  const [row] = await tx.execute<{ n: number }>(
+    sql`select coalesce(max(substring(id from '^F-[0-9]+-([0-9]+)$')::int), 0) as n from finding where id like ${`F-${year}-%`}`,
+  )
+  let next = Number(row?.n ?? 0)
+  for (let i = 0; i < fresh.length; i += BATCH) {
+    const slice = fresh.slice(i, i + BATCH)
+    const rows = slice.map(({ c, fp }) => {
+      next += 1
+      const id = `F-${year}-${String(next).padStart(4, '0')}`
+      return { id, fp, c, certificate: buildCertificate(detector, c, fp, ctx, runId, id) }
+    })
+    await tx.insert(finding).values(
+      rows.map((r) => ({
+        id: r.id,
+        type: r.c.type,
+        status: 'candidate',
+        claim: r.c.claim,
+        legalUnits: r.c.legalUnits,
+        certificate: r.certificate as unknown as Record<string, unknown>,
+        detector: detectorId(detector),
+      })),
     )
-    let next = Number(row?.n ?? 0)
-    for (let i = 0; i < fresh.length; i += BATCH) {
-      const slice = fresh.slice(i, i + BATCH)
-      const rows = slice.map(({ c, fp }) => {
-        next += 1
-        const id = `F-${year}-${String(next).padStart(4, '0')}`
-        return { id, fp, c, certificate: buildCertificate(detector, c, fp, ctx, runId, id) }
-      })
-      await tx.insert(finding).values(
-        rows.map((r) => ({
-          id: r.id,
-          type: r.c.type,
-          status: 'candidate',
-          claim: r.c.claim,
-          legalUnits: r.c.legalUnits,
-          certificate: r.certificate as unknown as Record<string, unknown>,
-          detector: detectorId(detector),
-        })),
-      )
-      await tx.insert(findingFingerprint).values(rows.map((r) => ({ fingerprint: r.fp, findingId: r.id })))
-    }
-  })
+    await tx.insert(findingFingerprint).values(rows.map((r) => ({ fingerprint: r.fp, findingId: r.id })))
+  }
   return { added: fresh.length, known: known.size }
 }

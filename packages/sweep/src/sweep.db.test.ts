@@ -10,6 +10,7 @@ import {
   type Db,
   event,
   finding,
+  findingFingerprint,
   legalArticle,
   legalLink,
   legalText,
@@ -149,6 +150,70 @@ describe('sweep sur bugdeloi_test', async () => {
           .where(eq(sweepRun.id, first.runId as number))
         expect(run?.status).toBe('success')
         expect(run?.articlesChecked).toEqual({ [TEXT_ID]: 1 })
+        const surviving = mine.find((r) => r.detector.startsWith('ref-morte-liens'))
+        if (!surviving) throw new Error('Finding de test absent.')
+        const previous = 'ref-morte-liens@1.0.0'
+        const current = 'ref-morte-liens@1.1.0'
+        await tx.update(finding).set({ detector: previous }).where(eq(finding.id, surviving.id))
+        const ghosts = ['candidate', 'reproduced', 'qualified', 'published', 'rejected'].map((status) => ({
+          id: `sweep-test-${status}`,
+          status,
+          type: surviving.type,
+          claim: surviving.claim,
+          detector: previous,
+          certificate: {
+            source_id: surviving.certificate.source_id,
+            independent_reproduction: { result: 'test' },
+          },
+        }))
+        await tx.insert(finding).values(ghosts)
+        await tx
+          .insert(findingFingerprint)
+          .values(ghosts.map(({ id }) => ({ findingId: id, fingerprint: id })))
+
+        const upgraded = () => runSweep(t, { codes: [TEXT_ID], detectors: ['ref-morte-liens'] })
+        const snapshots = () =>
+          tx.select().from(finding).where(like(finding.id, 'sweep-test-%')).orderBy(finding.id)
+        const beforeUpgrade = await snapshots()
+        await expect(upgraded()).rejects.toThrow(
+          'sweep-test-published (published), sweep-test-qualified (qualified), sweep-test-rejected (rejected)',
+        )
+        expect(await snapshots()).toEqual(beforeUpgrade)
+        const [failed] = await tx
+          .select()
+          .from(sweepRun)
+          .where(eq(sweepRun.status, 'failed'))
+          .orderBy(sweepRun.id)
+        expect(failed?.error).toContain('Balayage bloqué')
+        for (const status of ['qualified', 'published', 'rejected']) {
+          // Place les cas protégés dans la version courante pour tester le retrait des deux autres.
+          await tx
+            .update(finding)
+            .set({ detector: current })
+            .where(eq(finding.id, `sweep-test-${status}`))
+        }
+
+        expect((await upgraded()).outcomes[0]?.new).toBe(0)
+        const [retained] = await tx.select().from(finding).where(eq(finding.id, surviving.id))
+        expect(retained?.detector).toBe(current)
+        expect(retained?.certificate).toEqual(surviving.certificate)
+        const afterUpgrade = await snapshots()
+        for (const row of afterUpgrade.filter(({ id }) => /candidate|reproduced/.test(id))) {
+          expect(row.status).toBe('withdrawn')
+          expect(row.detector).toBe(previous)
+          expect(row.certificate).toMatchObject({
+            independent_reproduction: { result: 'test' },
+            withdrawal: {
+              reason: 'detector_fix',
+              by: current,
+              at: expect.any(String),
+              note: expect.any(String),
+            },
+          })
+        }
+        await upgraded()
+        expect(await snapshots()).toEqual(afterUpgrade)
+
         tx.rollback()
       })
     } catch (error) {

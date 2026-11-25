@@ -43,6 +43,9 @@ const results = {
   refMorteTexteTotal: 0,
   refMorteLiensTotal: 1,
   ecartsLienTexte: 2,
+  reproducedByType: { SYNTAXE: 1 },
+  withdrawals: [{ id: 'F-2026-0002', type: 'REF_MORTE', by: 'ref-morte-liens@1.1.0' }],
+  numerosReattribues: 1,
   triage: { size: 1, byStratumAndVerdict: {} },
 } as unknown as Results
 
@@ -64,6 +67,8 @@ test('le rapport annonce « candidats non qualifiés », le tri non probant, la 
   expect(md).toContain('tri par LLM, non probant')
   expect(md).toContain('80 %') // 8 liens résolus sur 10
   expect(md).toContain('`F-2026-0001`')
+  expect(md).toContain('`F-2026-0002`')
+  expect(md).toContain('SYNTAXE 1')
   for (const banned of ['prouvé', 'certifié', 'vérifié', 'bug de la loi'])
     expect(md.toLowerCase()).not.toContain(banned)
 })

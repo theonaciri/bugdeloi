@@ -103,11 +103,11 @@ ${results.detectors
         : 'REF_MORTE'
     const def: Record<string, string> = {
       'ref-morte-liens':
-        "Lien LEGI `CITATION` de sens `source` (l'article porteur cite la cible) d'une version en vigueur vers un article dont **aucune** version n'est en vigueur à la date de projection et dont aucune n'est annoncée plus tard. Sous-type = état de la dernière version (`abrogé`, `transféré`, `périmé`, `disjoint`, `annulé`, `autre:<état>`). Le numéro cité doit figurer dans le texte, sinon le constat est un écart lien/texte (voir plus bas), pas un candidat.",
+        "Lien LEGI `CITATION` de sens `source` (l'article porteur cite la cible) d'une version en vigueur vers un article dont **aucune** version n'est en vigueur à la date de projection et dont aucune n'est annoncée plus tard. Sous-type = état de la dernière version (`abrogé`, `transféré`, `périmé`, `disjoint`, `annulé`, `autre:<état>`). Le numéro cité doit figurer dans le texte, sinon le constat est un écart lien/texte. Si une autre lignée porte ce numéro en vigueur dans le même code, le lien est compté comme « numéro réattribué ».",
       'ref-morte-texte':
-        "Numéro écrit dans le texte (« l'article L. 521-1 du présent code », « aux articles 199 decies E à 199 decies G ») résolu par son numéro normalisé dans le code visé (présent code, CGI, CSS ou CCH nommés, ou même code sans désignation) ; l'article n'a aucune version en vigueur. Écartés : autre norme (loi, décret, directive, annexe, sigle, « du même code », « précité »), numéro sans préfixe L/R/D dans le CSS et le CCH, numéro à préfixe sans désignation dans le CGI, « article 1er » sans désignation. Un numéro absent de la base n'est pas jugé.",
+        "Numéro écrit dans le texte (« l'article L. 521-1 du présent code », « aux articles 199 decies E à 199 decies G ») résolu par son numéro normalisé dans le code visé (présent code, CGI, CSS ou CCH nommés, ou même code sans désignation) ; l'article n'a aucune version en vigueur. Écartés : autre norme (loi, décret, directive, annexe, sigle, « du même code », « précité »), numéro sans préfixe L/R/D dans le CSS et le CCH, numéro à préfixe sans désignation dans le CGI, « article 1er » sans désignation. Une version en vigueur portant le numéro cité prime sur les lignées historiques. Un numéro absent de la base n'est pas jugé.",
       numerotation:
-        'Deux versions en vigueur de **lignées différentes** portant le même numéro normalisé dans le même code ; deux marqueurs de subdivision identiques à la suite (« …, 2°, 3°, 3° »), même niveau, sans niveau supérieur intercalé, en milieu de suite croissante, articles dont le numéro commence par « Annexe » exclus. Pas de recherche de « trous ».',
+        'Deux versions en vigueur de **lignées différentes** portant le même numéro normalisé dans le même code ; deux marqueurs de subdivision identiques à la suite (« …, 2°, 3°, 3° »), même niveau, sous le même parent (y compris « III bis. »), hors citation, en milieu de suite croissante, articles dont le numéro commence par « Annexe » exclus. Pas de recherche de « trous ».',
       syntaxe:
         "Parenthèse, crochet ou guillemet français non apparié sur l'article entier ; citation à guillemets droits laissée ouverte. Exclusions : énumérations « a) », « 1) », « i) », « 1°) », « a bis) » ; « ou \" en tête d'alinéa qui poursuit une citation déjà ouverte (citation sur plusieurs alinéas) ; articles d'annexes.",
     }
@@ -151,6 +151,24 @@ Par détecteur : ${Object.entries(results.candidatesByDetector)
 - Recoupement : sur ${fmt(results.refMorteTexteTotal)} candidats textuels, ${fmt(results.refMorteTexteRecoupeLesLiens)} désignent le même couple
   (version citante, article cité) qu'un candidat par lien ; ${fmt(results.refMorteTexteAvecLienLegi)} ont un lien LEGI vers la cible morte.
 
+Résultats au statut \`reproduced\` en base : ${
+    Object.entries(results.reproducedByType)
+      .map(([type, n]) => `${type} ${fmt(n)}`)
+      .join(' · ') || 'aucun'
+  }.
+
+### Retraits liés aux corrections
+
+${fmt(results.withdrawals.length)} findings sont au statut \`withdrawn\` à la suite du changement de version.
+${
+  results.withdrawals.length
+    ? table(
+        ['Identifiant', 'Type', 'Détecteur ayant enregistré le retrait'],
+        results.withdrawals.map((r) => [`\`${r.id}\``, r.type, `\`${r.by}\``]),
+      )
+    : ''
+}
+
 ## Couverture
 
 **Liens LEGI.** ${fmt(total)} liens \`CITATION\` sortants des versions en vigueur ; ${fmt(resolved)} (${pct(resolved, total)}) sont résolubles
@@ -165,6 +183,7 @@ ${table(
         vivante: 'résolu, article en vigueur',
         morte: 'résolu, **aucune version en vigueur**',
         a_venir: 'résolu, entrée en vigueur annoncée',
+        numero_reattribue: 'résolu, numéro réattribué à un article en vigueur',
         hors_codes_ingeres: 'cible hors des trois codes (autre code, loi, décret)',
         texte_ou_section: 'cible = texte entier ou section',
         sans_cible: 'lien sans identifiant de cible',
@@ -197,9 +216,14 @@ cible). Ce n'est pas une anomalie du texte : ils ne sont pas des candidats mais 
 Liste complète : [\`ecarts-lien-texte.json\`](ecarts-lien-texte.json). L'inverse (numéro cité dans le texte sans lien LEGI
 correspondant) est visible dans le certificat des candidats textuels (\`legi_link_to_target\`).
 
+Sur les liens résolus, ${fmt(results.numerosReattribues)} pointent vers une lignée terminée dont
+le numéro est porté par un autre article en vigueur du même code. Le lien conserve sa cible
+historique. La citation textuelle par numéro se résout vers l’article en vigueur. Ces liens sont
+des constats de métadonnées.
+
 ## Échantillon de triage — **tri par LLM, non probant**
 
-Tirage de ${triage.length} candidats, graine \`20261125\`, strates fixées (liens 8, texte 12, numérotation 2, syntaxe 8) :
+Tirage historique du balayage n° 7, sur ${triage.length} candidats, graine \`20261125\`, strates fixées (liens 8, texte 12, numérotation 2, syntaxe 8) :
 \`bun replications/c0.2/triage-input.ts\`. Chaque candidat a été classé par un modèle (Claude Sonnet 5.5) à partir du
 certificat et de l'extrait, **sans consulter Légifrance**. C'est un tri par LLM, non probant (AGENTS.md §4.2) :
 il sert à prioriser la qualification humaine et à corriger les détecteurs, rien d'autre. Un échantillon de ${triage.length} ne
@@ -268,14 +292,14 @@ SHA-256 de la preuve ; il dit aussi si la date de projection ou le lot DILA ont 
 - **Un candidat n'est pas une erreur du législateur.** Un renvoi vers un article abrogé peut être voulu
   (disposition transitoire, citation d'un état antérieur) ; les indices ne couvrent que des formules usuelles.
 - **Couverture partielle** : les cibles hors du CGI, du CSS et du CCH ne sont pas jugées (voir le tableau de couverture).
-  Le stock ne contient pas tout l'historique : certains liens pointent vers des versions absentes de la base ;
-  elles sont rattachées par leur numéro, ce qui suppose qu'un numéro n'a pas été réutilisé entre-temps.
+  Le stock ne contient qu'une partie de l'historique. Le rattachement par numéro donne l'état du numéro cité
+  quand le lien pointe vers une version absente de la base et des blocs VERSIONS.
 - **Détection textuelle prudente** : plages (« L. 1 à L. 5 ») réduites à leurs bornes ; désignation lue sur la proposition
   seule ; numéros à lettres inhabituelles ou à plusieurs niveaux non reconnus ; un numéro cité mais absent de la base n'est pas jugé.
 - Les articles d'**annexes** sont lus comme les autres pour les renvois, écartés pour la numérotation et la syntaxe.
 - La date de projection de chaque code est celle de l'ingestion (\`legi_state.as_of\`) : une abrogation datée du lendemain
   n'est pas vue avant le lot suivant.
-- NUMEROTATION : peu de candidats, précision limitée par les structures à titres imbriqués (I./A./1.) non reconnues.
+- NUMEROTATION : seuls les marqueurs reconnus en début d’alinéa hors citation sont comparés.
 - Rien dans ce rapport ne qualifie un candidat ; l'échantillon de triage ne remplace pas la revue humaine.
 `
 }

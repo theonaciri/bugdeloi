@@ -39,3 +39,9 @@ export function statusOf(lineages: Lineage[]): {
 export function lineagesWithNum(ctx: SweepContext, textId: string, num: string): Lineage[] {
   return ctx.lineagesByNum.get(`${textId}|${normalizeNum(num)}`) ?? []
 }
+
+/** Lignées qui portent ce numéro dans une version actuellement en vigueur. */
+export function inForceWithNum(lineages: Lineage[], num: string): Lineage[] {
+  const normalized = normalizeNum(num)
+  return lineages.filter((l) => l.inForce.some((v) => v.num && normalizeNum(v.num) === normalized))
+}

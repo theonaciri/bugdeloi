@@ -16,7 +16,16 @@ bun replications/c0.2/triage-input.ts out.json          # retire l'échantillon 
 Un lancement écrit : une ligne `sweep_run`, des `finding` au statut `candidate` (dédoublonnés par
 `finding_fingerprint`), un événement `sweep.finished`. **Aucun** événement `finding.*`, et la charge utile de
 `sweep.finished` ne contient aucun nombre de candidats (le journal public l'affiche tel quel). Un second lancement
-sur la même base ne crée rien (0 nouveau) mais ajoute un `sweep_run` et un événement : n'en lancer que quand c'est utile.
+sur la même base et avec les mêmes versions ne crée aucun finding et ajoute un `sweep_run` et un événement.
+
+Lors d'une montée de version, un finding encore produit conserve son identifiant, son empreinte et son
+certificat d'origine. Pour les statuts `candidate` et `reproduced`, seule la version dans la colonne `detector`
+est actualisée. Si son empreinte disparaît du nouveau balayage, il passe à `withdrawn` avec
+`certificate.withdrawal = { reason: 'detector_fix', by, at, note }`. L'ancien certificat et l'empreinte restent
+en base. La réconciliation couvre les sources identifiées dans les codes balayés. La disparition d'un finding
+`qualified`, `published` ou `rejected` annule les écritures du balayage. Le détail est consigné dans
+`sweep_run.error` et remonté par la commande de rapport. Le rejeu applique le détecteur courant à la version citante et indique si sa version diffère
+de celle épinglée dans le certificat.
 
 ## Structure du paquet
 
@@ -39,7 +48,12 @@ sur la même base ne crée rien (0 nouveau) mais ajoute un `sweep_run` et un év
 - **Liens vers des versions absentes du stock** : 3 160 liens (11 %) pointent vers un LEGIARTI inconnu de la base alors que
   l'article existe sous un autre LEGIARTI. Rattachement par `(target_cid, target_num)` ; un numéro porté par plusieurs
   lignées n'est « mort » que si toutes le sont.
-- **Liens parasites** : 589 liens vers un article mort ne correspondent à aucune citation du texte actuel (héritage
+- **Numéro réattribué** : un lien vers une lignée historique terminée peut porter le même numéro qu'une
+  autre lignée en vigueur dans le même code (CCH `R111-2`, CSS `D136-1`). Le lien conserve sa cible
+  historique et entre dans la classe `numero_reattribue`, exclue des candidats. La version en vigueur doit
+  porter ce numéro elle-même. Un ancien numéro d'une lignée en vigueur sous un autre numéro ne suffit pas.
+  La citation textuelle donne la priorité à la version qui porte le numéro cité en vigueur.
+- **Liens parasites** : certains liens vers un article mort ne correspondent à aucune citation du texte actuel (héritage
   d'une rédaction antérieure). Ils ne sont pas des candidats (voir `ecarts-lien-texte.json`).
 - **Une version `MODIFIE_MORT_NE`** (fin avant début) ne dit rien de la fin de vie de l'article : exclue du choix de la
   « dernière version » qui donne le sous-type (`abrogé`, `transféré`, `périmé`, `disjoint`, `annulé`, `autre:<état>`).
@@ -66,6 +80,16 @@ sur la même base ne crée rien (0 nouveau) mais ajoute un `sweep_run` et un év
   sans désignation écarté (presque toujours l'article 1er d'une loi).
 - Un numéro absent de la base n'est jamais jugé ; la part des occurrences jugées est publiée dans le rapport (couverture).
 - Les indices (`hints`) ne filtrent rien : ils signalent « dans sa rédaction… », « en vigueur avant le… », etc.
+
+## Portée des subdivisions
+
+- Les marqueurs à l'intérieur d'une citation entre guillemets français ou droits sont écartés.
+  Une citation peut couvrir plusieurs alinéas, avec reprise du guillemet ouvrant en tête d'alinéa.
+  La liste englobante reprend à la fermeture de la citation. Un guillemet laissé ouvert jusqu'à la
+  fin de l'article peut donc masquer des marqueurs.
+- Chaque marqueur de niveau supérieur réinitialise les suites de ses descendants. Les titres
+  romains suffixés, dont `III bis.-1.`, `III. bis.-1.` et `III. – bis`, ouvrent leur propre subdivision.
+  Le suffixe ouvre une nouvelle portée sans fournir de rang numérique pour la détection de doublons.
 
 ## Triage de l'échantillon
 

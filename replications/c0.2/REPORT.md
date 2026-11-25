@@ -4,7 +4,7 @@
 > langage) signalent dans les articles en vigueur. Aucun candidat n'est qualifié : seuls un rejeu par la CI
 > et un verdict humain feraient entrer un résultat dans un compteur public (AGENTS.md §4.4).
 
-Balayage n° 7 · 2026-11-25.
+Balayage n° 8 · 2026-11-25.
 
 ## Périmètre et données
 
@@ -23,12 +23,12 @@ plus récente en vigueur n'est pas mort. Données : base LEGI de la DILA, Licenc
 
 ## Détecteurs
 
-| Détecteur               | Type         | Définition exacte                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| ----------------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ref-morte-liens@1.0.0` | REF_MORTE    | Lien LEGI `CITATION` de sens `source` (l'article porteur cite la cible) d'une version en vigueur vers un article dont **aucune** version n'est en vigueur à la date de projection et dont aucune n'est annoncée plus tard. Sous-type = état de la dernière version (`abrogé`, `transféré`, `périmé`, `disjoint`, `annulé`, `autre:<état>`). Le numéro cité doit figurer dans le texte, sinon le constat est un écart lien/texte (voir plus bas), pas un candidat.                                                                                                |
-| `ref-morte-texte@1.0.0` | REF_MORTE    | Numéro écrit dans le texte (« l'article L. 521-1 du présent code », « aux articles 199 decies E à 199 decies G ») résolu par son numéro normalisé dans le code visé (présent code, CGI, CSS ou CCH nommés, ou même code sans désignation) ; l'article n'a aucune version en vigueur. Écartés : autre norme (loi, décret, directive, annexe, sigle, « du même code », « précité »), numéro sans préfixe L/R/D dans le CSS et le CCH, numéro à préfixe sans désignation dans le CGI, « article 1er » sans désignation. Un numéro absent de la base n'est pas jugé. |
-| `numerotation@1.0.0`    | NUMEROTATION | Deux versions en vigueur de **lignées différentes** portant le même numéro normalisé dans le même code ; deux marqueurs de subdivision identiques à la suite (« …, 2°, 3°, 3° »), même niveau, sans niveau supérieur intercalé, en milieu de suite croissante, articles dont le numéro commence par « Annexe » exclus. Pas de recherche de « trous ».                                                                                                                                                                                                            |
-| `syntaxe@1.0.0`         | SYNTAXE      | Parenthèse, crochet ou guillemet français non apparié sur l'article entier ; citation à guillemets droits laissée ouverte. Exclusions : énumérations « a) », « 1) », « i) », « 1°) », « a bis) » ; « ou " en tête d'alinéa qui poursuit une citation déjà ouverte (citation sur plusieurs alinéas) ; articles d'annexes.                                                                                                                                                                                                                                         |
+| Détecteur               | Type         | Définition exacte                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ----------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ref-morte-liens@1.1.0` | REF_MORTE    | Lien LEGI `CITATION` de sens `source` (l'article porteur cite la cible) d'une version en vigueur vers un article dont **aucune** version n'est en vigueur à la date de projection et dont aucune n'est annoncée plus tard. Sous-type = état de la dernière version (`abrogé`, `transféré`, `périmé`, `disjoint`, `annulé`, `autre:<état>`). Le numéro cité doit figurer dans le texte, sinon le constat est un écart lien/texte. Si une autre lignée porte ce numéro en vigueur dans le même code, le lien est compté comme « numéro réattribué ».                                                                                                |
+| `ref-morte-texte@1.1.0` | REF_MORTE    | Numéro écrit dans le texte (« l'article L. 521-1 du présent code », « aux articles 199 decies E à 199 decies G ») résolu par son numéro normalisé dans le code visé (présent code, CGI, CSS ou CCH nommés, ou même code sans désignation) ; l'article n'a aucune version en vigueur. Écartés : autre norme (loi, décret, directive, annexe, sigle, « du même code », « précité »), numéro sans préfixe L/R/D dans le CSS et le CCH, numéro à préfixe sans désignation dans le CGI, « article 1er » sans désignation. Une version en vigueur portant le numéro cité prime sur les lignées historiques. Un numéro absent de la base n'est pas jugé. |
+| `numerotation@1.1.0`    | NUMEROTATION | Deux versions en vigueur de **lignées différentes** portant le même numéro normalisé dans le même code ; deux marqueurs de subdivision identiques à la suite (« …, 2°, 3°, 3° »), même niveau, sous le même parent (y compris « III bis. »), hors citation, en milieu de suite croissante, articles dont le numéro commence par « Annexe » exclus. Pas de recherche de « trous ».                                                                                                                                                                                                                                                                 |
+| `syntaxe@1.0.0`         | SYNTAXE      | Parenthèse, crochet ou guillemet français non apparié sur l'article entier ; citation à guillemets droits laissée ouverte. Exclusions : énumérations « a) », « 1) », « i) », « 1°) », « a bis) » ; « ou " en tête d'alinéa qui poursuit une citation déjà ouverte (citation sur plusieurs alinéas) ; articles d'annexes.                                                                                                                                                                                                                                                                                                                          |
 
 Chaque candidat est un enregistrement `finding` de statut `candidate`, dédoublonné par empreinte (la
 version du détecteur n'en fait pas partie), avec un certificat JSON : identifiants et dates des versions
@@ -39,21 +39,17 @@ mention d'abrogation).
 
 ## Résultats
 
-| Type / sous-type                      | Candidats |
-| ------------------------------------- | --------- |
-| NUMEROTATION / subdivision_dupliquee  | 2         |
-| REF_MORTE / abrogé                    | 932       |
-| REF_MORTE / annulé                    | 2         |
-| REF_MORTE / autre:MODIFIE             | 2         |
-| REF_MORTE / périmé                    | 14        |
-| REF_MORTE / transféré                 | 167       |
-| SYNTAXE / guillemet_droit_non_apparie | 7         |
-| SYNTAXE / parenthese_non_fermee       | 1         |
-| SYNTAXE / parenthese_non_ouverte      | 1         |
+| Type / sous-type          | Candidats |
+| ------------------------- | --------- |
+| REF_MORTE / abrogé        | 928       |
+| REF_MORTE / annulé        | 2         |
+| REF_MORTE / autre:MODIFIE | 2         |
+| REF_MORTE / périmé        | 14        |
+| REF_MORTE / transféré     | 166       |
 
-Total par type : NUMEROTATION 2 · REF_MORTE 1 117 · SYNTAXE 9.
+Total par type : REF_MORTE 1 112.
 
-Par détecteur : `numerotation@1.0.0` 2 · `ref-morte-liens@1.0.0` 449 · `ref-morte-texte@1.0.0` 668 · `syntaxe@1.0.0` 9.
+Par détecteur : `ref-morte-liens@1.1.0` 444 · `ref-morte-texte@1.1.0` 668.
 
 - NUMEROTATION : aucun numéro d'article dupliqué entre deux articles distincts en vigueur (0).
   0 cas où **deux versions d'un même article** sont en vigueur à la fois (CSS R611-2 : la version
@@ -61,6 +57,22 @@ Par détecteur : `numerotation@1.0.0` 2 · `ref-morte-liens@1.0.0` 449 · `ref-m
   notée mais pas candidate.
 - Recoupement : sur 668 candidats textuels, 443 désignent le même couple
   (version citante, article cité) qu'un candidat par lien ; 417 ont un lien LEGI vers la cible morte.
+
+Résultats au statut `reproduced` en base : SYNTAXE 9.
+
+### Retraits liés aux corrections
+
+7 findings sont au statut `withdrawn` à la suite du changement de version.
+
+| Identifiant   | Type         | Détecteur ayant enregistré le retrait |
+| ------------- | ------------ | ------------------------------------- |
+| `F-2026-0103` | REF_MORTE    | `ref-morte-liens@1.1.0`               |
+| `F-2026-0238` | REF_MORTE    | `ref-morte-liens@1.1.0`               |
+| `F-2026-0241` | REF_MORTE    | `ref-morte-liens@1.1.0`               |
+| `F-2026-0286` | REF_MORTE    | `ref-morte-liens@1.1.0`               |
+| `F-2026-0430` | REF_MORTE    | `ref-morte-liens@1.1.0`               |
+| `F-2026-1118` | NUMEROTATION | `numerotation@1.1.0`                  |
+| `F-2026-1119` | NUMEROTATION | `numerotation@1.1.0`                  |
 
 ## Couverture
 
@@ -72,9 +84,10 @@ dans les trois codes ingérés et donc jugés. Le reste n'est pas jugé :
 | résolu, article en vigueur                           | 18 965 | 68,8 %  |
 | cible hors des trois codes (autre code, loi, décret) | 6 105  | 22,1 %  |
 | cible = texte entier ou section                      | 1 346  | 4,9 %   |
-| résolu, **aucune version en vigueur**                | 1 038  | 3,8 %   |
+| résolu, **aucune version en vigueur**                | 1 031  | 3,7 %   |
 | lien sans identifiant de cible                       | 109    | 0,4 %   |
 | code ingéré mais numéro inconnu de la base           | 13     | < 0,1 % |
+| résolu, numéro réattribué à un article en vigueur    | 7      | < 0,1 % |
 | résolu, entrée en vigueur annoncée                   | 2      | < 0,1 % |
 
 Rattachement des liens résolus : version connue 16 832 · numéro et code du lien (la version citée n’est pas dans le stock) 3 160 · identifiant listé par un bloc VERSIONS 13.
@@ -88,15 +101,20 @@ sur 47 224 extraites (74,1 %).
 
 ## Écarts entre lien LEGI et texte
 
-589 liens LEGI mènent à un article sans version en vigueur **alors que le texte actuel de la version
+587 liens LEGI mènent à un article sans version en vigueur **alors que le texte actuel de la version
 citante ne contient pas ce numéro** (liens hérités d'une rédaction antérieure, ou lien rattaché à la mauvaise
 cible). Ce n'est pas une anomalie du texte : ils ne sont pas des candidats mais une information pour la DILA.
 Liste complète : [`ecarts-lien-texte.json`](ecarts-lien-texte.json). L'inverse (numéro cité dans le texte sans lien LEGI
 correspondant) est visible dans le certificat des candidats textuels (`legi_link_to_target`).
 
+Sur les liens résolus, 7 pointent vers une lignée terminée dont
+le numéro est porté par un autre article en vigueur du même code. Le lien conserve sa cible
+historique. La citation textuelle par numéro se résout vers l’article en vigueur. Ces liens sont
+des constats de métadonnées.
+
 ## Échantillon de triage — **tri par LLM, non probant**
 
-Tirage de 30 candidats, graine `20261125`, strates fixées (liens 8, texte 12, numérotation 2, syntaxe 8) :
+Tirage historique du balayage n° 7, sur 30 candidats, graine `20261125`, strates fixées (liens 8, texte 12, numérotation 2, syntaxe 8) :
 `bun replications/c0.2/triage-input.ts`. Chaque candidat a été classé par un modèle (Claude Sonnet 5.5) à partir du
 certificat et de l'extrait, **sans consulter Légifrance**. C'est un tri par LLM, non probant (AGENTS.md §4.2) :
 il sert à prioriser la qualification humaine et à corriger les détecteurs, rien d'autre. Un échantillon de 30 ne
@@ -151,15 +169,15 @@ une note, voir plus haut).
 
 | Étape                                                                              | Durée (ms) |
 | ---------------------------------------------------------------------------------- | ---------- |
-| Chargement du contexte (71 884 versions, 27 578 liens de citation sortants)        | 3 051      |
-| Détecteur `ref-morte-liens@1.0.0`                                                  | 111        |
-| Détecteur `ref-morte-texte@1.0.0`                                                  | 281        |
-| Détecteur `numerotation@1.0.0`                                                     | 90         |
-| Détecteur `syntaxe@1.0.0`                                                          | 651        |
-| Balayage complet (contexte, détecteurs, insertion ou reconnaissance des candidats) | 4 003      |
-| `run.ts` en entier (écriture des fichiers comprise)                                | 5 236      |
+| Chargement du contexte (71 884 versions, 27 578 liens de citation sortants)        | 3 056      |
+| Détecteur `ref-morte-liens@1.1.0`                                                  | 114        |
+| Détecteur `ref-morte-texte@1.1.0`                                                  | 365        |
+| Détecteur `numerotation@1.1.0`                                                     | 127        |
+| Détecteur `syntaxe@1.0.0`                                                          | 611        |
+| Balayage complet (contexte, détecteurs, insertion ou reconnaissance des candidats) | 4 030      |
+| `run.ts` en entier (écriture des fichiers comprise)                                | 5 330      |
 
-Mémoire résidente de pointe de `run.ts` : 974 Mio (aarch64, 4 cœurs partagés, lancé sous `nice`) ;
+Mémoire résidente de pointe de `run.ts` : 952 Mio (aarch64, 4 cœurs partagés, lancé sous `nice`) ;
 la commande `sweep run --dry-run` seule, qui ne charge qu'un contexte, a été mesurée à environ 930 Mio le 25/11/2026. La première exécution, qui insère les
 candidats, est plus longue que les suivantes, qui les reconnaissent par empreinte.
 
@@ -180,12 +198,12 @@ SHA-256 de la preuve ; il dit aussi si la date de projection ou le lot DILA ont 
 - **Un candidat n'est pas une erreur du législateur.** Un renvoi vers un article abrogé peut être voulu
   (disposition transitoire, citation d'un état antérieur) ; les indices ne couvrent que des formules usuelles.
 - **Couverture partielle** : les cibles hors du CGI, du CSS et du CCH ne sont pas jugées (voir le tableau de couverture).
-  Le stock ne contient pas tout l'historique : certains liens pointent vers des versions absentes de la base ;
-  elles sont rattachées par leur numéro, ce qui suppose qu'un numéro n'a pas été réutilisé entre-temps.
+  Le stock ne contient qu'une partie de l'historique. Le rattachement par numéro donne l'état du numéro cité
+  quand le lien pointe vers une version absente de la base et des blocs VERSIONS.
 - **Détection textuelle prudente** : plages (« L. 1 à L. 5 ») réduites à leurs bornes ; désignation lue sur la proposition
   seule ; numéros à lettres inhabituelles ou à plusieurs niveaux non reconnus ; un numéro cité mais absent de la base n'est pas jugé.
 - Les articles d'**annexes** sont lus comme les autres pour les renvois, écartés pour la numérotation et la syntaxe.
 - La date de projection de chaque code est celle de l'ingestion (`legi_state.as_of`) : une abrogation datée du lendemain
   n'est pas vue avant le lot suivant.
-- NUMEROTATION : peu de candidats, précision limitée par les structures à titres imbriqués (I./A./1.) non reconnues.
+- NUMEROTATION : seuls les marqueurs reconnus en début d’alinéa hors citation sont comparés.
 - Rien dans ce rapport ne qualifie un candidat ; l'échantillon de triage ne remplace pas la revue humaine.

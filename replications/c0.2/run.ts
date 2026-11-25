@@ -18,7 +18,7 @@ import {
   runSweep,
   selectDetectors,
 } from '@bugdeloi/sweep'
-import { desc, eq, inArray } from 'drizzle-orm'
+import { and, desc, eq, inArray, or, sql as query } from 'drizzle-orm'
 import { renderReport, type TriageEntry } from './report.ts'
 import { buildResults, summarizeFinding } from './results.ts'
 
@@ -55,28 +55,49 @@ try {
     ? await lastRun()
     : await runSweep(db, { context: ctx, contextMs })
 
+  const detectorIds = summary.outcomes.map((d) => d.detector)
   const rows = await db
     .select()
     .from(finding)
     .where(
-      inArray(
-        finding.detector,
-        detectors.map((d) => `${d.name}@${d.version}`),
+      or(
+        inArray(finding.detector, detectorIds),
+        and(
+          eq(finding.status, 'withdrawn'),
+          query`${finding.certificate}->'withdrawal'->>'reason' = 'detector_fix'`,
+          inArray(query`${finding.certificate}->'withdrawal'->>'by'`, detectorIds),
+        ),
       ),
     )
-  const candidates = rows
-    .filter((r) => r.status === 'candidate')
-    .sort((a, b) => a.id.localeCompare(b.id))
-    .map(summarizeFinding)
-  const ecarts =
-    scans.find((s) => s.detector.name === 'ref-morte-liens')?.result.notes?.ecarts_lien_texte ?? []
+    .orderBy(finding.id)
+  const candidates = rows.filter((r) => r.status === 'candidate').map(summarizeFinding)
+  const reproduced = rows.filter((r) => r.status === 'reproduced').map((r) => r.type)
+  const withdrawals = rows.flatMap((r) => {
+    const withdrawal = r.certificate.withdrawal as
+      | { reason: string; by: string; at: string; note: string }
+      | undefined
+    return r.status === 'withdrawn' &&
+      withdrawal?.reason === 'detector_fix' &&
+      detectorIds.includes(withdrawal.by)
+      ? [{ id: r.id, type: r.type, ...withdrawal }]
+      : []
+  })
+  const linkNotes = scans.find((s) => s.detector.name === 'ref-morte-liens')?.result.notes
+  const ecarts = linkNotes?.ecarts_lien_texte ?? []
   const triage = JSON.parse(await Bun.file(`${here}triage.json`).text()) as TriageEntry[]
-  const ids = new Map(candidates.map((c) => [c.fingerprint, c.id]))
+  const ids = new Map(
+    rows.flatMap((r) =>
+      typeof r.certificate.fingerprint === 'string' ? [[r.certificate.fingerprint, r.id]] : [],
+    ),
+  )
 
   const results = buildResults({
     summary,
     ctx,
     candidates,
+    reproduced,
+    withdrawals,
+    reassignedCount: linkNotes?.numeros_reattribues?.length ?? 0,
     ecartsCount: ecarts.length,
     triage,
     contextMs,
