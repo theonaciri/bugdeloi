@@ -211,6 +211,49 @@ describe('ref-morte-liens', () => {
     )
     expect(scanLiens(ctx).candidates).toHaveLength(0)
   })
+  test.each([
+    ['F-2026-0103', 'R*111-2', 'R. 111-2', 'R111-2', 'version'],
+    ['F-2026-0238', 'R*111-2', 'R. 111-2', 'R*111-2', 'version'],
+    ['F-2026-0241', 'R*111-2', 'R. 111-2', 'R111-2', 'version_ids'],
+    ['F-2026-0286', 'R*111-2', 'R. 111-2', 'R111-2', 'version'],
+    ['F-2026-0430', 'D136-1', 'D. 136-1', 'D136-1', 'version'],
+  ])('%s : lien historique et numéro réattribué', (_id, oldNum, raw, currentNum, via) => {
+    const sourceId = 'LEGIARTI000000000001'
+    const historyId = 'LEGIARTI000000000020'
+    const missingId = 'LEGIARTI000000000022'
+    const presentId = 'LEGIARTI000000000021'
+    const citation = link(sourceId, via === 'version_ids' ? missingId : historyId, oldNum)
+    const ctx = ctxOf(
+      [
+        {
+          id: sourceId,
+          num: 'L100-1',
+          etat: 'VIGUEUR',
+          debut: '2020-01-01',
+          html: p(`Voir l'article ${raw}.`),
+        },
+        {
+          id: historyId,
+          num: oldNum,
+          etat: 'ABROGE',
+          debut: '2000-01-01',
+          fin: '2018-01-01',
+          versionIds: [historyId, missingId],
+        },
+        { id: presentId, num: currentNum, etat: 'VIGUEUR', debut: '2021-01-01' },
+      ],
+      [citation],
+    )
+    const resolution = classifyLink(ctx, citation)
+    expect(resolution).toMatchObject({ cls: 'numero_reattribue', via, lineage: { id: historyId } })
+    expect(resolution.alternates?.map((l) => l.id)).toEqual([presentId])
+    const liens = scanLiens(ctx)
+    expect(liens.candidates).toEqual([])
+    expect(liens.notes?.numeros_reattribues).toHaveLength(1)
+    const texte = scanTexte(ctx)
+    expect(texte.candidates).toEqual([])
+    expect(texte.stats.couples_vivants).toBe(1)
+  })
 })
 
 describe('ref-morte-texte', () => {
@@ -389,6 +432,38 @@ describe('numerotation', () => {
     expect(duplicateMarkers(['III. - Texte', 'III. bis - Autre'])).toHaveLength(0)
     expect(duplicateMarkers(['1. Désignation', '1. Désignation'])).toHaveLength(0)
     expect(duplicateMarkers(['1° x', '2° y', '2° bis Z', '3° w'])).toHaveLength(0)
+  })
+
+  test('F-2026-1118 : le premier c) est dans une citation, le second dans la liste englobante', () => {
+    for (const [open, close] of [
+      ['"', '"'],
+      ['«', '»'],
+    ]) {
+      const paragraphs = [
+        'a) Première adaptation',
+        'b) Les alinéas sont ainsi rédigés :',
+        `${open} Les dispositions suivantes s’appliquent :`,
+        'a) Première disposition',
+        'b) Deuxième disposition',
+        `c) Dernière disposition ${close} ;`,
+        'c) Troisième adaptation',
+      ]
+      expect(duplicateMarkers(paragraphs)).toEqual([])
+      expect(duplicateMarkers([...paragraphs, 'c) Adaptation en double'])).toHaveLength(1)
+    }
+  })
+
+  test('F-2026-1119 : III et III bis ouvrent des suites distinctes', () => {
+    for (const parent of ['III bis.-1. Contrat', 'III. bis - 1. Contrat', 'III. bis.-1. Contrat']) {
+      const paragraphs = ['III.-1. Plan', '2. Suite du plan', parent, '2. Suite du contrat']
+      expect(duplicateMarkers(paragraphs)).toEqual([])
+      expect(duplicateMarkers([...paragraphs, '2. Contrat en double'])).toHaveLength(1)
+    }
+  })
+
+  test('titres romains suffixés : III et III bis ne sont pas des doublons', () => {
+    expect(duplicateMarkers(['II. – Titre', 'III. – Titre', 'III. – bis (Abrogé).'])).toEqual([])
+    expect(duplicateMarkers(['II.-Titre', 'III.-Titre', 'III. bis.-Autre titre'])).toEqual([])
   })
 
   test('annexes écartées', () => {

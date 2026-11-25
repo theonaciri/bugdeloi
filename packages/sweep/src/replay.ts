@@ -51,7 +51,7 @@ export async function replayFinding(db: Db, id: string): Promise<ReplayResult> {
     proof_sha256?: string
     pinned?: { legi_state?: unknown }
   }
-  const stored = row.detector
+  const stored = cert.detector ?? row.detector
   const name = stored.split('@')[0] ?? stored
   const detector = detectorByName(name)
   const base = {

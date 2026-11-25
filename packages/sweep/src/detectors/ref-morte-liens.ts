@@ -7,7 +7,8 @@
  *
  * Un lien pointe vers une *version*. La cible est résolue au niveau de l'*article* (lignée, voir
  * context.ts). Une citation n'est candidate que si **aucune** version de la lignée cible n'est en
- * vigueur à la date de projection de son code et qu'aucune n'est annoncée pour plus tard.
+ * vigueur à la date de projection de son code, qu'aucune n'est annoncée pour plus tard et qu'aucune
+ * autre lignée ne porte actuellement le numéro cité dans ce code.
  * Les cibles hors des codes ingérés ne sont pas résolues : elles sont comptées (couverture), jamais
  * jugées.
  *
@@ -19,7 +20,7 @@
 import { legifranceArticleUrl } from '@bugdeloi/core/legi'
 import { hintsAround, legalUnit, lineageRef, versionRef } from '../certificate.ts'
 import { citationsOf, normalizeNum } from '../citations.ts'
-import { deadSubtype, statusOf } from '../resolve.ts'
+import { deadSubtype, inForceWithNum, lineagesWithNum, statusOf } from '../resolve.ts'
 import { excerptAround } from '../text.ts'
 import type {
   Candidate,
@@ -33,12 +34,13 @@ import type {
 } from '../types.ts'
 
 export const NAME = 'ref-morte-liens'
-export const VERSION = '1.0.0'
+export const VERSION = '1.1.0'
 
 export type LinkClass =
   | 'vivante'
   | 'a_venir'
   | 'morte'
+  | 'numero_reattribue'
   | 'inconnue_dans_nos_codes'
   | 'hors_codes_ingeres'
   | 'texte_ou_section'
@@ -55,6 +57,7 @@ export interface Resolution {
   /** Autres lignées de même numéro (réutilisation d'un numéro), pour le certificat. */
   alternates?: Lineage[]
   cited?: Version
+  reassignedNum?: string
 }
 
 /**
@@ -71,7 +74,14 @@ export function classifyLink(ctx: SweepContext, link: LinkRow): Resolution {
   const lineage = ctx.lineageOf.get(id)
   if (lineage) {
     const st = statusOf([lineage])
-    return { ...st, via: cited ? 'version' : 'version_ids', cited, alternates: [] }
+    const via = cited ? 'version' : 'version_ids'
+    const num = cited?.num ?? link.targetNum ?? lineage.last.num
+    if (st.cls === 'morte' && num) {
+      const alternates = inForceWithNum(lineagesWithNum(ctx, lineage.textId, num), num)
+      if (alternates.length > 0)
+        return { cls: 'numero_reattribue', lineage, via, cited, alternates, reassignedNum: num }
+    }
+    return { ...st, via, cited }
   }
   const ingested = ctx.codes.some((c) => c.textId === link.targetCid)
   if (!ingested) return { cls: 'hors_codes_ingeres' }
@@ -95,6 +105,7 @@ const linkRef = (l: LinkRow) => ({
 export function scan(ctx: SweepContext, options: ScanOptions = {}): ScanResult {
   const candidates: Candidate[] = []
   const gaps: Array<Record<string, unknown>> = []
+  const reassigned: Array<Record<string, unknown>> = []
   const classes: Record<string, number> = {}
   const subtypes: Record<string, number> = {}
   const perCode: Record<string, number> = {}
@@ -112,6 +123,15 @@ export function scan(ctx: SweepContext, options: ScanOptions = {}): ScanResult {
       const res = classifyLink(ctx, link)
       classes[res.cls] = (classes[res.cls] ?? 0) + 1
       if (res.via) via[res.via] = (via[res.via] ?? 0) + 1
+      if (res.cls === 'numero_reattribue') {
+        reassigned.push({
+          source: versionRef(source),
+          link: linkRef(link),
+          target_num: res.reassignedNum,
+          historical_lineage: res.lineage?.id,
+          current_lineages: res.alternates?.map((l) => l.id),
+        })
+      }
       if (res.cls !== 'morte' || !res.lineage) continue
       const entry = dead.get(res.lineage.id) ?? { lineage: res.lineage, links: [] }
       entry.links.push({ link, res })
@@ -147,11 +167,12 @@ export function scan(ctx: SweepContext, options: ScanOptions = {}): ScanResult {
       subtypes[candidate.subtype] = (subtypes[candidate.subtype] ?? 0) + 1
     }
   }
-  const resolved = (classes.vivante ?? 0) + (classes.a_venir ?? 0) + (classes.morte ?? 0)
+  const resolved =
+    (classes.vivante ?? 0) + (classes.a_venir ?? 0) + (classes.morte ?? 0) + (classes.numero_reattribue ?? 0)
   const total = Object.values(classes).reduce((a, b) => a + b, 0)
   return {
     candidates,
-    notes: { ecarts_lien_texte: gaps },
+    notes: { ecarts_lien_texte: gaps, numeros_reattribues: reassigned },
     stats: {
       articles_controles: articles,
       articles_par_code: perCode,

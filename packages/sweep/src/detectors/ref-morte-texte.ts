@@ -13,7 +13,7 @@
 import { legifranceArticleUrl } from '@bugdeloi/core/legi'
 import { hintsAround, legalUnit, lineageRef, versionRef } from '../certificate.ts'
 import { citationsOf, type TextCitation } from '../citations.ts'
-import { deadSubtype, lineagesWithNum, statusOf } from '../resolve.ts'
+import { deadSubtype, inForceWithNum, lineagesWithNum, statusOf } from '../resolve.ts'
 import { excerptAround } from '../text.ts'
 import type {
   Candidate,
@@ -26,7 +26,7 @@ import type {
 } from '../types.ts'
 
 export const NAME = 'ref-morte-texte'
-export const VERSION = '1.0.0'
+export const VERSION = '1.1.0'
 
 const PREFIXED = /^[ldra]\d/
 const MAX_OCCURRENCES = 8
@@ -92,7 +92,9 @@ export function scan(ctx: SweepContext, options: ScanOptions = {}): ScanResult {
       }
       stats.couples_resolus++
       stats.citations_jugees += g.cits.length
-      const st = statusOf(lineages)
+      // Une version en vigueur qui porte ce numéro prime sur une ancienne identité renumérotée.
+      const current = inForceWithNum(lineages, g.num)[0]
+      const st = statusOf(current ? [current, ...lineages.filter((l) => l !== current)] : lineages)
       if (st.cls === 'vivante') stats.couples_vivants++
       else if (st.cls === 'a_venir') stats.couples_a_venir++
       else {
