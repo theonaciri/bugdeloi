@@ -174,6 +174,10 @@ et `qualified` (verdict humain).**
   avec `certificate.withdrawal = { reason, by, at }`. Il n'est jamais supprimé ni montré au cimetière.
 - `rejected` : verdict **humain** (`non_pertinent`, `erreur_nôtre`, `choix_assumé`), montré au cimetière
   public avec son motif.
+- **Qualification = un commit humain.** Depuis `reproduced`, le relecteur écrit ses verdicts motivés dans
+  `qualifications/verdicts/AAAA-MM-JJ-<handle>.yaml` (modèle : `EXEMPLE.yaml.sample`), **commite**, puis lance
+  `qualify` : le SHA du dernier commit du fichier est consigné dans `certificate.qualification`. Un agent
+  LLM n'écrit **jamais** de fichier de verdicts.
 
 ### 4.5 Marqueurs d'étalonnage du système
 
@@ -325,6 +329,10 @@ bun run db:migrate          # applique les migrations
 bun run --filter @bugdeloi/web dev      # site en dev sur 127.0.0.1:19070
 bun run --filter @bugdeloi/web seed:dev # données FICTIVES, base bugdeloi_webdev uniquement
 bun packages/ingest/src/cli.ts legi --incremental   # applique les nouveaux lots DILA
+bun packages/sweep/src/cli.ts run          # balayage mécanique C0.2 (candidats non qualifiés)
+bun packages/sweep/src/cli.ts dossier --status reproduced [--type …]   # dossier pour un humain (non versionné)
+bun packages/sweep/src/cli.ts qualify qualifications/verdicts/<date>-<handle>.yaml [--dry-run]
+bun packages/sweep/src/cli.ts publish <id…>   # qualified → published
 scripts/deploy.sh [ref]     # mise en production (127.0.0.1:19069), retour arrière automatique
 ```
 

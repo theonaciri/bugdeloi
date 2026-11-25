@@ -106,10 +106,11 @@
 
 1. ✔ Détecteurs C0.2 en 1.1.0 : les 7 infirmés sont `withdrawn` (balayage n° 8). Base : 1 112 REF_MORTE
    `candidate`, 9 SYNTAXE `reproduced`, 7 `withdrawn`.
-2. En cours : qualification humaine par fichiers de verdicts versionnés + `/anomalies` — codex/gpt-6.2-sol
-   (high) (la 1ʳᵉ tentative Claude Sonnet a échoué sur la limite d'usage).
+2. ✔ Qualification humaine par verdicts commités (`dossier`, `qualify`, `publish`) + pages `/anomalies`,
+   `/anomalies/[id]`, `/anomalies/cimetiere` — codex/gpt-6.2-sol (high), en ligne. (Une 2ᵉ implémentation par
+   claude-sonnet-5-5, reprise seule après quota, existe sur `t3/qualification-workflow-pages` : non fusionnée.)
 3. En cours : reproduction indépendante n° 2 depuis les **XML DILA bruts** (historique complet) pour
    trancher les 1 112 REF_MORTE — claude-opus-5-5 (high) ; la tentative Gemini (antigravity) a échoué sur
    quota (réinitialisation ~131 h).
-4. **Qualification humaine** d'un premier lot par le mainteneur ou un juriste → premiers findings publiés.
+4. **Qualification humaine** (dossier prêt : 9 SYNTAXE reproduits, `qualifications/dossiers/2026-11-25-SYNTAXE.md`) d'un premier lot par le mainteneur ou un juriste → premiers findings publiés.
 5. J3 : desk + `join.txt` + CI de vérification.
