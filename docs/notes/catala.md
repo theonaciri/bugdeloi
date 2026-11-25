@@ -41,13 +41,15 @@ La base par défaut est `bugdeloi` via socket Unix. `DATABASE_URL` permet de sé
 `bugdeloi_test`. Chaque rejeu ajoute les lignes `replication_run` et l’événement
 `replication.finished` dans une transaction. Voir les [résultats C0.1](../../replications/c0.1/REPORT.md).
 
-Au commit épinglé, 507 identifiants `LEGIARTI` distincts apparaissent dans les fichiers
-`.catala_fr` et `.catala_en`. Le motif de titres `#… Article … | LEGIARTI…` en retient 473.
-Les 478 lignes du [résumé de couverture](../../replications/c0.1/coverage.json) suivent la clé de
-`reference_coverage`, qui regroupe par source, identifiant et fichier. Pour plusieurs titres
-admissibles de même identifiant dans un fichier, le relevé conserve le premier. Le relevé décrit
-les titres de la source. Pour interpréter un rejeu, utiliser le statut et le nombre de tests du
-dossier. Clerk peut sortir avec succès sur un dossier qui compte zéro test.
+Le [résumé de couverture](../../replications/c0.1/coverage.json) compte les identifiants LEGIARTI
+dont le titre est suivi d'un bloc Catala avec une définition, une règle, une assertion ou une déclaration.
+La clé de `reference_coverage` regroupe par source, identifiant et fichier. Le relevé conserve le
+premier titre qui satisfait cette règle pour un même identifiant dans un fichier.
+
+`bun replications/c0.1/promote.ts --dry-run` rapproche la couverture recalculée de la version en
+vigueur et du dernier rejeu terminé du dossier. La suite doit avoir le statut `passed` et compter
+au moins un test. Après relecture du résultat, retirer `--dry-run` actualise la couverture et les
+marqueurs en base dans une transaction. Le journal conserve le motif de chaque retrait.
 
 Le dépôt BugDeLoi conserve les métadonnées et les résumés. Les journaux bruts restent ignorés par
 Git, notamment les sorties de la suite `impot_revenu` sous CeCILL.

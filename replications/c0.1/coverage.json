@@ -1,8 +1,8 @@
 {
   "source": "inria/catala-examples",
   "sourceCommit": "9e251b932288cf5f4a74af072d203144a057494b",
-  "distinctLegiarti": 473,
-  "rows": 478,
+  "distinctLegiarti": 273,
+  "rows": 277,
   "folders": [
     {
       "folder": "NSW_community_gaming",
@@ -12,14 +12,14 @@
     },
     {
       "folder": "aides_logement",
-      "distinctLegiarti": 391,
-      "rows": 391,
+      "distinctLegiarti": 216,
+      "rows": 216,
       "files": 6
     },
     {
       "folder": "allocations_familiales",
-      "distinctLegiarti": 23,
-      "rows": 23,
+      "distinctLegiarti": 18,
+      "rows": 18,
       "files": 6
     },
     {
@@ -36,20 +36,20 @@
     },
     {
       "folder": "droit_successions",
-      "distinctLegiarti": 6,
-      "rows": 6,
+      "distinctLegiarti": 5,
+      "rows": 5,
       "files": 1
     },
     {
       "folder": "impot_revenu",
-      "distinctLegiarti": 52,
-      "rows": 52,
+      "distinctLegiarti": 33,
+      "rows": 33,
       "files": 2
     },
     {
       "folder": "prestations_familiales",
-      "distinctLegiarti": 5,
-      "rows": 5,
+      "distinctLegiarti": 4,
+      "rows": 4,
       "files": 2
     },
     {

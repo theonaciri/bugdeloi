@@ -44,5 +44,5 @@ test('relève les titres Article avec les positions, hors blocs de code', () => 
   const heading = '####### Article X | LEGIARTI000000000000 [archive]'
   expect(
     articleHeadings(['~~~catala', heading, '~~~', heading, '### Annexe | LEGIARTI000000000001'].join('\r\n')),
-  ).toEqual([{ heading, legiarti: 'LEGIARTI000000000000', line: 4 }])
+  ).toEqual([{ heading, legiarti: 'LEGIARTI000000000000', line: 4, formalized: false }])
 })
