@@ -5,16 +5,16 @@
 
 ## Jalon courant : J0 Fondations (+ début J1)
 
-| Chantier                                          | Responsable                | État                                                    | Livrable                                                 |
-| ------------------------------------------------- | -------------------------- | ------------------------------------------------------- | -------------------------------------------------------- |
-| Monorepo Bun, Biome, TS 7, licences               | orchestrateur              | ✔ fait                                                  | racine, `packages/core`, `packages/db`                   |
-| Base Postgres `bugdeloi` + migration 0000         | orchestrateur              | ✔ fait                                                  | `packages/db/migrations`                                 |
-| Image Catala 1.3.2 multi-arch + C0.1 rejeu Inria  | codex/gpt-6.2-sol (medium) | en cours                                                | `infra/catala/`, `packages/runner`, `replications/c0.1/` |
-| Ingestion LEGI (CGI, CSS, CCH)                    | codex/gpt-6.2-sol (high)   | en cours                                                | `packages/ingest`                                        |
-| Site web (accueil, carte, article, méthode, join) | claude-opus-5-5 (high)     | en cours                                                | `apps/web`                                               |
-| Service systemd + mise en ligne sur 19069         | orchestrateur              | unité + script prêts, mise en ligne après fusion du web | `infra/systemd/`                                         |
-| Balayage mécanique C0.2 (renvois morts…)          | —                          | à faire (après ingestion)                               | `packages/sweep`                                         |
-| Couverture Inria (LEGIARTI cités) → carte         | —                          | à faire (après ingestion + C0.1)                        | `reference_coverage`                                     |
+| Chantier                                          | Responsable                | État                                                                                | Livrable                                                 |
+| ------------------------------------------------- | -------------------------- | ----------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| Monorepo Bun, Biome, TS 7, licences               | orchestrateur              | ✔ fait                                                                              | racine, `packages/core`, `packages/db`                   |
+| Base Postgres `bugdeloi` + migration 0000         | orchestrateur              | ✔ fait                                                                              | `packages/db/migrations`                                 |
+| Image Catala 1.3.2 multi-arch + C0.1 rejeu Inria  | codex/gpt-6.2-sol (medium) | ✔ fait — **171/171 tests Inria verts** (ARM64), 473 LEGIARTI de couverture importés | `infra/catala/`, `packages/runner`, `replications/c0.1/` |
+| Ingestion LEGI (CGI, CSS, CCH)                    | codex/gpt-6.2-sol (high)   | en cours                                                                            | `packages/ingest`                                        |
+| Site web (accueil, carte, article, méthode, join) | claude-opus-5-5 (high)     | en cours                                                                            | `apps/web`                                               |
+| Service systemd + mise en ligne sur 19069         | orchestrateur              | unité + script prêts, mise en ligne après fusion du web                             | `infra/systemd/`                                         |
+| Balayage mécanique C0.2 (renvois morts…)          | —                          | à faire (après ingestion)                                                           | `packages/sweep`                                         |
+| Couverture Inria (LEGIARTI cités) → carte         | —                          | données importées (`reference_coverage`) ; affichage ★ après ingestion              | `reference_coverage`                                     |
 
 ## Journal des décisions
 
@@ -38,6 +38,14 @@
 - Seul le chantier d'ingestion peut modifier `packages/db/src/schema.ts` pendant J0-J1.
 
 ## Pièges connus
+
+- Clerk 1.3.2 en conteneur `--read-only` : `CLERK_BUILD_DIR` et `CLERK_TARGET_DIR` doivent pointer vers le
+  tmpfs (`/build`), sinon échec d'écriture. Détails : `docs/notes/catala.md`.
+- Catala 1.3.2 (opam) n'a **ni `catala proof` ni chaîne JavaScript** dans notre image : la simulation dans le
+  navigateur et Z3 restent à étudier (JS via js_of_ocaml ? backend C → WASM ?).
+- L'image Catala est verrouillée par digest, mais **sa reconstruction n'est pas encore reproductible**
+  (image Debian et dépôt opam non épinglés) → à épingler avant la CI publique.
+- `smic` et `base_mensuelle_allocations_familiales` n'ont aucun test `#[test]` côté Inria.
 
 - Biome 2.6 formate aussi le Markdown (italique `*x*` → `_x_`) : c'est voulu, ne pas lutter.
 - Biome : `linter.rules.recommended` est déprécié → `"preset": "recommended"`.

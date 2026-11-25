@@ -294,10 +294,10 @@ apps/worker     pg-boss : ingestion LEGI/BOFiP, pré-check sandbox, oracles, agr
 packages/core   échelle de preuve, types de findings, normalisation/empreinte LEGI   ✔
 packages/db     schéma Drizzle (contrat partagé), client, migrations               ✔
 packages/ingest parseur LEGI (XML) → Postgres                                       (J1)
-packages/runner exécution Catala sandboxée (Podman)                                (J0)
+packages/runner exécution Catala sandboxée (Podman rootless, image par digest)      ✔
 packages/cli    bdl (setup, next, check, submit, replay)                           (prévu)
-infra/          image Catala, unités systemd                                       (J0)
-replications/   rejeux de référence (C0.1…) : scripts + résultats résumés           (J0)
+infra/          image Catala (infra/catala, verrou image.lock.json), systemd       ✔
+replications/   rejeux de référence : c0.1 (bun replications/c0.1/run.ts)          ✔
 docs/           PLAN.md, STATUS.md (avancement vivant), décisions                   ✔
 ```
 
