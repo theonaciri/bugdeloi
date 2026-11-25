@@ -8,7 +8,9 @@
 import { parseArgs } from 'node:util'
 import { createDb } from '@bugdeloi/db'
 import { DETECTORS } from './detectors/index.ts'
+import { writeDossier } from './dossier.ts'
 import { listFindings } from './list.ts'
+import { publishFindings, qualifyFindings, readCommittedVerdicts } from './qualification.ts'
 import { replayFinding } from './replay.ts'
 import { runSweep } from './run.ts'
 
@@ -16,7 +18,10 @@ const USAGE = `Usage :
   sweep run [--codes CGI,CSS,CCH] [--detectors nom,nom] [--dry-run] [--json]
   sweep replay <id> [--json]
   sweep list [--type T] [--subtype S] [--status candidate] [--limit N] [--json]
-  sweep detectors`
+  sweep detectors
+  sweep dossier [--status reproduced|candidate] [--type T] [--limit N] [--seed S]
+  sweep qualify <fichier.yaml> [--dry-run]
+  sweep publish <id…>`
 
 const { positionals, values } = parseArgs({
   args: Bun.argv.slice(2),
@@ -30,6 +35,7 @@ const { positionals, values } = parseArgs({
     subtype: { type: 'string' },
     status: { type: 'string' },
     limit: { type: 'string' },
+    seed: { type: 'string' },
     help: { type: 'boolean', short: 'h', default: false },
   },
 })
@@ -103,6 +109,27 @@ try {
       })
       if (values.json) console.log(JSON.stringify(rows, null, 2))
       else for (const r of rows) console.log(`${r.id}  ${r.type}/${r.subtype}  ${r.status}  ${r.claim}`)
+      break
+    }
+    case 'dossier': {
+      const { filename, count } = await writeDossier(db, values)
+      console.log(`${filename} (${count} fiches)`)
+      break
+    }
+    case 'qualify': {
+      if (!arg || positionals.length !== 2) throw new Error(USAGE)
+      const dryRun = values['dry-run']
+      const results = await qualifyFindings(db, readCommittedVerdicts(arg), dryRun)
+      if (dryRun) console.log('Simulation sans écriture.')
+      for (const { id, status, changed } of results)
+        console.log(`${id} : ${status}${changed ? '' : ' (déjà appliqué)'}`)
+      break
+    }
+    case 'publish': {
+      if (!arg || values['dry-run']) throw new Error(USAGE)
+      const results = await publishFindings(db, positionals.slice(1))
+      for (const { id, status, changed } of results)
+        console.log(`${id} : ${status}${changed ? '' : ' (déjà appliqué)'}`)
       break
     }
     default:

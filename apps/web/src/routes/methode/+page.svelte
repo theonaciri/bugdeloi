@@ -7,27 +7,22 @@ const lifecycle = [
   {
     code: 'candidate',
     label: 'Candidat',
-    text: 'Un détecteur ou un contributeur signale une anomalie possible. Rien n’est encore affirmé ; un candidat n’entre dans aucun compteur public.',
+    text: 'Un détecteur ou un contributeur signale une anomalie possible à reproduire.',
   },
   {
     code: 'reproduced',
     label: 'Reproduit',
-    text: 'La vérification automatique (CI) a rejoué le certificat avec des versions épinglées et obtenu exactement les mêmes sorties.',
+    text: 'Une chaîne indépendante confirme le constat. Le certificat indique sa source, sa version et son résultat. Le rejeu en CI publique reste à mettre en place.',
   },
   {
     code: 'qualified',
     label: 'Qualifié',
-    text: 'Un humain a examiné le résultat et rendu un verdict : défaut du texte, lacune, choix assumé du législateur, erreur de notre part ou non pertinent.',
+    text: 'Un humain conclut à un défaut du texte ou à une lacune. Son verdict, son motif et le commit Git qui porte sa signature figurent dans le certificat.',
   },
   {
     code: 'published',
     label: 'Publié',
-    text: 'L’anomalie qualifiée est présentée au public avec son certificat. Seuls les statuts « qualifié » et « publié » sont comptés sur le site.',
-  },
-  {
-    code: 'rejected',
-    label: 'Rejeté',
-    text: 'Le candidat est écarté ; il est conservé avec son motif, publiquement.',
+    text: 'La commande de publication inscrit l’événement dans le journal public. Le registre présente déjà le certificat dès la qualification.',
   },
 ]
 </script>
@@ -90,10 +85,9 @@ const lifecycle = [
 
     <h3 id="cycle">Le cycle d’une anomalie</h3>
   </div>
-  <ol class="mt-4 grid max-w-4xl gap-3 md:grid-cols-5">
-    {#each lifecycle as step, i (step.code)}
+  <ol class="mt-4 grid max-w-4xl gap-3 md:grid-cols-4">
+    {#each lifecycle as step (step.code)}
       <li class="card p-4">
-        <p class="text-sm text-muted">{i < 4 ? `Étape ${i + 1}` : 'Ou bien'}</p>
         <p class="font-semibold">{step.label}</p>
         <p class="mt-1 text-sm">{step.text}</p>
       </li>
@@ -101,6 +95,22 @@ const lifecycle = [
   </ol>
 
   <div class="prose-page mt-6">
+    <h3>Verdicts humains</h3>
+    <dl class="space-y-2">
+      <div><dt class="font-semibold">Défaut du texte</dt><dd>Le relecteur identifie un défaut dans la version officielle.</dd></div>
+      <div><dt class="font-semibold">Lacune</dt><dd>Le relecteur relève une situation que le texte ne prévoit pas.</dd></div>
+      <div><dt class="font-semibold">Choix assumé</dt><dd>Le relecteur identifie une disposition voulue, par exemple un renvoi à une rédaction antérieure.</dd></div>
+      <div><dt class="font-semibold">Erreur de notre part</dt><dd>Le relecteur relève une erreur dans notre lecture, nos données ou notre détection.</dd></div>
+      <div><dt class="font-semibold">Non pertinent</dt><dd>Le relecteur explique pourquoi le constat ne relève pas d’une anomalie à retenir.</dd></div>
+    </dl>
+    <p>
+      Les défauts du texte et les lacunes rejoignent le <a href="/anomalies">registre des anomalies qualifiées</a>.
+      Les trois autres verdicts donnent le statut « rejeté » et sont consultables avec leur motif au
+      <a href="/anomalies/cimetiere">cimetière</a>.
+      Le statut « retiré » est attribué par une machine, par exemple après correction d’un détecteur.
+      Les retraits restent dans l’historique interne.
+    </p>
+
     <h2 id="compteurs">Comment sont calculés les compteurs</h2>
     <p>
       Chaque nombre du site est le résultat d’une requête sur notre base, définie dans un seul fichier du code source
@@ -128,9 +138,8 @@ const lifecycle = [
       <div id="compteur-anomalies">
         <dt class="font-semibold">Anomalies qualifiées</dt>
         <dd>
-          Nombre d’anomalies au statut « qualifié » ou « publié », c’est-à-dire reproduites par la CI puis examinées par un
-          humain. Les candidats et les anomalies seulement reproduites ne sont jamais comptés, et n’apparaissent pas dans le
-          journal public.
+          Nombre d’anomalies au statut « qualifié » ou « publié ». Une chaîne indépendante a reproduit le constat et un
+          humain a conclu à un défaut du texte ou à une lacune.
         </dd>
       </div>
       <div id="compteur-rejeux">
@@ -153,8 +162,8 @@ const lifecycle = [
       <div id="compteur-journal">
         <dt class="font-semibold">Derniers événements</dt>
         <dd>
-          Les entrées les plus récentes du journal public, qui n’est jamais réécrit. Les événements concernant des
-          anomalies non qualifiées en sont exclus.
+          Les entrées les plus récentes du journal public, qui conserve son historique. Pour les anomalies, il présente
+          les événements de qualification favorable et de publication.
         </dd>
       </div>
     </dl>

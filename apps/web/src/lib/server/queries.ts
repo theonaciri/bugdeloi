@@ -17,7 +17,16 @@
  * lecture seule (voir `db.ts`).
  */
 
-import { PUBLIC_FINDING_STATUSES } from '@bugdeloi/core/findings'
+import { findingArticle, findingEvidence } from '@bugdeloi/core/finding-certificate'
+import {
+  FINDING_ID_RE,
+  FINDING_TYPE_LABEL,
+  FINDING_TYPES,
+  findingQualification,
+  PUBLIC_FINDING_STATUSES,
+  qualifiedStatus,
+  REJECTED_VERDICTS,
+} from '@bugdeloi/core/findings'
 import { CODES, LEGIARTI_RE, LEGISCTA_RE } from '@bugdeloi/core/legi'
 import { articleInForce } from '@bugdeloi/db/predicates'
 import {
@@ -38,6 +47,12 @@ import { asLevel, countAtLeast, emptyLevelCounts, type Level } from '../levels.t
 import { MAP_WINDOW, type MapArticleRow, type MapCountRow, type MapSectionRow } from '../map-tree.ts'
 import type { CodeProgress, PublicEvent, RunInfo, Snapshot } from '../snapshot.ts'
 import { db } from './db.ts'
+
+const publicFindingFilter = inArray(finding.status, PUBLIC_FINDING_STATUSES)
+const rejectedFindingFilter = and(
+  eq(finding.status, 'rejected'),
+  inArray(sql<string>`${finding.certificate}->'qualification'->>'verdict'`, REJECTED_VERDICTS),
+)
 
 /** Valeur de `ingest_run.source` écrite par `scripts/seed-dev.ts` : signale des données fictives. */
 export const FICTIONAL_SOURCE = 'FICTIF-DEV'
@@ -127,10 +142,7 @@ export async function codeProgress(): Promise<CodeProgress[]> {
 
 /** Anomalies publiques : statut `qualified` ou `published` (jamais les candidats). */
 export async function publicFindingCount(): Promise<number> {
-  const [r] = await db()
-    .select({ n: count() })
-    .from(finding)
-    .where(inArray(finding.status, [...PUBLIC_FINDING_STATUSES]))
+  const [r] = await db().select({ n: count() }).from(finding).where(publicFindingFilter)
   return Number(r?.n ?? 0)
 }
 
@@ -654,6 +666,83 @@ export async function article(legiarti: string): Promise<ArticleData | null> {
       line: c.line,
       heading: c.heading,
     })),
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Anomalies
+// ---------------------------------------------------------------------------
+
+const findingSummaryFields = {
+  id: finding.id,
+  type: finding.type,
+  status: finding.status,
+  claim: finding.claim,
+  legalUnits: finding.legalUnits,
+  qualification: sql<unknown>`${finding.certificate}->'qualification'`,
+}
+
+function findingSummary(
+  row: Pick<typeof finding.$inferSelect, 'id' | 'type' | 'status' | 'claim' | 'legalUnits'>,
+  stamp: unknown,
+) {
+  const type = FINDING_TYPES.find((t) => t === row.type)
+  const qualification = findingQualification({ qualification: stamp })
+  return {
+    id: row.id,
+    typeLabel: type ? FINDING_TYPE_LABEL[type] : row.type,
+    status: row.status,
+    claim: row.claim,
+    articles: row.legalUnits.flatMap((unit) => {
+      const article = findingArticle(unit)
+      return article ? [article] : []
+    }),
+    qualification,
+  }
+}
+
+/** Registre public, même filtre que le compteur d’accueil. */
+export async function publicFindings(database = db()) {
+  const rows = await database
+    .select(findingSummaryFields)
+    .from(finding)
+    .where(publicFindingFilter)
+    .orderBy(desc(sql<string>`${finding.certificate}->'qualification'->>'qualified_at'`), asc(finding.id))
+  return rows.map((row) => findingSummary(row, row.qualification))
+}
+
+/** Cimetière : requête limitée aux rejets, puis contrôle du verdict et de sa provenance Git. */
+export async function rejectedFindings(database = db()) {
+  const rows = await database
+    .select(findingSummaryFields)
+    .from(finding)
+    .where(rejectedFindingFilter)
+    .orderBy(desc(sql<string>`${finding.certificate}->'qualification'->>'qualified_at'`), asc(finding.id))
+  return rows.flatMap((row) => {
+    const summary = findingSummary(row, row.qualification)
+    return summary.qualification ? [{ ...summary, qualification: summary.qualification }] : []
+  })
+}
+
+/** Certificat public ou rejet humain documenté. Les autres statuts sont traités comme absents. */
+export async function findingDetail(id: string, database = db()) {
+  if (!FINDING_ID_RE.test(id)) return null
+  const [row] = await database
+    .select()
+    .from(finding)
+    .where(and(eq(finding.id, id), or(publicFindingFilter, rejectedFindingFilter)))
+    .limit(1)
+  if (!row) return null
+
+  const summary = findingSummary(row, row.certificate.qualification)
+  const q = summary.qualification
+  if (row.status === 'rejected' && (!q || qualifiedStatus(q.verdict) !== 'rejected')) return null
+
+  return {
+    ...summary,
+    ...findingEvidence(row.certificate),
+    certificate: JSON.stringify(row.certificate, null, 2),
+    replay: typeof row.certificate.replay === 'string' ? row.certificate.replay : null,
   }
 }
 

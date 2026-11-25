@@ -159,7 +159,7 @@ $effect(() => {
           </dd>
         </div>
         <div class="card p-4">
-          <dt class="text-sm text-muted">Anomalies qualifiées par un humain</dt>
+          <dt class="text-sm text-muted"><a href="/anomalies">Anomalies qualifiées par un humain</a></dt>
           <dd class="mt-1 text-3xl font-semibold">{formatInt(snap.findings.public)}</dd>
           <dd class="mt-1 text-sm text-muted">
             Les candidats non qualifiés ne sont jamais comptés. <a href="/methode#compteur-anomalies">Méthode</a>

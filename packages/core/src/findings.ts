@@ -45,3 +45,67 @@ export const FINDING_TYPE_LABEL: Record<FindingType, string> = {
   DIVERGENCE_SIMULATEUR: 'Écart loi / simulateur',
   AMBIGUITE: 'Ambiguïté (deux lectures divergent)',
 }
+
+export const FINDING_ID_RE = /^F-\d{4}-\d{4,}$/
+export const GITHUB_HANDLE_RE = /^[a-z\d]+(?:-[a-z\d]+)*$/i
+export const GIT_SHA_RE = /^[a-f\d]{40}$/
+
+export const QUALIFIED_VERDICTS = ['bug_texte', 'lacune'] as const
+export const REJECTED_VERDICTS = ['choix_assumé', 'erreur_nôtre', 'non_pertinent'] as const
+export const QUALIFICATION_VERDICTS = [...QUALIFIED_VERDICTS, ...REJECTED_VERDICTS] as const
+export type QualificationVerdict = (typeof QUALIFICATION_VERDICTS)[number]
+
+export const VERDICT_LABEL: Record<QualificationVerdict, string> = {
+  bug_texte: 'Défaut du texte',
+  lacune: 'Lacune',
+  choix_assumé: 'Choix assumé',
+  erreur_nôtre: 'Erreur de notre part',
+  non_pertinent: 'Non pertinent',
+}
+
+export interface VerdictEntry {
+  id: string
+  verdict: QualificationVerdict
+  note: string
+  reviewer: string
+}
+
+export interface FindingQualification extends Omit<VerdictEntry, 'id'> {
+  file: string
+  commit: string
+  qualified_at: string
+}
+
+export const QUALIFICATION_FILE_RE = /^qualifications\/verdicts\/\d{4}-\d{2}-\d{2}-([A-Za-z\d-]+)\.yaml$/
+
+export function isReviewer(value: unknown): value is string {
+  return typeof value === 'string' && value.length <= 39 && GITHUB_HANDLE_RE.test(value)
+}
+
+export function isQualificationVerdict(value: unknown): value is QualificationVerdict {
+  return QUALIFICATION_VERDICTS.some((v) => v === value)
+}
+
+export function qualifiedStatus(verdict: QualificationVerdict): 'qualified' | 'rejected' {
+  return QUALIFIED_VERDICTS.some((v) => v === verdict) ? 'qualified' : 'rejected'
+}
+
+export function findingQualification(certificate: Record<string, unknown>): FindingQualification | null {
+  const value = certificate.qualification
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null
+  const { verdict, reviewer, note, file, commit, qualified_at } = value as Record<string, unknown>
+  if (
+    !isQualificationVerdict(verdict) ||
+    !isReviewer(reviewer) ||
+    typeof note !== 'string' ||
+    !note.trim() ||
+    typeof file !== 'string' ||
+    QUALIFICATION_FILE_RE.exec(file)?.[1]?.toLowerCase() !== reviewer.toLowerCase() ||
+    typeof commit !== 'string' ||
+    !GIT_SHA_RE.test(commit) ||
+    typeof qualified_at !== 'string' ||
+    !Number.isFinite(Date.parse(qualified_at))
+  )
+    return null
+  return { verdict, reviewer, note, file, commit, qualified_at }
+}

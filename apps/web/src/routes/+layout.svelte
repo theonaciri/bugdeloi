@@ -11,6 +11,7 @@ let { children, data }: LayoutProps = $props()
 const nav = [
   { href: '/', label: 'Accueil' },
   { href: '/carte', label: 'Carte' },
+  { href: '/anomalies', label: 'Anomalies' },
   { href: '/methode', label: 'Méthode' },
   { href: '/join', label: 'Participer' },
   { href: '/sponsors', label: 'Soutenir' },

@@ -1,0 +1,7 @@
+# Modèle fictif. Créer un fichier AAAA-MM-JJ-handle.yaml et le commiter avant qualify.
+# Choix : bug_texte, lacune, choix_assumé, erreur_nôtre, non_pertinent.
+# Chaque note expose le motif humain et cite, le cas échéant, les versions LEGI consultées.
+- id: F-2099-9999
+  verdict: non_pertinent
+  note: "Exemple fictif à remplacer par le motif de la revue."
+  reviewer: exemple

@@ -24,3 +24,6 @@ replications/**/raw/
 replications/c0.2/candidates.json
 replications/c0.2/ecarts-lien-texte.json
 replications/c0.2-independent/results.json
+
+# Dossiers de qualification à usage interne (régénérables)
+qualifications/dossiers/
