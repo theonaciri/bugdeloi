@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ARTICLE>
+  <META>
+    <META_COMMUN><ID>LEGIARTI999990000002</ID><NATURE>Article</NATURE></META_COMMUN>
+    <META_SPEC><META_ARTICLE>
+      <NUM>42 A</NUM><ETAT>VIGUEUR</ETAT><DATE_DEBUT>2024-01-01</DATE_DEBUT>
+      <DATE_FIN>2999-01-01</DATE_FIN><TYPE>AUTONOME</TYPE>
+    </META_ARTICLE></META_SPEC>
+  </META>
+  <VERSIONS>
+    <VERSION etat="MODIFIE"><LIEN_ART id="LEGIARTI999990000001" debut="2020-01-01" fin="2024-01-01"/></VERSION>
+    <VERSION etat="VIGUEUR"><LIEN_ART id="LEGIARTI999990000002" debut="2024-01-01" fin="2999-01-01"/></VERSION>
+  </VERSIONS>
+  <NOTA><CONTENU><i>Note de la version</i></CONTENU></NOTA>
+  <BLOC_TEXTUEL><CONTENU><p class="test">Texte d’essai&#160;&amp; suite</p><p>Fin<br/></p></CONTENU></BLOC_TEXTUEL>
+  <LIENS>
+    <LIEN cidtexte="LEGITEXT999990000009" datesignatexte="2023-12-30" id="LEGIARTI999990000003" naturetexte="LOI" nortexte="TEST1234567L" num="3" numtexte="2023-123" sens="source" typelien="CITATION">Loi &amp; exemple</LIEN>
+    <LIEN cidtexte="" datesignatexte="" id="" naturetexte="" nortexte="" num="" numtexte="" sens="cible" typelien="MODIFIE"/>
+  </LIENS>
+</ARTICLE>
