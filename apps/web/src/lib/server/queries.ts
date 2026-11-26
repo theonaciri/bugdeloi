@@ -1125,6 +1125,7 @@ export interface ArticleData {
   level: Level
   flags: string[]
   levelUpdatedAt: string | null
+  catalaFile: string | null
   versions: ArticleVersion[]
   links: ArticleLink[]
   linksTruncated: boolean
@@ -1144,6 +1145,7 @@ export async function article(legiarti: string): Promise<ArticleData | null> {
       sectionPath: sql<string | null>`${legalSection.path}::text`,
       level: articleStatus.level,
       flags: articleStatus.flags,
+      evidence: articleStatus.evidence,
       levelUpdatedAt: articleStatus.updatedAt,
     })
     .from(legalArticle)
@@ -1219,6 +1221,8 @@ export async function article(legiarti: string): Promise<ArticleData | null> {
   allVersions.sort((x, y) => (y.dateDebut ?? '').localeCompare(x.dateDebut ?? '') || x.id.localeCompare(y.id))
 
   const crumbById = new Map(crumbRows.map((c) => [c.id, c]))
+  const corpusEv = field(a.evidence, 'corpus')
+  const catalaFile = typeof field(corpusEv, 'file') === 'string' ? (field(corpusEv, 'file') as string) : null
   return {
     id: art.id,
     num: art.num,
@@ -1241,6 +1245,7 @@ export async function article(legiarti: string): Promise<ArticleData | null> {
     level: asLevel(a.level),
     flags: a.flags ?? [],
     levelUpdatedAt: ISO(a.levelUpdatedAt),
+    catalaFile,
     versions: allVersions,
     links: links.slice(0, MAX_LINKS).map((l) => ({
       typeLien: l.typeLien,

@@ -43,10 +43,21 @@ const title = $derived(a.num ? `Article ${a.num}` : a.id)
           <strong class="text-ink">{etatLabel(a.etat)}</strong> · version applicable {formatPeriod(a.dateDebut, a.dateFin)}
         </p>
       </div>
-      <p>
-        <a href={data.legifrance} rel="external">Lire cet article sur Légifrance</a>
-        <span class="text-sm text-muted">(seul le texte publié sur Légifrance fait foi).</span>
-      </p>
+      <div class="flex flex-wrap items-center gap-4">
+        <p>
+          <a href={data.legifrance} rel="external">Lire cet article sur Légifrance</a>
+          <span class="text-sm text-muted">(seul le texte publié sur Légifrance fait foi).</span>
+        </p>
+        {#if a.catalaFile}
+          <a
+            href="https://github.com/theonaciri/bugdeloi/blob/main/{a.catalaFile}"
+            rel="external"
+            class="inline-flex items-center rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
+          >
+            Voir le code Catala ({a.level}) →
+          </a>
+        {/if}
+      </div>
     </div>
   </header>
 
