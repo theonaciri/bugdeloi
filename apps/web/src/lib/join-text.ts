@@ -91,6 +91,8 @@ Si tu traites plusieurs articles dans une session :
   traductions .catala_fr et fichiers hors .catala_fr dans la même PR).
 - Avant d’inclure une fiche d’analyse dans une PR, vérifie qu’un traducteur peut directement
   en déduire les types d’entrée/sortie et le traitement de chaque alinéa.
+- Dans la description de chaque PR, ajoute si pertinent un bref retour d’expérience : adéquation
+  de la méthode de travail, qualité ou limites du rendu, et difficultés rencontrées.
 
 Pour translate, implémente l’interface et les types indiqués dans context_pack.objective.
 Le fichier Catala doit reprendre le texte LEGI de la tâche à l’identique. Une tâche translate
