@@ -29,10 +29,10 @@
 
 ## Journal des décisions
 
-- 2026-11-26 — Le service `bugdeloi-desk.timer` complète toutes les 15 minutes la réserve à 24 analyses
-  libres sur des articles LEGI en vigueur. Trois interfaces de traduction du CCH sont épinglées par version et empreinte dans
-  `apps/web/scripts/desk-translations.ts`. Les nouvelles traductions sont inscrites après ajout d’une
-  interface figée au catalogue. Un bail ou une soumission existante garde son historique.
+- 2026-11-26 — `/desk/next` calcule la disponibilité sur la projection LEGI courante. Les tâches sont
+  inscrites au premier bail, avec verrouillage PostgreSQL et sans réserve périodique. Les traductions
+  restent liées aux interfaces versionnées de `apps/web/src/lib/server/desk-translations.ts`.
+  La page d’activité compte aussi les tâches qui pourront être inscrites au premier bail.
 
 - 2026-11-26 — `syntaxe@1.1.0` reconnaît les marqueurs comme `l2°)` en tête d’alinéa. Le balayage CSS
   n° 10 a retiré F-2026-1128 (`withdrawn`) et conservé les deux autres constats SYNTAXE du code.
@@ -78,10 +78,8 @@
 
 ## Pièges connus
 
-- Desk : activer avec `DESK_ENABLED=1` après migration et amorçage. Pour préparer les tâches, cibler
-  explicitement une base avec `DATABASE_URL` puis lancer `bun apps/web/scripts/seed-desk.ts --dry-run`.
-  Sans `--dry-run`, le script complète la réserve et inscrit les traductions du catalogue. Il
-  conserve les tâches déjà présentes et leur état.
+- Desk : activer avec `DESK_ENABLED=1` après migration et ingestion LEGI. Les baux existants
+  conservent leur historique. Une nouvelle réservation requiert des versions et empreintes courantes.
 - Desk : pseudo GitHub et famille déclaratifs. La limite de 30 requêtes par minute et par IP est
   locale au processus, avec une fenêtre fixe de 60 secondes et une remise à zéro au redémarrage.
   Le motif `submitted` clôt la tâche sur déclaration du détenteur du bail.

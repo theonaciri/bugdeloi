@@ -63,6 +63,7 @@ import type {
   SuiteInfo,
 } from '../snapshot.ts'
 import { db } from './db.ts'
+import { currentDeskTask, newDeskTaskFilter } from './desk-catalog.ts'
 
 const publicFindingFilter = inArray(finding.status, PUBLIC_FINDING_STATUSES)
 const rejectedFindingFilter = and(
@@ -693,43 +694,54 @@ async function referenceSuites(): Promise<SuiteInfo[]> {
 /** Une tâche est disponible si elle n'est ni terminée ni couverte par un bail actif. */
 async function deskPublicStats(): Promise<DeskPublicStats> {
   const active = sql`(${deskTask.completedAt} is null and coalesce(${deskTask.leaseExpiresAt} > statement_timestamp(), false))`
-  const [roles, recent] = await Promise.all([
-    db()
-      .select({
-        role: deskTask.role,
-        open: sql<number>`count(*) filter (where ${deskTask.completedAt} is null and not ${active})`.mapWith(
-          Number,
-        ),
-        active: sql<number>`count(*) filter (where ${active})`.mapWith(Number),
-        completed: sql<number>`count(${deskTask.completedAt})`.mapWith(Number),
-      })
-      .from(deskTask)
-      .groupBy(deskTask.role),
-    db()
-      .select({
-        taskId: deskTask.id,
-        payload: deskTask.payload,
-        role: deskTask.role,
-        handle: deskTask.leaseHandle,
-        family: deskTask.leaseFamily,
-        startedAt: deskTask.leaseStartedAt,
-        expiresAt: deskTask.leaseExpiresAt,
-        active: sql<boolean>`${active}`,
-      })
-      .from(deskTask)
-      .where(and(isNotNull(deskTask.leaseHandle), isNotNull(deskTask.leaseStartedAt)))
-      .orderBy(desc(deskTask.leaseStartedAt), asc(deskTask.role), asc(deskTask.leaseHandle))
-      .limit(20),
-  ])
+  const [roles, recent, analyses, translations] = await db().transaction(
+    (tx) =>
+      Promise.all([
+        tx
+          .select({
+            role: deskTask.role,
+            open: sql<number>`count(*) filter (where ${deskTask.completedAt} is null and not ${active} and ${currentDeskTask})`.mapWith(
+              Number,
+            ),
+            active: sql<number>`count(*) filter (where ${active})`.mapWith(Number),
+            completed: sql<number>`count(${deskTask.completedAt})`.mapWith(Number),
+          })
+          .from(deskTask)
+          .groupBy(deskTask.role),
+        tx
+          .select({
+            taskId: deskTask.id,
+            payload: deskTask.payload,
+            role: deskTask.role,
+            handle: deskTask.leaseHandle,
+            family: deskTask.leaseFamily,
+            startedAt: deskTask.leaseStartedAt,
+            expiresAt: deskTask.leaseExpiresAt,
+            active: sql<boolean>`${active}`,
+          })
+          .from(deskTask)
+          .where(and(isNotNull(deskTask.leaseHandle), isNotNull(deskTask.leaseStartedAt)))
+          .orderBy(desc(deskTask.leaseStartedAt), asc(deskTask.role), asc(deskTask.leaseHandle))
+          .limit(20),
+        tx.select({ total: count() }).from(legalArticle).where(newDeskTaskFilter('analyst')),
+        tx.select({ total: count() }).from(legalArticle).where(newDeskTaskFilter('translate')),
+      ]),
+    { isolationLevel: 'repeatable read', accessMode: 'read only' },
+  )
+  const unassigned = { analyst: analyses[0]?.total ?? 0, translate: translations[0]?.total ?? 0 }
   return {
     enabled: process.env.DESK_ENABLED === '1',
-    open: roles.reduce((total, row) => total + row.open, 0),
+    open: roles.reduce((total, row) => total + row.open, unassigned.analyst + unassigned.translate),
     activeLeases: roles.reduce((total, row) => total + row.active, 0),
     completed: roles.reduce((total, row) => total + row.completed, 0),
     byRole: Object.fromEntries(
       DESK_ROLES.map((role) => {
         const row = roles.find((row) => row.role === role)
-        return [role, { open: row?.open ?? 0, active: row?.active ?? 0, completed: row?.completed ?? 0 }]
+        const extra = role === 'analyst' || role === 'translate' ? unassigned[role] : 0
+        return [
+          role,
+          { open: (row?.open ?? 0) + extra, active: row?.active ?? 0, completed: row?.completed ?? 0 },
+        ]
       }),
     ),
     recentHandles: recent.flatMap(({ handle, startedAt, expiresAt, payload, ...row }) => {
