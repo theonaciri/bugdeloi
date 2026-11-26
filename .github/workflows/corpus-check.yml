@@ -60,7 +60,7 @@ jobs:
 
           bun scripts/check-corpus-pr.ts > "$log" 2>&1 || finish REJECTED 'N1 · anti-doublon' "$?"
 
-          IMAGE="ghcr.io/${REPOSITORY_OWNER,,}/bugdeloi-catala:1.3.2"
+          IMAGE="ghcr.io/${REPOSITORY_OWNER,,}/bugdeloi-catala@sha256:5f3f6572d073596f3f2b4b3b3ac6205f3743a7bf9cf81720c4d46744f7e48328"
           docker pull "$IMAGE" > "$log" 2>&1 || finish FAULT 'Catala 1.3.2 · docker pull' "$?"
 
           mapfile -d '' -t FILES < <(cd corpus && find . -name '*.catala_fr' -print0 | sort -z)

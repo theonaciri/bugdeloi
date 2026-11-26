@@ -1,0 +1,41 @@
+#### Article R160-20|LEGIARTI000031797331
+
+La participation forfaitaire mentionnée au II de l'article L. 160-13 n'est pas exigée au titre des ayants droit qui n'ont pas atteint l'âge de dix-huit ans au 1er janvier de l'année civile considérée.
+
+Interface `DispenseParticipationMineur@v1`. Version applicable à compter du 2016-01-01.
+
+L’âge révolu est fourni pour le 1er janvier de l’année civile considérée. La sortie indique uniquement la dispense prévue par cet article.
+
+```catala
+déclaration champ d'application DispenseParticipationMineur:
+  entrée date_d_application contenu date
+  entrée est_ayant_droit contenu booléen
+  entrée âge_révolu_au_premier_janvier contenu entier
+  résultat dispensé_de_participation contenu booléen
+
+champ d'application DispenseParticipationMineur:
+  # LEGIARTI000031797331, début de validité de la version.
+  assertion date_d_application >= |2016-01-01|
+  # CSS, article R. 160-20, alinéa unique : âge révolu au premier janvier de l'année considérée.
+  définition dispensé_de_participation égal à
+    est_ayant_droit et âge_révolu_au_premier_janvier < 18
+
+#[test]
+déclaration champ d'application TestDispenseParticipationMineur:
+  mineur champ d'application DispenseParticipationMineur
+  majeur champ d'application DispenseParticipationMineur
+
+champ d'application TestDispenseParticipationMineur:
+  # LEGIARTI000031797331, premier jour de validité et cas d’essai de l’alinéa.
+  définition mineur.date_d_application égal à |2016-01-01|
+  définition mineur.est_ayant_droit égal à vrai
+  définition mineur.âge_révolu_au_premier_janvier égal à 17
+  # LEGIARTI000031797331, règle de l’alinéa.
+  assertion mineur.dispensé_de_participation
+  # LEGIARTI000031797331, premier jour de validité et cas d’essai de l’alinéa.
+  définition majeur.date_d_application égal à |2016-01-01|
+  définition majeur.est_ayant_droit égal à vrai
+  définition majeur.âge_révolu_au_premier_janvier égal à 18
+  # LEGIARTI000031797331, règle de l’alinéa.
+  assertion non majeur.dispensé_de_participation
+```

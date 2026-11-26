@@ -1,0 +1,52 @@
+#### Article D846-1|LEGIARTI000031673946
+
+Conformément à l'article L. 843-4, il est procédé au réexamen périodique du montant de la prime d'activité au lendemain d'une période de trois mois civils ainsi que lorsqu'un droit au revenu de solidarité active mentionné à l' article L. 262-1 du code de l'action sociale et des familles  est ouvert. Le bénéficiaire de la prime d'activité doit déclarer les ressources de son foyer afin de permettre ce réexamen.
+
+Interface `DéclenchementRéexamenPrimeActivité@v1`. Version applicable à compter du 2016-01-01.
+
+Le scope s’applique à un bénéficiaire. L’appelant fournit les événements constatés à la date d’application. Le calcul du calendrier individuel et l’ouverture du droit au RSA relèvent des dispositions citées par renvoi.
+
+```catala
+déclaration champ d'application DéclenchementRéexamenPrimeActivité:
+  entrée date_d_application contenu date
+  entrée lendemain_de_la_période_civile contenu booléen
+  entrée ouverture_d_un_droit_au_rsa contenu booléen
+  résultat durée_période_civile contenu durée
+  résultat réexamen_requis contenu booléen
+  résultat déclaration_des_ressources_requise contenu booléen
+
+champ d'application DéclenchementRéexamenPrimeActivité:
+  # LEGIARTI000031673946, début de validité de la version.
+  assertion date_d_application >= |2016-01-01|
+  # CSS, article D. 846-1, première phrase.
+  définition durée_période_civile égal à 3 mois
+  définition réexamen_requis égal à lendemain_de_la_période_civile ou ouverture_d_un_droit_au_rsa
+  # CSS, article D. 846-1, seconde phrase.
+  définition déclaration_des_ressources_requise égal à réexamen_requis
+
+#[test]
+déclaration champ d'application TestDéclenchementRéexamenPrimeActivité:
+  périodique champ d'application DéclenchementRéexamenPrimeActivité
+  rsa champ d'application DéclenchementRéexamenPrimeActivité
+  sans_événement champ d'application DéclenchementRéexamenPrimeActivité
+
+champ d'application TestDéclenchementRéexamenPrimeActivité:
+  # LEGIARTI000031673946, premier jour de validité et cas d’essai de l’alinéa.
+  définition périodique.date_d_application égal à |2016-01-01|
+  définition périodique.lendemain_de_la_période_civile égal à vrai
+  définition périodique.ouverture_d_un_droit_au_rsa égal à faux
+  # LEGIARTI000031673946, règle de l’alinéa.
+  assertion périodique.déclaration_des_ressources_requise
+  # LEGIARTI000031673946, premier jour de validité et cas d’essai de l’alinéa.
+  définition rsa.date_d_application égal à |2016-01-01|
+  définition rsa.lendemain_de_la_période_civile égal à faux
+  définition rsa.ouverture_d_un_droit_au_rsa égal à vrai
+  # LEGIARTI000031673946, règle de l’alinéa.
+  assertion rsa.réexamen_requis
+  # LEGIARTI000031673946, premier jour de validité et cas d’essai de l’alinéa.
+  définition sans_événement.date_d_application égal à |2016-01-01|
+  définition sans_événement.lendemain_de_la_période_civile égal à faux
+  définition sans_événement.ouverture_d_un_droit_au_rsa égal à faux
+  # LEGIARTI000031673946, règle de l’alinéa.
+  assertion non sans_événement.réexamen_requis
+```

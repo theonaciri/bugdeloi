@@ -1,0 +1,36 @@
+#### Article 278|LEGIARTI000026950057
+
+Le taux normal de la taxe sur la valeur ajoutée est fixé à 20 %.
+
+Interface `TauxNormalTva@v1`. Version applicable à compter du 2014-01-01.
+
+La date d’application est celle du fait générateur. L’appelant détermine si le taux normal s’applique à l’opération et si la TVA sur l’encaissement était exigible avant le début de la version.
+
+```catala
+déclaration champ d'application TauxNormalTva:
+  entrée date_d_application contenu date
+  entrée exigible_avant_le_début_de_version contenu booléen
+  résultat taux_normal contenu décimal
+
+champ d'application TauxNormalTva:
+  # LEGIARTI000026950057, début de validité de la version.
+  assertion date_d_application >= |2014-01-01|
+  # LEGIARTI000026950057, fin de validité de la version, date exclue.
+  assertion date_d_application < |2027-01-01|
+  # LEGIARTI000026950057, nota : les encaissements exigibles avant le début de la version sont exclus.
+  assertion non exigible_avant_le_début_de_version
+
+  # CGI, article 278, alinéa unique.
+  définition taux_normal égal à 20%
+
+#[test]
+déclaration champ d'application TestTauxNormalTva:
+  normal champ d'application TauxNormalTva
+
+champ d'application TestTauxNormalTva:
+  # LEGIARTI000026950057, premier jour de validité et cas d’essai de l’alinéa.
+  définition normal.date_d_application égal à |2014-01-01|
+  définition normal.exigible_avant_le_début_de_version égal à faux
+  # LEGIARTI000026950057, règle de l’alinéa.
+  assertion normal.taux_normal = 20%
+```

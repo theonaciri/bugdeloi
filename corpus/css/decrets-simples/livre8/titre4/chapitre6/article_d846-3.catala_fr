@@ -1,0 +1,29 @@
+#### Article D846-3|LEGIARTI000031674243
+
+Le délai mentionné à l'article L. 843-5, au terme duquel le directeur de l'organisme chargé du service de la prime d'activité procède à la radiation de la liste des bénéficiaires de la prime d'activité, est fixé à vingt-quatre mois.
+
+Interface `DélaiRadiationPrimeActivité@v1`. Version applicable à compter du 2016-01-01.
+
+Le point de départ et les autres conditions de radiation relèvent de l’article L. 843-5.
+
+```catala
+déclaration champ d'application DélaiRadiationPrimeActivité:
+  entrée date_d_application contenu date
+  résultat délai_de_radiation contenu durée
+
+champ d'application DélaiRadiationPrimeActivité:
+  # LEGIARTI000031674243, début de validité de la version.
+  assertion date_d_application >= |2016-01-01|
+  # CSS, article D. 846-3, alinéa unique.
+  définition délai_de_radiation égal à 24 mois
+
+#[test]
+déclaration champ d'application TestDélaiRadiationPrimeActivité:
+  radiation champ d'application DélaiRadiationPrimeActivité
+
+champ d'application TestDélaiRadiationPrimeActivité:
+  # LEGIARTI000031674243, premier jour de validité et cas d’essai de l’alinéa.
+  définition radiation.date_d_application égal à |2016-01-01|
+  # LEGIARTI000031674243, règle de l’alinéa.
+  assertion radiation.délai_de_radiation = 24 mois
+```
