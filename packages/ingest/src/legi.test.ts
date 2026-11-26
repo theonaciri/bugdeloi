@@ -181,7 +181,8 @@ test('tar en flux : périmètre, sections imbriquées et suppressions DILA', asy
 })
 
 const { legalArticle, legalLink, legalSection, articleStatus, legiState, legiStructure, legalText } = schema
-const TEST_URL = 'postgres://ubuntu@localhost:5432/bugdeloi_test?host=/var/run/postgresql'
+const TEST_URL =
+  process.env.TEST_DATABASE_URL ?? 'postgres://ubuntu@localhost:5432/bugdeloi_test?host=/var/run/postgresql'
 const testTextId = 'LEGITEXT999990000001'
 
 async function rekey(files: CodeFiles, articleFile: string): Promise<CodeFiles> {
