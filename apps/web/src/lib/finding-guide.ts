@@ -1,23 +1,23 @@
 export const findingSteps = [
   {
     status: 'candidate',
-    term: 'Candidat',
-    definition: 'Un programme signale un cas à examiner.',
+    term: '1. Signalé',
+    definition: 'Un premier programme automatique repère une anomalie possible dans le texte de loi.',
   },
   {
     status: 'reproduced',
-    term: 'Reproduit',
-    definition: 'Une chaîne indépendante obtient le même constat sur des données traitées séparément.',
+    term: '2. Vérifié',
+    definition: 'Un second programme indépendant retrouve le même constat sur des archives distinctes.',
   },
   {
     status: 'qualified',
-    term: 'Qualifié',
+    term: '3. Validé par un juriste',
     definition:
-      'Un humain conclut à un défaut du texte ou à une lacune et consigne son verdict dans un commit.',
+      'Un humain relit le texte, confirme un défaut ou une lacune et signe publiquement son verdict.',
   },
   {
     status: 'published',
-    term: 'Publié',
-    definition: 'Le projet a publié la fiche du constat qualifié et son certificat.',
+    term: '4. Publié',
+    definition: 'La fiche complète entre au registre public avec son mode de vérification.',
   },
 ] as const

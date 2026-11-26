@@ -7,27 +7,34 @@ import DraftNotice from '#lib/components/DraftNotice.svelte'
   <meta name="description" content="Le registre public des dépenses, des dons et du calcul donné de BugDeLoi. Pas encore ouvert." />
 </svelte:head>
 
-<div class="container-page mt-8">
-  <div class="prose-page">
-    <p class="kicker">Transparence</p>
-    <h1 class="text-3xl font-semibold sm:text-4xl">Registre des comptes</h1>
-    <DraftNotice milestone="J6">
-      Le registre n’est pas encore publié. Aucun moyen de paiement n’étant ouvert, ce site n’a reçu aucun don.
-    </DraftNotice>
-    <h2>Ce que contiendra le registre</h2>
-    <ul>
-      <li><strong>Chaque dépense</strong>, datée, avec son objet et son justificatif.</li>
-      <li><strong>Les dons</strong>, agrégés (jamais d’identité de donateur sans accord explicite).</li>
-      <li>
-        <strong>Le calcul donné</strong> par les contributeurs (modèle, volume de jetons), converti en équivalent euros et
-        marqué « déclaratif », car nous ne pouvons pas le contrôler.
-      </li>
-    </ul>
-    <h2>Où il vivra</h2>
-    <p>
-      Dans un dossier versionné du dépôt public du corpus : chaque ligne sera un commit, l’historique ne pourra pas être
-      réécrit sans que cela se voie. Cette page en affichera le contenu, avec un lien vers chaque justificatif.
-    </p>
-    <p>Voir aussi <a href="/sponsors">Soutenir le projet</a>.</p>
+<section class="bg-bg">
+  <div class="container-wide py-12 sm:py-16">
+    <h1 class="font-serif text-4xl font-semibold tracking-tight sm:text-5xl">Registre des comptes</h1>
+    <p class="mt-4 max-w-[68ch] text-lg leading-relaxed text-muted">Le projet coûte peu à faire fonctionner. L’essentiel des calculs se fait sur les machines des contributeurs ou grâce aux services gratuits de tests automatiques pour les projets libres.</p>
+    <div class="mt-6 max-w-[68ch]">
+      <DraftNotice milestone="J6">
+        Aucun moyen de paiement n’est ouvert. Ne versez rien à quiconque se réclamerait de BugDeLoi.
+      </DraftNotice>
+    </div>
   </div>
-</div>
+</section>
+
+<section class="bg-surface border-t border-line">
+  <div class="container-wide py-12 sm:py-16">
+    <div class="max-w-[68ch] space-y-8">
+      <section class="space-y-4">
+        <h2 class="font-serif text-2xl font-semibold sm:text-3xl">Ce que le registre rendra public</h2>
+        <dl class="divide-y divide-line border-y border-line">
+          <div class="py-3"><dt class="font-semibold">Dépenses</dt><dd class="text-muted">Chaque dépense sera datée, détaillée au centime et accompagnée de son justificatif.</dd></div>
+          <div class="py-3"><dt class="font-semibold">Dons</dt><dd class="text-muted">Les montants seront regroupés et publiés sans les noms des donateurs.</dd></div>
+          <div class="py-3"><dt class="font-semibold">Temps de calcul offert</dt><dd class="text-muted">Les contributeurs déclareront le temps de calcul qu’ils offrent. Il figurera séparément des dons en argent.</dd></div>
+        </dl>
+        <p>Le dépôt public du corpus conservera l’historique du registre. Cette page donnera accès aux justificatifs.</p>
+      </section>
+      <section class="space-y-3">
+        <h2 class="font-serif text-2xl font-semibold sm:text-3xl">Aider dès maintenant, sans argent</h2>
+        <p class="text-muted">Lisez la <a href="/methode">méthode du projet</a> et signalez les passages qui vous semblent flous ou inexacts. Pour atteindre le <a href="/methode#niveaux">niveau N5</a>, un article doit aussi faire l’objet d’une relecture signée par un juriste identifié, après les contrôles des niveaux précédents.</p>
+      </section>
+    </div>
+  </div>
+</section>

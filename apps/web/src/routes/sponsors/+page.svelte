@@ -7,41 +7,34 @@ import DraftNotice from '#lib/components/DraftNotice.svelte'
   <meta name="description" content="Soutenir BugDeLoi : pas encore ouvert. Ce qui est prévu pour la transparence des dons et des dépenses." />
 </svelte:head>
 
-<div class="container-page mt-8">
-  <div class="prose-page">
-    <p class="kicker">Soutenir</p>
-    <h1 class="text-3xl font-semibold sm:text-4xl">Soutenir le projet</h1>
-    <DraftNotice milestone="J6">
-      Aucun moyen de paiement n’est ouvert. Ne versez rien à quiconque se réclamerait de BugDeLoi : il n’existe à ce jour
-      aucune cagnotte, aucun compte, aucune adresse de don.
-    </DraftNotice>
-    <p>
-      Le projet coûte peu : le calcul lourd tourne chez les contributeurs ou sur une intégration continue gratuite. Les
-      frais réels (nom de domaine, sauvegardes, éventuellement des relectures juridiques) seront publiés au centime.
-    </p>
-    <h2>Ce qui est prévu</h2>
-    <ul>
-      <li>
-        <strong>Un registre public</strong> de chaque dépense avec son justificatif, et des dons agrégés :
-        <a href="/registre">le registre</a>.
-      </li>
-      <li>
-        <strong>Le parrainage d’un chantier</strong> (par exemple « les aides au logement ») : une cagnotte par chantier,
-        affichée avec son usage réel.
-      </li>
-      <li>
-        <strong>Le temps de calcul donné</strong> par les agents (modèle, volume déclaré), affiché séparément et marqué
-        « déclaratif ».
-      </li>
-      <li>
-        <strong>Une structure associative</strong> est envisagée. Tant qu’aucun rescrit « intérêt général » n’a été obtenu,
-        un don ne sera pas déductible des impôts, et la page le dira.
-      </li>
-    </ul>
-    <h2>Aider dès maintenant, sans argent</h2>
-    <p>
-      Relire <a href="/methode">la méthode</a> et signaler ce qui vous paraît faux ou flou est la contribution la plus utile
-      aujourd’hui. Juristes, fiscalistes et spécialistes des prestations sociales : une revue signée par un juriste identifié est requise, en plus de tous les contrôles précédents, pour qu’un article atteigne le niveau N5.
-    </p>
+<section class="bg-bg">
+  <div class="container-wide py-12 sm:py-16">
+    <h1 class="font-serif text-4xl font-semibold tracking-tight sm:text-5xl">Soutenir le projet</h1>
+    <p class="mt-4 max-w-[68ch] text-lg leading-relaxed text-muted">Le projet coûte peu à faire fonctionner. L’essentiel des calculs se fait sur les machines des contributeurs ou grâce aux services gratuits de tests automatiques pour les projets libres.</p>
+    <div class="mt-6 max-w-[68ch]">
+      <DraftNotice milestone="J6">
+        Aucun moyen de paiement n’est ouvert. Ne versez rien à quiconque se réclamerait de BugDeLoi.
+      </DraftNotice>
+    </div>
   </div>
-</div>
+</section>
+
+<section class="bg-surface border-t border-line">
+  <div class="container-wide py-12 sm:py-16">
+    <div class="max-w-[68ch] space-y-8">
+      <section class="space-y-4">
+        <h2 class="font-serif text-2xl font-semibold sm:text-3xl">Ce que le registre rendra public</h2>
+        <dl class="divide-y divide-line border-y border-line">
+          <div class="py-3"><dt class="font-semibold">Dépenses</dt><dd class="text-muted">Chaque dépense sera datée, détaillée au centime et accompagnée de son justificatif.</dd></div>
+          <div class="py-3"><dt class="font-semibold">Dons</dt><dd class="text-muted">Les montants seront regroupés et publiés sans les noms des donateurs.</dd></div>
+          <div class="py-3"><dt class="font-semibold">Temps de calcul offert</dt><dd class="text-muted">Les contributeurs déclareront le temps de calcul qu’ils offrent. Il figurera séparément des dons en argent.</dd></div>
+        </dl>
+        <p><a href="/registre">Consulter la présentation du registre des comptes</a></p>
+      </section>
+      <section class="space-y-3">
+        <h2 class="font-serif text-2xl font-semibold sm:text-3xl">Aider dès maintenant, sans argent</h2>
+        <p class="text-muted">Lisez la <a href="/methode">méthode du projet</a> et signalez les passages qui vous semblent flous ou inexacts. Pour atteindre le <a href="/methode#niveaux">niveau N5</a>, un article doit aussi faire l’objet d’une relecture signée par un juriste identifié, après les contrôles des niveaux précédents.</p>
+      </section>
+    </div>
+  </div>
+</section>

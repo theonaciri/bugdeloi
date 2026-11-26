@@ -13,9 +13,9 @@ const refuted = $derived(flags.includes('refuted'))
     {levelName(level)}
   </span>
   {#if contested}
-    <span class="rounded-full border-2 border-contested px-2 py-0.5 text-sm font-semibold"><span aria-hidden="true">🟠 </span>Contesté — niveau gelé</span>
+    <span class="rounded-full border border-contested bg-surface px-2.5 py-0.5 text-sm font-semibold"><span aria-hidden="true">🟠 </span>Contesté · niveau gelé</span>
   {/if}
   {#if refuted}
-    <span class="rounded-full border-2 border-ko px-2 py-0.5 text-sm font-semibold"><span aria-hidden="true">✝ </span>Réfuté</span>
+    <span class="rounded-full border border-ko bg-surface px-2.5 py-0.5 text-sm font-semibold"><span aria-hidden="true">✝ </span>Réfuté</span>
   {/if}
 </span>

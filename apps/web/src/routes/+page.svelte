@@ -241,7 +241,7 @@ const raceTracks = $derived.by<RaceTrack[]>(() => {
           id: 'audit',
           label: 'Comparaison chiffrée',
           state: 'done',
-          detail: '10 montants identiques au centime, 3 écarts d’arrondi de 0,01 €, 2 désaccords.',
+          detail: '9 montants identiques au centime, 3 écarts d’arrondi de 0,01 €, 2 désaccords.',
         },
         {
           id: 'xcheck',

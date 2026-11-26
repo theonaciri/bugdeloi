@@ -6,29 +6,42 @@ import type { PageProps } from './$types'
 let { data }: PageProps = $props()
 </script>
 
-<svelte:head><title>Cimetière des constats rejetés · BugDeLoi</title></svelte:head>
+<svelte:head>
+  <title>Cimetière des signalements écartés · BugDeLoi</title>
+  <meta name="description" content="Les signalements écartés par un juriste, avec le motif de chaque décision." />
+</svelte:head>
 
-<div class="container-page mt-8">
-  <p class="mb-3"><a href="/anomalies">Anomalies qualifiées</a></p>
-  <h1 class="text-3xl font-semibold sm:text-4xl">Cimetière des constats rejetés</h1>
-  <p class="mt-2 text-muted">Les constats rejetés par un humain sont conservés avec leur motif.</p>
+<header class="bg-bg">
+  <div class="container-wide space-y-5 py-12 sm:py-16">
+    <p class="text-sm"><a href="/anomalies">← Retour aux anomalies</a></p>
+    <h1 class="font-serif text-4xl font-semibold tracking-tight sm:text-5xl">Cimetière des signalements écartés</h1>
+    <p class="max-w-3xl font-serif text-xl leading-relaxed text-ink/90">
+      Un juriste peut écarter un signalement parce que le renvoi à une ancienne loi était volontaire
+      ou parce que notre programme a fait une erreur. Nous conservons ces dossiers et le motif de
+      chaque décision pour que chacun puisse comprendre pourquoi ces signalements ont été écartés.
+    </p>
+  </div>
+</header>
 
-  {#if data.findings.length}
-    <ul class="mt-6 grid max-w-4xl gap-3">
-      {#each data.findings as item (item.id)}
-        <li class="card p-4">
-          <p class="text-sm text-muted">{item.typeLabel}</p>
-          <h2 class="mt-1 text-lg font-semibold"><a href="/anomalies/{item.id}">{item.id}</a></h2>
-          <p>{item.claim}</p>
-          <p class="mt-2 text-sm">
-            {VERDICT_LABEL[item.qualification.verdict]} · @{item.qualification.reviewer} ·
-            <time datetime={item.qualification.qualified_at}>{formatDateTime(item.qualification.qualified_at)}</time>
-          </p>
-          <p class="mt-2 whitespace-pre-wrap">{item.qualification.note}</p>
-        </li>
-      {/each}
-    </ul>
-  {:else}
-    <p class="mt-6">Aucun verdict humain de rejet à ce jour.</p>
-  {/if}
-</div>
+<section class="border-t border-line bg-surface" aria-label="Signalements écartés et motifs">
+  <div class="container-wide py-12 sm:py-16">
+    {#if data.findings.length > 0}
+      <ul class="max-w-4xl divide-y divide-line border-y border-line">
+        {#each data.findings as item (item.id)}
+          <li class="space-y-2 py-5">
+            <h2 class="font-serif text-xl font-semibold"><a href="/anomalies/{item.id}">{item.typeLabel}</a></h2>
+            <p class="mono text-xs text-muted">{item.id}</p>
+            <p>{item.claim}</p>
+            <p class="text-sm text-muted">
+              {VERDICT_LABEL[item.qualification.verdict]} · @{item.qualification.reviewer} ·
+              <time datetime={item.qualification.qualified_at}>{formatDateTime(item.qualification.qualified_at)}</time>
+            </p>
+            <p class="whitespace-pre-wrap">{item.qualification.note}</p>
+          </li>
+        {/each}
+      </ul>
+    {:else}
+      <p class="text-muted">Aucun signalement n’a encore été écarté par un juriste à ce jour.</p>
+    {/if}
+  </div>
+</section>

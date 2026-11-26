@@ -37,11 +37,11 @@ type Explanation = {
 }
 
 const importWhy =
-  'La Direction de l’information légale et administrative (DILA) diffuse les textes officiels dans des archives. Le projet les importe pour travailler sur des versions datées.'
+  'Les services de l’État (la DILA, qui publie Légifrance) diffusent les textes de loi officiels dans des archives publiques. BugDeLoi les importe pour travailler uniquement sur le texte authentique, daté jour par jour.'
 const replayWhy =
-  'Le projet relance des tests publiés par la recherche ou une administration pour savoir si les mêmes résultats sont obtenus avec la version de Catala utilisée ici.'
+  'Des chercheurs publics (Inria) et des administrations ont déjà traduit certains articles en programmes de calcul. BugDeLoi exécute leurs tests officiels pour vérifier que nous obtenons exactement les mêmes résultats.'
 const referenceMeaning =
-  'Le résultat porte sur des travaux externes. Les niveaux N0 à N5 décrivent les contrôles des travaux de BugDeLoi.'
+  'Ce résultat porte sur des programmes écrits par des chercheurs ou des administrations. Les niveaux N0 à N5 mesurent séparément les vérifications réalisées par BugDeLoi.'
 
 const events: Record<string, Explanation> = {
   'ingest.started': {

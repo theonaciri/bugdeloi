@@ -100,7 +100,7 @@ function toggle(e: MouseEvent, node: MapNode) {
 
 function summary(node: MapNode): string {
   if (node.kind === 'article') return node.level ? levelName(node.level) : ''
-  return `${plural(totalOf(node.counts), 'article en vigueur', 'articles en vigueur')} — ${describeCounts(node.counts)}`
+  return `${plural(totalOf(node.counts), 'article en vigueur', 'articles en vigueur')} · ${describeCounts(node.counts)}`
 }
 </script>
 

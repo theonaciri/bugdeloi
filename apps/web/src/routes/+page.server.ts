@@ -41,7 +41,7 @@ const c03Spotlights = [
     inriaWhy: 'Applique le filtre de métropole qui exclut l’enfant unique de la majoration d’âge.',
     lawWhy: 'L’article D755-5 en vigueur prévoit une majoration de 3,69 % dès 11 ans en Guyane.',
     summary:
-      'Deux relectures indépendantes confirment que le texte en vigueur prévoit bien 39,66 € et que le programme Inria applique un filtre trop restrictif. Un juriste doit trancher avant publication.',
+      'Deux lectures du texte s’opposent : le renvoi général excluant l’aîné (24,37 €) face à la règle spéciale Guyane pour enfant unique dès 11 ans (39,66 €). Un juriste doit trancher.',
     verifications: readVerifications('Test3', reports, reportsUrl),
   },
   {

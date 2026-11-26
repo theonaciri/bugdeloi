@@ -6,10 +6,14 @@ import { etatLabel, formatDateTime, formatLegiDate } from '#lib/format.ts'
 import type { PageProps } from './$types'
 
 let { data }: PageProps = $props()
-let item = $derived(data.finding)
-let rejected = $derived(item.status === 'rejected')
-let pending = $derived(item.status === 'candidate' || item.status === 'reproduced')
+const item = $derived(data.finding)
+const rejected = $derived(item.status === 'rejected')
+const pending = $derived(item.status === 'candidate' || item.status === 'reproduced')
+const title = $derived(item.type === 'SYNTAXE' ? 'Faute de ponctuation' : item.typeLabel)
 const currentStep = $derived(findingSteps.findIndex((step) => step.status === item.status))
+const otherArticles = $derived(
+  item.articles.filter((article) => article.id !== item.source?.id && article.id !== item.target?.id),
+)
 const abrogation = $derived(
   item.target?.etat === 'ABROGE' && item.target.dateFin && !item.target.dateFin.startsWith('2999')
     ? `Abrogé le ${formatLegiDate(item.target.dateFin)}`
@@ -22,160 +26,229 @@ function articleLabel(ref: typeof item.source, fallback: string) {
 }
 </script>
 
-<svelte:head><title>{item.id} · Anomalies · BugDeLoi</title></svelte:head>
+<svelte:head>
+  <title>{title} · {item.id} · BugDeLoi</title>
+  <meta name="description" content="Le texte concerné, les contrôles effectués et l’état de la relecture humaine pour le dossier {item.id}." />
+</svelte:head>
 
-<div class="container-page mt-8">
-  <div class="prose-page">
-    <p><a href={rejected ? '/anomalies/cimetiere' : '/anomalies'}>{rejected ? 'Cimetière des constats rejetés' : 'Anomalies qualifiées'}</a></p>
-    <h1 class="text-3xl font-semibold sm:text-4xl">{item.typeLabel}</h1>
-    <p class="text-muted">
-      <code class="mr-2 text-xs">{item.id}</code>
-      {pending ? 'En attente de qualification' : rejected ? 'Rejeté par un humain' : item.status === 'published' ? 'Publié après verdict humain' : 'Qualifié par un humain'}
-      <code class="ml-2 text-xs">{item.type} · {item.status}</code>
-    </p>
-
-    {#if pending}
-      <p class="rounded-lg border border-line bg-surface-2 p-4">
-        {item.status === 'reproduced'
-          ? 'Constat non qualifié par un humain — reproduit par machine, en attente de verdict humain (pas encore compté parmi les anomalies qualifiées)'
-          : 'Constat non qualifié par un humain — candidat détecté par machine, en attente de reproduction et de verdict humain (pas encore compté parmi les anomalies qualifiées)'}
+<article>
+  <header class="bg-bg">
+    <div class="container-wide space-y-5 py-12 sm:py-16">
+      <p class="text-sm">
+        <a href={rejected ? '/anomalies/cimetiere' : '/anomalies'}>
+          {rejected ? '← Retour aux signalements écartés' : '← Retour aux anomalies'}
+        </a>
       </p>
-    {/if}
+      <h1 class="font-serif text-4xl font-semibold tracking-tight sm:text-5xl">{title}</h1>
+      <p class="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-muted">
+        <code class="text-sm">{item.id}</code>
+        {#if rejected}
+          <strong class="text-ink">Écarté par un juriste</strong>
+        {:else if item.status === 'published'}
+          <strong class="text-ink">Publié après verdict humain</strong>
+        {:else if item.status === 'qualified'}
+          <strong class="text-ink">Qualifié par un juriste</strong>
+        {/if}
+      </p>
 
-    <h2>Ce que le contrôle a relevé</h2>
-    {#if item.type === 'REF_MORTE'}
-      <p>Le programme a repéré un renvoi vers un article qu’il a identifié comme abrogé à la date du contrôle.</p>
-      <figure>
-        <FlowDiagram
-          title="Le renvoi signalé"
-          description={`${articleLabel(item.source, 'L’article source')} cite ${articleLabel(item.target, 'l’article cité')}.`}
-          from={articleLabel(item.source, 'Article source')}
-          to={articleLabel(item.target, 'Article cité')}
-          relation="Cite"
-          detail={abrogation}
-        />
-        <figcaption class="mt-2 text-sm text-muted">Le schéma reprend les versions enregistrées dans le certificat.</figcaption>
-      </figure>
-      <p>Un renvoi vers une ancienne version peut être volontaire. {pending ? 'La relecture humaine doit examiner ce renvoi.' : 'Le verdict humain précise ce qui a été retenu dans ce cas.'}</p>
-      <details>
-        <summary>Constat enregistré par le programme</summary>
-        <p class="mt-2">{item.claim}</p>
-      </details>
-    {:else}
-      <p>{item.claim}</p>
-    {/if}
-
-    <h2>Où en est ce constat ?</h2>
-    <ol class="mt-4 grid list-none gap-y-2 border-y border-line p-0 sm:grid-cols-4" aria-label="Cycle du constat">
-      {#each findingSteps as step, index (step.status)}
-        {@const reached = rejected ? index < 2 : index <= currentStep}
-        <li class="m-0 border-t border-line px-3 py-3 first:border-0 sm:border-l sm:border-t-0" aria-current={item.status === step.status ? 'step' : undefined}>
-          <p class="font-semibold">{step.term}</p>
-          <p class="text-xs {item.status === step.status ? 'font-semibold text-brand-strong' : 'text-muted'}">
-            {item.status === step.status ? 'Étape actuelle' : reached ? 'Étape passée' : rejected ? 'Étape écartée' : 'Étape suivante'}
+      {#if pending}
+        <div class="max-w-3xl space-y-1 rounded-xl bg-notice/70 p-5 text-notice-ink">
+          <p class="font-semibold">En attente de qualification</p>
+          <p class="text-sm leading-relaxed">
+            {#if item.status === 'reproduced'}
+              Deux programmes indépendants ont retrouvé ce signalement. Un juriste doit encore relire le texte et
+              signer son verdict. Le signalement ne compte pas parmi les anomalies qualifiées.
+            {:else}
+              Un premier programme a repéré ce signalement. Un contrôle indépendant doit d’abord retrouver le résultat.
+              Si ce contrôle le confirme, un juriste pourra examiner le dossier. Le signalement ne compte pas parmi
+              les anomalies qualifiées.
+            {/if}
           </p>
-          <p class="mt-1 text-sm">{step.definition}</p>
-        </li>
-      {/each}
-    </ol>
-    {#if rejected}
-      <p>Le relecteur a écarté le constat après sa reproduction. <a href="#verdict">Lire son motif</a>.</p>
-    {:else if item.status === 'qualified'}
-      <p><a href="#verdict">Lire le verdict</a>. Une entrée de publication pourra ensuite être ajoutée au journal.</p>
-    {:else if item.status === 'published'}
-      <p>Vous pouvez <a href="#verdict">lire le verdict</a> et relancer le contrôle à partir du certificat.</p>
-    {/if}
+        </div>
+      {/if}
+    </div>
+  </header>
 
-    <h2>Versions d’articles</h2>
-    {#if item.projectionDate}
-      <p>Date de projection du balayage · {formatLegiDate(item.projectionDate)}</p>
-    {/if}
-    {@render version('Article source', item.source)}
-    {@render version('Dernière version connue de la cible', item.target)}
-    {#if item.articles.length}
-      <ul aria-label="Unités légales">
-        {#each item.articles as article (article.id)}
-          <li><a href={article.url}>{article.id} sur Légifrance</a>{#if article.dateDebut} · début le {formatLegiDate(article.dateDebut)}{/if}</li>
-        {/each}
-      </ul>
-    {/if}
-
-    <h2>Extraits du certificat</h2>
-    {#each item.excerpts as excerpt}
-      <blockquote class="border-l-2 border-line pl-4 whitespace-pre-wrap">{excerpt.before}<mark>{excerpt.marked}</mark>{excerpt.after}</blockquote>
-    {:else}
-      <p>Aucun extrait dans le certificat.</p>
-    {/each}
-    {#if item.hints.length}
-      <h3>Indices dans le texte</h3>
-      <ul>
-        {#each item.hints as hint}<li>« {hint} »</li>{/each}
-      </ul>
-    {/if}
-
-    <h2>Reproduction indépendante</h2>
-    {#if typeof item.reproduction.verdict === 'string'}
-      <dl>
-        <dt>Résultat de la reproduction</dt>
-        <dd>
-          {item.reproduction.verdict === 'confirmé' ? 'La chaîne indépendante a retrouvé le constat.' : 'Le certificat consigne le résultat du contrôle.'}
-          <code class="ml-2 text-xs text-muted">{item.reproduction.verdict}</code>
-        </dd>
-        {#if typeof item.reproduction.source === 'string'}
-          <dt>Source</dt>
-          <dd>{item.reproduction.source}</dd>
+  <div class="border-t border-line bg-surface">
+    <div class="container-wide space-y-12 py-12 sm:py-16">
+      <section class="max-w-3xl space-y-4" aria-labelledby="constat">
+        <h2 id="constat" class="font-serif text-2xl font-semibold sm:text-3xl">Ce que le programme a repéré</h2>
+        {#if item.type === 'REF_MORTE'}
+          <p class="leading-relaxed">Un article en vigueur renvoie à un article que le programme a identifié comme abrogé à la date du contrôle.</p>
+          <FlowDiagram
+            title="Le renvoi signalé"
+            description={`${articleLabel(item.source, 'L’article qui fait le renvoi')} cite ${articleLabel(item.target, 'l’article cité')}.`}
+            from={articleLabel(item.source, 'Article source')}
+            to={articleLabel(item.target, 'Article cité')}
+            relation="Cite"
+            detail={abrogation}
+          />
+          <p class="leading-relaxed text-muted">
+            Un renvoi à un ancien texte peut être volontaire. Une règle de transition peut, par exemple, maintenir
+            les anciennes règles pour certaines situations. Un juriste examine le contexte du renvoi pour trancher.
+          </p>
+          <details class="text-sm">
+            <summary class="cursor-pointer font-semibold">Afficher le signalement enregistré par le programme</summary>
+            <p class="mt-2 leading-relaxed">{item.claim}</p>
+          </details>
+        {:else}
+          <p class="leading-relaxed">{item.claim}</p>
         {/if}
-        {#if typeof item.reproduction.checked_at === 'string'}
-          <dt>Date de la reproduction</dt>
-          <dd>{formatDateTime(item.reproduction.checked_at)}</dd>
+      </section>
+
+      <section class="space-y-4 border-t border-line pt-8" aria-labelledby="verification">
+        <h2 id="verification" class="font-serif text-2xl font-semibold sm:text-3xl">Où en est la vérification ?</h2>
+        <ol class="grid border-y border-line sm:grid-cols-2 lg:grid-cols-4" aria-label="Étapes de vérification du signalement">
+          {#each findingSteps as step, index (step.status)}
+            {@const reached = rejected ? index < 2 : index < currentStep}
+            {@const active = item.status === step.status}
+            <li
+              class="border-line px-4 py-4 max-sm:border-b max-sm:last:border-b-0 sm:border-l sm:nth-[odd]:border-l-0 lg:nth-[odd]:border-l lg:first:border-l-0 {active ? 'bg-brand-soft' : ''}"
+              aria-current={active ? 'step' : undefined}
+            >
+              <p class="font-semibold">{step.term}</p>
+              <p class="mt-1 text-xs {active ? 'font-semibold text-brand-strong' : 'text-muted'}">
+                {active ? 'Étape actuelle' : reached ? 'Étape terminée' : rejected ? 'Étape non atteinte' : 'Étape à venir'}
+              </p>
+              <p class="mt-2 text-sm leading-relaxed">{step.definition}</p>
+            </li>
+          {/each}
+        </ol>
+        {#if rejected}
+          <p class="text-sm text-muted">Un juriste a écarté le signalement. <a href="#verdict">Lire son motif</a>.</p>
+        {:else if item.humanQualified}
+          <p class="text-sm"><a href="#verdict">Lire le verdict du juriste</a></p>
         {/if}
-      </dl>
-    {:else}
-      <p>Aucun verdict de reproduction indépendante dans le certificat.</p>
-    {/if}
+      </section>
 
-    <h2 id="verdict">Verdict humain</h2>
-    {#if item.qualification}
-      <p>
-        <strong>{VERDICT_LABEL[item.qualification.verdict]}</strong> · @{item.qualification.reviewer} ·
-        <time datetime={item.qualification.qualified_at}>{formatDateTime(item.qualification.qualified_at)}</time>
-      </p>
-      <p class="whitespace-pre-wrap">{item.qualification.note}</p>
-      <p><a href="https://github.com/theonaciri/bugdeloi/commit/{item.qualification.commit}">Commit du verdict sur GitHub</a> · <code class="wrap-anywhere">{item.qualification.file}</code></p>
-    {:else if pending}
-      <p>En attente de verdict humain.</p>
-    {:else}
-      <p>Détail du verdict indisponible dans le certificat.</p>
-    {/if}
+      <section class="max-w-3xl space-y-4" aria-labelledby="passage">
+        <h2 id="passage" class="font-serif text-2xl font-semibold sm:text-3xl">Passage exact du texte de loi</h2>
+        {#if item.excerpts.length > 0}
+          <p class="text-sm leading-relaxed text-muted">Le surlignage montre le passage relevé par le programme dans les extraits du certificat.</p>
+          {#each item.excerpts as excerpt}
+            <blockquote class="wrap-anywhere whitespace-pre-wrap rounded-xl bg-bg p-5 font-serif text-lg leading-relaxed">{excerpt.before}<mark class="rounded bg-notice text-notice-ink">{excerpt.marked}</mark>{excerpt.after}</blockquote>
+          {/each}
+        {:else}
+          <p class="text-muted">Le dossier ne contient pas d’extrait. Les liens vers Légifrance ci-dessous donnent accès aux textes concernés.</p>
+        {/if}
+        {#if item.hints.length}
+          <h3 class="font-serif text-xl font-semibold">Mots et expressions à examiner</h3>
+          <p class="text-sm leading-relaxed text-muted">Ces expressions proches du passage peuvent aider à comprendre le contexte du signalement.</p>
+          <ul class="list-disc space-y-1 ps-5">
+            {#each item.hints as hint}<li>« {hint} »</li>{/each}
+          </ul>
+        {/if}
+      </section>
 
-    <h2>Reproduire le résultat à l’aide du certificat</h2>
-    {#if item.replay}
-      <pre class="wrap-anywhere whitespace-pre-wrap rounded-lg bg-surface-2 p-4"><code>{item.replay}</code></pre>
-    {:else}
-      <p>Aucune commande de reproduction dans le certificat.</p>
-    {/if}
+      <section class="max-w-4xl space-y-4 border-t border-line pt-8" aria-labelledby="articles">
+        <h2 id="articles" class="font-serif text-2xl font-semibold sm:text-3xl">Articles concernés</h2>
+        {#if item.projectionDate}
+          <p class="text-sm text-muted">Textes en vigueur examinés à la date du {formatLegiDate(item.projectionDate)}.</p>
+        {/if}
+        {#if item.source || item.target}
+          <div class="grid gap-y-5 {item.source && item.target ? 'sm:grid-cols-2 sm:divide-x sm:divide-line' : ''}">
+            {@render version(item.type === 'REF_MORTE' ? 'Article qui fait le renvoi' : 'Article signalé', item.source)}
+            {@render version('Article cité (dernière version connue)', item.target, Boolean(item.source))}
+          </div>
+        {/if}
+        {#if otherArticles.length}
+          <ul aria-label="Versions d’articles sur Légifrance" class="space-y-2 text-sm">
+            {#each otherArticles as article (article.id)}
+              <li>
+                <a href={article.url} rel="external">{article.id} sur Légifrance</a>{#if article.dateDebut} · version du {formatLegiDate(article.dateDebut)}{/if}
+              </li>
+            {/each}
+          </ul>
+        {:else if !item.source && !item.target}
+          <p class="text-sm text-muted">Aucune référence d’article n’est disponible pour ce dossier.</p>
+        {/if}
+      </section>
 
-    <details class="mt-6">
-      <summary>Certificat complet (JSON)</summary>
-      <pre class="wrap-anywhere whitespace-pre-wrap rounded-lg bg-surface-2 p-4"><code>{item.certificate}</code></pre>
-    </details>
+      <div class="grid gap-8 border-t border-line pt-8 lg:grid-cols-2">
+        <section class="min-w-0 space-y-3" aria-labelledby="controle-independant">
+          <h2 id="controle-independant" class="font-serif text-2xl font-semibold sm:text-3xl">Contrôle indépendant</h2>
+          <p class="leading-relaxed text-muted">
+            Un second programme examine les archives séparément pour voir s’il retrouve le même signalement.
+          </p>
+          {#if typeof item.reproduction.verdict === 'string'}
+            <p class="font-semibold">
+              {item.reproduction.verdict === 'confirmé'
+                ? 'Le second programme a retrouvé le même résultat.'
+                : `Résultat enregistré : ${item.reproduction.verdict}`}
+            </p>
+            <dl class="space-y-2 text-sm">
+              {#if typeof item.reproduction.source === 'string'}
+                <div><dt class="text-muted">Source du contrôle</dt><dd class="wrap-anywhere">{item.reproduction.source}</dd></div>
+              {/if}
+              {#if typeof item.reproduction.checked_at === 'string'}
+                <div><dt class="text-muted">Date du contrôle</dt><dd>{formatDateTime(item.reproduction.checked_at)}</dd></div>
+              {/if}
+            </dl>
+          {:else}
+            <p class="text-sm text-muted">Le résultat de ce contrôle ne figure pas encore dans le dossier.</p>
+          {/if}
+        </section>
+
+        <section class="min-w-0 space-y-3 border-t border-line pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0" aria-labelledby="verdict">
+          <h2 id="verdict" class="font-serif text-2xl font-semibold sm:text-3xl">Verdict humain</h2>
+          {#if item.qualification}
+            <p class="text-sm">
+              <strong>{VERDICT_LABEL[item.qualification.verdict]}</strong> · @{item.qualification.reviewer} ·
+              <time datetime={item.qualification.qualified_at}>{formatDateTime(item.qualification.qualified_at)}</time>
+            </p>
+            <p class="whitespace-pre-wrap leading-relaxed">{item.qualification.note}</p>
+            <p class="text-sm"><a href="https://github.com/theonaciri/bugdeloi/commit/{item.qualification.commit}" rel="external">Consulter le verdict signé sur GitHub</a></p>
+          {:else if pending}
+            <p class="leading-relaxed text-muted">Un juriste doit encore déterminer si le signalement correspond à un défaut du texte, à une lacune ou à un choix volontaire.</p>
+          {:else}
+            <p class="text-muted">Le détail du verdict est indisponible dans ce dossier.</p>
+          {/if}
+        </section>
+      </div>
+    </div>
   </div>
-</div>
 
-{#snippet version(label: string, ref: typeof item.source)}
+  <section class="border-t border-line bg-bg" aria-labelledby="donnees-techniques">
+    <div class="container-wide space-y-4 py-12 sm:py-16">
+      <h2 id="donnees-techniques" class="font-serif text-2xl font-semibold sm:text-3xl">Données techniques et reproductibilité</h2>
+      <p class="max-w-3xl leading-relaxed text-muted">
+        Le certificat regroupe les données et les versions utilisées pour le contrôle. La commande permet de relancer ce contrôle.
+      </p>
+      <div class="divide-y divide-line border-y border-line">
+        <details class="py-4">
+          <summary class="cursor-pointer font-semibold">Afficher la commande pour relancer le contrôle</summary>
+          {#if item.replay}
+            <pre class="mt-3 wrap-anywhere whitespace-pre-wrap rounded-xl bg-surface p-4 text-sm"><code>{item.replay}</code></pre>
+          {:else}
+            <p class="mt-3 text-sm text-muted">Le certificat ne contient aucune commande.</p>
+          {/if}
+        </details>
+        <details class="py-4">
+          <summary class="cursor-pointer font-semibold">Afficher le certificat complet (JSON)</summary>
+          <pre class="mt-3 wrap-anywhere whitespace-pre-wrap rounded-xl bg-surface p-4 text-sm"><code>{item.certificate}</code></pre>
+        </details>
+      </div>
+    </div>
+  </section>
+</article>
+
+{#snippet version(label: string, ref: typeof item.source, separated = false)}
   {#if ref}
-    <h3>{label}</h3>
-    <p>
-      {#if ref.code || ref.num}{[ref.code, ref.num].filter(Boolean).join(' · ')} · {/if}
-      <a href={ref.url}>{ref.id} sur Légifrance</a>
-    </p>
-    <dl>
-      <dt>État dans le certificat</dt>
-      <dd>{etatLabel(ref.etat)}</dd>
-      <dt>Début de la version</dt>
-      <dd>{formatLegiDate(ref.dateDebut)}</dd>
-      <dt>Fin de la version</dt>
-      <dd>{formatLegiDate(ref.dateFin)}</dd>
-    </dl>
+    <div class="min-w-0 space-y-2 pr-5 {separated ? 'sm:pl-5' : ''}">
+      <h3 class="font-serif text-xl font-semibold">{label}</h3>
+      <p>
+        {#if ref.code || ref.num}
+          <strong>{[ref.code, ref.num ? `Article ${ref.num}` : null].filter(Boolean).join(' · ')}</strong>
+        {:else}
+          <strong>{ref.id}</strong>
+        {/if}
+      </p>
+      <p class="text-sm"><a href={ref.url} rel="external">Lire l’article sur Légifrance</a></p>
+      <dl class="space-y-1 text-sm">
+        <div><dt class="inline text-muted">État.</dt> <dd class="inline">{etatLabel(ref.etat)}</dd></div>
+        <div><dt class="inline text-muted">Début de la version.</dt> <dd class="inline">{ref.dateDebut ? formatLegiDate(ref.dateDebut) : 'Date inconnue'}</dd></div>
+        <div><dt class="inline text-muted">Fin de la version.</dt> <dd class="inline">{ref.dateFin ? formatLegiDate(ref.dateFin) : 'Date inconnue'}</dd></div>
+      </dl>
+    </div>
   {/if}
 {/snippet}
