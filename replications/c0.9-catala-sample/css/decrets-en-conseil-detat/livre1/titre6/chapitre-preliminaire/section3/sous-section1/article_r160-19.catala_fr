@@ -1,0 +1,45 @@
+#### Article R160-19|LEGIARTI000049158192
+
+Le montant de la participation forfaitaire mentionnée au II de l'article L. 160-13 ne peut, sans être inférieur à 2 euros, excéder 3 euros.
+
+```catala
+déclaration champ d'application BornesParticipationForfaitaire:
+  entrée date_de_calcul contenu date
+  entrée montant_de_la_participation contenu argent
+  résultat montant_dans_les_bornes contenu booléen
+
+champ d'application BornesParticipationForfaitaire:
+  # LEGIARTI000049158192, métadonnées LEGI : début de la version.
+  assertion date_de_calcul >= |2024-02-18|
+
+  définition montant_dans_les_bornes égal à
+    # CSS, article R160-19, alinéa unique : plancher et plafond inclus.
+    (montant_de_la_participation >= 2€) et (montant_de_la_participation <= 3€)
+
+#[test]
+déclaration champ d'application TestBornesParticipationForfaitaire:
+  interne date_du_cas contenu date
+  sous_le_plancher champ d'application BornesParticipationForfaitaire
+  au_plancher champ d'application BornesParticipationForfaitaire
+  au_plafond champ d'application BornesParticipationForfaitaire
+  au_dessus_du_plafond champ d'application BornesParticipationForfaitaire
+
+champ d'application TestBornesParticipationForfaitaire:
+  # LEGIARTI000049158192, métadonnées LEGI : premier jour de la version.
+  définition date_du_cas égal à |2024-02-18|
+  définition sous_le_plancher.date_de_calcul égal à date_du_cas
+  définition au_plancher.date_de_calcul égal à date_du_cas
+  définition au_plafond.date_de_calcul égal à date_du_cas
+  définition au_dessus_du_plafond.date_de_calcul égal à date_du_cas
+
+  # CSS, article R160-19, alinéa unique : centime sous le plancher, puis bornes exactes.
+  définition sous_le_plancher.montant_de_la_participation égal à 1,99€
+  définition au_plancher.montant_de_la_participation égal à 2€
+  définition au_plafond.montant_de_la_participation égal à 3€
+  # CSS, article R160-19, alinéa unique : centime au-dessus du plafond.
+  définition au_dessus_du_plafond.montant_de_la_participation égal à 3,01€
+  assertion non sous_le_plancher.montant_dans_les_bornes
+  assertion au_plancher.montant_dans_les_bornes
+  assertion au_plafond.montant_dans_les_bornes
+  assertion non au_dessus_du_plafond.montant_dans_les_bornes
+```

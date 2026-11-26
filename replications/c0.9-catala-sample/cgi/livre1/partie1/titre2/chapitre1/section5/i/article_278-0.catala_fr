@@ -1,0 +1,72 @@
+#### Article 278-0|LEGIARTI000042853334
+
+Lorsqu'une opération comprend des éléments autres qu'accessoires relevant de taux différents, le taux applicable à cette opération est le taux le plus élevé parmi les taux applicables à ces différents éléments.
+
+```catala
+déclaration structure ÉlémentOpération:
+  donnée appréciation_accessoire contenu booléen
+  donnée taux_applicable contenu décimal
+
+déclaration énumération RésultatTauxComposite:
+  -- RègleNonApplicable
+  -- TauxRetenu contenu décimal
+
+déclaration champ d'application TauxOpérationComposite:
+  entrée date_de_l_opération contenu date
+  entrée éléments contenu liste de ÉlémentOpération
+  résultat résultat_du_taux contenu RésultatTauxComposite
+
+champ d'application TauxOpérationComposite:
+  # LEGIARTI000042853334, métadonnées LEGI : début inclus, fin exclue.
+  assertion (date_de_l_opération >= |2020-12-31|) et (date_de_l_opération < |2027-01-01|)
+
+  # CGI, article 278-0, alinéa unique. La qualification d'accessoire et le taux
+  # propre à chaque élément sont fournis en entrée.
+  définition résultat_du_taux égal à
+    soit taux_principaux égal à
+      transforme chaque élément parmi éléments
+        tel que non élément.appréciation_accessoire en élément.taux_applicable
+    dans
+    # CGI, article 278-0, alinéa unique : aucun taux distinct pour une liste vide.
+    si (nombre de taux_principaux) = 0 alors RègleNonApplicable
+    sinon
+      soit taux_maximal égal à maximum de taux_principaux dans
+      si (existe taux parmi taux_principaux tel que taux != taux_maximal)
+      alors TauxRetenu contenu taux_maximal
+      sinon RègleNonApplicable
+
+#[test]
+déclaration champ d'application TestTauxOpérationComposite:
+  interne date_du_cas contenu date
+  hétérogène champ d'application TauxOpérationComposite
+  homogène champ d'application TauxOpérationComposite
+  accessoires_seuls champ d'application TauxOpérationComposite
+
+champ d'application TestTauxOpérationComposite:
+  # LEGIARTI000042853334, métadonnées LEGI : premier jour de la version.
+  définition date_du_cas égal à |2020-12-31|
+  définition hétérogène.date_de_l_opération égal à date_du_cas
+  définition homogène.date_de_l_opération égal à date_du_cas
+  définition accessoires_seuls.date_de_l_opération égal à date_du_cas
+
+  définition hétérogène.éléments égal à [
+    # CGI, article 278-0, alinéa unique : taux d'entrée fictifs pour comparer et filtrer.
+    ÉlémentOpération { -- appréciation_accessoire: faux -- taux_applicable: 10% };
+    ÉlémentOpération { -- appréciation_accessoire: vrai -- taux_applicable: 20% };
+    ÉlémentOpération { -- appréciation_accessoire: faux -- taux_applicable: 5% }
+  ]
+  définition homogène.éléments égal à [
+    # CGI, article 278-0, alinéa unique : deux taux d'entrée fictifs identiques.
+    ÉlémentOpération { -- appréciation_accessoire: faux -- taux_applicable: 10% };
+    ÉlémentOpération { -- appréciation_accessoire: faux -- taux_applicable: 10% }
+  ]
+  définition accessoires_seuls.éléments égal à [
+    # CGI, article 278-0, alinéa unique : un taux fictif d'élément accessoire.
+    ÉlémentOpération { -- appréciation_accessoire: vrai -- taux_applicable: 20% }
+  ]
+
+  # CGI, article 278-0, alinéa unique : le plus élevé des taux fictifs non accessoires.
+  assertion hétérogène.résultat_du_taux = (TauxRetenu contenu 10%)
+  assertion homogène.résultat_du_taux = RègleNonApplicable
+  assertion accessoires_seuls.résultat_du_taux = RègleNonApplicable
+```

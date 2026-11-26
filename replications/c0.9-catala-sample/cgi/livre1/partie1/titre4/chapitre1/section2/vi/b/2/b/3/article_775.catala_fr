@@ -1,0 +1,44 @@
+#### Article 775|LEGIARTI000006305398
+
+Les frais funéraires sont déduits de l'actif de la succession pour un montant de 1 500 €, et pour la totalité de l'actif si celui-ci est inférieur à ce montant (1).
+
+```catala
+déclaration champ d'application DéductionFraisFunéraires:
+  entrée date_d_ouverture contenu date
+  entrée actif_de_la_succession contenu argent
+  résultat déduction contenu argent
+
+champ d'application DéductionFraisFunéraires:
+  # LEGIARTI000006305398, nota (1) : successions ouvertes à compter du 1er janvier 2003.
+  assertion date_d_ouverture >= |2003-01-01|
+  # CGI, article 775, alinéa unique : l'entrée représente l'actif disponible pour cette déduction.
+  assertion actif_de_la_succession >= 0€
+
+  définition déduction égal à
+    # CGI, article 775, alinéa unique : déduction forfaitaire, limitée à l'actif.
+    si actif_de_la_succession < 1 500€ alors actif_de_la_succession
+    sinon 1 500€
+
+#[test]
+déclaration champ d'application TestDéductionFraisFunéraires:
+  interne date_du_cas contenu date
+  sous_le_forfait champ d'application DéductionFraisFunéraires
+  au_forfait champ d'application DéductionFraisFunéraires
+  au_dessus_du_forfait champ d'application DéductionFraisFunéraires
+
+champ d'application TestDéductionFraisFunéraires:
+  # LEGIARTI000006305398, nota (1) : premier jour d'application.
+  définition date_du_cas égal à |2003-01-01|
+  définition sous_le_forfait.date_d_ouverture égal à date_du_cas
+  définition au_forfait.date_d_ouverture égal à date_du_cas
+  définition au_dessus_du_forfait.date_d_ouverture égal à date_du_cas
+
+  # CGI, article 775, alinéa unique : forfait et actifs d'essai à un euro de part et d'autre.
+  définition sous_le_forfait.actif_de_la_succession égal à 1 499€
+  définition au_forfait.actif_de_la_succession égal à 1 500€
+  définition au_dessus_du_forfait.actif_de_la_succession égal à 1 501€
+  # CGI, article 775, alinéa unique : la déduction est limitée par l'actif et le forfait.
+  assertion sous_le_forfait.déduction = 1 499€
+  assertion au_forfait.déduction = 1 500€
+  assertion au_dessus_du_forfait.déduction = 1 500€
+```

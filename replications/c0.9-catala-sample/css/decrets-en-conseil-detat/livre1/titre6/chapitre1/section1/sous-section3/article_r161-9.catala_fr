@@ -1,0 +1,50 @@
+#### Article R161-9|LEGIARTI000006747389
+
+Pour l'application de l'article L. 161-16, le taux d'invalidité global doit être d'au moins 60 %. Les assurés en cause doivent être âgés d'au moins cinquante-cinq ans.
+
+```catala
+déclaration champ d'application SeuilsÂgeEtInvalidité:
+  entrée date_de_calcul contenu date
+  entrée âge_en_années_révolues contenu entier
+  entrée taux_d_invalidité_global contenu décimal
+  résultat seuils_atteints contenu booléen
+
+champ d'application SeuilsÂgeEtInvalidité:
+  # LEGIARTI000006747389, métadonnées LEGI : début de la version.
+  assertion date_de_calcul >= |1985-12-21|
+
+  définition seuils_atteints égal à
+    # CSS, article R161-9, première et deuxième phrases : les deux seuils sont inclus.
+    (taux_d_invalidité_global >= 60%) et (âge_en_années_révolues >= 55)
+
+#[test]
+déclaration champ d'application TestSeuilsÂgeEtInvalidité:
+  interne date_du_cas contenu date
+  aux_seuils champ d'application SeuilsÂgeEtInvalidité
+  âge_insuffisant champ d'application SeuilsÂgeEtInvalidité
+  taux_insuffisant champ d'application SeuilsÂgeEtInvalidité
+
+champ d'application TestSeuilsÂgeEtInvalidité:
+  # LEGIARTI000006747389, métadonnées LEGI : premier jour de la version.
+  définition date_du_cas égal à |1985-12-21|
+  définition aux_seuils.date_de_calcul égal à date_du_cas
+  définition âge_insuffisant.date_de_calcul égal à date_du_cas
+  définition taux_insuffisant.date_de_calcul égal à date_du_cas
+
+  # CSS, article R161-9, première et deuxième phrases : seuils exacts.
+  définition aux_seuils.âge_en_années_révolues égal à 55
+  définition aux_seuils.taux_d_invalidité_global égal à 60%
+
+  # CSS, article R161-9, deuxième phrase : un an sous le seuil d'âge.
+  définition âge_insuffisant.âge_en_années_révolues égal à 54
+  définition âge_insuffisant.taux_d_invalidité_global égal à 60%
+
+  # CSS, article R161-9, deuxième phrase : seuil d'âge exact.
+  définition taux_insuffisant.âge_en_années_révolues égal à 55
+  # CSS, article R161-9, première phrase : un point sous le seuil de taux.
+  définition taux_insuffisant.taux_d_invalidité_global égal à 59%
+
+  assertion aux_seuils.seuils_atteints
+  assertion non âge_insuffisant.seuils_atteints
+  assertion non taux_insuffisant.seuils_atteints
+```

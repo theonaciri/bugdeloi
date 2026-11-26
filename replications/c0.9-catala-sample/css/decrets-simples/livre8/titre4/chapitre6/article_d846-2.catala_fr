@@ -1,0 +1,36 @@
+#### Article D846-2|LEGIARTI000031674204
+
+Le montant en dessous duquel la prime d'activité n'est pas versée est fixé à 15 euros.
+
+```catala
+déclaration champ d'application SeuilVersementPrimeActivité:
+  entrée date_de_calcul contenu date
+  entrée montant_calculé contenu argent
+  résultat montant_inférieur_au_seuil contenu booléen
+
+champ d'application SeuilVersementPrimeActivité:
+  # LEGIARTI000031674204, métadonnées LEGI : début de la version.
+  assertion date_de_calcul >= |2016-01-01|
+
+  définition montant_inférieur_au_seuil égal à
+    # CSS, article D846-2, alinéa unique : le seuil de non-versement est strict.
+    montant_calculé < 15€
+
+#[test]
+déclaration champ d'application TestSeuilVersementPrimeActivité:
+  interne date_du_cas contenu date
+  sous_le_seuil champ d'application SeuilVersementPrimeActivité
+  au_seuil champ d'application SeuilVersementPrimeActivité
+
+champ d'application TestSeuilVersementPrimeActivité:
+  # LEGIARTI000031674204, métadonnées LEGI : premier jour de la version.
+  définition date_du_cas égal à |2016-01-01|
+  définition sous_le_seuil.date_de_calcul égal à date_du_cas
+  définition au_seuil.date_de_calcul égal à date_du_cas
+
+  # CSS, article D846-2, alinéa unique : un centime sous le seuil et seuil exact.
+  définition sous_le_seuil.montant_calculé égal à 14,99€
+  définition au_seuil.montant_calculé égal à 15€
+  assertion sous_le_seuil.montant_inférieur_au_seuil
+  assertion non au_seuil.montant_inférieur_au_seuil
+```
