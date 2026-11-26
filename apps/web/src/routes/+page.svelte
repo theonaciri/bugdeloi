@@ -398,15 +398,16 @@ $effect(() => {
             id="hero-title"
             class="font-serif text-[2.85rem] font-semibold leading-[1.03] tracking-tight text-ink sm:text-[4rem] lg:text-[4.65rem]"
           >
-            Traduire la loi française en Catala, article par article.
+            Vérifier formellement la loi française par ordinateur.
           </h1>
           <p class="max-w-[58ch] font-serif text-xl leading-relaxed text-ink/90 sm:text-[1.42rem]">
-            BugDeLoi formalise progressivement les articles de loi en code Catala vérifiable avec l’aide de la
-            communauté, afin de détecter les incompatibilités, contradictions et renvois cassés entre les textes.
+            À la manière d’un assistant de preuve comme Lean pour le logiciel, BugDeLoi traduit progressivement la loi
+            française en Catala avec la communauté pour établir quels articles sont cohérents, applicables et sans
+            incompatibilité ni contournement face au reste du droit.
           </p>
           <p class="max-w-[58ch] text-base leading-relaxed text-muted">
-            Chaque contribution fait avancer le taux de couverture Catala : des agents et contributeurs traduisent,
-            le compilateur et des juristes vérifient.
+            Chaque article progresse de son texte brut (N0) jusqu’à la certification complète (N5) : le compilateur
+            Catala prouve l’absence de conflit et de cas vide, puis des juristes signent la revue.
           </p>
         </div>
 
@@ -415,16 +416,21 @@ $effect(() => {
             <p class="flex flex-wrap items-baseline gap-x-3 gap-y-2 text-base text-ink sm:text-lg tabular">
               <span>
                 <strong class="font-serif text-2xl font-semibold text-brand-strong sm:text-3xl">{catalaProgressPct} %</strong>
-                en Catala ({formatInt(catalaFormalized)} / {formatInt(inForceTotal)} articles)
+                formalisé en Catala ({formatInt(catalaFormalized)} / {formatInt(inForceTotal)})
+              </span>
+              <span class="text-line-strong" aria-hidden="true">·</span>
+              <span>
+                <strong class="font-serif text-2xl font-semibold text-ink sm:text-3xl">{formatInt(totals.N5)}</strong>
+                niveau N5
               </span>
               <span class="text-line-strong" aria-hidden="true">·</span>
               <span>
                 <strong class="font-serif text-2xl font-semibold text-notice-ink sm:text-3xl">{formatInt(snap.pipeline.reproducedCount)}</strong>
-                incompatibilités &amp; renvois cassés reproduits
+                incompatibilités &amp; renvois cassés
               </span>
             </p>
             <p class="text-xs text-muted">
-              {formatInt(totals.REF)} articles ★ Référence ({formatInt(totalInriaTests)} tests Catala verts) · {formatInt(snap.findings.public)} anomalie qualifiée par un humain à ce jour ·
+              {formatInt(totals.REF)} articles ★ Référence ({formatInt(totalInriaTests)} tests Catala 1.3.2 verts) · {formatInt(snap.findings.public)} anomalie qualifiée par un humain ·
               <strong class="font-medium text-ink">Un compte, pas une probabilité.</strong>
               <a href="/methode#compteurs">Méthode →</a>
             </p>
@@ -440,8 +446,8 @@ $effect(() => {
             Contribuer en Catala
             <ArrowRight class="size-4" aria-hidden="true" />
           </Button>
-          <Button href="#carte-vivante" variant="secondary" size="lg">
-            Progression par code
+          <Button href="#lois-verifiees" variant="secondary" size="lg">
+            Lois vérifiées
           </Button>
           <Button href="/anomalies" variant="ghost" size="lg">
             Voir les incompatibilités
@@ -492,144 +498,144 @@ $effect(() => {
   </div>
 </section>
 
-<!-- BANDE 1.2 : OUTILS ET DONNÉES OUVERTES (3 GRANDS WIDGETS) -->
-<section id="outils-directs" class="border-t border-line bg-surface py-14 sm:py-16" aria-labelledby="outils-title">
+<!-- BANDE 1.2 : ÉTAT DE LA VÉRIFICATION FORMELLE DES LOIS -->
+<section id="lois-verifiees" class="border-t border-line bg-surface py-14 sm:py-16" aria-labelledby="lois-verifiees-title">
   <div class="container-wide space-y-8">
     <div class="flex flex-wrap items-end justify-between gap-4">
       <div class="max-w-3xl space-y-2">
-        <h2 id="outils-title" class="font-serif text-3xl font-semibold text-ink sm:text-4xl">
-          Annexes : simulateurs, oracle externe et veille parlementaire
+        <h2 id="lois-verifiees-title" class="font-serif text-3xl font-semibold text-ink sm:text-4xl">
+          Quelles lois sont vérifiées par l’ordinateur aujourd’hui ?
         </h2>
         <p class="text-base leading-relaxed text-muted">
-          En complément de la formalisation incrémentale en Catala, ces trois outils permettent de vérifier nos
-          calculs face à OpenFisca, de suivre les amendements et d’observer les effets de seuil en annexe.
+          Un article n’est déclaré vérifié qu’une fois traduit en Catala, compilé sans conflit ni cas non couvert,
+          confronté à des oracles indépendants et relu par un juriste. Voici l’état exact et transparent du corpus.
         </p>
       </div>
-      <a href="/experiences" class="text-sm font-semibold text-brand-strong no-underline hover:underline">
-        Toutes les annexes →
+      <a href="/methode" class="text-sm font-semibold text-brand-strong no-underline hover:underline">
+        Échelle de preuve N0 → N5 →
       </a>
     </div>
 
     <div class="grid gap-6 lg:grid-cols-3">
-      <!-- Widget 1 : Simulateur multi-lois -->
+      <!-- Widget 1 : Niveau N5 Certifié -->
       <article class="flex flex-col justify-between rounded-2xl border border-line bg-bg p-6 sm:p-7">
         <div class="space-y-4">
           <div class="flex items-center justify-between gap-2">
             <span class="rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand-strong">
-              Simulateur multi-lois · C0.7
+              Niveau N5 · Certifié
             </span>
-            <span class="text-xs font-medium text-muted">100 % navigateur</span>
+            <span class="text-xs font-medium text-muted">Objectif final</span>
           </div>
           <h3 class="font-serif text-2xl font-semibold text-ink">
-            Revenu disponible réel et effets de seuil
+            Lois sans contradiction ni inapplicabilité
           </h3>
           <p class="text-sm leading-relaxed text-muted">
-            Croisez en direct l’impôt sur le revenu 2026 (garde alternée, demi-parts art. 195), les allocations
-            familiales, l’APL, le RSA et la Prime d’activité pour observer l’effet du dernier euro gagné.
+            Articles formalisés en Catala, testés sur au moins 10 000 cas contre des implémentations indépendantes,
+            exempts de conflit d’exceptions, de cas vide ou de contournement, avec revue juridique humaine signée.
           </p>
           <div class="rounded-xl border border-line bg-surface p-4">
-            <p class="text-xs font-semibold uppercase tracking-wide text-muted">Chute candidate détectée (sortie RSA)</p>
-            <p class="mt-1 font-serif text-2xl font-semibold text-ko tabular">−1 055,96 € / an</p>
-            <p class="mt-0.5 text-xs text-muted">à 12 192 € de revenu · couple 2 enfants, loyer 750 €</p>
+            <p class="text-xs font-semibold uppercase tracking-wide text-muted">Articles au niveau N5</p>
+            <p class="mt-1 font-serif text-3xl font-semibold text-ink tabular">{formatInt(totals.N5)}</p>
+            <p class="mt-0.5 text-xs text-muted">sur {formatInt(inForceTotal)} articles en vigueur · chantier ouvert à la communauté</p>
           </div>
         </div>
         <div class="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
           <a
-            href="/experiences/revenu-disponible"
+            href="/join"
             class="inline-flex items-center gap-1.5 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
           >
-            Ouvrir le simulateur
+            Formaliser un article
             <ArrowRight class="size-4" aria-hidden="true" />
           </a>
-          <a
-            href="https://github.com/theonaciri/bugdeloi/blob/main/replications/c0.7/summary.json"
-            rel="external"
-            class="text-xs font-semibold text-muted no-underline hover:text-ink hover:underline"
-          >
-            Données JSON →
+          <a href="/methode" class="text-xs font-semibold text-muted no-underline hover:text-ink hover:underline">
+            Critères N1 → N5 →
           </a>
         </div>
       </article>
 
-      <!-- Widget 2 : Oracle OpenFisca-France -->
+      <!-- Widget 2 : Articles ★ Référence -->
       <article class="flex flex-col justify-between rounded-2xl border border-line bg-bg p-6 sm:p-7">
         <div class="space-y-4">
           <div class="flex items-center justify-between gap-2">
             <span class="rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand-strong">
-              Oracle indépendant · C0.8
+              ★ Référence · Catala 1.3.2
             </span>
-            <span class="text-xs font-medium text-muted">OpenFisca 177.1.4</span>
+            <span class="text-xs font-medium text-muted">Inria · DGFiP · CNAF</span>
           </div>
           <h3 class="font-serif text-2xl font-semibold text-ink">
-            Comparaison croisée avec OpenFisca-France
+            Lois déjà formalisées et exécutées en Catala
           </h3>
           <p class="text-sm leading-relaxed text-muted">
-            Confrontation automatique de nos moteurs sur 328 foyers : 100 % d’accord exact sur les allocations
-            familiales dans le périmètre et identification d’un candidat d’arrondi sur l’impôt sur le revenu.
+            Versions en vigueur formalisées par des chercheurs ou administrations (impôt sur le revenu, allocations
+            familiales, aides au logement, successions) dont les suites de tests passent dans notre compilateur épinglé.
           </p>
           <div class="rounded-xl border border-line bg-surface p-4">
-            <p class="text-xs font-semibold uppercase tracking-wide text-muted">Candidat ARRONDI à 17 593 €</p>
-            <p class="mt-1 font-serif text-2xl font-semibold text-notice-ink tabular">61 € vs 0 €</p>
-            <p class="mt-0.5 text-xs text-muted">24 écarts tous expliqués par l’ordre d’arrondi avant décote</p>
+            <p class="text-xs font-semibold uppercase tracking-wide text-muted">Articles ★ Référence</p>
+            <p class="mt-1 font-serif text-3xl font-semibold text-brand-strong tabular">{formatInt(totals.REF)}</p>
+            <p class="mt-0.5 text-xs text-muted">{formatInt(totalInriaTests)} tests Catala verts · {activeSuites.length} suites vérifiées</p>
           </div>
         </div>
         <div class="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
           <a
-            href="/experiences/openfisca"
+            href="/references"
             class="inline-flex items-center gap-1.5 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
           >
-            Voir la comparaison
+            Voir les {formatInt(totals.REF)} articles
             <ArrowRight class="size-4" aria-hidden="true" />
           </a>
-          <a
-            href="https://github.com/theonaciri/bugdeloi/blob/main/replications/c0.8-openfisca/REPORT.md"
-            rel="external"
-            class="text-xs font-semibold text-muted no-underline hover:text-ink hover:underline"
-          >
-            Rapport complet →
+          <a href="/carte" class="text-xs font-semibold text-muted no-underline hover:text-ink hover:underline">
+            Explorer la carte →
           </a>
         </div>
       </article>
 
-      <!-- Widget 3 : Amendements (Tricoteuses) -->
+      <!-- Widget 3 : Incompatibilités et renvois cassés -->
       <article class="flex flex-col justify-between rounded-2xl border border-line bg-bg p-6 sm:p-7">
         <div class="space-y-4">
           <div class="flex items-center justify-between gap-2">
             <span class="rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand-strong">
-              Veille parlementaire · Tricoteuses
+              Incompatibilités &amp; contradictions
             </span>
-            <span class="text-xs font-medium text-muted">42 tests verts</span>
+            <span class="text-xs font-medium text-muted">Contrôle continu</span>
           </div>
           <h3 class="font-serif text-2xl font-semibold text-ink">
-            Impact d’un amendement en euros
+            Renvois abrogés, conflits et cas inapplicables
           </h3>
           <p class="text-sm leading-relaxed text-muted">
-            Lecture stricte du dispositif d’amendements ciblant nos 7 articles formalisés. Toute clause non reconnue
-            bascule en <code>non_calculable</code> ; pour les autres, l’écart annuel est chiffré sur 4 foyers types.
+            Détection mécanique des renvois vers des articles abrogés et des défauts de forme sur les trois codes,
+            complétée par la recherche de conflits logiques et de boucles circulaires à mesure que Catala progresse.
           </p>
           <div class="rounded-xl border border-line bg-surface p-4">
-            <p class="text-xs font-semibold uppercase tracking-wide text-muted">Couverture actuelle</p>
-            <p class="mt-1 font-serif text-2xl font-semibold text-ink tabular">7 articles suivis</p>
-            <p class="mt-0.5 text-xs text-muted">Code général des impôts &amp; Code de la sécurité sociale</p>
+            <p class="text-xs font-semibold uppercase tracking-wide text-muted">Constats reproduits</p>
+            <p class="mt-1 font-serif text-3xl font-semibold text-notice-ink tabular">
+              {formatInt(snap?.pipeline.reproducedCount ?? 0)}
+            </p>
+            <p class="mt-0.5 text-xs text-muted">en attente de qualification humaine signée dans Git</p>
           </div>
         </div>
         <div class="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
           <a
-            href="/experiences/parlement"
+            href="/anomalies"
             class="inline-flex items-center gap-1.5 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
           >
-            Voir les exemples
+            Consulter les constats
             <ArrowRight class="size-4" aria-hidden="true" />
           </a>
-          <a
-            href="https://github.com/theonaciri/bugdeloi/tree/main/packages/parlement"
-            rel="external"
-            class="text-xs font-semibold text-muted no-underline hover:text-ink hover:underline"
-          >
-            Code source →
+          <a href="/anomalies/cimetiere" class="text-xs font-semibold text-muted no-underline hover:text-ink hover:underline">
+            Cimetière →
           </a>
         </div>
       </article>
+    </div>
+
+    <div class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-line bg-bg px-5 py-4 text-sm">
+      <p class="text-muted">
+        <strong class="font-semibold text-ink">Annexes d’étalonnage :</strong>
+        simulateur multi-lois (effets de seuil), comparaison croisée OpenFisca-France et veille parlementaire Tricoteuses.
+      </p>
+      <a href="/experiences" class="font-semibold text-brand-strong no-underline hover:underline">
+        Ouvrir les annexes →
+      </a>
     </div>
   </div>
 </section>
