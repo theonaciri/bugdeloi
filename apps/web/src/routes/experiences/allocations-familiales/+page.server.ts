@@ -14,7 +14,7 @@ const reports = import.meta.glob<string>('../../../../../../docs/audits/verifica
   query: '?raw',
   import: 'default',
 })
-const reportsUrl = `${repo}/j0-fondations/docs/audits/verifications`
+const reportsUrl = `${repo}/main/docs/audits/verifications`
 
 const euroCases: EuroCase[] = summary.cases
   .filter(

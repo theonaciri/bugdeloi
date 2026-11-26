@@ -81,6 +81,10 @@ if [[ "$ok" != 1 ]]; then
   exit 1
 fi
 
+if systemctl is-enabled --quiet bugdeloi-desk.timer; then
+  sudo systemctl disable --now bugdeloi-desk.timer >/dev/null
+fi
+
 log "en ligne : $SHORT ($HEALTH_URL)"
 
 # Ménage : garder les 5 révisions les plus récentes (jamais celle en service).

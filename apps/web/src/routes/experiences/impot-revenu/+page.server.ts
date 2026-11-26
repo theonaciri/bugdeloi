@@ -4,7 +4,7 @@ import mutationSummary from '../../../../../../replications/c0.6/mutation-summar
 import c06Summary from '../../../../../../replications/c0.6/summary.json'
 import type { PageServerLoad } from './$types'
 
-const repo = 'https://github.com/theonaciri/bugdeloi/blob/j0-fondations'
+const repo = 'https://github.com/theonaciri/bugdeloi/blob/main'
 
 export const load: PageServerLoad = () => ({
   c06: c06Summary,

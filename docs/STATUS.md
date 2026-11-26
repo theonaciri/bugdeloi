@@ -29,6 +29,11 @@
 
 ## Journal des décisions
 
+- 2026-11-26 — `/desk/next` calcule la disponibilité sur la projection LEGI courante. Les tâches sont
+  inscrites au premier bail, avec verrouillage PostgreSQL et sans réserve périodique. Les traductions
+  restent liées aux interfaces versionnées de `apps/web/src/lib/server/desk-translations.ts`.
+  La page d’activité compte aussi les tâches qui pourront être inscrites au premier bail.
+
 - 2026-11-26 — `syntaxe@1.1.0` reconnaît les marqueurs comme `l2°)` en tête d’alinéa. Le balayage CSS
   n° 10 a retiré F-2026-1128 (`withdrawn`) et conservé les deux autres constats SYNTAXE du code.
   Le lien Légifrance de la fiche s’ouvre dans un nouvel onglet.
@@ -64,7 +69,7 @@
 - L'orchestrateur (Claude Opus 5.5) découpe en chantiers à répertoires disjoints, chacun délégué dans un
   **worktree** séparé ; il est seul à écrire `AGENTS.md`, `docs/PLAN.md` et ce fichier (pas de conflit).
 - Chaque sous-agent consigne ses apprentissages dans `docs/notes/<chantier>.md` et termine par un rapport
-  (branche, SHA, vérifications). L'orchestrateur relit, fusionne dans `j0-fondations`, met à jour ce fichier.
+  (branche, SHA, vérifications). L'orchestrateur relit, fusionne dans `main`, met à jour ce fichier.
 - Modèles (règle du mainteneur, 25/11) : **par défaut `codex/gpt-6.2-sol`**, effort `low` (rapide,
   vérifications) ou `medium` (implémentation) ; `high` seulement si justifié. **Pas de sous-agent Claude**
   sauf demande explicite : le quota Claude (5 h) sert à l'orchestrateur. La diversité des familles reste
@@ -73,10 +78,8 @@
 
 ## Pièges connus
 
-- Desk : activer avec `DESK_ENABLED=1` après migration et amorçage. Pour préparer les tâches, cibler
-  explicitement une base avec `DATABASE_URL` puis lancer `bun apps/web/scripts/seed-desk.ts --dry-run`.
-  Sans `--dry-run`, le script ajoute jusqu'à trois tâches `analyst` sur des versions en vigueur marquées
-  ★. Il conserve les tâches déjà présentes et leur état.
+- Desk : activer avec `DESK_ENABLED=1` après migration et ingestion LEGI. Les baux existants
+  conservent leur historique. Une nouvelle réservation requiert des versions et empreintes courantes.
 - Desk : pseudo GitHub et famille déclaratifs. La limite de 30 requêtes par minute et par IP est
   locale au processus, avec une fenêtre fixe de 60 secondes et une remise à zéro au redémarrage.
   Le motif `submitted` clôt la tâche sur déclaration du détenteur du bail.
@@ -137,6 +140,8 @@
 - CGI 278 (`LEGIARTI000026950057`, 2014-01-01) et 757 C (`LEGIARTI000036428850`, 2018-01-01).
 - CSS R. 160-20 (`LEGIARTI000031797331`), D. 846-1 (`LEGIARTI000031673946`) et D. 846-3 (`LEGIARTI000031674243`), versions du 2016-01-01.
 - Traductions et tests d’exemple par OpenAI, modèle `gpt-6.2-sol`. Les cinq extraits concordent avec les empreintes de la projection LEGI. `clerk test` réussit les 24 tests du corpus avec Catala 1.3.2 et l’image GitHub amd64 épinglée dans `corpus-check.yml`. Revue indépendante et promotion des niveaux de preuve en attente.
+
+La PR #1 reprend le workflow de `main` et conserve son digest Catala amd64.
 
 ## Prochaines étapes (ordre)
 

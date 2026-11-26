@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'bun:test'
-import { createSql, type DeskTaskPayload, deskTask, schema } from '@bugdeloi/db'
-import { eq, sql } from 'drizzle-orm'
+import { sha256Hex } from '@bugdeloi/core/legi'
+import { createSql, type DeskTaskPayload, deskTask, legalArticle, legalText, schema } from '@bugdeloi/db'
+import { eq, inArray, sql } from 'drizzle-orm'
 import { drizzle } from 'drizzle-orm/postgres-js'
 import { claimTask, updateLease } from './desk.ts'
 import { createDeskRateLimiter } from './desk-http.ts'
@@ -150,4 +151,73 @@ test.skipIf(!reachable)(
       }
     }
   },
+)
+
+test.skipIf(!reachable)(
+  'matérialise des analyses distinctes sous 300 demandes concurrentes',
+  async () => {
+    const client = createSql(url, { max: 8, connection: { default_transaction_read_only: true } })
+    const database = drizzle(client, { schema })
+    const textId = 'LEGITEXT999000000001'
+    const contentText = 'Disposition fictive pour le test du guichet.'
+    const ids = Array.from({ length: 300 }, (_, index) => `LEGIARTI999${String(index).padStart(9, '0')}`)
+    const assignment = { role: 'analyst', family: 'openai' } as const
+    try {
+      await database.transaction(
+        async (tx) => {
+          await tx.insert(legalText).values({ id: textId, title: 'Code fictif' })
+          await tx.insert(legalArticle).values(
+            ids.map((id, index) => ({
+              id,
+              textId,
+              num: String(index + 1),
+              sectionId: 'LEGISCTA999000000001',
+              etat: 'VIGUEUR',
+              type: 'AUTONOME',
+              dateDebut: '2000-01-01',
+              contentText,
+              textSha256: sha256Hex(contentText),
+            })),
+          )
+        },
+        { accessMode: 'read write' },
+      )
+
+      const claims = await Promise.all(
+        ids.map((_, index) => claimTask(database, { ...assignment, handle: `agent-${index}` })),
+      )
+      expect(claims.every((claim) => claim !== null)).toBe(true)
+      expect(new Set(claims.map((claim) => claim?.task.id)).size).toBe(ids.length)
+      expect(await claimTask(database, { ...assignment, handle: 'extra' })).toBeNull()
+
+      const first = claims[0]
+      if (!first) throw new Error('Bail de test absent')
+      const articleId = first.task.node
+      await database.transaction(
+        (tx) => tx.update(legalArticle).set({ dateFin: '2001-01-01' }).where(eq(legalArticle.id, articleId)),
+        { accessMode: 'read write' },
+      )
+      expect(await updateLease(database, first.lease, 'other')).toEqual({ expires_at: null })
+      expect(await claimTask(database, { ...assignment, handle: 'extra' })).toBeNull()
+    } finally {
+      try {
+        await database.transaction(
+          async (tx) => {
+            await tx.delete(deskTask).where(
+              inArray(
+                deskTask.id,
+                ids.map((id) => `analyst-${id}`),
+              ),
+            )
+            await tx.delete(legalArticle).where(eq(legalArticle.textId, textId))
+            await tx.delete(legalText).where(eq(legalText.id, textId))
+          },
+          { accessMode: 'read write' },
+        )
+      } finally {
+        await client.end()
+      }
+    }
+  },
+  20_000,
 )
