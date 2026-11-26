@@ -437,36 +437,6 @@ $effect(() => {
             Veille parlementaire
           </Button>
         </div>
-
-        <div class="grid gap-3 pt-2 sm:grid-cols-3">
-          <a
-            href="/experiences/revenu-disponible"
-            class="rounded-xl border border-line bg-surface p-3.5 no-underline transition hover:border-brand"
-          >
-            <p class="text-xs font-semibold uppercase tracking-wide text-brand-strong">Simulateur multi-lois</p>
-            <p class="mt-1 text-xs leading-relaxed text-muted">
-              Impôt 2026, allocations, APL, RSA, Prime d’activité et effets de seuil en direct.
-            </p>
-          </a>
-          <a
-            href="/experiences/openfisca"
-            class="rounded-xl border border-line bg-surface p-3.5 no-underline transition hover:border-brand"
-          >
-            <p class="text-xs font-semibold uppercase tracking-wide text-brand-strong">Oracle OpenFisca</p>
-            <p class="mt-1 text-xs leading-relaxed text-muted">
-              328 foyers comparés, 100 % d’accord sur les allocations et un candidat d’arrondi à 17 593 €.
-            </p>
-          </a>
-          <a
-            href="/experiences/parlement"
-            class="rounded-xl border border-line bg-surface p-3.5 no-underline transition hover:border-brand"
-          >
-            <p class="text-xs font-semibold uppercase tracking-wide text-brand-strong">Amendements (Tricoteuses)</p>
-            <p class="mt-1 text-xs leading-relaxed text-muted">
-              Lecture stricte des amendements et calcul de l’écart en euros sur 4 foyers types.
-            </p>
-          </a>
-        </div>
       </div>
 
       <!-- Journal en direct : titres factuels et chiffrés -->
@@ -508,6 +478,148 @@ $effect(() => {
           <p class="text-sm text-muted">En attente des premières opérations publiques.</p>
         {/if}
       </aside>
+    </div>
+  </div>
+</section>
+
+<!-- BANDE 1.2 : OUTILS ET DONNÉES OUVERTES (3 GRANDS WIDGETS) -->
+<section id="outils-directs" class="border-t border-line bg-surface py-14 sm:py-16" aria-labelledby="outils-title">
+  <div class="container-wide space-y-8">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div class="max-w-3xl space-y-2">
+        <h2 id="outils-title" class="font-serif text-3xl font-semibold text-ink sm:text-4xl">
+          Explorer nos simulateurs et données ouvertes
+        </h2>
+        <p class="text-base leading-relaxed text-muted">
+          Trois portes d’entrée concrètes pour tester la loi en euros, vérifier nos calculs face à un moteur
+          indépendant et mesurer l’effet d’un amendement parlementaire.
+        </p>
+      </div>
+      <a href="/experiences" class="text-sm font-semibold text-brand-strong no-underline hover:underline">
+        Toutes les expériences →
+      </a>
+    </div>
+
+    <div class="grid gap-6 lg:grid-cols-3">
+      <!-- Widget 1 : Simulateur multi-lois -->
+      <article class="flex flex-col justify-between rounded-2xl border border-line bg-bg p-6 sm:p-7">
+        <div class="space-y-4">
+          <div class="flex items-center justify-between gap-2">
+            <span class="rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand-strong">
+              Simulateur multi-lois · C0.7
+            </span>
+            <span class="text-xs font-medium text-muted">100 % navigateur</span>
+          </div>
+          <h3 class="font-serif text-2xl font-semibold text-ink">
+            Revenu disponible réel et effets de seuil
+          </h3>
+          <p class="text-sm leading-relaxed text-muted">
+            Croisez en direct l’impôt sur le revenu 2026 (garde alternée, demi-parts art. 195), les allocations
+            familiales, l’APL, le RSA et la Prime d’activité pour observer l’effet du dernier euro gagné.
+          </p>
+          <div class="rounded-xl border border-line bg-surface p-4">
+            <p class="text-xs font-semibold uppercase tracking-wide text-muted">Chute candidate détectée (sortie RSA)</p>
+            <p class="mt-1 font-serif text-2xl font-semibold text-ko tabular">−1 055,96 € / an</p>
+            <p class="mt-0.5 text-xs text-muted">à 12 192 € de revenu · couple 2 enfants, loyer 750 €</p>
+          </div>
+        </div>
+        <div class="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
+          <a
+            href="/experiences/revenu-disponible"
+            class="inline-flex items-center gap-1.5 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
+          >
+            Ouvrir le simulateur
+            <ArrowRight class="size-4" aria-hidden="true" />
+          </a>
+          <a
+            href="https://github.com/theonaciri/bugdeloi/blob/main/replications/c0.7/summary.json"
+            rel="external"
+            class="text-xs font-semibold text-muted no-underline hover:text-ink hover:underline"
+          >
+            Données JSON →
+          </a>
+        </div>
+      </article>
+
+      <!-- Widget 2 : Oracle OpenFisca-France -->
+      <article class="flex flex-col justify-between rounded-2xl border border-line bg-bg p-6 sm:p-7">
+        <div class="space-y-4">
+          <div class="flex items-center justify-between gap-2">
+            <span class="rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand-strong">
+              Oracle indépendant · C0.8
+            </span>
+            <span class="text-xs font-medium text-muted">OpenFisca 177.1.4</span>
+          </div>
+          <h3 class="font-serif text-2xl font-semibold text-ink">
+            Comparaison croisée avec OpenFisca-France
+          </h3>
+          <p class="text-sm leading-relaxed text-muted">
+            Confrontation automatique de nos moteurs sur 328 foyers : 100 % d’accord exact sur les allocations
+            familiales dans le périmètre et identification d’un candidat d’arrondi sur l’impôt sur le revenu.
+          </p>
+          <div class="rounded-xl border border-line bg-surface p-4">
+            <p class="text-xs font-semibold uppercase tracking-wide text-muted">Candidat ARRONDI à 17 593 €</p>
+            <p class="mt-1 font-serif text-2xl font-semibold text-notice-ink tabular">61 € vs 0 €</p>
+            <p class="mt-0.5 text-xs text-muted">24 écarts tous expliqués par l’ordre d’arrondi avant décote</p>
+          </div>
+        </div>
+        <div class="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
+          <a
+            href="/experiences/openfisca"
+            class="inline-flex items-center gap-1.5 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
+          >
+            Voir la comparaison
+            <ArrowRight class="size-4" aria-hidden="true" />
+          </a>
+          <a
+            href="https://github.com/theonaciri/bugdeloi/blob/main/replications/c0.8-openfisca/REPORT.md"
+            rel="external"
+            class="text-xs font-semibold text-muted no-underline hover:text-ink hover:underline"
+          >
+            Rapport complet →
+          </a>
+        </div>
+      </article>
+
+      <!-- Widget 3 : Amendements (Tricoteuses) -->
+      <article class="flex flex-col justify-between rounded-2xl border border-line bg-bg p-6 sm:p-7">
+        <div class="space-y-4">
+          <div class="flex items-center justify-between gap-2">
+            <span class="rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand-strong">
+              Veille parlementaire · Tricoteuses
+            </span>
+            <span class="text-xs font-medium text-muted">42 tests verts</span>
+          </div>
+          <h3 class="font-serif text-2xl font-semibold text-ink">
+            Impact d’un amendement en euros
+          </h3>
+          <p class="text-sm leading-relaxed text-muted">
+            Lecture stricte du dispositif d’amendements ciblant nos 7 articles formalisés. Toute clause non reconnue
+            bascule en <code>non_calculable</code> ; pour les autres, l’écart annuel est chiffré sur 4 foyers types.
+          </p>
+          <div class="rounded-xl border border-line bg-surface p-4">
+            <p class="text-xs font-semibold uppercase tracking-wide text-muted">Couverture actuelle</p>
+            <p class="mt-1 font-serif text-2xl font-semibold text-ink tabular">7 articles suivis</p>
+            <p class="mt-0.5 text-xs text-muted">Code général des impôts &amp; Code de la sécurité sociale</p>
+          </div>
+        </div>
+        <div class="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
+          <a
+            href="/experiences/parlement"
+            class="inline-flex items-center gap-1.5 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
+          >
+            Voir les exemples
+            <ArrowRight class="size-4" aria-hidden="true" />
+          </a>
+          <a
+            href="https://github.com/theonaciri/bugdeloi/tree/main/packages/parlement"
+            rel="external"
+            class="text-xs font-semibold text-muted no-underline hover:text-ink hover:underline"
+          >
+            Code source →
+          </a>
+        </div>
+      </article>
     </div>
   </div>
 </section>

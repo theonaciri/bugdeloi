@@ -17,11 +17,10 @@ const breakdown = $derived(
     .map((level) => `${formatInt(tree.counts[level])} · ${levelName(level)}`)
     .join(', '),
 )
-const codeNames = { CGI: 'Impôts', CSS: 'Sécurité sociale', CCH: 'Logement' }
 </script>
 
 <svelte:head>
-  <title>{map.focus.isRoot ? `Carte du ${map.code}` : map.focus.title} · Carte · BugDeLoi</title>
+  <title>{map.focus.isRoot ? `Carte du ${map.codeTitle}` : map.focus.title} · Carte · BugDeLoi</title>
   <meta name="description" content="Explorez les articles en vigueur, chapitre par chapitre, et découvrez où en sont les vérifications." />
 </svelte:head>
 
@@ -45,7 +44,7 @@ const codeNames = { CGI: 'Impôts', CSS: 'Sécurité sociale', CCH: 'Logement' }
               title={c.title}
               class="block rounded-full border border-line px-4 py-2 text-sm font-semibold text-ink no-underline hover:bg-surface-2 aria-[current=page]:border-brand aria-[current=page]:bg-brand-soft aria-[current=page]:text-brand-strong"
             >
-              {codeNames[c.key]} ({c.key})
+              {c.title}
             </a>
           </li>
         {/each}

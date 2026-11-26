@@ -70,7 +70,7 @@ const hasRef = (r: TreemapRect) => (r.node.counts.REF ?? 0) > 0
         size="sm"
         options={previews.map((p) => ({
           value: p.code,
-          label: p.code,
+          label: p.codeTitle,
           badge: formatInt(p.inForce),
         }))}
       />
