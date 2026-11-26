@@ -94,8 +94,15 @@ const markerY = $derived(yScale(Math.min(50, Math.max(0, tmePct))))
 
 const presets = [
   {
-    label: 'Entrée impôt (17 215 €)',
-    rev: 17215,
+    label: 'Avant falaise 61 € (17 592 €)',
+    rev: 17592,
+    sit: 'celibataire' as const,
+    enf: 0,
+    dom: 'Métropole' as const,
+  },
+  {
+    label: 'Falaise 61 € : +1 € = +61 € (17 593 €)',
+    rev: 17593,
     sit: 'celibataire' as const,
     enf: 0,
     dom: 'Métropole' as const,
@@ -112,13 +119,6 @@ const presets = [
     rev: 90000,
     sit: 'couple' as const,
     enf: 2,
-    dom: 'Métropole' as const,
-  },
-  {
-    label: 'Parent isolé (60 000 €)',
-    rev: 60000,
-    sit: 'parent_isole' as const,
-    enf: 1,
     dom: 'Métropole' as const,
   },
   {
@@ -301,17 +301,31 @@ function applyPreset(p: (typeof presets)[number]) {
               <span class="font-mono font-medium text-ok tabular">- {fmtCents(resultat.decote)}</span>
             </div>
           {/if}
+          <div class="flex justify-between py-2.5">
+            <span class="text-muted">Cotisation arrondie à l’euro (art. 1657.1)</span>
+            <span class="font-mono text-ink tabular">{fmtCents(resultat.impotArrondiEuro)}</span>
+          </div>
+          {#if resultat.impotArrondiEuro > 0 && resultat.impotMisEnRecouvrement === 0}
+            <div class="flex justify-between py-2.5">
+              <span class="font-medium text-ok">Seuil de non-recouvrement &lt; 61 € (art. 1657 1 bis)</span>
+              <span class="font-mono font-semibold text-ok tabular">0,00 € à payer</span>
+            </div>
+          {/if}
         </div>
       </div>
 
       <div class="space-y-6 lg:col-span-7">
         <div class="grid gap-6 border-b border-line pb-6 sm:grid-cols-3">
           <div>
-            <p class="text-xs font-medium text-muted">Impôt net annuel</p>
+            <p class="text-xs font-medium text-muted">Impôt mis en recouvrement</p>
             <p class="mt-1 font-serif text-3xl font-semibold text-ink tabular sm:text-4xl">
-              {fmtCents(resultat.impotNetAvantCredits)}
+              {fmtCents(resultat.impotMisEnRecouvrement)}
             </p>
-            <p class="mt-1 text-xs text-muted">Avant réductions et crédits</p>
+            <p class="mt-1 text-xs text-muted">
+              {resultat.impotArrondiEuro > 0 && resultat.impotMisEnRecouvrement === 0
+                ? `${fmtCents(resultat.impotArrondiEuro)} calculés (< 61 €, non prélevés)`
+                : 'Art. 1657 1 bis, avant crédits'}
+            </p>
           </div>
           <div>
             <p class="text-xs font-medium text-muted">Taux moyen d’imposition</p>
@@ -404,31 +418,46 @@ function applyPreset(p: (typeof presets)[number]) {
 <section class="border-t border-line bg-bg" aria-labelledby="coudes-titre">
   <div class="container-wide py-12 sm:py-16">
     <h2 id="coudes-titre" class="font-serif text-2xl font-semibold text-ink sm:text-3xl">
-      Ce que révèle le détecteur automatique de coudes (expérience C0.6)
+      Ce que révèle le détecteur automatique de coudes et falaises (expérience C0.6)
     </h2>
     <p class="mt-3 max-w-[68ch] text-base leading-relaxed text-muted">
       En testant automatiquement chaque euro de revenu entre 0 € et 200 000 € sur quatre foyers types, notre programme
-      repère <strong>{data.c06.totalKinks} changements brusques de taux marginal</strong> (des « coudes ») et
-      <strong>{data.c06.totalCliffs} falaise</strong> (cas où gagner 1 € ferait perdre plus de 1 € d’impôt).
+      repère <strong>{data.c06.totalKinks} changements brusques de taux marginal</strong> (des « coudes »),
+      <strong>{data.c06.totalCliffs} falaise</strong> sur le barème progressif seul, mais
+      <strong>{data.c06.totalCliffs1657} falaises réelles</strong> dès que l’on applique le seuil de recouvrement de 61 €
+      (CGI art. 1657 1 bis).
     </p>
-    <p class="mt-3 max-w-[68ch] text-base leading-relaxed text-ink">
-      <strong>Effet frappant de la décote 2026 :</strong> pour un célibataire, la tranche officielle affichée est de
-      11 % entre 11 600 € et 29 579 €. Mais parce que la décote diminue de 45,25 % à chaque euro d’impôt supplémentaire,
-      le taux réel ressenti est de <strong>15,98 %</strong> (11 % × 1,4525). Et entre <strong>29 579 € et 29 594 €</strong>,
-      la tranche à 30 % s’enclenche avant la fin de la décote : pendant 15 €, chaque euro gagné subit un taux marginal
-      effectif de <strong>43,58 %</strong>, avant de redescendre à 30 %.
-    </p>
+    <div class="mt-5 grid gap-5 lg:grid-cols-2">
+      <div class="rounded-xl border border-line bg-surface p-5">
+        <h3 class="font-serif text-lg font-semibold text-ink">La vraie falaise de 61 € (taux marginal : +6 100 %)</h3>
+        <p class="mt-2 text-sm leading-relaxed text-muted">
+          L’article 1657 1 bis du CGI prévoit qu’un impôt inférieur à 61 € n’est pas prélevé. Pour un célibataire,
+          un revenu de <strong>17 592 €</strong> donne 60 € d’impôt, donc <strong>0 € à payer</strong>. Avec
+          <strong>1 € de plus</strong> (17 593 €), l’impôt passe à <strong>61 €</strong> : gagner 1 € fait perdre
+          <strong>60 € de revenu disponible</strong>.
+        </p>
+      </div>
+      <div class="rounded-xl border border-line bg-surface p-5">
+        <h3 class="font-serif text-lg font-semibold text-ink">Le pic de décote à 43,58 % (pendant 15 €)</h3>
+        <p class="mt-2 text-sm leading-relaxed text-muted">
+          Parce que la décote diminue de 45,25 % par euro d’impôt supplémentaire, le taux réel dans la tranche à 11 %
+          est de <strong>15,98 %</strong>. Entre <strong>29 579 € et 29 594 €</strong>, la tranche à 30 % démarre avant
+          la fin de la décote : pendant 15 €, chaque euro gagné subit un taux marginal de <strong>43,58 %</strong>,
+          avant de redescendre à 30 %.
+        </p>
+      </div>
+    </div>
 
     <div class="mt-8 overflow-x-auto">
-      <table class="w-full min-w-[42rem] border-collapse text-left text-sm">
+      <table class="w-full min-w-[46rem] border-collapse text-left text-sm">
         <thead>
           <tr class="border-b border-line-strong text-muted">
             <th scope="col" class="py-3 pr-4 font-semibold">Foyer type</th>
             <th scope="col" class="py-3 pr-4 font-semibold">Entrée dans l’impôt</th>
+            <th scope="col" class="py-3 pr-4 font-semibold">Falaise 61 € (art. 1657 1 bis)</th>
             <th scope="col" class="py-3 pr-4 font-semibold">Zone de décote</th>
             <th scope="col" class="py-3 pr-4 font-semibold">Taux réel en décote</th>
-            <th scope="col" class="py-3 pr-4 font-semibold">Plafond quotient familial</th>
-            <th scope="col" class="py-3 font-semibold">Falaises</th>
+            <th scope="col" class="py-3 font-semibold">Plafond quotient familial</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-line">
@@ -436,6 +465,13 @@ function applyPreset(p: (typeof presets)[number]) {
             <tr>
               <th scope="row" class="py-3.5 pr-4 font-semibold text-ink">{h.label}</th>
               <td class="py-3.5 pr-4 font-mono tabular">{intFmt.format(h.seuilEntreeEuros)} €</td>
+              <td class="py-3.5 pr-4 font-mono font-semibold text-ko tabular">
+                {#if h.cliff1657}
+                  {intFmt.format(h.cliff1657.revenuAvantEuros)} € → {intFmt.format(h.cliff1657.revenuApresEuros)} € (0 → 61 €)
+                {:else}
+                  Aucune
+                {/if}
+              </td>
               <td class="py-3.5 pr-4 font-mono tabular">
                 {#if h.debutDecotePartielleEuros && h.finDecoteEuros}
                   {intFmt.format(h.debutDecotePartielleEuros)} € → {intFmt.format(h.finDecoteEuros)} €
@@ -446,16 +482,41 @@ function applyPreset(p: (typeof presets)[number]) {
               <td class="py-3.5 pr-4 font-mono font-semibold text-notice-ink tabular">
                 {h.tmeZoneDecotePct !== null ? pctFmt(h.tmeZoneDecotePct) : '0,00 %'}
               </td>
-              <td class="py-3.5 pr-4 font-mono tabular">
+              <td class="py-3.5 font-mono tabular">
                 {h.seuilPlafondQfEuros ? `${intFmt.format(h.seuilPlafondQfEuros)} €` : 'Non atteint'}
               </td>
-              <td class="py-3.5 font-mono tabular">{h.cliffs.length}</td>
             </tr>
           {/each}
         </tbody>
       </table>
     </div>
     <p class="mt-4 text-xs text-muted">{data.c06.note}</p>
+
+    <div class="mt-10 grid gap-6 border-t border-line pt-8 sm:grid-cols-3">
+      <div>
+        <p class="text-xs font-medium text-muted">Différentiel indépendant</p>
+        <p class="mt-1 font-serif text-2xl font-semibold text-ink tabular">
+          {intFmt.format(data.differential.totalCases)} foyers · {data.differential.divergences} divergence
+        </p>
+        <p class="mt-1 text-xs text-muted">
+          Dont {intFmt.format(data.differential.thresholdCasesIncluded)} cas de seuils légaux (± 1 €).
+        </p>
+      </div>
+      <div>
+        <p class="text-xs font-medium text-muted">Score de mutation</p>
+        <p class="mt-1 font-serif text-2xl font-semibold text-ok tabular">
+          {data.mutation.killedMutants}/{data.mutation.totalMutants} ({pctFmt(data.mutation.killScorePct)})
+        </p>
+        <p class="mt-1 text-xs text-muted">
+          Seuil requis pour le niveau N4 : ≥ {data.mutation.thresholdN4Pct} %.
+        </p>
+      </div>
+      <div>
+        <p class="text-xs font-medium text-muted">Programme Catala 1.3.2</p>
+        <p class="mt-1 font-serif text-2xl font-semibold text-brand-strong tabular">14/14 tests verts</p>
+        <p class="mt-1 text-xs text-muted">4 empreintes LEGI vérifiées + rétro-traduction publiée.</p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -481,6 +542,7 @@ function applyPreset(p: (typeof presets)[number]) {
     <div class="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
       <a href={data.links.catala} rel="external">Programme Catala 1.3.2 (noyau_ir.catala_fr)</a>
       <a href={data.links.oracles} rel="external">30 cas de vérification YAML</a>
+      <a href={data.links.backtranslation} rel="external">Rétro-traduction française du programme</a>
       <a href={data.links.report} rel="external">Rapport complet du détecteur C0.6</a>
     </div>
   </div>

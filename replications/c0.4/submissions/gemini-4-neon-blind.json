@@ -1,0 +1,872 @@
+[
+  {
+    "legiarti": "LEGIARTI000006302582",
+    "category": "calcul",
+    "quote": "Un abattement de 40 % est pratiqué sur le montant brut des pensions",
+    "explanation": "L'article ne précise pas l'articulation de cet abattement de 40 % avec l'abattement de 10 % sur les pensions et retraites (prévu à l'article 158, 5, a du CGI) ni avec les cotisations ou contributions déductibles : faut-il appliquer l'abattement de 40 % avant ou après celui de 10 %, et l'assiette du plafond/plancher de l'abattement de 10 % se calcule-t-elle avant ou après l'abattement de 40 % ? De plus, l'étendue exacte du terme « pensions » (pensions de retraite seules, pensions alimentaires, rentes viagères) n'est pas précisée."
+  },
+  {
+    "legiarti": "LEGIARTI000006302582",
+    "category": "perimetre",
+    "quote": "un débiteur établi ou domicilié en France métropolitaine à des personnes ayant leur domicile fiscal en Polynésie française, aux îles Wallis et Futuna, dans les Terres australes et antarctiques françaises et en Nouvelle-Calédonie.",
+    "explanation": "Le texte soulève trois questions de champ d'application : l'exclusion littérale des débiteurs établis dans un département ou une région d'outre-mer (Guadeloupe, Guyane, Martinique, La Réunion, Mayotte), les critères permettant de déterminer le « domicile fiscal » dans ces collectivités dotées de l'autonomie fiscale (renvoi aux règles de domiciliation et conventions territoriales), et le traitement d'un changement de domicile fiscal du bénéficiaire en cours d'année (date de perception de chaque arrérage, prorata temporis ou situation au 31 décembre)."
+  },
+  {
+    "legiarti": "LEGIARTI000006302582",
+    "category": "arrondi",
+    "quote": "Un abattement de 40 % est pratiqué sur le montant brut des pensions",
+    "explanation": "Aucune règle d'arrondi n'est spécifiée pour le calcul de l'abattement de 40 % (conservation des centimes, arrondi à l'euro le plus proche, inférieur ou supérieur, et étape à laquelle cet arrondi intervient)."
+  },
+  {
+    "legiarti": "LEGIARTI000006750602",
+    "category": "perimetre",
+    "quote": "Les enfants ouvrent droit aux prestations familiales jusqu'à l'âge de vingt ans",
+    "explanation": "La borne exacte de fin de droit n'est pas définie : le droit s'éteint-il la veille du vingtième anniversaire, le jour même, à la fin du mois précédant l'anniversaire ou à la fin du mois du vingtième anniversaire ? De plus, l'âge minimal à partir duquel la condition de plafond de rémunération s'applique renvoie au 2° de l'article L. 512-3, absent du paquet."
+  },
+  {
+    "legiarti": "LEGIARTI000006750602",
+    "category": "calcul",
+    "quote": "sous réserve que leur rémunération n'excède pas le plafond fixé au deuxième alinéa du présent article.",
+    "explanation": "Le texte ne définit pas l'assiette de la « rémunération » à comparer au plafond (rémunération brute, nette imposable, nette sociale ou nette à payer) ni la période sur laquelle elle est appréciée par rapport à un plafond fixé « pour un mois » (contrôle mois par mois, moyenne semestrielle ou annuelle, traitement des primes ponctuelles et des emplois saisonniers)."
+  },
+  {
+    "legiarti": "LEGIARTI000006750602",
+    "category": "parametre",
+    "quote": "55 % du salaire minimum interprofessionnel de croissance défini aux articles L. 141-1 à L. 141-9 du code du travail, multiplié par 169.",
+    "explanation": "La valeur du SMIC horaire (et le fait qu'il s'agisse du SMIC brut) ainsi que sa date de référence en cas de revalorisation en cours d'année ne sont pas précisés. En outre, la référence aux articles L. 141-1 à L. 141-9 du code du travail renvoie à l'ancienne numérotation recodifiée en 2008, et le multiplicateur 169 correspond à l'ancienne durée légale de 39 heures hebdomadaires (il faut confirmer s'il reste applicable tel quel malgré la durée légale de 35 heures)."
+  },
+  {
+    "legiarti": "LEGIARTI000006750602",
+    "category": "arrondi",
+    "quote": "égal, pour un mois, à 55 % du salaire minimum interprofessionnel de croissance défini aux articles L. 141-1 à L. 141-9 du code du travail, multiplié par 169.",
+    "explanation": "Le calcul 55 % × SMIC × 169 produit des fractions de centimes sans qu'aucune règle d'arrondi soit précisée (précision au centime ou à l'euro, sens de l'arrondi, et application d'un arrondi intermédiaire ou uniquement final)."
+  },
+  {
+    "legiarti": "LEGIARTI000006750602",
+    "category": "renvoi_externe",
+    "quote": "Pour ceux des enfants qui bénéficient d'avantages en nature, l'évaluation de ces avantages devra être faite suivant les barèmes fixés pour l'application de la législation sur les assurances sociales.",
+    "explanation": "Le texte renvoie sans référence normative précise aux « barèmes fixés pour l'application de la législation sur les assurances sociales » (barèmes forfaitaires d'évaluation des avantages en nature nourriture/logement), qui sont externes au paquet et évoluent périodiquement. L'article L. 512-3 (2°) cité au deuxième alinéa est également absent."
+  },
+  {
+    "legiarti": "LEGIARTI000018620184",
+    "category": "renvoi_externe",
+    "quote": "Les dispositions prévues par l'article 100 bis du code général des impôts sont applicables, sous les mêmes conditions,",
+    "explanation": "L'intégralité du mécanisme de calcul (période de moyenne sur 3 ou 5 ans, modalités et délais d'option ou de révocation, traitement des années antérieures) figure à l'article 100 bis du CGI, absent du paquet."
+  },
+  {
+    "legiarti": "LEGIARTI000018620184",
+    "category": "calcul",
+    "quote": "pour la détermination des salaires imposables",
+    "explanation": "La transposition aux traitements et salaires d'un dispositif conçu pour les bénéfices non commerciaux (article 100 bis) impose de préciser à quelle étape la moyenne s'applique : sur les salaires bruts, sur les salaires nets de cotisations sociales, ou sur les salaires nets après déduction forfaitaire de 10 % ou frais réels de l'article 83, et comment traiter le cas où le contribuable perçoit aussi des salaires hors champ de l'article 84 A."
+  },
+  {
+    "legiarti": "LEGIARTI000018620184",
+    "category": "renvoi_externe",
+    "quote": "titulaires d'un contrat entrant dans les prévisions des articles L. 7121-3 à L. 7121-7 du code du travail",
+    "explanation": "L'éligibilité des artistes du spectacle dépend des critères de présomption de salariat et des exceptions définis aux articles L. 7121-3 à L. 7121-7 du code du travail, absents du paquet."
+  },
+  {
+    "legiarti": "LEGIARTI000018620184",
+    "category": "appreciation",
+    "quote": "et des salaires imposables des sportifs perçus au titre de la pratique d'un sport.",
+    "explanation": "Les notions de « sportifs » (statut professionnel ou non, inclusion des entraîneurs, arbitres ou joueurs d'e-sport) et de salaires perçus « au titre de la pratique d'un sport » (inclusion ou exclusion des primes d'image, prestations publicitaires ou primes de signature) ne sont pas définies et nécessitent une qualification juridique."
+  },
+  {
+    "legiarti": "LEGIARTI000024189561",
+    "category": "calcul",
+    "quote": "une somme égale à trois fois le montant horaire du salaire minimum de croissance, par jour et pour chacun des enfants qui leur sont confiés.",
+    "explanation": "Le texte ne définit pas la durée minimale constituant un « jour » d'accueil : l'abattement de 3 SMIC horaires s'applique-t-il intégralement quelle que soit la durée de garde dans la journée, ou faut-il le proratiser pour les journées incomplètes (par exemple inférieures à 8 heures) ? Il ne précise pas non plus si les jours d'absence rémunérés de l'enfant ou de congés payés ouvrent droit à l'abattement."
+  },
+  {
+    "legiarti": "LEGIARTI000024189561",
+    "category": "calcul",
+    "quote": "une somme égale à une fois le montant horaire du salaire minimum de croissance lorsque la durée de garde de l'enfant est de vingt-quatre heures consécutives.",
+    "explanation": "La formule « est de vingt-quatre heures consécutives » ne précise pas si le seuil s'entend comme « au moins 24 heures » ni comment calculer la majoration lorsque la garde continue dépasse 24 heures (par exemple 36 heures ou 48 heures consécutives : une majoration par période complète de 24 heures ou par journée entamée ?)."
+  },
+  {
+    "legiarti": "LEGIARTI000024189561",
+    "category": "parametre",
+    "quote": "trois fois le montant horaire du salaire minimum de croissance",
+    "explanation": "La valeur du SMIC horaire (brut) n'est pas fixée dans le texte et peut être revalorisée plusieurs fois au cours d'une même année civile : il faut décider si l'on applique le SMIC en vigueur au jour de chaque garde, par période d'application en cours d'année, ou un SMIC unique annuel (1er janvier ou 31 décembre)."
+  },
+  {
+    "legiarti": "LEGIARTI000024189561",
+    "category": "calcul",
+    "quote": "le total des sommes versées tant à titre de rémunération que d'indemnités pour l'entretien et l'hébergement des enfants",
+    "explanation": "L'assiette « total des sommes versées » pose plusieurs questions : s'agit-il de la rémunération brute ou nette imposable (après cotisations sociales et CSG déductible) ? Les repas fournis directement par les parents (avantages en nature), les indemnités kilométriques ou de rupture doivent-ils être inclus ? Enfin, le texte ne précise pas le caractère optionnel de ce régime par rapport au droit commun des traitements et salaires ni son articulation avec la déduction forfaitaire de 10 % ou les frais réels de l'article 83."
+  },
+  {
+    "legiarti": "LEGIARTI000024189561",
+    "category": "calcul",
+    "quote": "Le montant de l'abattement retenu pour déterminer la rémunération imposable des assistants maternels et des assistants familiaux ne peut excéder le total des sommes versées",
+    "explanation": "La maille d'appréciation du plafonnement (qui empêche un revenu négatif) n'est pas spécifiée : l'abattement est-il plafonné globalement sur l'année tous enfants confondus, employeur par employeur, enfant par enfant ou jour par jour ?"
+  },
+  {
+    "legiarti": "LEGIARTI000024189561",
+    "category": "renvoi_externe",
+    "quote": "régis par les articles L. 421-1 et suivants et L. 423-1 et suivants du code de l'action sociale et des familles",
+    "explanation": "L'éligibilité au régime (agrément, statut), l'ouverture droit à la majoration de 4 SMIC horaires (article L. 423-13 du CASF) et l'exercice en maison d'assistants maternels (articles L. 424-1 à L. 424-7 du CASF) dépendent de dispositions externes absentes du paquet."
+  },
+  {
+    "legiarti": "LEGIARTI000024189561",
+    "category": "perimetre",
+    "quote": "Les dispositions du présent article sont applicables aux revenus professionnels des assistants maternels exerçant leur activité dans les conditions prévues aux articles L. 424-1 à L. 424-7 du code de l'action sociale et des familles, sauf si ces derniers sont salariés d'une personne morale de droit privé.",
+    "explanation": "La portée de l'exclusion finale (« sauf si ces derniers sont salariés d'une personne morale de droit privé ») demande à être clarifiée : vise-t-elle uniquement les assistants maternels exerçant en maison d'assistants maternels (MAM) ou exclut-elle également tout assistant maternel salarié d'une crèche familiale privée ou d'une association ?"
+  },
+  {
+    "legiarti": "LEGIARTI000029962999",
+    "category": "appreciation",
+    "quote": "à la personne qui a effectivement la charge de celui-ci.",
+    "explanation": "La notion de « charge effective » d'un enfant n'est pas définie dans l'article (conditions matérielles, éducatives et financières, et règle de désignation de l'allocataire unique ou de partage en cas de séparation ou de résidence alternée)."
+  },
+  {
+    "legiarti": "LEGIARTI000029962999",
+    "category": "renvoi_externe",
+    "quote": "Toutefois, les quatre derniers alinéas de l'article L. 521-1 ne sont pas applicables lorsque le ménage ou la personne a un seul enfant à charge.",
+    "explanation": "L'article L. 521-1 du code de la sécurité sociale est absent du paquet : impossible de déterminer à partir du seul texte quelles règles exactes (modulation selon les ressources, majoration pour âge, allocation forfaitaire, complément dégressif) figurent dans ses « quatre derniers alinéas » à la date d'application, ce type de renvoi par position d'alinéas étant en outre sensible à toute modification ultérieure de l'article L. 521-1."
+  },
+  {
+    "legiarti": "LEGIARTI000029962999",
+    "category": "perimetre",
+    "quote": "Les allocations familiales sont dues, pour tout enfant,",
+    "explanation": "Le texte de l'article n'énonce pas son champ d'application territorial (départements et collectivités d'outre-mer régis par le livre VII du CSS) et ne fixe pas le barème ni le montant réglementaire applicable pour un enfant unique à charge."
+  },
+  {
+    "legiarti": "LEGIARTI000030680324",
+    "category": "parametre",
+    "quote": "20,234 % de la base mensuelle de calcul des allocations familiales par enfant",
+    "explanation": "La valeur de la base mensuelle de calcul des allocations familiales (BMAF) et son calendrier de revalorisation annuelle ne figurent pas dans le texte et doivent être fournis comme paramètre daté."
+  },
+  {
+    "legiarti": "LEGIARTI000030680324",
+    "category": "renvoi_externe",
+    "quote": "au plafond défini au I de l'article D. 521-3",
+    "explanation": "Les plafonds de ressources (I et II de l'article D. 521-3), la définition et la période de référence des « ressources » du ménage ou de la personne, ainsi que les conditions d'ouverture et de durée de l'allocation forfaitaire (deuxième et sixième alinéas de l'article L. 521-1) sont absents du paquet."
+  },
+  {
+    "legiarti": "LEGIARTI000030680324",
+    "category": "arrondi",
+    "quote": "le montant mensuel de l'allocation forfaitaire est fixé à 20,234 % de la base mensuelle de calcul des allocations familiales par enfant",
+    "explanation": "Les taux exprimés à trois décimales (20,234 %, 10,117 %, 5,059 %) multipliés par la BMAF, ainsi que la division par 12 du complément dégressif au II, génèrent des fractions de centimes sans qu'aucune règle d'arrondi soit précisée (au centime le plus proche, inférieur ou supérieur, et ordre d'arrondi entre le calcul mensuel, la multiplication par 12 au II et l'addition finale)."
+  },
+  {
+    "legiarti": "LEGIARTI000030680324",
+    "category": "calcul",
+    "quote": "d'une somme inférieure à douze fois le montant mensuel de l'allocation forfaitaire auquel l'enfant ouvre droit. Ce complément dégressif est égal, pour chaque mois, au douzième de la différence entre, d'une part, ce plafond de ressources majoré de la somme définie à l'alinéa précédent et, d'autre part, le montant des ressources.",
+    "explanation": "Le II présente deux ambiguïtés de calcul : d'une part, il faut confirmer que « le montant mensuel de l'allocation forfaitaire auquel l'enfant ouvre droit » désigne le montant de la tranche après franchissement du plafond (10,117 % ou 5,059 % — étant observé que 10,117 % − 5,059 % = 5,058 % diffère légèrement de 5,059 %, créant un léger saut au seuil du II) ; d'autre part, si plusieurs enfants ouvrent simultanément droit à l'allocation forfaitaire (ex. naissances multiples), le texte ne précise pas si le seuil de dépassement et le complément dégressif se calculent par enfant ou sur la somme des allocations forfaitaires dues, ni comment ils s'articulent avec le complément dégressif des allocations familiales."
+  },
+  {
+    "legiarti": "LEGIARTI000030680324",
+    "category": "perimetre",
+    "quote": "Le nombre minimum d'enfants à charge mentionné au deuxième alinéa de l'article L. 521-1 est fixé à trois.",
+    "explanation": "En l'absence du deuxième alinéa de l'article L. 521-1, il faut préciser si le minimum de trois enfants à charge s'apprécie avant que l'enfant concerné n'atteigne l'âge limite de 20 ans (donc en l'incluant dans le décompte) ou après son passage à 20 ans (trois autres enfants restant à charge)."
+  },
+  {
+    "legiarti": "LEGIARTI000033220369",
+    "category": "appreciation",
+    "quote": "à la condition qu'elles vivent sous son toit,",
+    "explanation": "La condition de cohabitation « vivent sous son toit » requiert une appréciation de fait : comment traiter les absences temporaires (hospitalisation, séjour en établissement spécialisé) et les cohabitations sur une partie seulement de l'année civile (date d'appréciation au 1er janvier, au 31 décembre ou cohabitation permanente) ?"
+  },
+  {
+    "legiarti": "LEGIARTI000033220369",
+    "category": "perimetre",
+    "quote": "Tout contribuable peut considérer comme étant à sa charge, au sens de l'article 196,",
+    "explanation": "La portée et les effets de cette option facultative (« peut considérer ») dépendent de règles absentes de l'article : exclusion du conjoint ou partenaire de PACS, obligation d'inclure les revenus de la personne recueillie dans le revenu imposable du foyer fiscal, absence de condition de parenté ou de plafond de ressources, et sort des titulaires d'anciennes cartes d'invalidité ou d'une demande de carte en cours au 31 décembre."
+  },
+  {
+    "legiarti": "LEGIARTI000033220369",
+    "category": "renvoi_externe",
+    "quote": "les personnes titulaires de la carte \" mobilité inclusion \" portant la mention \" invalidité \" prévue à l'article L. 241-3 du code de l'action sociale et des familles.",
+    "explanation": "Les conditions de délivrance et de validité de la carte « mobilité inclusion » mention « invalidité » (article L. 241-3 du CASF) ainsi que le régime général des personnes à charge (article 196 du CGI) renvoient à des textes absents du paquet."
+  },
+  {
+    "legiarti": "LEGIARTI000033817781",
+    "category": "perimetre",
+    "quote": "Célibataire, divorcé ou veuf sans enfant à charge 1 Marié sans enfant à charge 2",
+    "explanation": "Le barème du I ne mentionne pas les partenaires liés par un PACS soumis à imposition commune (bien que la rupture de PACS soit visée plus loin) : leur assimilation aux contribuables mariés repose sur un texte externe (article 6 du CGI). Par ailleurs, l'article ne précise pas la date d'appréciation de la situation et des charges de famille en cas de changement en cours d'année (mariage, divorce, décès, naissance)."
+  },
+  {
+    "legiarti": "LEGIARTI000033817781",
+    "category": "perimetre",
+    "quote": "Marié ou veuf ayant un enfant à charge 2,5",
+    "explanation": "Le texte ne précise pas si un contribuable veuf qui n'a à charge qu'un enfant en résidence alternée (à charge égale) ou qu'une personne invalide recueillie au titre de l'article 196 A bis conserve le bénéfice de la base de 2 parts (comme un couple marié) au lieu d'une base de 1 part."
+  },
+  {
+    "legiarti": "LEGIARTI000033817781",
+    "category": "calcul",
+    "quote": "Pour l'application des dispositions du premier alinéa, sont assimilées à des enfants à charge les personnes considérées comme étant à la charge du contribuable en vertu de l'article 196 A bis.",
+    "explanation": "L'assimilation des personnes recueillies au titre de l'article 196 A bis étant expressément cantonnée « aux dispositions du premier alinéa » du I, le texte ne précise pas si ces personnes doivent être comptées dans le nombre d'enfants à charge exclusive/principale déterminant le rang des enfants en résidence alternée (a, b, c du cinquième alinéa du I) ni si elles ouvrent droit à la majoration pour parent isolé du II."
+  },
+  {
+    "legiarti": "LEGIARTI000033817781",
+    "category": "appreciation",
+    "quote": "chacun d'eux est considéré comme un célibataire ayant à sa charge les enfants dont il assume à titre principal l'entretien. Dans cette situation, ainsi qu'en cas de divorce, de rupture du pacte civil de solidarité ou de toute séparation de fait de parents non mariés, l'enfant est considéré, jusqu'à preuve du contraire, comme étant à la charge du parent chez lequel il réside à titre principal.",
+    "explanation": "Les critères d'« entretien à titre principal », de « résidence à titre principal », de « résidence alternée » et les éléments permettant d'écarter les présomptions (« jusqu'à preuve du contraire », « s'il est justifié que l'un d'entre eux assume la charge principale des enfants ») relèvent d'une appréciation de fait et de la preuve non calculable à partir du texte."
+  },
+  {
+    "legiarti": "LEGIARTI000033817781",
+    "category": "perimetre",
+    "quote": "les enfants mineurs sont réputés être à la charge égale de l'un et de l'autre parent.",
+    "explanation": "La règle de charge égale en résidence alternée visant exclusivement les « enfants mineurs », le texte ne précise pas le traitement fiscal d'un enfant en résidence alternée qui atteint sa majorité en cours d'année d'imposition (maintien du partage de parts pour l'année des 18 ans ou rattachement exclusif chez un seul parent ?)."
+  },
+  {
+    "legiarti": "LEGIARTI000033817781",
+    "category": "appreciation",
+    "quote": "Pour l'imposition des contribuables célibataires ou divorcés qui vivent seuls,",
+    "explanation": "La condition « qui vivent seuls » au II n'est pas définie (exclusion du concubinage, traitement de la cohabitation avec un tiers ou un ascendant, date d'appréciation au 1er janvier ou en cours d'année) et nécessite une appréciation de fait."
+  },
+  {
+    "legiarti": "LEGIARTI000033817781",
+    "category": "perimetre",
+    "quote": "des contribuables célibataires ou divorcés qui vivent seuls, le nombre de parts prévu au I est augmenté de 0,5",
+    "explanation": "Le II vise littéralement les « contribuables célibataires ou divorcés » sans mentionner les contribuables mariés ou pacsés faisant l'objet d'une imposition séparée au titre du 4 de l'article 6 (pourtant assimilés à des célibataires au I), ni les personnes séparées de fait ou les veufs : leur éligibilité à la majoration du II doit être précisée."
+  },
+  {
+    "legiarti": "LEGIARTI000033817781",
+    "category": "renvoi_externe",
+    "quote": "pour la division du revenu imposable prévue à l'article 193",
+    "explanation": "L'article renvoie à l'article 193 (calcul de l'impôt par quotient familial), au 4 de l'article 6 (cas d'imposition séparée des époux) et à l'article 229-1 du code civil (divorce par consentement mutuel), absents du paquet, et omet le mécanisme de plafonnement des effets du quotient familial (article 197)."
+  },
+  {
+    "legiarti": "LEGIARTI000036428314",
+    "category": "calcul",
+    "quote": "Toutefois, ce montant net n'est pas imposable lorsqu'il est utilisé à compenser le déficit d'exploitation de l'exercice.",
+    "explanation": "Le texte ne précise pas si la compensation du déficit d'exploitation de l'exercice par la plus-value nette à long terme est une faculté (sur option) ou une obligation, si elle peut aussi porter sur des déficits reportables d'exercices antérieurs, ni quel est l'ordre d'imputation lorsque coexistent des moins-values à long terme reportables des dix exercices précédents (visées au 2) et un déficit d'exploitation de l'exercice."
+  },
+  {
+    "legiarti": "LEGIARTI000036428314",
+    "category": "calcul",
+    "quote": "l'imposition de la plus-value nette à long terme réalisée à la suite de la perception d'indemnités d'assurances ou de l'expropriation d'immeubles figurant à l'actif est différée de deux ans.",
+    "explanation": "Le texte n'indique pas si ce différé de deux ans est optionnel ou obligatoire, quel est son point de départ exact (date du sinistre, de perception de l'indemnité, d'expropriation ou clôture de l'exercice), quel taux d'imposition s'applique lors de la taxation différée en cas de changement de taux, ni si cette plus-value différée peut être compensée avec des moins-values à long terme constatées pendant le différé."
+  },
+  {
+    "legiarti": "LEGIARTI000036428314",
+    "category": "calcul",
+    "quote": "dans la limite du rapport existant entre le taux d'imposition des plus-values à long terme applicable à l'exercice de réalisation des moins-values et le taux normal prévu au deuxième alinéa du I de l'article 219 applicable à l'exercice de liquidation.",
+    "explanation": "Trois précisions de calcul manquent : le rapport utilise le taux normal de l'IS (article 219) même pour une entreprise relevant de l'IR (à confirmer), l'ordre d'imputation des moins-values à long terme issues de plusieurs exercices soumis à des taux de PVLT différents n'est pas défini, et aucune règle d'arrondi n'est indiquée pour le rapport ou le montant déductible."
+  },
+  {
+    "legiarti": "LEGIARTI000036428314",
+    "category": "perimetre",
+    "quote": "En cas de liquidation d'entreprise,",
+    "explanation": "La portée exacte de « liquidation d'entreprise » au 2, par distinction avec la « cessation d'activité » visée au 1, n'est pas définie : une cessation d'entreprise individuelle ou une cession de fonds sans liquidation judiciaire ouvre-t-elle droit à la déduction partielle de l'excédent des moins-values à long terme ?"
+  },
+  {
+    "legiarti": "LEGIARTI000036428314",
+    "category": "renvoi_externe",
+    "quote": "Sous réserve des dispositions des articles 41, 151 octies et 210 A à 210 C,",
+    "explanation": "Les régimes dérogatoires de report ou d'exonération (articles 41, 151 octies, 210 A à 210 C), la définition des plus-values et moins-values « à long terme » (article 39 duodecies) et le taux normal de l'impôt sur les sociétés (article 219, I, alinéa 2) figurent dans des textes externes absents du paquet."
+  },
+  {
+    "legiarti": "LEGIARTI000037985788",
+    "category": "appreciation",
+    "quote": "appelés de l'étranger à occuper un emploi dans une entreprise établie en France pendant une période limitée ne sont pas soumis à l'impôt à raison des éléments de leur rémunération directement liés à cette situation",
+    "explanation": "Trois standards qualitatifs non calculables doivent être appréciés : la condition d'être « appelé de l'étranger » (mobilité intra-groupe ou recrutement direct depuis l'étranger), la notion de « période limitée » (compatibilité avec un contrat à durée indéterminée), et la délimitation des éléments de rémunération « directement liés » à l'impatriation (prime d'impatriation stipulée au contrat, avantages en nature, prise en charge d'impôts ou de frais de logement/scolarité)."
+  },
+  {
+    "legiarti": "LEGIARTI000037985788",
+    "category": "perimetre",
+    "quote": "ou, sur option, à hauteur de 30 % de leur rémunération.",
+    "explanation": "Le texte ne précise pas si l'option forfaitaire de 30 % est ouverte à tous les impatriés visés au 1 ou réservée aux seuls salariés recrutés directement à l'étranger (hors mobilité intra-groupe), si l'option est annuelle et révocable, ni l'assiette exacte de « leur rémunération » (brute, nette imposable avant ou après cotisations sociales, incluant ou non les avantages en nature et gains d'actionnariat)."
+  },
+  {
+    "legiarti": "LEGIARTI000037985788",
+    "category": "appreciation",
+    "quote": "inférieure à la rémunération versée au titre de fonctions analogues dans l'entreprise ou, à défaut, dans des entreprises similaires établies en France,",
+    "explanation": "La rémunération de référence (« fonctions analogues », « entreprises similaires établies en France ») repose sur une comparaison factuelle externe sans méthode de calcul ni référentiel officiel. De plus, l'article ne précise pas si la comparaison s'effectue sur la rémunération brute ou nette imposable."
+  },
+  {
+    "legiarti": "LEGIARTI000037985788",
+    "category": "appreciation",
+    "quote": "si les séjours réalisés à l'étranger sont effectués dans l'intérêt direct et exclusif de l'employeur.",
+    "explanation": "La condition « dans l'intérêt direct et exclusif de l'employeur » relève d'une appréciation de fait non formalisable (par exemple pour distinguer un déplacement professionnel commandé par l'employeur du télétravail effectué à l'étranger par convenance personnelle)."
+  },
+  {
+    "legiarti": "LEGIARTI000037985788",
+    "category": "calcul",
+    "quote": "La fraction de la rémunération correspondant à l'activité exercée à l'étranger pendant la durée définie au 1 est exonérée",
+    "explanation": "Aucune formule de proratisation n'est fixée pour isoler la « fraction de la rémunération correspondant à l'activité exercée à l'étranger » : prorata au nombre de jours travaillés à l'étranger sur le nombre total de jours travaillés dans l'année ou sur 365 jours, traitement des jours de voyage et des congés, et inclusion ou exclusion de la prime d'impatriation dans la rémunération proratisée."
+  },
+  {
+    "legiarti": "LEGIARTI000037985788",
+    "category": "calcul",
+    "quote": "Sur option des salariés et personnes mentionnés au 1, soit la fraction de la rémunération exonérée conformément aux 1 et 2 est limitée à 50 % de la rémunération totale, soit la fraction de la rémunération exonérée conformément au 2 est limitée à 20 % de la rémunération imposable résultant du 1.",
+    "explanation": "L'ordre des opérations entre la réintégration de la différence avec la rémunération de référence (1, cinquième alinéa) et les plafonds de 50 % ou 20 % (3) n'est pas précisé. De plus, il faut clarifier si l'exercice de l'une des deux options du 3 est obligatoire (ou si un plafonnement s'applique par défaut), si le choix est renouvelable chaque année, et si les assiettes « rémunération totale » et « rémunération imposable résultant du 1 » s'entendent avant ou après déduction des frais professionnels de l'article 83."
+  },
+  {
+    "legiarti": "LEGIARTI000037985788",
+    "category": "perimetre",
+    "quote": "jusqu'au 31 décembre de la huitième année civile suivant celle de cette prise de fonctions, au titre des années à raison desquelles ils sont fiscalement domiciliés en France au sens des a et b du 1 de l'article 4 B.",
+    "explanation": "Le texte ne précise pas les conséquences d'une perte temporaire de la domiciliation fiscale en France (au sens des a et b du 1 de l'article 4 B) au cours des huit années (suspension ou décompte continu du délai, reprise ultérieure du régime), ni les conséquences d'un changement d'employeur vers une entreprise hors groupe. Au II, il faut aussi préciser si le salarié « bénéficie des dispositions du même I » (ouvrant droit à l'exonération de 50 % des revenus passifs) au titre d'une année où son exonération salariale au titre du I est nulle."
+  },
+  {
+    "legiarti": "LEGIARTI000037985788",
+    "category": "calcul",
+    "quote": "exonérés d'impôt à hauteur de 50 % du montant des revenus suivants :",
+    "explanation": "Pour les revenus passifs et plus-values du II, l'article ne précise pas comment l'exonération de 50 % s'articule avec le prélèvement forfaitaire unique (PFU) par rapport au barème progressif, avec l'abattement de 40 % sur les dividendes (article 158, 3, 2°) ou les abattements pour durée de détention, ni comment imputer les moins-values réduites à 50 % (c, dernier alinéa) sur d'autres plus-values de droit commun."
+  },
+  {
+    "legiarti": "LEGIARTI000037985788",
+    "category": "renvoi_externe",
+    "quote": "dans un Etat ou territoire ayant conclu avec la France une convention fiscale qui contient une clause d'assistance administrative en vue de lutter contre la fraude ou l'évasion fiscale",
+    "explanation": "La liste des États et territoires satisfaisant cette condition conventionnelle à la date de perception ou de cession est externe et évolutive. L'article renvoie en outre aux articles 80 ter, 4 B, 81 A, 92 du CGI et L. 233-3 du code de commerce, absents du paquet."
+  },
+  {
+    "legiarti": "LEGIARTI000038814864",
+    "category": "parametre",
+    "quote": "Aux ménages qui n'ont pas d'enfant à charge, pendant une durée déterminée à compter du mariage ;",
+    "explanation": "La « durée déterminée à compter du mariage » (ainsi que toute condition éventuelle d'âge maximal des époux au moment du mariage) n'est pas chiffrée dans l'article et renvoie à la partie réglementaire. En outre, l'emploi conjoint de « ménages » et de « mariage » laisse à confirmer l'exclusion des partenaires liés par un PACS ou des concubins pour ce 3°."
+  },
+  {
+    "legiarti": "LEGIARTI000038814864",
+    "category": "parametre",
+    "quote": "un ascendant vivant au foyer ayant dépassé un âge déterminé ;",
+    "explanation": "L'« âge déterminé » de l'ascendant (et d'éventuels âges abaissés en cas d'inaptitude ou de statut particulier) n'est pas fixé dans l'article et relève de la partie réglementaire."
+  },
+  {
+    "legiarti": "LEGIARTI000038814864",
+    "category": "parametre",
+    "quote": "dont l'incapacité permanente est au moins égale à un pourcentage fixé par voie réglementaire",
+    "explanation": "Le seuil minimal d'incapacité permanente n'est pas fixé par l'article et renvoie à un texte réglementaire absent du paquet."
+  },
+  {
+    "legiarti": "LEGIARTI000038814864",
+    "category": "perimetre",
+    "quote": "Aux ménages ou personnes qui ont à leur charge un ascendant ou un descendant ou un collatéral au deuxième ou au troisième degré vivant au foyer,",
+    "explanation": "Les critères définissant quand un ascendant, descendant ou collatéral est « à leur charge » (plafond de ressources de la personne recueillie, prise en charge financière) et « vivant au foyer » (cohabitation continue, absences temporaires) ne sont pas précisés, pas plus que l'assimilation éventuelle des alliés (beaux-parents, beaux-frères)."
+  },
+  {
+    "legiarti": "LEGIARTI000038814864",
+    "category": "perimetre",
+    "quote": "A la personne seule sans personne à charge à compter du premier jour du mois civil suivant le quatrième mois de la grossesse et jusqu'au mois civil de la naissance de l'enfant.",
+    "explanation": "Trois points doivent être précisés : la définition de la « personne seule » (exclusion des couples mariés, pacsés ou en concubinage), le mode de calcul du « quatrième mois de la grossesse » (à partir de la date présumée de conception ou en semaines d'aménorrhée), et l'inclusion ou l'exclusion du « mois civil de la naissance » comme borne finale (ainsi que le traitement en cas d'interruption de grossesse)."
+  },
+  {
+    "legiarti": "LEGIARTI000038814864",
+    "category": "renvoi_externe",
+    "quote": "1° Aux personnes qui perçoivent : a) Soit les allocations familiales mentionnées au 2° de l'article L. 511-1 du code de la sécurité sociale ;",
+    "explanation": "L'éligibilité aux 1°, 2° et 5° dépend des conditions d'ouverture des prestations familiales (article L. 511-1 du CSS), de la notion d'enfant à charge (article L. 512-3 du CSS), de la restriction substantielle et durable dans l'accès à l'emploi (article L. 821-2 du CSS) et de la décision de la CDAPH (article L. 146-9 du CASF), textes absents du paquet."
+  },
+  {
+    "legiarti": "LEGIARTI000038878681",
+    "category": "calcul",
+    "quote": "l'allocation est calculée de façon à couvrir la différence entre le loyer principal acquitté dans l'ancien logement, déduction faite, le cas échéant, de l'allocation qui leur était octroyée et le nouveau loyer principal qui leur est réclamé, dans la limite du plafond fixé en application du 3° de l'article L. 823-1.",
+    "explanation": "La formule présente plusieurs ambiguïtés : (1) « dans la limite du plafond fixé en application du 3° de l'article L. 823-1 » écrête-t-il le nouveau loyer principal avant soustraction de l'ancien loyer net, ou plafonne-t-il directement le montant de l'allocation résultante ? (2) Pour les personnes qui « remplissaient les conditions pour pouvoir en bénéficier » sans percevoir l'allocation dans l'ancien logement, la déduction de « l'allocation qui leur était octroyée » vaut-elle 0 ou l'allocation théorique ? (3) Comment cette règle dérogatoire s'articule-t-elle avec le barème de droit commun de l'allocation de logement (si celui-ci est plus favorable), pour quelle durée s'applique-t-elle et comment évolue-t-elle lors des révisions ultérieures de loyer ou de ressources ?"
+  },
+  {
+    "legiarti": "LEGIARTI000038878681",
+    "category": "perimetre",
+    "quote": "à occuper un logement locatif présentant un loyer plus élevé que celui qu'elles payaient précédemment, l'allocation est calculée de façon à couvrir la différence entre le loyer principal acquitté dans l'ancien logement,",
+    "explanation": "La notion de « loyer principal » (exclusion des charges locatives et accessoires, date de référence retenue pour l'ancien loyer) n'est pas définie, et la condition d'un « loyer plus élevé que celui qu'elles payaient précédemment » ne précise pas si la comparaison porte sur le loyer brut ou sur le reste à charge net d'allocation."
+  },
+  {
+    "legiarti": "LEGIARTI000038878681",
+    "category": "renvoi_externe",
+    "quote": "les personnes mentionnées au 3° de l'article D. 842-16",
+    "explanation": "L'éligibilité et le calcul dépendent de quatre textes externes absents du paquet : les catégories de bénéficiaires (3° de l'article D. 842-16), les conditions de superficie (article R. 822-25), les opérations visées à l'article L. 522-1, et le plafond de loyer pris en application du 3° de l'article L. 823-1."
+  },
+  {
+    "legiarti": "LEGIARTI000039048889",
+    "category": "appreciation",
+    "quote": "de celle contractée en même temps pour réaliser des travaux permettant de remplir les conditions de décence ;",
+    "explanation": "Le texte ne définit ni les « conditions de décence » (renvoi implicite au décret logement décent), ni l'exigence temporelle « contractée en même temps » (même contrat de prêt, même date de signature ou délai toléré ?), ni les critères de la « résidence principale » (durée minimale d'occupation annuelle)."
+  },
+  {
+    "legiarti": "LEGIARTI000039048889",
+    "category": "perimetre",
+    "quote": "2° Aux personnes qui se libèrent d'une dette contractée en vue de réaliser des travaux figurant sur la liste mentionnée à l'article R. 321-15 ;",
+    "explanation": "Alors que le 1° vise expressément « les personnes propriétaires du logement », les 2° et 3° visent « les personnes » sans préciser si seuls les propriétaires occupants sont éligibles ou si les usufruitiers, indivisaires ou autres titulaires de droits peuvent également en bénéficier. En outre, l'article ne mentionne pas les éventuelles conditions de date de signature du prêt limitant l'allocation de logement accession."
+  },
+  {
+    "legiarti": "LEGIARTI000039048889",
+    "category": "calcul",
+    "quote": "pendant la période au cours de laquelle elles se libèrent de la dette contractée pour accéder à la propriété de ce logement",
+    "explanation": "Les bornes exactes de la période de libération de la dette ne sont pas précisées (traitement des périodes de différé d'amortissement ou d'intérêts intercalaires, remboursement anticipé, rachat ou renégociation de prêt, impayés), ni les formes de dette admises (prêts bancaires uniquement ou prêts familiaux / vendeurs)."
+  },
+  {
+    "legiarti": "LEGIARTI000039048889",
+    "category": "renvoi_externe",
+    "quote": "travaux figurant sur la liste mentionnée à l'article R. 321-15 ; 3° Aux personnes qui se libèrent d'une dette contractée en vue soit d'agrandir leur logement, soit d'aménager à usage de logements des locaux non destinés à l'habitation, lorsque ces travaux répondent aux normes techniques imposées pour le bénéfice des prêts conventionnés mentionnés à l'article D. 331-63.",
+    "explanation": "La liste des travaux éligibles (article R. 321-15 du CCH) et les normes techniques applicables aux prêts conventionnés (article D. 331-63 du CCH et ses textes d'application) sont absentes du paquet."
+  },
+  {
+    "legiarti": "LEGIARTI000039048901",
+    "category": "renvoi_externe",
+    "quote": "1° Prêt aidé par l'Etat pour la construction, l'acquisition et l'amélioration des logements en accession à la propriété défini à l'article D. 331-32 ; 2° Prêt conventionné défini à l'article D. 331-63, dans les conditions précisées par l'article D. 331-64.",
+    "explanation": "Les critères d'éligibilité des prêts ouvrant droit à l'APL accession (y compris les éventuelles restrictions de zone géographique ou de date de signature du prêt liées à la réforme de l'APL accession) sont entièrement définis aux articles D. 331-32, D. 331-63 et D. 331-64 du CCH, absents du paquet."
+  },
+  {
+    "legiarti": "LEGIARTI000039048901",
+    "category": "perimetre",
+    "quote": "accordée au propriétaire qui est titulaire et supporte les charges correspondantes",
+    "explanation": "L'article ne précise pas comment traiter les cas où propriété, titularité du prêt et paiement effectif des mensualités sont dissociés (indivision, co-emprunteurs non tous propriétaires, démembrement usufruit/nue-propriété, SCI), ni ce que recouvrent les « charges correspondantes » (capital, intérêts, assurance, cas d'impayés ou de report d'échéances) ; il omet aussi la condition d'occupation à titre de résidence principale."
+  },
+  {
+    "legiarti": "LEGIARTI000042340496",
+    "category": "calcul",
+    "quote": "dans une limite annuelle de 300 000 €. La fraction de l'avantage qui excède cette limite est imposée entre les mains de l'attributaire suivant les règles de droit commun des traitements et salaires.",
+    "explanation": "Trois questions de calcul se posent : (1) la limite annuelle de 300 000 € s'apprécie-t-elle par attributaire ou par foyer fiscal ? (2) En cas de cession à un prix inférieur à la valeur d'acquisition (V, seconde phrase), la moins-value déduite de l'avantage mentionné au I s'impute-t-elle avant ou après l'appréciation du seuil de 300 000 € (et dans quel ordre en cas de cessions multiples la même année) ? (3) La fraction excédant 300 000 € (imposée en droit commun des traitements et salaires) bénéficie-t-elle de la déduction de 10 % pour frais professionnels de l'article 83 ?"
+  },
+  {
+    "legiarti": "LEGIARTI000042340496",
+    "category": "calcul",
+    "quote": "correspondant à la valeur, à leur date d'acquisition, des actions attribuées",
+    "explanation": "L'article ne fixe pas la méthode de détermination de la « valeur, à leur date d'acquisition » (cours d'ouverture, de clôture ou cours moyen pour les titres cotés ; méthode d'évaluation pour les titres non cotés ; taux de change applicable pour une société étrangère visée au IV), ni ne précise explicitement que « date d'acquisition » désigne la date d'acquisition définitive au terme de la période d'acquisition (et non la date d'attribution initiale)."
+  },
+  {
+    "legiarti": "LEGIARTI000042340496",
+    "category": "perimetre",
+    "quote": "au titre de l'année au cours de laquelle le bénéficiaire a disposé de ses actions, les a cédées, converties au porteur ou mises en location.",
+    "explanation": "L'étendue du terme « disposé » (donation, succession, nantissement, apport hors III) et l'application du V en cas de disposition à titre gratuit (absence de « prix de cession ») ne sont pas précisées. Au III, l'appréciation des seuils de détention indirecte (< 10 % et < 40 %, avant ou après l'apport ?) et, au IV, la définition de « société mère ou filiale » (taux de détention, exclusion éventuelle des sociétés sœurs) restent également à préciser."
+  },
+  {
+    "legiarti": "LEGIARTI000042340496",
+    "category": "renvoi_externe",
+    "quote": "selon les modalités prévues au 3 de l'article 200 A,",
+    "explanation": "Le calcul de l'imposition dépend des modalités d'abattement du 3 de l'article 200 A du CGI, du régime des plus-values mobilières de l'article 150-0 A du CGI et des conditions du code de commerce (articles L. 225-197-1 à L. 225-197-5, L. 22-10-59 et L. 22-10-60), tous absents du paquet. En outre, l'article ne mentionne pas les dates d'autorisation d'attribution en assemblée générale conditionnant l'application de cette version du régime par rapport aux régimes antérieurs."
+  },
+  {
+    "legiarti": "LEGIARTI000044978385",
+    "category": "appreciation",
+    "quote": "a réalisé un revenu qui par sa nature n'est pas susceptible d'être recueilli annuellement",
+    "explanation": "La qualification d'un revenu comme « n'étant pas susceptible, par sa nature, d'être recueilli annuellement » (hors les cas expressément listés au troisième alinéa du I) repose sur une appréciation juridique et factuelle non calculable."
+  },
+  {
+    "legiarti": "LEGIARTI000044978385",
+    "category": "appreciation",
+    "quote": "a eu, par suite de circonstances indépendantes de sa volonté, la disposition d'un revenu correspondant, par la date normale de son échéance, à une ou plusieurs années antérieures,",
+    "explanation": "Le critère des « circonstances indépendantes de sa volonté » (excluant un report ou un encaissement volontairement différé par le contribuable) ainsi que la détermination de la « date normale de son échéance » relèvent d'une appréciation de fait externe."
+  },
+  {
+    "legiarti": "LEGIARTI000044978385",
+    "category": "calcul",
+    "quote": "le montant de ce revenu exceptionnel dépasse la moyenne des revenus nets d'après lesquels ce contribuable a été soumis à l'impôt sur le revenu au titre des trois dernières années,",
+    "explanation": "Plusieurs règles de calcul de ce seuil sont absentes : (1) quels revenus entrent dans la moyenne des trois dernières années (revenus nets globaux soumis au barème seul ou incluant les revenus à taux forfaitaire/PFU ? années déficitaires comptées pour zéro ou négatives ? cas d'un contribuable non imposable ou ayant changé de foyer fiscal — mariage, divorce, rattachement antérieur — durant la période ?) ; (2) le revenu exceptionnel comparé à la moyenne est-il pris brut ou net (après abattements catégoriels et imputation des déficits) ? (3) En présence de plusieurs revenus exceptionnels la même année, la comparaison se fait-elle revenu par revenu ou sur leur somme ?"
+  },
+  {
+    "legiarti": "LEGIARTI000044978385",
+    "category": "calcul",
+    "quote": "en ajoutant le quart du revenu exceptionnel net à son revenu net global imposable et en multipliant par quatre la cotisation supplémentaire ainsi obtenue.",
+    "explanation": "L'article ne précise pas à quelle étape de la liquidation de l'impôt est mesurée la « cotisation supplémentaire » (impôt brut au barème, impôt après plafonnement du quotient familial, après décote ou après réduction d'impôt outre-mer ?). De plus, lorsqu'un contribuable perçoit au cours de la même année plusieurs revenus relevant du système du quotient (par exemple un revenu exceptionnel au coefficient 4 et un ou plusieurs revenus différés avec des coefficients différents), le texte ne précise pas si les quotients sont ajoutés séparément à la même base ordinaire ou cumulativement et dans quel ordre."
+  },
+  {
+    "legiarti": "LEGIARTI000044978385",
+    "category": "calcul",
+    "quote": "Le revenu exceptionnel net s'entend après imputation, le cas échéant, du déficit constaté dans la même catégorie de revenu, du déficit global ou du revenu net global négatif.",
+    "explanation": "L'ordre d'imputation des déficits catégoriels, du déficit global, des déficits reportables antérieurs et des charges déductibles du revenu global (article 156) entre le revenu ordinaire, le revenu exceptionnel et un éventuel revenu différé simultané n'est pas spécifié."
+  },
+  {
+    "legiarti": "LEGIARTI000044978385",
+    "category": "calcul",
+    "quote": "un coefficient égal au nombre d'années civiles correspondant aux échéances normales de versement augmenté de un,",
+    "explanation": "Le mode de décompte du « nombre d'années civiles correspondant aux échéances normales de versement » doit être précisé lorsque les échéances antérieures sont discontinues (nombre d'années civiles distinctes concernées ou écart entre la plus ancienne et l'année de versement ?) et lorsqu'une fraction du versement correspond à l'année de perception elle-même."
+  },
+  {
+    "legiarti": "LEGIARTI000044978385",
+    "category": "arrondi",
+    "quote": "en ajoutant à son revenu net global imposable le quotient ainsi déterminé, puis en multipliant par ce même coefficient la cotisation supplémentaire ainsi obtenue.",
+    "explanation": "Aucune règle d'arrondi n'est précisée pour le quotient (division par 4 au I ou par le coefficient du II) ni pour la cotisation supplémentaire avant et après multiplication par le coefficient (arrondi à l'euro, au centime ou calcul exact)."
+  },
+  {
+    "legiarti": "LEGIARTI000044978385",
+    "category": "renvoi_externe",
+    "quote": "imposés d'après le barème progressif prévu à l'article 197.",
+    "explanation": "Le calcul de la cotisation supplémentaire nécessite le barème progressif et les règles de liquidation de l'article 197 du CGI, absent du paquet."
+  },
+  {
+    "legiarti": "LEGIARTI000046860376",
+    "category": "calcul",
+    "quote": "Le montant net des plus-values à court terme peut être réparti par parts égales sur l'année de leur réalisation et sur les deux années suivantes.",
+    "explanation": "Le 1 emploie le terme « année » (alors que les 1 ter et 1 quinquies emploient « exercices ») : en cas d'exercice comptable décalé ou d'une durée différente de 12 mois, l'étalement se fait-il sur trois exercices ou sur trois années civiles ? De même, au 1 bis, si une somme supérieure au dixième est rattachée une année, le minimum des années suivantes reste-t-il fixé au dixième du montant initial jusqu'à apurement ? Enfin, aucune règle d'arrondi n'est indiquée pour la répartition en parts égales."
+  },
+  {
+    "legiarti": "LEGIARTI000046860376",
+    "category": "arrondi",
+    "quote": "à la durée moyenne d'amortissement déjà pratiquée sur les biens détruits ou expropriés, pondérée en fonction du prix d'acquisition de ces biens et limitée à quinze ans.",
+    "explanation": "Au 1 ter, la durée moyenne d'amortissement pondérée peut être un nombre non entier (ou inférieur à 1 an) : le texte ne précise pas comment l'arrondir pour déterminer un nombre entier d'exercices de répartition (arrondi à l'entier supérieur, inférieur, le plus proche, ou minimum d'un exercice, et sort du solde résiduel). Il ne précise pas non plus comment mesurer la durée « déjà pratiquée » (durée calendaire depuis la mise en service ou rapport amortissements cumulés / dotation annuelle linéaire)."
+  },
+  {
+    "legiarti": "LEGIARTI000046860376",
+    "category": "calcul",
+    "quote": "actualisés à un taux égal au taux à échéance constante dont la maturité est la plus proche de la durée restant à courir de la date de rachat jusqu'à la date de chaque échéance,",
+    "explanation": "Au 1 quinquies, plusieurs paramètres et conventions financières manquent pour effectuer l'actualisation : la source officielle et la date exacte de cotation du taux à échéance constante (TEC), la règle de départage si la durée restant à courir est exactement à mi-distance de deux maturités TEC, la convention actuarielle de décompte des jours et de capitalisation, ainsi que le seuil de durée qualifiant une « dette à moyen et long termes »."
+  },
+  {
+    "legiarti": "LEGIARTI000046860376",
+    "category": "calcul",
+    "quote": "La fraction du profit prise en compte dans le résultat imposable est majorée d'un montant égal au produit de cette fraction par une fois et demie le taux de l'intérêt de retard prévu à l'article 1727.",
+    "explanation": "Le taux de l'intérêt de retard de l'article 1727 étant un taux mensuel, le texte ne précise pas la durée sur laquelle il est appliqué à chaque cinquième du profit : s'agit-il d'un taux annuel forfaitaire identique pour chaque exercice, ou d'un intérêt cumulé sur le nombre de mois/années écoulés entre le rachat et chaque exercice d'imposition (croissant de l'année 1 à l'année 5) ? Et comment calculer cette majoration en cas de déchéance anticipée (avant-dernier alinéa du 1 quinquies ou 2) ?"
+  },
+  {
+    "legiarti": "LEGIARTI000046860376",
+    "category": "calcul",
+    "quote": "que le rapport entre le montant des dettes à moyen et long termes et le montant formé par le total de l'actif brut calculé à la clôture de l'exercice au cours duquel intervient le rachat soit inférieur d'au moins 10 % à ce même rapport calculé à l'ouverture du même exercice.",
+    "explanation": "L'expression « inférieur d'au moins 10 % à ce même rapport » est ambiguë entre une diminution relative de 10 % (R_clôture <= 0,90 × R_ouverture) et une diminution absolue de 10 points de pourcentage (R_clôture <= R_ouverture − 0,10). De plus, pour la condition de maintien sur les cinq exercices suivants (« ce même rapport est supérieur à celui constaté à l'ouverture »), le texte ne précise pas si l'actif brut doit aussi être diminué de la perte comptable de chacun de ces exercices."
+  },
+  {
+    "legiarti": "LEGIARTI000046860376",
+    "category": "appreciation",
+    "quote": "dont la valeur réelle à la date de leur émission est inférieure à leur valeur d'inscription en comptabilité",
+    "explanation": "Au 2 bis, la détermination de la « valeur réelle à la date de leur émission » de titres de participation (le plus souvent non cotés) ne fait l'objet d'aucune méthode d'évaluation normative, et la notion de « titres de participation » renvoie aux qualifications comptable ou fiscale externes."
+  },
+  {
+    "legiarti": "LEGIARTI000046860376",
+    "category": "renvoi_externe",
+    "quote": "sous réserve des dispositions des articles 41 et 210 A à 210 C.",
+    "explanation": "L'application de l'article dépend de plusieurs dispositions externes absentes du paquet : qualification de plus-value à court terme (article 39 duodecies), agrément (article 1465), taux de l'intérêt de retard (article 1727), définition des entreprises liées (article 39, 12), et régimes de report/fusion/apport (articles 41, 151 octies, 210 A à 210 C)."
+  },
+  {
+    "legiarti": "LEGIARTI000046860994",
+    "category": "calcul",
+    "quote": "le revenu imposable des contribuables célibataires, divorcés ou veufs n'ayant pas d'enfant à leur charge, exclusive, principale ou réputée également partagée entre les parents, est divisé par 1,5 lorsque ces contribuables :",
+    "explanation": "Deux points d'articulation doivent être tranchés : (1) la formulation « est divisé par 1,5 » implique-t-elle un non-cumul absolu entre les différents cas du 1 (par exemple un contribuable vivant seul ayant élevé un enfant pendant 5 ans au titre du a ET invalide au titre du d bis ou ancien combattant au titre du f reste-t-il limité à 1,5 part, ou cumule-t-il plusieurs demi-parts) ? (2) Un célibataire sans enfant mais recueillant une personne invalide au titre de l'article 196 A bis (assimilée à un enfant à charge à l'article 194, I, mais non visée aux 1, 2 ou 5 de l'article 195) entre-t-il dans le 1, dans le 5, et ouvre-t-il droit à la demi-part supplémentaire du 2 ?"
+  },
+  {
+    "legiarti": "LEGIARTI000046860994",
+    "category": "calcul",
+    "quote": "5. Le quotient familial prévu à l'article 194 est augmenté d'une demi-part pour les contribuables célibataires, divorcés ou veufs ayant un ou plusieurs enfants à charge, que celle-ci soit exclusive, principale ou réputée également partagée entre les parents, lorsque ces contribuables remplissent l'une des conditions d'invalidité fixées aux c, d ou d bis du 1.",
+    "explanation": "Le 5 ne renvoie qu'aux conditions d'invalidité (c, d ou d bis du 1) et omet la condition f du 1 (contribuable âgé de plus de 74 ans titulaire de la carte du combattant) : un célibataire, divorcé ou veuf ayant des enfants à charge perd-il la demi-part d'ancien combattant dont il bénéficierait sans enfant (1, f) ou marié (6) ? Par ailleurs, au 6, le texte ne précise pas si le bénéfice reste limité à une seule demi-part lorsque les deux conjoints mariés remplissent chacun la condition d'ancien combattant âgé de plus de 74 ans."
+  },
+  {
+    "legiarti": "LEGIARTI000046860994",
+    "category": "perimetre",
+    "quote": "Sont âgés de plus de 74 ans et titulaires de la carte du combattant",
+    "explanation": "L'expression « âgés de plus de 74 ans » (au 1, f et au 6) est ambiguë quant à la borne exacte : suffit-il d'avoir atteint son 74e anniversaire au 31 décembre de l'année d'imposition (≥ 74 ans révolus) ou faut-il avoir plus de 74 ans révolus (≥ 75 ans) ? En outre, les partenaires de PACS ne sont mentionnés ni dans « conjoints survivants » (1, f) ni dans « contribuables mariés » (3, 4 et 6)."
+  },
+  {
+    "legiarti": "LEGIARTI000046860994",
+    "category": "appreciation",
+    "quote": "Vivent seuls et ont un ou plusieurs enfants majeurs ou faisant l'objet d'une imposition distincte dont ces contribuables ont supporté à titre exclusif ou principal la charge pendant au moins cinq années au cours desquelles ils vivaient seuls ;",
+    "explanation": "Plusieurs conditions des a, b et e du 1 appellent des précisions : la notion de fait « vivre seul » (absence de concubinage, date d'appréciation), le caractère continu ou discontinu des « cinq années », le décompte d'années civiles incomplètes (année de naissance ou de séparation), le cumul éventuel de périodes sur plusieurs enfants distincts, et la preuve de la « charge à titre exclusif ou principal » sur des années antérieures (exclusion de la résidence alternée)."
+  },
+  {
+    "legiarti": "LEGIARTI000046860994",
+    "category": "perimetre",
+    "quote": "soit à titre de veuve, d'une pension prévue par les dispositions du code des pensions militaires d'invalidité et des victimes de guerre reproduisant celles des lois des 31 mars et 24 juin 1919 ;",
+    "explanation": "La formulation genrée « à titre de veuve » pose la question de l'application aux veufs titulaires de la même pension de conjoint survivant, et le renvoi historique aux dispositions « reproduisant celles des lois des 31 mars et 24 juin 1919 » ne désigne pas précisément les articles actuels du code des pensions militaires d'invalidité."
+  },
+  {
+    "legiarti": "LEGIARTI000046860994",
+    "category": "perimetre",
+    "quote": "Les contribuables qui bénéficient des dispositions des 3 ou 4 ne peuvent bénéficier des dispositions du premier alinéa.",
+    "explanation": "Au 6, l'interdiction de cumul vise « les contribuables qui bénéficient des dispositions des 3 ou 4 » : lorsque, dans un couple marié, un conjoint est invalide (ouvrant droit au 3) et l'autre conjoint est ancien combattant de plus de 74 ans (visé au 6), le foyer est-il privé de la demi-part du 6 (non-cumul au niveau du foyer) ou seulement lorsque c'est le même conjoint qui remplit les deux conditions ?"
+  },
+  {
+    "legiarti": "LEGIARTI000046860994",
+    "category": "renvoi_externe",
+    "quote": "titulaire de la carte \" mobilité inclusion \" portant la mention \" invalidité \" prévue à l'article L. 241-3 du code de l'action sociale et des familles.",
+    "explanation": "Les conditions de détention des titres et pensions ouvrant droit aux demi-parts (article L. 241-3 du CASF, code des pensions militaires d'invalidité, pensions d'accident du travail, statut d'enfant recueilli de l'article 196 du CGI) ainsi que les règles de plafonnement spécifique des demi-parts (article 197) sont externes au paquet."
+  },
+  {
+    "legiarti": "LEGIARTI000047288741",
+    "category": "calcul",
+    "quote": "Ce prélèvement est assis sur le montant du capital diminué d'un abattement de 10 %.",
+    "explanation": "L'article ne précise pas si cet abattement de 10 % est totalement déplafonné ou soumis au plancher (442 €) et au plafond par foyer fiscal (4 321 €) prévus au a du 5 de l'article 158 (et s'il s'impute sur ce plafond commun), ni si le « montant du capital » s'entend brut ou net de cotisations sociales et CSG déductible. Aucune règle d'arrondi n'est non plus fixée pour l'abattement et le prélèvement de 7,5 %."
+  },
+  {
+    "legiarti": "LEGIARTI000047288741",
+    "category": "appreciation",
+    "quote": "Ce prélèvement est applicable lorsque le versement n'est pas fractionné",
+    "explanation": "La condition d'absence de fractionnement n'est pas définie : un rachat partiel unique suivi d'une rente ou d'un autre retrait ultérieur est-il exclu ? Comment traiter la liquidation de plusieurs contrats distincts en capital la même année ou des années différentes, ou un versement échelonné pour des raisons purement techniques ?"
+  },
+  {
+    "legiarti": "LEGIARTI000047288741",
+    "category": "perimetre",
+    "quote": "que les cotisations versées durant la phase de constitution des droits, y compris le cas échéant par l'employeur, étaient déductibles de son revenu imposable ou étaient afférentes à un revenu exonéré dans l'Etat auquel était attribué le droit d'imposer celui-ci.",
+    "explanation": "Le texte ne règle pas le cas mixte où seule une partie des cotisations versées au cours de la phase de constitution était déductible (par exemple en cas de dépassement des plafonds de déduction ou de carrière internationale) : le régime de 7,5 % s'applique-t-il au prorata ou est-il perdu pour le tout ? Par ailleurs, il ne précise pas si les produits financiers capitalisés compris dans le versement entrent dans l'assiette du prélèvement."
+  },
+  {
+    "legiarti": "LEGIARTI000047288741",
+    "category": "renvoi_externe",
+    "quote": "Ces dispositions ne sont pas applicables aux prestations mentionnées à l'article 80 decies ni à celles provenant d'un plan d'épargne retraite mentionné à l'article L. 224-1 du code monétaire et financier ou d'un sous-compte français du produit paneuropéen d'épargne-retraite individuelle mentionné à l'article L. 225-1 du même code.",
+    "explanation": "La délimitation exacte des prestations exclues renvoie à des articles absents du paquet (article 80 decies du CGI, articles L. 224-1 et L. 225-1 du code monétaire et financier)."
+  },
+  {
+    "legiarti": "LEGIARTI000047622381",
+    "category": "calcul",
+    "quote": "ajusté s'il y a lieu au prorata du temps d'activité au cours de l'année de référence,",
+    "explanation": "La formule exacte du prorata temporis en cas de début ou de cessation d'activité en cours d'année de référence n'est pas précisée (prorata au nombre exact de jours sur 365 ou 366 jours bissextiles, ou en mois entiers ; date retenue pour le début d'activité). En outre, le texte ne précise pas expressément si le régime s'applique de plein droit sans plafond les deux premières années d'activité (absence de recettes en N−1 et N−2)."
+  },
+  {
+    "legiarti": "LEGIARTI000047622381",
+    "category": "calcul",
+    "quote": "est égal au montant brut des recettes annuelles diminué d'un abattement forfaitaire de 34 %. Cet abattement ne peut être inférieur à 305 €.",
+    "explanation": "Quatre imprécisions de calcul : (1) contrairement aux articles 83 et 158, aucun plafonnement « sans pouvoir excéder le montant brut » n'est écrit : si les recettes sont inférieures à 305 €, l'abattement minimal de 305 € est-il plafonné aux recettes ou crée-t-il un déficit ? (2) En cas de pluralité d'activités ou de contribuables dans le foyer, le minimum de 305 € s'applique-t-il par contribuable, par activité ou par foyer ? (3) Alors que le seuil est apprécié « hors taxes » et après exclusion des rétrocessions d'honoraires, l'assiette de l'abattement de 34 % est appelée « montant brut des recettes annuelles » sans préciser si la TVA, les débours et les rétrocessions d'honoraires en sont exclus. (4) Aucune règle d'arrondi n'est indiquée pour l'abattement de 34 %."
+  },
+  {
+    "legiarti": "LEGIARTI000047622381",
+    "category": "parametre",
+    "quote": "Le premier seuil mentionné au premier alinéa est actualisé tous les trois ans dans la même proportion que l'évolution triennale de la première tranche du barème de l'impôt sur le revenu et arrondi à la centaine d'euros la plus proche.",
+    "explanation": "Le texte ne fixe pas le calendrier du cycle triennal (quelle année correspond au montant de 77 700 € et quelle est la prochaine année de revalorisation) ni les années de référence du barème servant à mesurer « l'évolution triennale de la première tranche ». De plus, la formule « Le premier seuil » est ambiguë car un seul seuil de recettes figure au premier alinéa (le plancher d'abattement de 305 € n'étant pas actualisé)."
+  },
+  {
+    "legiarti": "LEGIARTI000047622381",
+    "category": "perimetre",
+    "quote": "a. Les contribuables qui exercent plusieurs activités dont le total des revenus, abstraction faite des recettes des offices publics ou ministériels, excède la limite mentionnée au 1 ;",
+    "explanation": "Le 6, a vise « plusieurs activités » et le « total des revenus » sans préciser s'il s'agit uniquement du cumul de plusieurs activités non commerciales (BNC) ou aussi d'activités BIC/BA, si « revenus » doit se lire comme « recettes hors taxes » (cohérent avec la limite de 77 700 €), et si le cumul s'apprécie par personne ou par foyer fiscal. Par ailleurs, au 1, l'exclusion des « honoraires rétrocédés à des confrères selon les usages de la profession » comporte une part d'appréciation."
+  },
+  {
+    "legiarti": "LEGIARTI000047622381",
+    "category": "renvoi_externe",
+    "quote": "dans les conditions prévues à l'article 93 quater, sous réserve des dispositions de l'article 151 septies.",
+    "explanation": "Le régime des plus-values et moins-values (articles 93 quater et 151 septies), les règles d'option et de sortie du régime de la déclaration contrôlée / créances acquises (articles 93 A, 96, 97), les obligations déclaratives (article 170), la fiducie (article 2011 du code civil) et l'activité occulte (article L. 169 du LPF) renvoient à des textes absents du paquet."
+  },
+  {
+    "legiarti": "LEGIARTI000048844097",
+    "category": "perimetre",
+    "quote": "à l'exclusion de la location directe ou indirecte de locaux d'habitation meublés ou destinés à être loués meublés, autres que ceux mentionnés aux 2° et 3° du III de l'article 1407 ; 1° bis 15 000 € s'il s'agit de la location directe ou indirecte de meublés de tourisme au sens de l'article L. 324-1-1 du code du tourisme ;",
+    "explanation": "Contradiction/chevauchement de champ d'application entre le 1° et le 1° bis : le 1° maintient dans son périmètre (seuil 188 700 €, abattement 71 %) les locaux classés meublés de tourisme mentionnés au 2° du III de l'article 1407, tandis que le 1° bis vise l'ensemble des « meublés de tourisme au sens de l'article L. 324-1-1 du code du tourisme » (seuil 15 000 €, abattement 30 %) sans exclure les meublés classés. Ce chevauchement rend incertains à la fois le seuil applicable aux meublés de tourisme classés et le taux total résultant de l'abattement supplémentaire de 21 % (71 % + 21 % = 92 % ou 30 % + 21 % = 51 % ?)."
+  },
+  {
+    "legiarti": "LEGIARTI000048844097",
+    "category": "calcul",
+    "quote": "Lorsque l'activité d'une entreprise se rattache aux trois catégories définies aux 1°, 1° bis et 2°, le régime défini au présent article n'est applicable que si le chiffre d'affaires hors taxes global de l'entreprise respecte la limite mentionnée au 1° et si : a) Le chiffre d'affaires hors taxes afférent aux activités de la catégorie mentionnée au 1° bis respecte la limite mentionnée au même 1° bis ; b) Et le chiffre d'affaires hors taxes afférent aux activités de la catégorie mentionnée au 2° respecte la limite mentionnée au même 2°.",
+    "explanation": "La règle des activités mixtes comporte deux lacunes : (1) elle ne vise littéralement que le rattachement « aux trois catégories », sans formuler explicitement le plafond global lorsque l'entreprise relève seulement des catégories 1° bis et 2° (le plafond global est-il alors 77 700 € ou 188 700 € ?) ; (2) lorsque coexistent des activités des catégories 1° bis et 2°, le texte ne précise pas si la somme de leurs chiffres d'affaires doit respecter le seuil du 2° (77 700 €) ou seulement chaque sous-seuil pris isolément."
+  },
+  {
+    "legiarti": "LEGIARTI000048844097",
+    "category": "calcul",
+    "quote": "diminué d'un abattement, qui ne peut être inférieur à 305 €, de : -71 % pour le chiffre d'affaires provenant d'activités de la catégorie mentionnée au 1° ; -30 % pour le chiffre d'affaires provenant d'activités de la catégorie mentionnée au 1° bis ; -50 % pour le chiffre d'affaires provenant d'activités de la catégorie mentionnée au 2°.",
+    "explanation": "Trois questions de calcul : (1) en l'absence de clause « sans pouvoir excéder le chiffre d'affaires », un CA inférieur à 305 € donne-t-il un résultat nul ou déficitaire ? (2) En cas d'activité mixte relevant de plusieurs catégories, le minimum de 305 € s'applique-t-il globalement à l'entreprise ou séparément à chaque catégorie de CA ? (3) Aucune règle d'arrondi n'est précisée pour les abattements (y compris l'abattement supplémentaire de 21 %)."
+  },
+  {
+    "legiarti": "LEGIARTI000048844097",
+    "category": "calcul",
+    "quote": "ajusté s'il y a lieu au prorata du temps d'exploitation au cours de l'année de référence,",
+    "explanation": "La formule exacte du prorata temporis (jours sur 365/366 ou mois, traitement des entreprises saisonnières ou créées en cours d'année) et le régime des deux premières années d'exploitation (sans N−1 ou N−2) ne sont pas précisés. En outre, pour l'abattement supplémentaire de 21 %, le plafond de 15 000 € ne vise que « l'année civile précédente » (sans mentionner la pénultième année contrairement au premier alinéa)."
+  },
+  {
+    "legiarti": "LEGIARTI000048844097",
+    "category": "perimetre",
+    "quote": "lorsque ces derniers ne sont pas situés dans des zones géographiques se caractérisant par un déséquilibre important entre l'offre et la demande de logements,",
+    "explanation": "Le texte ne renvoie à aucun décret, arrêté ou article identifiant la liste des « zones géographiques se caractérisant par un déséquilibre important entre l'offre et la demande de logements » (par exemple zonage A/B/C), rendant impossible de déterminer quelles communes ouvrent droit à l'abattement supplémentaire de 21 %."
+  },
+  {
+    "legiarti": "LEGIARTI000048844097",
+    "category": "renvoi_externe",
+    "quote": "Le bénéfice de cet abattement supplémentaire est subordonné au respect du règlement (UE) n° 1407/2013 de la Commission du 18 décembre 2013 relatif à l'application des articles 107 et 108 du traité sur le fonctionnement de l'Union européenne aux aides de minimis.",
+    "explanation": "Le règlement (UE) n° 1407/2013, dont les plafonds triennaux de cumul d'aides sont externes au paquet, est expiré au 31 décembre 2023 (remplacé par le règlement (UE) 2023/2831), alors que cette version de l'article s'applique en 2024 : il faut déterminer quel règlement et quel plafond de minimis sont applicables. L'article renvoie également à de nombreux articles externes absents du paquet (1407, L. 324-1-1 du code du tourisme, 39 duodecies, 151 septies, 8, 35, 170, 239 nonies, 2011 C. civ., L. 169 LPF)."
+  },
+  {
+    "legiarti": "LEGIARTI000048844097",
+    "category": "parametre",
+    "quote": "Les seuils mentionnés au présent 1 sont actualisés tous les trois ans dans la même proportion que l'évolution triennale de la première tranche du barème de l'impôt sur le revenu et arrondis à la centaine d'euros la plus proche.",
+    "explanation": "Le texte ne précise ni le calendrier exact du cycle triennal et des années de référence du barème, ni si le seuil de 15 000 € (au 1° bis et pour l'abattement supplémentaire de 21 %) fait partie des « seuils mentionnés au présent 1 » soumis à cette actualisation triennale."
+  },
+  {
+    "legiarti": "LEGIARTI000048856832",
+    "category": "calcul",
+    "quote": "jusqu'au terme du cinquante-neuvième mois suivant celui du début de leur activité dans l'une de ces zones. Ces bénéfices sont soumis à l'impôt sur le revenu ou à l'impôt sur les sociétés à concurrence de 40 %, 60 % ou 80 % de leur montant selon qu'ils sont réalisés respectivement au cours de la première, de la deuxième ou de la troisième période de douze mois suivant cette période d'exonération.",
+    "explanation": "Lorsqu'un exercice comptable est à cheval sur deux périodes soumises à des taux d'exonération différents (par exemple fin du 59e mois à 100 % puis début de la période à 60 % d'exonération / 40 % imposé), le texte n'indique pas comment ventiler le bénéfice entre les deux périodes (prorata temporis en jours ou en mois, ou arrêt comptable intermédiaire). De même, la méthode exacte de proratisation du chiffre d'affaires « ramené ou porté le cas échéant à douze mois » (en jours ou en mois) n'est pas fixée."
+  },
+  {
+    "legiarti": "LEGIARTI000048856832",
+    "category": "calcul",
+    "quote": "dont l'effectif salarié dépasse deux cent cinquante salariés et dont le chiffre d'affaires annuel hors taxes excède 50 millions d'euros ou dont le total du bilan annuel excède 43 millions d'euros.",
+    "explanation": "La clause du b comporte une ambiguïté de priorité logique entre « et » et « ou » : faut-il lire `effectif > 250 ET (CA > 50 M€ OU bilan > 43 M€)` ou `(effectif > 250 ET CA > 50 M€) OU bilan > 43 M€` ? Par ailleurs, le a parle de « chiffre d'affaires » sans préciser « hors taxes » contrairement au b, et le texte n'indique pas à quelle date dans l'exercice s'apprécie la condition de détention du capital (de manière continue ou à la clôture) ni comment calculer la détention indirecte."
+  },
+  {
+    "legiarti": "LEGIARTI000048856832",
+    "category": "calcul",
+    "quote": "Lorsque l'activité non sédentaire d'un contribuable est implantée dans une zone franche urbaine-territoire entrepreneur mais est exercée en tout ou partie en dehors d'une telle zone, l'exonération s'applique si ce contribuable emploie au moins un salarié sédentaire à temps plein ou équivalent, exerçant ses fonctions dans les locaux affectés à l'activité, ou si ce contribuable réalise au moins 25 % de son chiffre d'affaires auprès de clients situés dans les zones franches urbaines-territoires entrepreneurs.",
+    "explanation": "L'articulation entre cette règle du I (pour les activités non sédentaires) et le sixième alinéa du II (« les bénéfices réalisés sont soumis à l'impôt ... en proportion du montant hors taxes du chiffre d'affaires ou de recettes réalisé en dehors de ces zones ») est ambiguë : lorsqu'une entreprise non sédentaire remplit l'une des deux conditions du I, bénéficie-t-elle d'une exonération sur 100 % de son bénéfice ou subit-elle malgré tout la proratisation du II ? En outre, les notions d'« activité non sédentaire », d'« équivalent » temps plein et de localisation du chiffre d'affaires « en dehors de ces zones » (lieu d'exécution, de livraison ou adresse du client) ne sont pas définies."
+  },
+  {
+    "legiarti": "LEGIARTI000048856832",
+    "category": "calcul",
+    "quote": "Le bénéfice exonéré ne peut excéder 50 000 € par contribuable et par période de douze mois, majoré de 5 000 € par nouveau salarié embauché à compter du 1er janvier 2015 domicilié dans un quartier prioritaire de la politique de la ville ou dans une zone franche urbaine-territoire entrepreneur et employé à temps plein pendant une période d'au moins six mois.",
+    "explanation": "Quatre questions de calcul se posent : (1) pendant les périodes d'abattement dégressif (exonération de 60 %, 40 % ou 20 %), le plafond de 50 000 € (+ 5 000 €/salarié) s'applique-t-il au bénéfice exonéré après application du taux ou est-il lui-même réduit à proportion du taux d'exonération ? (2) Ce plafond « par période de douze mois » doit-il être proratisé si l'exercice a une durée différente de douze mois ? (3) Un « nouveau salarié embauché » suppose-t-il une augmentation nette d'effectif (ou inclut-il un remplacement) et ouvre-t-il droit à la majoration de 5 000 € uniquement l'année d'embauche ou chaque année ? (4) En cas de société de personnes (article 8), la limite « par contribuable » s'apprécie-t-elle au niveau de la société ou de chaque associé ?"
+  },
+  {
+    "legiarti": "LEGIARTI000048856832",
+    "category": "calcul",
+    "quote": "diminué des produits bruts ci-après qui restent imposables dans les conditions de droit commun :",
+    "explanation": "Sauf pour le c (qui déduit les frais financiers), le II exclut les « produits bruts » (a, b, d) sans indiquer comment traiter les charges directement engagées pour la réalisation de ces produits (restent-elles déduites du bénéfice exonéré ou doivent-elles être isolées avec les produits imposables ?), ni comment opérer cette soustraction pour un contribuable soumis aux régimes forfaitaires micro-BIC (50-0) ou micro-BNC (102 ter)."
+  },
+  {
+    "legiarti": "LEGIARTI000048856832",
+    "category": "perimetre",
+    "quote": "soit égal au moins à la moitié du total des salariés employés dans les mêmes conditions. Les salariés employés à temps partiel sont pris en compte au prorata de la durée du travail prévue à leur contrat ;",
+    "explanation": "Le texte ne précise pas comment appliquer la clause d'embauche locale (50 %) lorsque l'entreprise n'emploie aucun salarié (0/0) ou n'emploie qu'un seul salarié en CDI ou CDD ≥ 12 mois (faut-il qu'il réside en ZFU-TE/QPV dès le 1er salarié, ou la clause ne s'applique-t-elle qu'à partir du deuxième salarié ?). Il ne précise pas non plus la durée de référence (légale ou conventionnelle) servant au prorata des salariés à temps partiel ni la règle d'arrondi."
+  },
+  {
+    "legiarti": "LEGIARTI000048856832",
+    "category": "renvoi_externe",
+    "quote": "le bénéfice de l'exonération est subordonné au respect du règlement (UE) n° 1407/2013 de la Commission, du 18 décembre 2013, relatif à l'application des articles 107 et 108 du traité sur le fonctionnement de l'Union européenne aux aides de minimis.",
+    "explanation": "Le règlement (UE) n° 1407/2013 était arrivé à expiration au 31 décembre 2023 alors que cette version de l'article entre en vigueur le 1er juillet 2024 : il faut confirmer le basculement vers le règlement (UE) 2023/2831 et son plafond. En outre, l'article dépend de délimitations géographiques externes (ZFU-TE de la loi n° 95-115, QPV, unités urbaines), de la nomenclature NAF de l'INSEE (et du critère définissant l'« activité principale »), de l'article L. 130-1 du CSS, d'un décret déclaratif (IV) et de nombreux articles du CGI absents du paquet."
+  },
+  {
+    "legiarti": "LEGIARTI000049641834",
+    "category": "autre",
+    "quote": "a. Aux produits des actions des sociétés de capital-risque mentionnées au 3° septies du même article prélevés sur des bénéfices exonérés d'impôt sur les sociétés ;",
+    "explanation": "Erreur de renvoi interne dans le texte : le a du 3° du 3 vise les sociétés mentionnées « au 3° septies du même article », alors qu'aucun article 208 n'a été mentionné auparavant dans le 3° (l'article 208 n'est cité qu'au b qui suit, et le dernier article cité au 1° est l'article 200 A qui ne comporte pas de 3° septies). Il faut corriger/interpréter ce renvoi comme visant le 3° septies de l'article 208 du CGI (comme au 4° c)."
+  },
+  {
+    "legiarti": "LEGIARTI000049641834",
+    "category": "appreciation",
+    "quote": "distribués par les sociétés passibles de l'impôt sur les sociétés ou d'un impôt équivalent ou soumises sur option à cet impôt, ayant leur siège dans un Etat de l'Union européenne ou dans un Etat ou territoire ayant conclu avec la France une convention fiscale en vue d'éviter les doubles impositions en matière d'impôt sur les revenus qui contient une clause d'assistance administrative en vue de lutter contre la fraude et l'évasion fiscales et résultant d'une décision régulière des organes compétents,",
+    "explanation": "L'éligibilité à l'abattement de 40 % repose sur des appréciations juridiques externes (« impôt équivalent », « décision régulière des organes compétents », ainsi qu'au 4° « organismes comparables » et « sociétés comparables » constitués selon un droit étranger) et sur la liste évolutive des États conventionnés avec clause d'assistance administrative."
+  },
+  {
+    "legiarti": "LEGIARTI000049641834",
+    "category": "calcul",
+    "quote": "Toutefois, ces résultats nets ne sont pas imposables lorsqu'ils sont utilisés pour compenser le déficit d'exploitation de l'exercice. Le déficit ainsi imputé ne peut plus être reporté sur les bénéfices des exercices ultérieurs.",
+    "explanation": "Au 4, comme pour les plus-values à long terme, le texte ne précise pas si la compensation du déficit d'exploitation de l'exercice par les résultats nets relevant de l'article 238 (cessions/concessions d'actifs incorporels) est obligatoire ou facultative, ni l'ordre d'imputation lorsque l'entreprise dispose à la fois de plus-values à long terme (article 39 quindecies) et de résultats relevant de l'article 238."
+  },
+  {
+    "legiarti": "LEGIARTI000049641834",
+    "category": "calcul",
+    "quote": "Les pensions et retraites font l'objet d'un abattement de 10 % qui ne peut excéder 4 321 €. Ce plafond s'applique au montant total des pensions et retraites perçues par l'ensemble des membres du foyer fiscal. Chaque année, il est révisé selon les mêmes modalités que la limite supérieure de la première tranche du barème de l'impôt sur le revenu. L'abattement indiqué au deuxième alinéa ne peut être inférieur à 442 €, sans pouvoir excéder le montant brut des pensions et retraites. Cette disposition s'applique au montant des pensions ou retraites perçu par chaque retraité ou pensionné membre du foyer fiscal.",
+    "explanation": "Trois questions de calcul : (1) comment combiner le plancher individuel (442 € par pensionné, plafonné à ses pensions brutes) et le plafond global par foyer fiscal (4 321 €) : calcule-t-on d'abord l'abattement individuel avec son plancher de 442 € pour chaque pensionné avant de plafonner la somme à 4 321 € au niveau du foyer, et que faire si la somme des planchers individuels dépassait le plafond du foyer ? (2) Lorsque le plafond de 4 321 € joue pour plusieurs pensionnés d'un foyer, comment ventiler l'abattement plafonné entre les membres du foyer ? (3) L'assiette des 10 % s'entend-elle avant ou après déduction de la CSG déductible et de l'abattement de 40 % de l'article 83 A ?"
+  },
+  {
+    "legiarti": "LEGIARTI000049641834",
+    "category": "parametre",
+    "quote": "Chaque année, il est révisé selon les mêmes modalités que la limite supérieure de la première tranche du barème de l'impôt sur le revenu.",
+    "explanation": "Au 5, a, les montants de 4 321 € et 442 € ne sont assortis d'aucune indication d'année d'imposition de référence, l'indice annuel de revalorisation (limite supérieure de la première tranche du barème de l'IR) est externe au paquet, et aucune règle d'arrondi n'est précisée ni pour les seuils révisés ni pour l'abattement de 10 % lui-même."
+  },
+  {
+    "legiarti": "LEGIARTI000049641834",
+    "category": "calcul",
+    "quote": "1° Sont imposées sans application de l'abattement prévu au deuxième alinéa du a du présent 5 pour la part correspondant au montant des versements mentionnés au 1° de l'article L. 224-2 du code monétaire et financier",
+    "explanation": "Au 5, b quinquies, en cas de sortie partielle ou fractionnée en capital d'un plan d'épargne retraite, le texte ne précise pas la règle de ventilation de chaque retrait entre la fraction correspondant aux versements (imposée selon le 1°) et la fraction correspondant aux produits financiers (imposée selon le 2°)."
+  },
+  {
+    "legiarti": "LEGIARTI000049641834",
+    "category": "perimetre",
+    "quote": "Cette fraction, déterminée d'après l'âge du crédirentier lors de l'entrée en jouissance de la rente, est fixée à : - 70 % si l'intéressé est âgé de moins de 50 ans ; - 50 % s'il est âgé de 50 à 59 ans inclus ; - 40 % s'il est âgé de 60 à 69 ans inclus ; - 30 % s'il est âgé de plus de 69 ans.",
+    "explanation": "Au 6, le texte ne précise pas quel âge retenir lorsque la rente viagère à titre onéreux est constituée sur deux têtes (avec réversion entre époux ou partenaires : âge du plus âgé, du plus jeune, ou réévaluation lors de la réversion au décès du premier ?) ni quelle date exacte constitue « l'entrée en jouissance » (date d'effet du contrat, date d'exigibilité du premier arrérage ou date de paiement effectif)."
+  },
+  {
+    "legiarti": "LEGIARTI000049641834",
+    "category": "calcul",
+    "quote": "Le montant des revenus et charges énumérés ci-après, retenu pour le calcul de l'impôt selon les modalités prévues à l'article 197, est multiplié par un coefficient de 1,25.",
+    "explanation": "Au 7, l'articulation du coefficient de 1,25 avec les autres règles d'assiette n'est pas précisée : pour les revenus distribués (2°), s'applique-t-il avant ou après déduction des frais de garde/encaissement et est-il exclusif de l'abattement de 40 % (3, 2°) ? Pour les pensions alimentaires visées au 3° (décisions antérieures au 1er janvier 2006), la mention « revenus et charges » ne précise pas si le coefficient de 1,25 s'applique symétriquement en déduction chez le débirentier (avant ou après plafond de l'article 156, II, 2°) et en imposition chez le crédirentier (avant ou après abattement de 10 %)."
+  },
+  {
+    "legiarti": "LEGIARTI000049641834",
+    "category": "renvoi_externe",
+    "quote": "Les revenus nets des diverses catégories entrant dans la composition du revenu net global sont évalués d'après les règles fixées aux articles 12 et 13 et dans les conditions prévues aux 2 à 6 ter ci-après,",
+    "explanation": "L'article 158 renvoie pour la détermination de chaque catégorie de revenus et de ses exceptions à de nombreux articles absents du paquet (notamment les articles 12, 13, 14 à 33 quinquies, 34 à 103, 109, 111, 120, 123 bis, 125 A, 125-0 A, 150-0 A à 150 VH bis, 197, 200 A, 200 C, 208, 238 du CGI et L. 224-2 du CMF)."
+  },
+  {
+    "legiarti": "LEGIARTI000049641842",
+    "category": "calcul",
+    "quote": "si le revenu global n'est pas suffisant pour que l'imputation puisse être intégralement opérée, l'excédent du déficit est reporté successivement sur le revenu global des années suivantes jusqu'à la sixième année inclusivement.",
+    "explanation": "L'article ne fixe pas l'ordre d'imputation lorsque coexistent des déficits catégoriels de l'année, des déficits globaux reportés d'années antérieures (ordre chronologique FIFO ?) et des charges déductibles du revenu global du II : les charges du II s'imputent-elles avant ou après les déficits reportés, et un excédent de charges du II par rapport au revenu global peut-il créer un déficit global reportable sur six ans ?"
+  },
+  {
+    "legiarti": "LEGIARTI000049641842",
+    "category": "parametre",
+    "quote": "lorsque le total des revenus nets d'autres sources excède 125 416 € ; ces déficits peuvent cependant être admis en déduction des bénéfices de même nature des années suivantes jusqu'à la sixième inclusivement. Le montant mentionné au premier alinéa est révisé chaque année selon les mêmes modalités que la limite supérieure de la première tranche du barème de l'impôt sur le revenu.",
+    "explanation": "Au I, 1°, l'année d'imposition de référence du seuil de 125 416 €, l'évolution annuelle de la première tranche du barème et la règle d'arrondi du seuil révisé ne sont pas indiqués. En outre, la composition du « total des revenus nets d'autres sources » est imprécise (inclusion ou non des revenus soumis à taux forfaitaire/PFU ou plus-values, appréciation avant ou après imputation des autres déficits catégoriels et des charges déductibles du II)."
+  },
+  {
+    "legiarti": "LEGIARTI000049641842",
+    "category": "appreciation",
+    "quote": "lorsque ces activités ne comportent pas la participation personnelle, continue et directe de l'un des membres du foyer fiscal à l'accomplissement des actes nécessaires à l'activité.",
+    "explanation": "Au I, 1° bis, le caractère non professionnel d'une activité BIC repose sur un critère cumulatif qualitatif (« participation personnelle, continue et directe ... à l'accomplissement des actes nécessaires à l'activité ») qui relève d'une appréciation de fait non calculable."
+  },
+  {
+    "legiarti": "LEGIARTI000049641842",
+    "category": "calcul",
+    "quote": "L'imputation exclusive sur les revenus fonciers n'est pas non plus applicable aux déficits fonciers résultant de dépenses autres que les intérêts d'emprunt. L'imputation est limitée à 10 700 €. La fraction du déficit supérieure à 10 700 € et la fraction du déficit non imputable résultant des intérêts d'emprunt sont déduites dans les conditions prévues au premier alinéa.",
+    "explanation": "Au I, 3°, le texte ne définit pas l'ordre d'imputation des charges sur les revenus fonciers bruts pour déterminer quelle part du déficit foncier « résulte des intérêts d'emprunt » et quelle part « résulte de dépenses autres que les intérêts d'emprunt » : faut-il imputer en priorité les intérêts d'emprunt sur les loyers bruts (maximisant le déficit imputable sur le revenu global), les autres dépenses en priorité, ou opérer un prorata ?"
+  },
+  {
+    "legiarti": "LEGIARTI000049641842",
+    "category": "calcul",
+    "quote": "La limite mentionnée au deuxième alinéa est portée à 15 300 € pour les contribuables qui constatent un déficit foncier sur un logement pour lequel est pratiquée l'une des déductions prévues aux f ou o du 1° du I de l'article 31. La limite mentionnée au deuxième alinéa du présent 3° est rehaussée, sans pouvoir excéder 21 400 € par an, à concurrence du montant des dépenses déductibles de travaux de rénovation énergétique permettant à un bien de passer d'une classe énergétique E, F ou G, au sens de l'article L. 173-1-1 du code de la construction et de l'habitation, à une classe de performance énergétique A, B, C ou D, au sens du même article L. 173-1-1, au plus tard le 31 décembre 2025, dans des conditions définies par décret.",
+    "explanation": "L'articulation des deux majorations (15 300 € et rehaussement jusqu'à 21 400 €) en cas de cumul sur un même foyer ou un même logement n'est pas explicitée (le rehaussement énergétique s'ajoute-t-il à 10 700 € ou à 15 300 €, et reste-t-il plafonné à 21 400 € ?). En outre, la nature exacte et les dates de devis/paiement des travaux de rénovation énergétique éligibles renvoient expressément à un décret absent du paquet (ainsi qu'aux articles 31 du CGI et L. 173-1-1 du CCH)."
+  },
+  {
+    "legiarti": "LEGIARTI000049641842",
+    "category": "perimetre",
+    "quote": "Lorsque le propriétaire cesse de louer un immeuble ou lorsque le propriétaire de titres d'une société non soumise à l'impôt sur les sociétés les vend, le revenu foncier et le revenu global des trois années qui précèdent celle au cours de laquelle intervient cet événement sont, nonobstant toute disposition contraire, reconstitués selon les modalités prévues au premier alinéa du présent 3°.",
+    "explanation": "La portée de la remise en cause du déficit foncier imputé sur le revenu global appelle plusieurs précisions : traitement d'une vacance locative involontaire entre deux baux, effet d'une cession partielle de titres d'une SCI, et assiette de la reconstitution lorsque le contribuable loue plusieurs immeubles (reconstitution globale de tout le déficit foncier imputé ou de la seule part afférente à l'immeuble dont la location cesse ?)."
+  },
+  {
+    "legiarti": "LEGIARTI000049641842",
+    "category": "calcul",
+    "quote": "La déduction est limitée, par enfant majeur, au montant fixé pour l'abattement prévu par l'article 196 B. Lorsque l'enfant est marié, cette limite est doublée au profit du parent qui justifie qu'il participe seul à l'entretien du ménage.",
+    "explanation": "Quatre points à préciser au II, 2° : (1) le plafond est fixé par renvoi à l'article 196 B (absent du paquet) ; (2) le doublement visant « l'enfant marié » s'étend-il à l'enfant majeur pacsé ou célibataire chargé de famille ? (3) la preuve que le parent « participe seul à l'entretien du ménage » relève d'une appréciation de fait ; (4) lorsque les deux parents sont imposés séparément et versent chacun une pension à un même enfant majeur, la limite s'applique-t-elle par parent ou cumulativement aux deux parents ?"
+  },
+  {
+    "legiarti": "LEGIARTI000049641842",
+    "category": "parametre",
+    "quote": "à des personnes agées de plus de 75 ans vivant sous le toit du contribuable et dont le revenu imposable n'excède pas le plafond de ressources mentionné à l'article L. 815-9 du code de la sécurité sociale pour l'octroi de l'allocation de solidarité aux personnes âgées mentionnée à l'article L. 815-1 du même code et de l'allocation supplémentaire d'invalidité mentionnée à l'article L. 815-24 du même code. La déduction opérée par le contribuable ne peut excéder, par bénéficiaire, la somme de 3 968 €. Le montant de la déduction mentionnée au premier alinéa est relevé chaque année dans la même proportion que la limite supérieure de la première tranche du barème de l'impôt sur le revenu ;",
+    "explanation": "Au II, 2° ter : (1) le plafond de ressources renvoie à l'article L. 815-9 du CSS (absent du paquet) en mentionnant conjointement l'ASPA et l'ASI qui ont des plafonds distincts (et variant entre personne seule et couple) : quel plafond comparer au « revenu imposable » de la personne accueillie (et avant ou après abattement de 10 % sur pensions) ? (2) L'article ne précise pas comment évaluer les « avantages en nature », ni si le plafond de 3 968 € est proratisé en cas d'accueil en cours d'année, ni son année de référence et sa règle d'arrondi annuel. (3) La borne « âgées de plus de 75 ans » (75 ans révolus ou strictement plus de 75 ans ?) et la condition « vivant sous le toit » restent à préciser."
+  },
+  {
+    "legiarti": "LEGIARTI000049641842",
+    "category": "renvoi_externe",
+    "quote": "Dans les conditions fixées par décret, les charges foncières afférentes aux immeubles classés monuments historiques ou inscrits au titre des monuments historiques,",
+    "explanation": "De nombreux mécanismes déductibles de l'article 156 reposent sur des décrets et articles externes absents du paquet : décret sur les charges foncières des monuments historiques (II, 1° ter), décret en Conseil d'État sur le capital de rente (II, 2°), statut LMP (I, 1° ter renvoyant au IV de l'article 155), plafonds de cotisations des articles 154 bis-0 A, L. 222-2 du code de la mutualité, L. 621-1 et L. 622-2 du CSS, ainsi que le renvoi ancien à l'article R.* 421-40 du code de l'urbanisme (I, 1° bis, a)."
+  },
+  {
+    "legiarti": "LEGIARTI000049641925",
+    "category": "renvoi_externe",
+    "quote": "Les cotisations versées conformément aux dispositions du règlement CEE n° 1408/71 du Conseil du 14 juin 1971 relatif à l'application des régimes de sécurité sociale aux travailleurs salariés et aux membres de leur famille qui se déplacent à l'intérieur de la Communauté",
+    "explanation": "Le 1° 0 bis renvoie encore au règlement CEE n° 1408/71, qui a été abrogé et remplacé par le règlement (CE) n° 883/2004 : il faut confirmer l'application aux règlements européens successeurs. Plus généralement, les 1° à 2° bis renvoient à de nombreuses dispositions externes (CSS, CGFP, code de la défense, code des assurances, CMF, code du travail, conventions internationales) absentes du paquet."
+  },
+  {
+    "legiarti": "LEGIARTI000049641925",
+    "category": "parametre",
+    "quote": "dans la limite d'un montant égal à la somme de 5 % du montant annuel du plafond mentionné à l'article L. 241-3 du code de la sécurité sociale et de 2 % de la rémunération annuelle brute, sans que le total ainsi obtenu puisse excéder 2 % de huit fois le montant annuel du plafond précité.",
+    "explanation": "Au 1° quater et au 2°, la valeur du plafond annuel de la sécurité sociale (PASS, article L. 241-3 du CSS) est un paramètre annuel externe (sans précision sur une éventuelle proratisation en cas de temps partiel ou d'entrée/sortie en cours d'année). Par ailleurs, la définition exacte de la « rémunération annuelle brute » (au sens fiscal ou sécurité sociale, incluant ou non les avantages en nature et les cotisations patronales de frais de santé ajoutées à la rémunération imposable au 1° quater) et la maille d'appréciation des limites en cas de pluralité d'employeurs (par employeur ou tous employeurs confondus) ne sont pas précisées. Au 2°, la réduction de la limite renvoie aussi au 18° de l'article 81 (absent)."
+  },
+  {
+    "legiarti": "LEGIARTI000049641925",
+    "category": "calcul",
+    "quote": "La contribution prévue à l'article L. 137-11-1 du code de la sécurité sociale dans la limite de la fraction acquittée au titre des premiers 1 000 € de rente mensuelle ;",
+    "explanation": "Au 2°-0 quater, outre que le barème et les taux de la contribution de l'article L. 137-11-1 du CSS sont externes au paquet, le texte ne précise pas comment calculer la fraction afférente aux « premiers 1 000 € de rente mensuelle » lorsque la rente est servie selon une périodicité non mensuelle, varie en cours d'année ou résulte de plusieurs contrats."
+  },
+  {
+    "legiarti": "LEGIARTI000049641925",
+    "category": "calcul",
+    "quote": "La déduction à effectuer du chef des frais professionnels est calculée forfaitairement en fonction du revenu brut, après défalcation des cotisations, contributions et intérêts mentionnés aux 1° à 2° ter ; elle est fixée à 10 % du montant de ce revenu. Elle est limitée à 14 171 € pour l'imposition des rémunérations perçues en 2023 ; chaque année, le plafond retenu pour l'imposition des revenus de l'année précédente est relevé dans la même proportion que la limite supérieure de la première tranche du barème de l'impôt sur le revenu. Le montant de la déduction forfaitaire pour frais professionnels ne peut être inférieur à 495 €, sans pouvoir excéder le montant brut des traitements et salaires. Cette disposition s'applique séparément aux rémunérations perçues par chaque membre du foyer fiscal désigné aux 1 et 3 de l'article 6.",
+    "explanation": "Trois imprécisions de calcul : (1) l'assiette des 10 % est le revenu brut « après défalcation des cotisations... », tandis que le plafonnement du minimum de 495 € renvoie au « montant brut des traitements et salaires » : si le revenu net de cotisations est inférieur à 495 € alors que le salaire brut dépasse 495 €, le minimum est-il limité au salaire net de cotisations (évitant un déficit salarial) ou au salaire brut ? (2) L'individualisation par membre du foyer (« Cette disposition s'applique séparément... ») figure juste après le plancher de 495 € : il faut confirmer qu'elle s'applique également au plafond de 14 171 €. (3) Le renvoi « 1° à 2° ter » et la mention « intérêts » visent des dispositions abrogées (le 2° ter étant abrogé)."
+  },
+  {
+    "legiarti": "LEGIARTI000049641925",
+    "category": "parametre",
+    "quote": "chaque année, le plafond retenu pour l'imposition des revenus de l'année précédente est relevé dans la même proportion que la limite supérieure de la première tranche du barème de l'impôt sur le revenu.",
+    "explanation": "Pour les années postérieures à 2023, la proportion d'évolution de la première tranche du barème est externe au paquet, l'année de référence du plancher de 495 € n'est pas mentionnée explicitement (contrairement à 14 171 € fixé pour 2023), et aucune règle d'arrondi n'est précisée ni pour la révision annuelle du plafond et du plancher ni pour le calcul de la déduction de 10 %."
+  },
+  {
+    "legiarti": "LEGIARTI000049641925",
+    "category": "appreciation",
+    "quote": "3° Les frais inhérents à la fonction ou à l'emploi lorsqu'ils ne sont pas couverts par des allocations spéciales.",
+    "explanation": "La qualification de frais « inhérents à la fonction ou à l'emploi » (délimitation entre frais professionnels déductibles et dépenses personnelles : repas, tenue, télétravail, double résidence) repose sur une appréciation juridique et factuelle. En outre, l'article ne précise pas expressément l'obligation de réintégrer les « allocations spéciales » pour frais d'emploi dans le revenu imposable lorsque le salarié opte pour les frais réels."
+  },
+  {
+    "legiarti": "LEGIARTI000049641925",
+    "category": "perimetre",
+    "quote": "Les bénéficiaires de traitements et salaires sont également admis à justifier du montant de leurs frais réels,",
+    "explanation": "Le texte ne précise pas si l'option pour les frais réels s'exerce individuellement par chaque membre du foyer fiscal (permettant à un conjoint d'opter pour les frais réels et à l'autre de conserver les 10 %) et si elle s'impose de façon indivisible à l'ensemble des rémunérations salariales perçues par ce membre au cours de l'année."
+  },
+  {
+    "legiarti": "LEGIARTI000049641925",
+    "category": "calcul",
+    "quote": "Le montant des frais réels à prendre en compte au titre de l'acquisition des immeubles, des véhicules et autres biens dont la durée d'utilisation est supérieure à un an s'entend de la dépréciation que ces biens ont subie au cours de l'année d'imposition.",
+    "explanation": "Aucune méthode de calcul (durée ou taux d'amortissement, valeur vénale, cote argus, prorata d'usage professionnel/privé) n'est définie pour quantifier la « dépréciation que ces biens ont subie au cours de l'année d'imposition »."
+  },
+  {
+    "legiarti": "LEGIARTI000049641925",
+    "category": "appreciation",
+    "quote": "Lorsque la distance est supérieure, la déduction admise porte sur les quarante premiers kilomètres, sauf circonstances particulières notamment liées à l'emploi justifiant une prise en compte complète.",
+    "explanation": "La dérogation pour « circonstances particulières notamment liées à l'emploi » est un standard qualitatif non calculable. De plus, le texte ne précise pas si la limite de « quarante kilomètres » s'entend pour un aller simple (soit 80 km aller-retour) et pour un seul aller-retour quotidien."
+  },
+  {
+    "legiarti": "LEGIARTI000049641925",
+    "category": "renvoi_externe",
+    "quote": "sur le fondement d'un barème forfaitaire fixé par arrêté du ministre chargé du budget en fonction de la puissance administrative du véhicule, retenue dans la limite maximale de sept chevaux, du type de motorisation du véhicule, et de la distance annuelle parcourue.",
+    "explanation": "Le barème kilométrique forfaitaire — qui régit à la fois l'évaluation forfaitaire et le plafond absolu des frais réels de véhicule à l'alinéa suivant — est fixé par un arrêté ministériel annuel absent du paquet."
+  },
+  {
+    "legiarti": "LEGIARTI000049641925",
+    "category": "appreciation",
+    "quote": "dès lors que ces dépenses sont utiles à l'acquisition ou à la conservation de ses revenus. Les intérêts admis en déduction sont ceux qui correspondent à la part de l'emprunt dont le montant est proportionné à la rémunération annuelle perçue ou escomptée au moment où l'emprunt est contracté.",
+    "explanation": "Plusieurs standards qualitatifs non chiffrés doivent être appréciés pour la déduction des intérêts d'emprunt de souscription/acquisition de titres : le caractère « utile à l'acquisition ou à la conservation de ses revenus », le seuil ou ratio définissant un emprunt « proportionné » à la rémunération annuelle (aucun multiple n'étant fixé par la loi), l'évaluation d'une rémunération « escomptée », et la qualification d'« activité professionnelle principale » en cas de pluriactivité."
+  }
+]

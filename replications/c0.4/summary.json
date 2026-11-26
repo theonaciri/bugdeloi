@@ -138,6 +138,145 @@
           }
         ]
       }
+    },
+    {
+      "name": "gemini-4-neon-blind",
+      "sha256": "ce5a988b3a242ae5c438b5adfaea82b374daf57588bbda52a6560442babba405",
+      "result": {
+        "totalGroundTruth": 113,
+        "inPacket": 44,
+        "matched": 16,
+        "recallPercent": 36.36,
+        "observations": 145,
+        "bySuite": {
+          "aides_logement": {
+            "totalGroundTruth": 8,
+            "inPacket": 5,
+            "matched": 2,
+            "recallPercent": 40
+          },
+          "allocations_familiales": {
+            "totalGroundTruth": 3,
+            "inPacket": 3,
+            "matched": 2,
+            "recallPercent": 66.67
+          },
+          "asp": {
+            "totalGroundTruth": 24,
+            "inPacket": 0,
+            "matched": 0,
+            "recallPercent": null
+          },
+          "impot_revenu": {
+            "totalGroundTruth": 77,
+            "inPacket": 35,
+            "matched": 12,
+            "recallPercent": 34.29
+          },
+          "prestations_familiales": {
+            "totalGroundTruth": 1,
+            "inPacket": 1,
+            "matched": 0,
+            "recallPercent": 0
+          }
+        },
+        "byKind": {
+          "todo_juridique": {
+            "totalGroundTruth": 50,
+            "inPacket": 17,
+            "matched": 7,
+            "recallPercent": 41.18
+          },
+          "dependance_bofip": {
+            "totalGroundTruth": 63,
+            "inPacket": 27,
+            "matched": 9,
+            "recallPercent": 33.33
+          }
+        },
+        "matches": [
+          {
+            "itemId": "c04-todo-004",
+            "observation": 55,
+            "topics": ["pourcentage réglementaire"]
+          },
+          {
+            "itemId": "c04-todo-006",
+            "observation": 66,
+            "topics": ["différence entre les prêts"]
+          },
+          {
+            "itemId": "c04-todo-010",
+            "observation": 20,
+            "topics": ["charge effective"]
+          },
+          {
+            "itemId": "c04-todo-011",
+            "observation": 8,
+            "topics": ["avantages en nature"]
+          },
+          {
+            "itemId": "c04-bofip-001",
+            "observation": 80,
+            "topics": ["plus et moins-values"]
+          },
+          {
+            "itemId": "c04-bofip-002",
+            "observation": 41,
+            "topics": ["plus et moins-values"]
+          },
+          {
+            "itemId": "c04-bofip-003",
+            "observation": 40,
+            "topics": ["plus et moins-values"]
+          },
+          {
+            "itemId": "c04-bofip-006",
+            "observation": 103,
+            "topics": ["meublés et régime d’abattement"]
+          },
+          {
+            "itemId": "c04-bofip-007",
+            "observation": 17,
+            "topics": ["plancher, plafond ou ordre de l’abattement"]
+          },
+          {
+            "itemId": "c04-bofip-011",
+            "observation": 138,
+            "topics": ["plancher, plafond ou ordre de l’abattement"]
+          },
+          {
+            "itemId": "c04-todo-038",
+            "observation": 1,
+            "topics": ["montant brut et abattement"]
+          },
+          {
+            "itemId": "c04-bofip-019",
+            "observation": 129,
+            "topics": ["imputation du déficit"]
+          },
+          {
+            "itemId": "c04-todo-040",
+            "observation": 126,
+            "topics": ["imputation du déficit"]
+          },
+          {
+            "itemId": "c04-bofip-020",
+            "observation": 120,
+            "topics": ["plancher, plafond ou ordre de l’abattement"]
+          },
+          {
+            "itemId": "c04-bofip-024",
+            "observation": 94,
+            "topics": ["plancher, plafond ou ordre de l’abattement"]
+          },
+          {
+            "itemId": "c04-todo-042",
+            "observation": 35,
+            "topics": ["enfants mineurs ou majeurs à charge"]
+          }
+        ]
+      }
     }
   ]
 }

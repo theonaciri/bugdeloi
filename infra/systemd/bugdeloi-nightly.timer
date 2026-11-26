@@ -1,0 +1,12 @@
+# Déclenche bugdeloi-nightly.service chaque nuit à 03:30 (heure de Paris).
+[Unit]
+Description=BugDeLoi - synchronisation nocturne
+
+[Timer]
+OnCalendar=*-*-* 03:30:00 Europe/Paris
+RandomizedDelaySec=15m
+Persistent=true
+Unit=bugdeloi-nightly.service
+
+[Install]
+WantedBy=timers.target

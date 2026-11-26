@@ -217,6 +217,28 @@ const title = $derived(a.num ? `Article ${a.num}` : a.id)
           </p>
         </section>
 
+        {#if data.doctrine.length > 0}
+          <section class="space-y-3 border-t border-line pt-6" aria-labelledby="doctrine">
+            <h2 id="doctrine" class="font-serif text-xl font-semibold">Doctrine fiscale (BOFiP)</h2>
+            <p class="text-sm leading-relaxed text-muted">
+              L’administration fiscale publie des commentaires officiels pour expliquer comment elle applique la loi.
+              BugDeLoi les présente séparément du texte voté : tout écart entre la loi et la doctrine peut faire l’objet
+              d’un signalement.
+            </p>
+            <ul class="divide-y divide-line text-sm">
+              {#each data.doctrine as entry (entry.bofipRef)}
+                <li class="py-2.5">
+                  <a href={entry.url} rel="external" class="font-mono text-xs font-semibold">
+                    {entry.bofipRef}
+                  </a>
+                  <p class="mt-0.5 text-sm text-ink">{entry.title}</p>
+                  <p class="mt-1 text-xs leading-relaxed text-muted">{entry.note}</p>
+                </li>
+              {/each}
+            </ul>
+          </section>
+        {/if}
+
         <section class="space-y-3 border-t border-line pt-6" aria-labelledby="empreinte">
           <h2 id="empreinte" class="font-serif text-xl font-semibold">Preuve d’authenticité technique</h2>
           <details class="text-sm">

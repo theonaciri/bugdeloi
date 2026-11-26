@@ -36,13 +36,13 @@ let { data }: PageProps = $props()
             </a>
           </h2>
           <p class="mt-2.5 max-w-[62ch] text-base leading-relaxed text-muted">
-            Formalisation en Catala des articles 193, 194 et 197 en vigueur en 2026, accompagnée d’un simulateur direct
-            dans le navigateur et d’un balayage au pas de 1 € sur quatre foyers types. Le détecteur retrouve le taux
-            marginal effectif de {data.c06.decoteTme.toFixed(2).replace('.', ',')} % dans la zone de décote et un pic
-            temporaire à 43,58 % entre 29 579 € et 29 594 €.
+            Formalisation en Catala des articles 193, 194, 197 et 1657 en vigueur en 2026, accompagnée d’un simulateur
+            direct dans le navigateur et d’un balayage au pas de 1 € sur quatre foyers types. Le détecteur retrouve le
+            taux marginal de {data.c06.decoteTme.toFixed(2).replace('.', ',')} % dans la décote, un pic à 43,58 % entre
+            29 579 € et 29 594 €, et la vraie falaise de 61 € (+6 100 %) due à l’article 1657 1 bis.
           </p>
           <p class="mt-3 text-sm font-medium text-brand-strong">
-            12/12 tests Catala réussis · 30 cas de contrôle · {data.c06.totalKinks} coudes détectés · {data.c06.totalCliffs} falaise
+            14/14 tests Catala · 10 000 foyers en différentiel (0 divergence) · 93,75 % mutation · {data.c06.totalCliffs1657} falaises 61 €
           </p>
         </div>
         <div class="lg:col-span-4 lg:text-right">
@@ -87,12 +87,13 @@ let { data }: PageProps = $props()
           <p class="mt-2.5 max-w-[62ch] text-base leading-relaxed text-muted">
             Les chercheurs d’Inria et de la DGFiP ont noté {data.c04.totalGroundTruth} questions d’interprétation et
             dépendances à la doctrine fiscale dans leurs programmes publics, dont {data.c04.inPacket} portent sur des
-            versions d’articles présentes dans notre base. Un premier témoin purement mécanique (sans IA) en retrouve
-            {data.c04.baselineMatched} sur {data.c04.inPacket} ({data.c04.baselineRecallPct !== null ? `${data.c04.baselineRecallPct.toFixed(2).replace('.', ',')} %` : '0 %'}) :
-            le paquet aveugle est désormais prêt pour mesurer des analystes IA et humains.
+            versions d’articles présentes dans notre base. Sans jamais voir les travaux d’Inria, un analyste IA aveugle
+            (Gemini 4 Neon) en retrouve <strong>{data.c04.blindMatched} sur {data.c04.inPacket} ({data.c04.blindRecallPct.toFixed(2).replace('.', ',')} %)</strong>,
+            contre {data.c04.baselineMatched} sur {data.c04.inPacket} ({data.c04.baselineRecallPct !== null ? `${data.c04.baselineRecallPct.toFixed(2).replace('.', ',')} %` : '0 %'})
+            pour un détecteur purement mécanique.
           </p>
           <p class="mt-3 text-xs text-muted">
-            Un compte, pas une probabilité · harnais aveugle vérifié sans fuite dans le dépôt.
+            Un compte, pas une probabilité · {data.c04.blindObservations} observations aveugles vérifiées sans fuite.
           </p>
         </div>
         <div class="lg:col-span-4 lg:text-right">

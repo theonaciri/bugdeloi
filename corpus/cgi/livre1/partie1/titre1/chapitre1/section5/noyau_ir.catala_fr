@@ -49,6 +49,8 @@ déclaration champ d'application CalculImpôtRevenu:
   résultat réfaction_outre_mer contenu argent
   résultat décote contenu argent
   résultat impôt_net_avant_crédits contenu argent
+  résultat impôt_arrondi_euro contenu argent
+  résultat impôt_mis_en_recouvrement contenu argent
 ```
 
 #### Article 193|LEGIARTI000054373592
@@ -216,6 +218,24 @@ champ d'application CalculImpôtRevenu:
     sinon décote_théorique
 
   définition impôt_net_avant_crédits égal à impôt_après_réfaction - décote
+```
+
+#### Article 1657|LEGIARTI000051219510
+
+1. Les bases de cotisation des impôts directs sont arrondies à l'euro le plus proche ; la fraction d'euro égale à 0,50 est comptée pour 1. Les bases des taxes foncières et de la taxe d'habitation sur les résidences secondaires ainsi que celles des taxes annexes correspondantes sont arrondies selon les modalités définies au premier alinéa. Les taux applicables aux bases de cotisations pour le calcul des impositions directes locales sont exprimés avec trois chiffres significatifs, le troisième chiffre étant augmenté d'une unité si le chiffre suivant est égal ou supérieur à 5. Les cotisations d'impôts directs de toute nature sont arrondies selon les modalités définies au premier alinéa. Il en est de même du montant des majorations, réductions et dégrèvements. Les tarifs par élément imposable prévus pour le calcul de certaines taxes perçues au profit des départements, des communes et de divers établissements sont, s'il y a lieu et nonobstant les maxima fixés par les dispositions les régissant, arrondis à l'euro le plus proche dans les mêmes conditions. En ce qui concerne les impositions locales perçues au profit des collectivités locales et organismes compétents, les différences en plus ou en moins résultant de l'arrondissement des taux et du montant des cotisations viennent en augmentation ou en diminution du produit des sommes revenant à l'Etat pour frais de dégrèvement et non-valeurs et pour frais d'assiette et de recouvrement. 1 bis. Les cotisations initiales d'impôt sur le revenu ne sont pas mises en recouvrement lorsque leur montant, avant imputation de tout crédit d'impôt, est inférieur à 61 €. 2. Les cotisations d'impôts directs dont le montant total par article de rôle est inférieur à 12 € ne sont pas mises en recouvrement si elles sont perçues au profit du budget de l'Etat ; elles sont allouées en non-valeurs si elles sont perçues au profit d'un autre budget.
+
+```catala
+# Article 1657 (LEGIARTI000051219510), 1 (arrondi à l'euro) et 1 bis (seuil de 61 €).
+# Hors périmètre : impositions directes locales et seuil général de 12 € (2).
+champ d'application CalculImpôtRevenu:
+  définition impôt_arrondi_euro égal à
+    # Article 1657 (LEGIARTI000051219510), 1 : cotisation arrondie à l'euro le plus proche (0,50 -> 1).
+    arrondi de impôt_net_avant_crédits
+
+  définition impôt_mis_en_recouvrement égal à
+    # Article 1657 (LEGIARTI000051219510), 1 bis : non mis en recouvrement si inférieur à 61 €.
+    si impôt_arrondi_euro < 61€ alors 0€
+    sinon impôt_arrondi_euro
 ```
 
 ##### Tests de vérification du noyau IR 2026
@@ -414,4 +434,39 @@ champ d'application TestRefactionGuyaneMayotte40:
   # source : CGI article 197 I.3, 17 103,99 € - 4 050,00 € = 13 053,99 €.
   assertion c.réfaction_outre_mer = 4 050,00€
   assertion c.impôt_net_avant_crédits = 13 053,99€
+  # source : CGI article 1657, 1 et 1 bis : 13 054 € mis en recouvrement.
+  assertion c.impôt_arrondi_euro = 13 054€
+  assertion c.impôt_mis_en_recouvrement = 13 054€
+
+# source : dérivation CGI article 1657 1 bis (LEGIARTI000051219510), avant falaise 61 €.
+#[test]
+déclaration champ d'application TestFalaise61Avant:
+  c champ d'application CalculImpôtRevenu
+
+champ d'application TestFalaise61Avant:
+  # source : CGI article 197 et 1657 1 bis, 17 592 € donne 60,37 € arrondi à 60 € (< 61 €).
+  définition c.revenu_net_imposable égal à 17 592€
+  définition c.situation_familiale égal à Célibataire
+  définition c.enfants_à_charge_exclusive_ou_principale égal à 0
+  définition c.appréciation_vit_seul égal à faux
+  définition c.domicile_fiscal égal à Métropole
+  # source : CGI article 1657, 1 bis : cotisation de 60 € non mise en recouvrement (0 €).
+  assertion c.impôt_arrondi_euro = 60€
+  assertion c.impôt_mis_en_recouvrement = 0€
+
+# source : dérivation CGI article 1657 1 bis (LEGIARTI000051219510), franchissement falaise 61 €.
+#[test]
+déclaration champ d'application TestFalaise61Apres:
+  c champ d'application CalculImpôtRevenu
+
+champ d'application TestFalaise61Apres:
+  # source : CGI article 197 et 1657 1 bis, +1 € (17 593 €) donne 60,53 € arrondi à 61 € (>= 61 €).
+  définition c.revenu_net_imposable égal à 17 593€
+  définition c.situation_familiale égal à Célibataire
+  définition c.enfants_à_charge_exclusive_ou_principale égal à 0
+  définition c.appréciation_vit_seul égal à faux
+  définition c.domicile_fiscal égal à Métropole
+  # source : CGI article 1657, 1 bis : cotisation de 61 € mise en recouvrement (+61 € pour +1 € de revenu).
+  assertion c.impôt_arrondi_euro = 61€
+  assertion c.impôt_mis_en_recouvrement = 61€
 ```

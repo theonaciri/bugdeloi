@@ -19,9 +19,10 @@ Le paquet contient les textes DILA de **25 versions** d’articles.
 
 ## Soumissions évaluées
 
-| Soumission       | Signalements | Annotations appariées | Rappel |
-| ---------------- | -----------: | --------------------: | -----: |
-| `baseline-rules` |           13 |                  2/44 | 4,55 % |
+| Soumission            | Signalements | Annotations appariées |  Rappel |
+| --------------------- | -----------: | --------------------: | ------: |
+| `baseline-rules`      |           13 |                  2/44 |  4,55 % |
+| `gemini-4-neon-blind` |          145 |                 16/44 | 36,36 % |
 
 ## Méthode et limites
 

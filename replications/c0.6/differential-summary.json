@@ -1,0 +1,9 @@
+{
+  "totalCases": 10000,
+  "thresholdCasesIncluded": 492,
+  "divergences": 0,
+  "unexplainedDivergences": 0,
+  "samples": [],
+  "seed": 20260701,
+  "note": "Un compte, pas une probabilité. Différentiel entre le moteur BigInt (aligné Catala) et une implémentation par part indépendante."
+}

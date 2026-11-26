@@ -3,13 +3,15 @@
   "legalUnits": [
     "LEGIARTI000054373592@2026-07-01",
     "LEGIARTI000033817781@2018-01-01",
-    "LEGIARTI000053542636@2026-02-21"
+    "LEGIARTI000053542636@2026-02-21",
+    "LEGIARTI000051219510@2025-02-16"
   ],
   "sweepRangeEuros": [0, 200000],
   "stepEuros": 1,
   "totalCliffs": 0,
+  "totalCliffs1657": 4,
   "totalKinks": 18,
-  "note": "Un compte, pas une probabilité. Balayage déterministe au pas de 1 € sur le noyau CGI 193-197 seul (hors seuils de recouvrement de 61 € et hors aides sociales).",
+  "note": "Un compte, pas une probabilité. Balayage déterministe au pas de 1 € sur CGI 193-197 (0 falaise) et avec seuil de recouvrement art. 1657 1 bis (falaise de +61 € pour +1 € de revenu, TME 6 100 %).",
   "households": [
     {
       "id": "celibataire-1p",
@@ -59,6 +61,14 @@
         }
       ],
       "cliffs": [],
+      "cliff1657": {
+        "revenuAvantEuros": 17592,
+        "revenuApresEuros": 17593,
+        "impotAvantEuros": 0,
+        "impotApresEuros": 61,
+        "perteRevenuDisponibleEuros": 60,
+        "tmePct": 6100
+      },
       "curve": [
         {
           "revenuEuros": 0,
@@ -692,6 +702,14 @@
         }
       ],
       "cliffs": [],
+      "cliff1657": {
+        "revenuAvantEuros": 32860,
+        "revenuApresEuros": 32861,
+        "impotAvantEuros": 0,
+        "impotApresEuros": 61,
+        "perteRevenuDisponibleEuros": 60,
+        "tmePct": 6100
+      },
       "curve": [
         {
           "revenuEuros": 0,
@@ -1304,6 +1322,14 @@
         }
       ],
       "cliffs": [],
+      "cliff1657": {
+        "revenuAvantEuros": 44460,
+        "revenuApresEuros": 44461,
+        "impotAvantEuros": 0,
+        "impotApresEuros": 61,
+        "perteRevenuDisponibleEuros": 60,
+        "tmePct": 6100
+      },
       "curve": [
         {
           "revenuEuros": 0,
@@ -1922,6 +1948,14 @@
         }
       ],
       "cliffs": [],
+      "cliff1657": {
+        "revenuAvantEuros": 29192,
+        "revenuApresEuros": 29193,
+        "impotAvantEuros": 0,
+        "impotApresEuros": 61,
+        "perteRevenuDisponibleEuros": 60,
+        "tmePct": 6100
+      },
       "curve": [
         {
           "revenuEuros": 0,

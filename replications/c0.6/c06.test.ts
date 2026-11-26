@@ -1,6 +1,8 @@
 import { describe, expect, test } from 'bun:test'
 import { analyzeHousehold, households } from './detect-kinks.ts'
+import { runDifferential } from './differential.ts'
 import { calculIR2026 } from './ir2026.ts'
+import { runMutationTests } from './mutation.ts'
 
 describe('J5 / C0.5 · noyau Impôt sur le revenu 2026 (CGI 193, 194, 197)', () => {
   test('applique le barème 2026, la décote et le plafonnement du quotient familial au centime', () => {
@@ -74,5 +76,27 @@ describe('C0.6 · détecteur de coudes et falaises', () => {
     expect(analysis.seuilPlafondQfEuros).not.toBeNull()
     expect(analysis.seuilPlafondQfEuros ?? 0).toBeGreaterThan(65_000)
     expect(analysis.seuilPlafondQfEuros ?? 0).toBeLessThan(80_000)
+  })
+
+  test('détecte la falaise réelle de 61 € (CGI art. 1657 1 bis, TME 6 100 %) pour un célibataire', () => {
+    const single = households[0]
+    if (!single) throw new Error('Foyer célibataire absent')
+    const analysis = analyzeHousehold(single, 35_000)
+
+    expect(analysis.cliff1657).not.toBeNull()
+    expect(analysis.cliff1657?.revenuAvantEuros).toBe(17592)
+    expect(analysis.cliff1657?.revenuApresEuros).toBe(17593)
+    expect(analysis.cliff1657?.impotAvantEuros).toBe(0)
+    expect(analysis.cliff1657?.impotApresEuros).toBe(61)
+    expect(analysis.cliff1657?.tmePct).toBe(6100)
+  })
+
+  test('différentiel indépendant (2 000 cas) sans divergence et score de mutation >= 80 %', async () => {
+    const diff = runDifferential(2_000)
+    expect(diff.divergences).toBe(0)
+
+    const mut = await runMutationTests()
+    expect(mut.meetsN4Threshold).toBe(true)
+    expect(mut.killScorePct).toBeGreaterThanOrEqual(80)
   })
 })

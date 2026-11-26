@@ -51,8 +51,14 @@ fi
 
 log "installation de l'unité systemd"
 sudo install -m 0644 "$DEST/infra/systemd/$SERVICE.service" "/etc/systemd/system/$SERVICE.service"
+for unit in bugdeloi-nightly.service bugdeloi-nightly.timer; do
+  sudo install -m 0644 "$DEST/infra/systemd/$unit" "/etc/systemd/system/$unit"
+done
+mkdir -p "$HOME/.cache/bugdeloi"
 sudo systemctl daemon-reload
 sudo systemctl enable "$SERVICE" >/dev/null 2>&1 || true
+# Le timer est activé sans lancer la synchronisation (--no-block ne s'applique qu'au timer).
+sudo systemctl enable --now --no-block bugdeloi-nightly.timer >/dev/null 2>&1 || log "avertissement : activation du timer nocturne impossible"
 
 ln -sfn "$DEST" "$CURRENT"
 log "redémarrage de $SERVICE sur $SHORT"

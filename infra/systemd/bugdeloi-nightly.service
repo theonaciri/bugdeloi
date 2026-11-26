@@ -1,0 +1,37 @@
+# BugDeLoi — synchronisation nocturne (ingestion LEGI incrémentale + balayage C0.2).
+# Déclenchée par bugdeloi-nightly.timer ; installée par scripts/deploy.sh.
+[Unit]
+Description=BugDeLoi - synchronisation LEGI et balayage C0.2
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/.local/share/bugdeloi/current
+Environment=NODE_ENV=production
+Environment=DATABASE_URL=postgres://ubuntu@localhost:5432/bugdeloi?host=/var/run/postgresql
+ExecStart=/home/ubuntu/.local/share/bugdeloi/current/scripts/nightly-sync.sh
+TimeoutStartSec=3h
+
+# Ressources : machine partagée.
+MemoryMax=2G
+CPUWeight=50
+Nice=10
+IOSchedulingClass=idle
+
+# Durcissement (aligné sur bugdeloi-web.service) ; écriture limitée au cache et à /tmp (privé).
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/ubuntu/.cache/bugdeloi
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictRealtime=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+SystemCallArchitectures=native

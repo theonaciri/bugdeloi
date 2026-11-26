@@ -1,0 +1,108 @@
+{
+  "totalMutants": 16,
+  "killedMutants": 15,
+  "survivedMutants": 1,
+  "killScorePct": 93.75,
+  "thresholdN4Pct": 80,
+  "meetsN4Threshold": true,
+  "suiteCases": 33,
+  "note": "Un compte, pas une probabilité. Score de mutation sur 16 altérations ciblées des règles CGI 193, 194, 197 et 1657.",
+  "details": [
+    {
+      "id": "M01-bareme-seuil-11600-off-by-100",
+      "description": "Seuil tranche 11 % décalé à 11 500 € au lieu de 11 600 €",
+      "killed": true,
+      "killedBy": "cgi-197-2026-sous-premier-seuil"
+    },
+    {
+      "id": "M02-arrondi-revenu-tronque",
+      "description": "CGI 193 : tronque le revenu au lieu d’arrondir 0,50 -> 1",
+      "killed": true,
+      "killedBy": "cgi-197-2026-arrondi-au-demi-euro"
+    },
+    {
+      "id": "M03-enfant-3-demi-part",
+      "description": "CGI 194 I : compte 0,5 part au lieu de 1 part à partir du 3e enfant",
+      "killed": false,
+      "killedBy": null
+    },
+    {
+      "id": "M04-oubli-parent-isole",
+      "description": "CGI 194 II : oublie la demi-part supplémentaire du parent isolé",
+      "killed": true,
+      "killedBy": "cgi-197-2026-parent-isole"
+    },
+    {
+      "id": "M05-oubli-plafond-qf",
+      "description": "CGI 197 I.2 : supprime le plafonnement du quotient familial",
+      "killed": true,
+      "killedBy": "cgi-197-2026-qf-couple-plafonne"
+    },
+    {
+      "id": "M06-plafond-qf-ancien-1759",
+      "description": "CGI 197 I.2 : utilise l’ancien plafond 1 759 € au lieu de 1 807 €",
+      "killed": true,
+      "killedBy": "cgi-197-2026-qf-couple-plafonne"
+    },
+    {
+      "id": "M07-oubli-bonus-veuf-2011",
+      "description": "CGI 197 I.2 dernier alinéa : oublie la réduction de 2 011 € des veufs avec enfants",
+      "killed": true,
+      "killedBy": "cgi-197-2026-veuf-et-deux-enfants"
+    },
+    {
+      "id": "M08-oubli-refaction-dom",
+      "description": "CGI 197 I.3 : supprime la réfaction outre-mer (30 % / 40 %)",
+      "killed": true,
+      "killedBy": "cgi-197-2026-dom-30-decote-apres-refaction"
+    },
+    {
+      "id": "M09-refaction-guyane-sans-plafond",
+      "description": "CGI 197 I.3 : supprime le plafond de 4 050 € en Guyane / Mayotte",
+      "killed": true,
+      "killedBy": "cgi-197-2026-dom-40-avec-plafond"
+    },
+    {
+      "id": "M10-oubli-decote",
+      "description": "CGI 197 I.4.a : supprime la décote",
+      "killed": true,
+      "killedBy": "cgi-197-2026-premier-seuil-plus-un"
+    },
+    {
+      "id": "M11-decote-taux-45-au-lieu-4525",
+      "description": "CGI 197 I.4.a : taux de décote 45 % au lieu de 45,25 %",
+      "killed": true,
+      "killedBy": "cgi-197-2026-premier-seuil-plus-un"
+    },
+    {
+      "id": "M12-decote-forfait-celibataire-pour-couple",
+      "description": "CGI 197 I.4.a : applique le forfait célibataire (897 €) aux couples",
+      "killed": true,
+      "killedBy": "cgi-197-2026-decote-couple"
+    },
+    {
+      "id": "M13-oubli-seuil-recouvrement-61",
+      "description": "CGI 1657 1 bis : oublie le seuil de non-mise en recouvrement de 61 €",
+      "killed": true,
+      "killedBy": "art1657-avant-falaise-60"
+    },
+    {
+      "id": "M14-seuil-recouvrement-inferieur-ou-egal-61",
+      "description": "CGI 1657 1 bis : utilise <= 61 € au lieu de < 61 €",
+      "killed": true,
+      "killedBy": "art1657-apres-falaise-61"
+    },
+    {
+      "id": "M15-arrondi-cotisation-inferieur",
+      "description": "CGI 1657 1 : arrondit la cotisation à l’euro inférieur au lieu du plus proche",
+      "killed": true,
+      "killedBy": "cgi-197-2026-deuxieme-seuil"
+    },
+    {
+      "id": "M16-inversion-refaction-decote",
+      "description": "CGI 197 I.3 / I.4.a : applique la décote avant la réfaction outre-mer",
+      "killed": true,
+      "killedBy": "cgi-197-2026-dom-30-decote-apres-refaction"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+# Modèle fictif. Copier vers AAAA-MM-JJ-<handle>-<nœud>.yaml, remplir, commiter AVEC SIGNATURE, puis lancer
+# `bun qualifications/n5-reviews/verify-n5.ts`. Ce fichier est écrit par le relecteur humain, jamais par un agent LLM.
+# Les valeurs ci-dessous sont des exemples fictifs.
+
+# Nœud revu (au niveau N4 au préalable), avec la version de l'interface.
+node: Cgi197Decote@v1
+
+# Unités légales relues, avec le hash normalisé du texte revu (celui de LEGI, repris dans le fichier lettré).
+legal_units:
+  - legiarti: LEGIARTI000053542636
+    text_sha256: "0000000000000000000000000000000000000000000000000000000000000000"
+
+# Fichier Catala relu et commit exact (40 caractères) dans le dépôt du corpus.
+catala_file: corpus/cgi/livre1/partie1/titre1/chapitre1/section5/noyau_ir.catala_fr
+catala_commit: "0000000000000000000000000000000000000000"
+
+# Identité du relecteur : juriste identifié. Tous les champs sont obligatoires.
+reviewer:
+  name: "Prénom Nom"
+  handle: exemple-handle        # pseudo GitHub
+  credentials: "Avocat fiscaliste, barreau de …"   # qualification juridique
+  affiliation: "Cabinet / université / indépendant"
+
+# Date de la revue (AAAA-MM-JJ).
+reviewed_at: 2099-01-01
+
+# Choix d'interprétation relus (au moins un). Reprendre chaque choix : alinéa visé et décision de lecture.
+interpretation_choices_checked:
+  - "Art. 197, I-1 : seuil de la première tranche lu comme inclusif — lecture confirmée."
+  - "Entrée appréciation_… : modélisée comme entrée explicite — confirmée."
+
+# approved | changes_requested
+verdict: changes_requested
+
+# Obligatoire si changes_requested ; recommandée sinon. Cite les versions LEGI consultées.
+note: "Exemple fictif à remplacer par les observations de la revue."

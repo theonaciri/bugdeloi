@@ -21,6 +21,8 @@ export interface ResultatIR2026 {
   refactionOutreMer: number
   decote: number
   impotNetAvantCredits: number
+  impotArrondiEuro: number
+  impotMisEnRecouvrement: number
 }
 
 // CGI 197 I.1, LEGIARTI000053542636@2026-02-21.
@@ -41,6 +43,12 @@ const max = (a: bigint, b: bigint) => (a > b ? a : b)
 
 export function auCentime(montant: bigint): number {
   return Number((montant + unitesParCentime / 2n) / unitesParCentime)
+}
+
+/** CGI 1657.1 : arrondi à l'euro le plus proche (0,50 -> 1), renvoyé en centimes entiers. */
+export function aLEuroEnCentimes(montant: bigint): number {
+  const eurosArrondis = (montant + unitesParEuro / 2n) / unitesParEuro
+  return Number(eurosArrondis * 100n)
 }
 
 export function nombreDeDemiParts(foyer: Foyer) {
@@ -145,6 +153,9 @@ export function calculIR2026(entree: EntreeIR2026): ResultatIR2026 {
   // CGI 193, dernière phrase, LEGIARTI000054373592@2026-07-01.
   const revenuEuros = (BigInt(revenu) + 50n) / 100n
   const exact = calculExact(revenuEuros, entree)
+  const impotArrondiEuro = aLEuroEnCentimes(exact.net)
+  // CGI 1657 1 bis, LEGIARTI000051219510@2025-02-16 : non mis en recouvrement si < 61 €.
+  const impotMisEnRecouvrement = impotArrondiEuro < 6100 ? 0 : impotArrondiEuro
   return {
     nombreDeParts: Number(exact.demiParts) / 2,
     impotBrutSansPlafond: auCentime(exact.brut),
@@ -152,5 +163,7 @@ export function calculIR2026(entree: EntreeIR2026): ResultatIR2026 {
     refactionOutreMer: auCentime(exact.refaction),
     decote: auCentime(exact.decote),
     impotNetAvantCredits: auCentime(exact.net),
+    impotArrondiEuro,
+    impotMisEnRecouvrement,
   }
 }

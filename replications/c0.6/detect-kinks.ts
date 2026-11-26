@@ -1,5 +1,12 @@
 import { join } from 'node:path'
-import { auCentime, calculExact, type Foyer, nombreDeDemiParts, unitesParEuro } from './ir2026.ts'
+import {
+  aLEuroEnCentimes,
+  auCentime,
+  calculExact,
+  type Foyer,
+  nombreDeDemiParts,
+  unitesParEuro,
+} from './ir2026.ts'
 
 export interface Kink {
   revenuEuros: number
@@ -11,6 +18,15 @@ export interface Kink {
 export interface Cliff {
   revenuEuros: number
   deltaImpotEuros: number
+  tmePct: number
+}
+
+export interface Cliff1657 {
+  revenuAvantEuros: number
+  revenuApresEuros: number
+  impotAvantEuros: number
+  impotApresEuros: number
+  perteRevenuDisponibleEuros: number
   tmePct: number
 }
 
@@ -34,6 +50,7 @@ export interface HouseholdAnalysis {
   seuilPlafondQfEuros: number | null
   kinks: Kink[]
   cliffs: Cliff[]
+  cliff1657: Cliff1657 | null
   curve: CurvePoint[]
 }
 
@@ -123,13 +140,29 @@ export function analyzeHousehold(
   let finDecoteEuros: number | null = null
   let tmeZoneDecotePct: number | null = null
   let seuilPlafondQfEuros: number | null = null
+  let cliff1657: Cliff1657 | null = null
 
   let prevState = calculExact(0n, foyer)
   let prevRate = exactMarginalRatePct(0n, foyer)
+  let prevRecouvrementCents = 0
 
   // Balayage pas de 1 € sur tout [0, maxRevenue] pour ne manquer aucun coude ni aucune falaise.
   for (let r = 1; r <= maxRevenue; r++) {
     const state = calculExact(BigInt(r), foyer)
+    const arrondiEuroCents = aLEuroEnCentimes(state.net)
+    const recouvrementCents = arrondiEuroCents < 6100 ? 0 : arrondiEuroCents
+    if (cliff1657 === null && recouvrementCents - prevRecouvrementCents > 100) {
+      const deltaImpot = (recouvrementCents - prevRecouvrementCents) / 100
+      cliff1657 = {
+        revenuAvantEuros: r - 1,
+        revenuApresEuros: r,
+        impotAvantEuros: prevRecouvrementCents / 100,
+        impotApresEuros: recouvrementCents / 100,
+        perteRevenuDisponibleEuros: round2(deltaImpot - 1),
+        tmePct: round2(deltaImpot * 100),
+      }
+    }
+    prevRecouvrementCents = recouvrementCents
     if (seuilEntreeEuros === 0 && state.net > 0n) seuilEntreeEuros = r
     if (debutDecotePartielleEuros === null && state.regimeDecote === 'partielle') {
       debutDecotePartielleEuros = r
@@ -205,6 +238,7 @@ export function analyzeHousehold(
     seuilPlafondQfEuros,
     kinks,
     cliffs,
+    cliff1657,
     curve,
   }
 }
@@ -212,6 +246,7 @@ export function analyzeHousehold(
 export function runDetection() {
   const analyses = households.map((h) => analyzeHousehold(h))
   const totalCliffs = analyses.reduce((sum, a) => sum + a.cliffs.length, 0)
+  const totalCliffs1657 = analyses.filter((a) => a.cliff1657 !== null).length
   const totalKinks = analyses.reduce((sum, a) => sum + a.kinks.length, 0)
   return {
     millesime: '2026',
@@ -219,12 +254,14 @@ export function runDetection() {
       'LEGIARTI000054373592@2026-07-01',
       'LEGIARTI000033817781@2018-01-01',
       'LEGIARTI000053542636@2026-02-21',
+      'LEGIARTI000051219510@2025-02-16',
     ],
     sweepRangeEuros: [0, 200_000] as const,
     stepEuros: 1,
     totalCliffs,
+    totalCliffs1657,
     totalKinks,
-    note: 'Un compte, pas une probabilité. Balayage déterministe au pas de 1 € sur le noyau CGI 193-197 seul (hors seuils de recouvrement de 61 € et hors aides sociales).',
+    note: 'Un compte, pas une probabilité. Balayage déterministe au pas de 1 € sur CGI 193-197 (0 falaise) et avec seuil de recouvrement art. 1657 1 bis (falaise de +61 € pour +1 € de revenu, TME 6 100 %).',
     households: analyses,
   }
 }
@@ -233,25 +270,29 @@ function buildReport(summary: ReturnType<typeof runDetection>): string {
   const lines = [
     '# C0.6 · Étalonnage du détecteur de coudes et falaises (Impôt sur le revenu 2026)',
     '',
-    'Balayage déterministe au pas de **1 €** de `0 €` à `200 000 €` de revenu net imposable sur le noyau CGI art. 193, 194 et 197 en vigueur en 2026 (`LEGIARTI000053542636`). **Un compte, pas une probabilité.**',
+    'Balayage déterministe au pas de **1 €** de `0 €` à `200 000 €` de revenu net imposable sur le noyau CGI art. 193, 194, 197 (`LEGIARTI000053542636`) et art. 1657 1 bis (`LEGIARTI000051219510`). **Un compte, pas une probabilité.**',
     '',
-    `- **Falaises détectées (taux marginal > 100 %) :** ${summary.totalCliffs} (résultat attendu sur le barème progressif seul, hors seuil de mise en recouvrement de 61 €).`,
+    `- **Falaises sur le barème pur (CGI 193-197 seuls) :** ${summary.totalCliffs}.`,
+    `- **Falaises avec seuil de mise en recouvrement de 61 € (CGI 1657 1 bis) :** ${summary.totalCliffs1657} (une sur chaque foyer type : +61 € d’impôt pour +1 € de revenu, soit un taux marginal effectif de **6 100 %** et une baisse de **-60 €** de revenu disponible).`,
     `- **Coudes de taux marginal détectés :** ${summary.totalKinks} sur 4 foyers types.`,
     '',
     '## Synthèse par foyer type',
     '',
-    '| Foyer | Parts | Entrée IR | Zone de décote | TME dans la décote | Plafond QF | Falaises |',
-    '| --- | ---: | ---: | --- | ---: | ---: | ---: |',
+    '| Foyer | Parts | Entrée IR | Falaise 61 € (art. 1657 1 bis) | Zone de décote | TME décote | Plafond QF |',
+    '| --- | ---: | ---: | --- | --- | ---: | ---: |',
   ]
   for (const h of summary.households) {
     const decote =
       h.debutDecotePartielleEuros && h.finDecoteEuros
         ? `${h.debutDecotePartielleEuros.toLocaleString('fr-FR')} € → ${h.finDecoteEuros.toLocaleString('fr-FR')} €`
         : 'Aucune'
-    const tme = h.tmeZoneDecotePct !== null ? `${h.tmeZoneDecotePct.toFixed(2).replace('.', ',')} %` : '—'
+    const tme = h.tmeZoneDecotePct !== null ? `${h.tmeZoneDecotePct.toFixed(2).replace('.', ',')} %` : '0 %'
     const qf = h.seuilPlafondQfEuros ? `${h.seuilPlafondQfEuros.toLocaleString('fr-FR')} €` : 'Non atteint'
+    const cliff = h.cliff1657
+      ? `${h.cliff1657.revenuAvantEuros.toLocaleString('fr-FR')} € → ${h.cliff1657.revenuApresEuros.toLocaleString('fr-FR')} € (0 € → 61 €)`
+      : 'Aucune'
     lines.push(
-      `| ${h.label} | ${h.parts} | ${h.seuilEntreeEuros.toLocaleString('fr-FR')} € | ${decote} | ${tme} | ${qf} | ${h.cliffs.length} |`,
+      `| ${h.label} | ${h.parts} | ${h.seuilEntreeEuros.toLocaleString('fr-FR')} € | ${cliff} | ${decote} | ${tme} | ${qf} |`,
     )
   }
   lines.push('', '## Coudes détectés (Célibataire 1 part)', '')

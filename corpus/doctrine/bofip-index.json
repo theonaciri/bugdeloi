@@ -1,0 +1,389 @@
+{
+  "generatedFrom": {
+    "groundTruth": "replications/c0.4/ground-truth.json",
+    "sourceUrl": "https://github.com/CatalaLang/catala-examples",
+    "sourceCommit": "9e251b932288cf5f4a74af072d203144a057494b",
+    "coreMappings": "corpus/doctrine/build-bofip-index.ts#CORE_MAPPINGS"
+  },
+  "totalArticles": 18,
+  "totalReferences": 29,
+  "articles": {
+    "LEGIARTI000018620184": [
+      {
+        "bofipRef": "BOI-BNC-CHAMP-10-30-30",
+        "title": "BOFiP – Bénéfices non commerciaux – Champ d’application (BOI-BNC-CHAMP-10-30-30)",
+        "url": "https://bofip.impots.gouv.fr/bofip/ext/pgp/search?q=BOI-BNC-CHAMP-10-30-30",
+        "source": "inria_catala_examples",
+        "note": "Référence BOFiP citée dans les commentaires Catala d’Inria/DGFiP (impot_revenu/cgi_revenus.catala_fr, ligne 2631) près de cet article. La doctrine est une interprétation administrative distincte de la loi ; un écart avec le texte est un candidat DIVERGENCE_DOCTRINE.",
+        "evidence": {
+          "id": "c04-bofip-015",
+          "file": "impot_revenu/cgi_revenus.catala_fr",
+          "line": 2631,
+          "sourceCommit": "9e251b932288cf5f4a74af072d203144a057494b"
+        }
+      }
+    ],
+    "LEGIARTI000024189561": [
+      {
+        "bofipRef": "BOI-IR-PAS-20-20-10",
+        "title": "BOFiP – Impôt sur le revenu – Prélèvement à la source (BOI-IR-PAS-20-20-10)",
+        "url": "https://bofip.impots.gouv.fr/bofip/ext/pgp/search?q=BOI-IR-PAS-20-20-10",
+        "source": "inria_catala_examples",
+        "note": "Référence BOFiP citée dans les commentaires Catala d’Inria/DGFiP (impot_revenu/cgi_revenus.catala_fr, ligne 1565) près de cet article. La doctrine est une interprétation administrative distincte de la loi ; un écart avec le texte est un candidat DIVERGENCE_DOCTRINE.",
+        "evidence": {
+          "id": "c04-bofip-009",
+          "file": "impot_revenu/cgi_revenus.catala_fr",
+          "line": 1565,
+          "sourceCommit": "9e251b932288cf5f4a74af072d203144a057494b"
+        }
+      },
+      {
+        "bofipRef": "BOI-RSA-CHAMP-10-20-10",
+        "title": "BOFiP – Revenus salariaux et assimilés – Champ d’application (BOI-RSA-CHAMP-10-20-10)",
+        "url": "https://bofip.impots.gouv.fr/bofip/ext/pgp/search?q=BOI-RSA-CHAMP-10-20-10",
+        "source": "inria_catala_examples",
+        "note": "Référence BOFiP citée dans les commentaires Catala d’Inria/DGFiP (impot_revenu/cgi_revenus.catala_fr, ligne 1549) près de cet article. La doctrine est une interprétation administrative distincte de la loi ; un écart avec le texte est un candidat DIVERGENCE_DOCTRINE.",
+        "evidence": {
+          "id": "c04-bofip-007",
+          "file": "impot_revenu/cgi_revenus.catala_fr",
+          "line": 1549,
+          "sourceCommit": "9e251b932288cf5f4a74af072d203144a057494b"
+        }
+      }
+    ],
+    "LEGIARTI000033220369": [
+      {
+        "bofipRef": "BOI-IR-LIQ-10-10-10-30",
+        "title": "BOFiP – Impôt sur le revenu – Liquidation (BOI-IR-LIQ-10-10-10-30)",
+        "url": "https://bofip.impots.gouv.fr/bofip/ext/pgp/search?q=BOI-IR-LIQ-10-10-10-30",
+        "source": "inria_catala_examples",
+        "note": "Référence BOFiP citée dans les commentaires Catala d’Inria/DGFiP (impot_revenu/cgi_revenus.catala_fr, ligne 5688) près de cet article. La doctrine est une interprétation administrative distincte de la loi ; un écart avec le texte est un candidat DIVERGENCE_DOCTRINE.",
+        "evidence": {
+          "id": "c04-bofip-027",
+          "file": "impot_revenu/cgi_revenus.catala_fr",
+          "line": 5688,
+          "sourceCommit": "9e251b932288cf5f4a74af072d203144a057494b"
+        }
+      }
+    ],
+    "LEGIARTI000033817781": [
+      {
+        "bofipRef": "BOI-IR-LIQ-10-20-10",
+        "title": "BOFiP – Impôt sur le revenu – Liquidation (BOI-IR-LIQ-10-20-10)",
+        "url": "https://bofip.impots.gouv.fr/bofip/ext/pgp/search?q=BOI-IR-LIQ-10-20-10",
+        "source": "cgi_noyau_ir",
+        "note": "Référence BOFiP associée à l’article 194 du CGI (noyau IR 2026), au niveau du thème ; aucun paragraphe n’est cité. La doctrine est une interprétation administrative distincte de la loi ; un écart avec le texte est un candidat DIVERGENCE_DOCTRINE."
+      },
+      {
+        "bofipRef": "BOI-IR-LIQ-10-20-20-10",
+        "title": "BOFiP – Impôt sur le revenu – Liquidation (BOI-IR-LIQ-10-20-20-10)",
+        "url": "https://bofip.impots.gouv.fr/bofip/ext/pgp/search?q=BOI-IR-LIQ-10-20-20-10",
+        "source": "inria_catala_examples",
+        "note": "Référence BOFiP citée dans les commentaires Catala d’Inria/DGFiP (impot_revenu/cgi_revenus.catala_fr, ligne 5354) près de cet article. La doctrine est une interprétation administrative distincte de la loi ; un écart avec le texte est un candidat DIVERGENCE_DOCTRINE.",
+        "evidence": {
+          "id": "c04-bofip-025",
+          "file": "impot_revenu/cgi_revenus.catala_fr",
+          "line": 5354,
+          "sourceCommit": "9e251b932288cf5f4a74af072d203144a057494b"
+        }
+      }
+    ],
+    "LEGIARTI000036428314": [
+      {
+        "bofipRef": "BOI-BNC-BASE-30-30-10",
+        "title": "BOFiP – Bénéfices non commerciaux – Base d’imposition (BOI-BNC-BASE-30-30-10)",
+        "url": "https://bofip.impots.gouv.fr/bofip/ext/pgp/search?q=BOI-BNC-BASE-30-30-10",
+        "source": "inria_catala_examples",
+        "note": "Référence BOFiP citée dans les commentaires Catala d’Inria/DGFiP (impot_revenu/cgi_revenus.catala_fr, ligne 529) près de cet article. La doctrine est une interprétation administrative distincte de la loi ; un écart avec le texte est un candidat DIVERGENCE_DOCTRINE.",
+        "evidence": {
+          "id": "c04-bofip-002",
+          "file": "impot_revenu/cgi_revenus.catala_fr",
+          "line": 529,
+          "sourceCommit": "9e251b932288cf5f4a74af072d203144a057494b"
+        }
+      }
+    ],
+    "LEGIARTI000042340496": [
+      {
+        "bofipRef": "BOI-RSA-ES-20-20-20",
+        "title": "BOFiP – Revenus salariaux et assimilés – Exonérations et sommes exclues (BOI-RSA-ES-20-20-20)",
+        "url": "https://bofip.impots.gouv.fr/bofip/ext/pgp/search?q=BOI-RSA-ES-20-20-20",
+        "source": "inria_catala_examples",
+        "note": "Référence BOFiP citée dans les commentaires Catala d’Inria/DGFiP (impot_revenu/cgi_revenus.catala_fr, ligne 1619) près de cet article. La doctrine est une interprétation administrative distincte de la loi ; un écart avec le texte est un candidat DIVERGENCE_DOCTRINE.",
+        "evidence": {
+          "id": "c04-bofip-010",
+          "file": "impot_revenu/cgi_revenus.catala_fr",
+          "line": 1619,
+          "sourceCommit": "9e251b932288cf5f4a74af072d203144a057494b"
+        }
+      }
+    ],
+    "LEGIARTI000044978385": [
+      {
+        "bofipRef": "BOI-IR-LIQ-20-30-20",
+        "title": "BOFiP – Impôt sur le revenu – Liquidation (BOI-IR-LIQ-20-30-20)",
+        "url": "https://bofip.impots.gouv.fr/bofip/ext/pgp/search?q=BOI-IR-LIQ-20-30-20",
+        "source": "inria_catala_examples",
+        "note": "Référence BOFiP citée dans les commentaires Catala d’Inria/DGFiP (impot_revenu/cgi_revenus.catala_fr, ligne 4609) près de cet article. La doctrine est une interprétation administrative distincte de la loi ; un écart avec le texte est un candidat DIVERGENCE_DOCTRINE.",
+        "evidence": {
+          "id": "c04-bofip-023",
+          "file": "impot_revenu/cgi_revenus.catala_fr",
+          "line": 4609,
+          "sourceCommit": "9e251b932288cf5f4a74af072d203144a057494b"
+        }
+      }
+    ],
+    "LEGIARTI000046860376": [
+      {
+        "bofipRef": "BOI-BIC-PVMV-20-30-10",
+        "title": "BOFiP – Bénéfices industriels et commerciaux – Plus-values et moins-values (BOI-BIC-PVMV-20-30-10)",
+        "url": "https://bofip.impots.gouv.fr/bofip/ext/pgp/search?q=BOI-BIC-PVMV-20-30-10",
+        "source": "inria_catala_examples",
+        "note": "Référence BOFiP citée dans les commentaires Catala d’Inria/DGFiP (impot_revenu/cgi_revenus.catala_fr, ligne 480) près de cet article. La doctrine est une interprétation administrative distincte de la loi ; un écart avec le texte est un candidat DIVERGENCE_DOCTRINE.",
+        "evidence": {
+          "id": "c04-bofip-001",
+          "file": "impot_revenu/cgi_revenus.catala_fr",
+          "line": 480,
+          "sourceCommit": "9e251b932288cf5f4a74af072d203144a057494b"
+        }
+      }
+    ],
+    "LEGIARTI000046860994": [
+      {
+        "bofipRef": "BOI-IR-LIQ-10-20-20-20",
+        "title": "BOFiP – Impôt sur le revenu – Liquidation (BOI-IR-LIQ-10-20-20-20)",
+        "url": "https://bofip.impots.gouv.fr/bofip/ext/pgp/search?q=BOI-IR-LIQ-10-20-20-20",
+        "source": "inria_catala_examples",
+        "note": "Référence BOFiP citée dans les commentaires Catala d’Inria/DGFiP (impot_revenu/cgi_revenus.catala_fr, ligne 5493) près de cet article. La doctrine est une interprétation administrative distincte de la loi ; un écart avec le texte est un candidat DIVERGENCE_DOCTRINE.",
+        "evidence": {
+          "id": "c04-bofip-026",
+          "file": "impot_revenu/cgi_revenus.catala_fr",
+          "line": 5493,
+          "sourceCommit": "9e251b932288cf5f4a74af072d203144a057494b"
+        }
+      }
+    ],
+    "LEGIARTI000047288741": [
+      {
+        "bofipRef": "BOI-RSA-PENS-30-10-20",
+        "title": "BOFiP – Revenus salariaux et assimilés – Pensions et rentes viagères (BOI-RSA-PENS-30-10-20)",
+        "url": "https://bofip.impots.gouv.fr/bofip/ext/pgp/search?q=BOI-RSA-PENS-30-10-20",
+        "source": "inria_catala_examples",
+        "note": "Référence BOFiP citée dans les commentaires Catala d’Inria/DGFiP (impot_revenu/cgi_revenus.catala_fr, ligne 4992) près de cet article. La doctrine est une interprétation administrative distincte de la loi ; un écart avec le texte est un candidat DIVERGENCE_DOCTRINE.",
+        "evidence": {
+          "id": "c04-bofip-024",
+          "file": "impot_revenu/cgi_revenus.catala_fr",
+          "line": 4992,
+          "sourceCommit": "9e251b932288cf5f4a74af072d203144a057494b"
+        }
+      }
+    ],
+    "LEGIARTI000047622381": [
+      {
+        "bofipRef": "BOI-IR-BASE-10-20-10",
+        "title": "BOFiP – Impôt sur le revenu – Base d’imposition (BOI-IR-BASE-10-20-10)",
+        "url": "https://bofip.impots.gouv.fr/bofip/ext/pgp/search?q=BOI-IR-BASE-10-20-10",
+        "source": "inria_catala_examples",
+        "note": "Référence BOFiP citée dans les commentaires Catala d’Inria/DGFiP (impot_revenu/cgi_revenus.catala_fr, ligne 3017) près de cet article. La doctrine est une interprétation administrative distincte de la loi ; un écart avec le texte est un candidat DIVERGENCE_DOCTRINE.",
+        "evidence": {
+          "id": "c04-bofip-017",
+          "file": "impot_revenu/cgi_revenus.catala_fr",
+          "line": 3017,
+          "sourceCommit": "9e251b932288cf5f4a74af072d203144a057494b"
+        }
+      },
+      {
+        "bofipRef": "BOI-IR-LIQ-20-30-20",
+        "title": "BOFiP – Impôt sur le revenu – Liquidation (BOI-IR-LIQ-20-30-20)",
+        "url": "https://bofip.impots.gouv.fr/bofip/ext/pgp/search?q=BOI-IR-LIQ-20-30-20",
+        "source": "inria_catala_examples",
+        "note": "Référence BOFiP citée dans les commentaires Catala d’Inria/DGFiP (impot_revenu/cgi_revenus.catala_fr, ligne 2971) près de cet article. La doctrine est une interprétation administrative distincte de la loi ; un écart avec le texte est un candidat DIVERGENCE_DOCTRINE.",
+        "evidence": {
+          "id": "c04-bofip-016",
+          "file": "impot_revenu/cgi_revenus.catala_fr",
+          "line": 2971,
+          "sourceCommit": "9e251b932288cf5f4a74af072d203144a057494b"
+        }
+      }
+    ],
+    "LEGIARTI000048844097": [
+      {
+        "bofipRef": "BOI-BIC-CHAMP-40-20",
+        "title": "BOFiP – Bénéfices industriels et commerciaux – Champ d’application (BOI-BIC-CHAMP-40-20)",
+        "url": "https://bofip.impots.gouv.fr/bofip/ext/pgp/search?q=BOI-BIC-CHAMP-40-20",
+        "source": "inria_catala_examples",
+        "note": "Référence BOFiP citée dans les commentaires Catala d’Inria/DGFiP (impot_revenu/cgi_revenus.catala_fr, ligne 1025) près de cet article. La doctrine est une interprétation administrative distincte de la loi ; un écart avec le texte est un candidat DIVERGENCE_DOCTRINE.",
+        "evidence": {
+          "id": "c04-bofip-006",
+          "file": "impot_revenu/cgi_revenus.catala_fr",
+          "line": 1025,
+          "sourceCommit": "9e251b932288cf5f4a74af072d203144a057494b"
+        }
+      },
+      {
+        "bofipRef": "BOI-IR-BASE-10-20-10",
+        "title": "BOFiP – Impôt sur le revenu – Base d’imposition (BOI-IR-BASE-10-20-10)",
+        "url": "https://bofip.impots.gouv.fr/bofip/ext/pgp/search?q=BOI-IR-BASE-10-20-10",
+        "source": "inria_catala_examples",
+        "note": "Référence BOFiP citée dans les commentaires Catala d’Inria/DGFiP (impot_revenu/cgi_revenus.catala_fr, ligne 864) près de cet article. La doctrine est une interprétation administrative distincte de la loi ; un écart avec le texte est un candidat DIVERGENCE_DOCTRINE.",
+        "evidence": {
+          "id": "c04-bofip-004",
+          "file": "impot_revenu/cgi_revenus.catala_fr",
+          "line": 864,
+          "sourceCommit": "9e251b932288cf5f4a74af072d203144a057494b"
+        }
+      },
+      {
+        "bofipRef": "BOI-IR-LIQ-20-30-20",
+        "title": "BOFiP – Impôt sur le revenu – Liquidation (BOI-IR-LIQ-20-30-20)",
+        "url": "https://bofip.impots.gouv.fr/bofip/ext/pgp/search?q=BOI-IR-LIQ-20-30-20",
+        "source": "inria_catala_examples",
+        "note": "Référence BOFiP citée dans les commentaires Catala d’Inria/DGFiP (impot_revenu/cgi_revenus.catala_fr, ligne 917) près de cet article. La doctrine est une interprétation administrative distincte de la loi ; un écart avec le texte est un candidat DIVERGENCE_DOCTRINE.",
+        "evidence": {
+          "id": "c04-bofip-005",
+          "file": "impot_revenu/cgi_revenus.catala_fr",
+          "line": 917,
+          "sourceCommit": "9e251b932288cf5f4a74af072d203144a057494b"
+        }
+      }
+    ],
+    "LEGIARTI000049641834": [
+      {
+        "bofipRef": "BOI-RSA-CHAMP-20-20",
+        "title": "BOFiP – Revenus salariaux et assimilés – Champ d’application (BOI-RSA-CHAMP-20-20)",
+        "url": "https://bofip.impots.gouv.fr/bofip/ext/pgp/search?q=BOI-RSA-CHAMP-20-20",
+        "source": "inria_catala_examples",
+        "note": "Référence BOFiP citée dans les commentaires Catala d’Inria/DGFiP (impot_revenu/cgi_revenus.catala_fr, ligne 4370) près de cet article. La doctrine est une interprétation administrative distincte de la loi ; un écart avec le texte est un candidat DIVERGENCE_DOCTRINE.",
+        "evidence": {
+          "id": "c04-bofip-022",
+          "file": "impot_revenu/cgi_revenus.catala_fr",
+          "line": 4370,
+          "sourceCommit": "9e251b932288cf5f4a74af072d203144a057494b"
+        }
+      },
+      {
+        "bofipRef": "BOI-RSA-PENS-30-10-10",
+        "title": "BOFiP – Revenus salariaux et assimilés – Pensions et rentes viagères (BOI-RSA-PENS-30-10-10)",
+        "url": "https://bofip.impots.gouv.fr/bofip/ext/pgp/search?q=BOI-RSA-PENS-30-10-10",
+        "source": "inria_catala_examples",
+        "note": "Référence BOFiP citée dans les commentaires Catala d’Inria/DGFiP (impot_revenu/cgi_revenus.catala_fr, ligne 4159) près de cet article. La doctrine est une interprétation administrative distincte de la loi ; un écart avec le texte est un candidat DIVERGENCE_DOCTRINE.",
+        "evidence": {
+          "id": "c04-bofip-020",
+          "file": "impot_revenu/cgi_revenus.catala_fr",
+          "line": 4159,
+          "sourceCommit": "9e251b932288cf5f4a74af072d203144a057494b"
+        }
+      }
+    ],
+    "LEGIARTI000049641842": [
+      {
+        "bofipRef": "BOI-IR-BASE-10-20-30",
+        "title": "BOFiP – Impôt sur le revenu – Base d’imposition (BOI-IR-BASE-10-20-30)",
+        "url": "https://bofip.impots.gouv.fr/bofip/ext/pgp/search?q=BOI-IR-BASE-10-20-30",
+        "source": "inria_catala_examples",
+        "note": "Référence BOFiP citée dans les commentaires Catala d’Inria/DGFiP (impot_revenu/cgi_revenus.catala_fr, ligne 3375) près de cet article. La doctrine est une interprétation administrative distincte de la loi ; un écart avec le texte est un candidat DIVERGENCE_DOCTRINE.",
+        "evidence": {
+          "id": "c04-bofip-018",
+          "file": "impot_revenu/cgi_revenus.catala_fr",
+          "line": 3375,
+          "sourceCommit": "9e251b932288cf5f4a74af072d203144a057494b"
+        }
+      },
+      {
+        "bofipRef": "BOI-IR-LIQ-20-30-20",
+        "title": "BOFiP – Impôt sur le revenu – Liquidation (BOI-IR-LIQ-20-30-20)",
+        "url": "https://bofip.impots.gouv.fr/bofip/ext/pgp/search?q=BOI-IR-LIQ-20-30-20",
+        "source": "inria_catala_examples",
+        "note": "Référence BOFiP citée dans les commentaires Catala d’Inria/DGFiP (impot_revenu/cgi_revenus.catala_fr, ligne 3378) près de cet article. La doctrine est une interprétation administrative distincte de la loi ; un écart avec le texte est un candidat DIVERGENCE_DOCTRINE.",
+        "evidence": {
+          "id": "c04-bofip-019",
+          "file": "impot_revenu/cgi_revenus.catala_fr",
+          "line": 3378,
+          "sourceCommit": "9e251b932288cf5f4a74af072d203144a057494b"
+        }
+      }
+    ],
+    "LEGIARTI000049641925": [
+      {
+        "bofipRef": "BOI-IR-LIQ-20-30-20",
+        "title": "BOFiP – Impôt sur le revenu – Liquidation (BOI-IR-LIQ-20-30-20)",
+        "url": "https://bofip.impots.gouv.fr/bofip/ext/pgp/search?q=BOI-IR-LIQ-20-30-20",
+        "source": "inria_catala_examples",
+        "note": "Référence BOFiP citée dans les commentaires Catala d’Inria/DGFiP (impot_revenu/cgi_revenus.catala_fr, ligne 2336) près de cet article. La doctrine est une interprétation administrative distincte de la loi ; un écart avec le texte est un candidat DIVERGENCE_DOCTRINE.",
+        "evidence": {
+          "id": "c04-bofip-011",
+          "file": "impot_revenu/cgi_revenus.catala_fr",
+          "line": 2336,
+          "sourceCommit": "9e251b932288cf5f4a74af072d203144a057494b"
+        }
+      },
+      {
+        "bofipRef": "BOI-RSA-BASE-30-50-20",
+        "title": "BOFiP – Revenus salariaux et assimilés – Base d’imposition (BOI-RSA-BASE-30-50-20)",
+        "url": "https://bofip.impots.gouv.fr/bofip/ext/pgp/search?q=BOI-RSA-BASE-30-50-20",
+        "source": "inria_catala_examples",
+        "note": "Référence BOFiP citée dans les commentaires Catala d’Inria/DGFiP (impot_revenu/cgi_revenus.catala_fr, ligne 2419) près de cet article. La doctrine est une interprétation administrative distincte de la loi ; un écart avec le texte est un candidat DIVERGENCE_DOCTRINE.",
+        "evidence": {
+          "id": "c04-bofip-012",
+          "file": "impot_revenu/cgi_revenus.catala_fr",
+          "line": 2419,
+          "sourceCommit": "9e251b932288cf5f4a74af072d203144a057494b"
+        }
+      },
+      {
+        "bofipRef": "BOI-RSA-BASE-30-50-30",
+        "title": "BOFiP – Revenus salariaux et assimilés – Base d’imposition (BOI-RSA-BASE-30-50-30)",
+        "url": "https://bofip.impots.gouv.fr/bofip/ext/pgp/search?q=BOI-RSA-BASE-30-50-30",
+        "source": "inria_catala_examples",
+        "note": "Référence BOFiP citée dans les commentaires Catala d’Inria/DGFiP (impot_revenu/cgi_revenus.catala_fr, ligne 2525) près de cet article. La doctrine est une interprétation administrative distincte de la loi ; un écart avec le texte est un candidat DIVERGENCE_DOCTRINE.",
+        "evidence": {
+          "id": "c04-bofip-014",
+          "file": "impot_revenu/cgi_revenus.catala_fr",
+          "line": 2525,
+          "sourceCommit": "9e251b932288cf5f4a74af072d203144a057494b"
+        }
+      }
+    ],
+    "LEGIARTI000051219510": [
+      {
+        "bofipRef": "BOI-IR-LIQ-20-20-40",
+        "title": "BOFiP – Impôt sur le revenu – Liquidation (BOI-IR-LIQ-20-20-40)",
+        "url": "https://bofip.impots.gouv.fr/bofip/ext/pgp/search?q=BOI-IR-LIQ-20-20-40",
+        "source": "cgi_noyau_ir",
+        "note": "Référence BOFiP associée à l’article 1657 du CGI (noyau IR 2026), au niveau du thème ; aucun paragraphe n’est cité. La doctrine est une interprétation administrative distincte de la loi ; un écart avec le texte est un candidat DIVERGENCE_DOCTRINE."
+      }
+    ],
+    "LEGIARTI000053542636": [
+      {
+        "bofipRef": "BOI-IR-LIQ-20-10",
+        "title": "BOFiP – Impôt sur le revenu – Liquidation (BOI-IR-LIQ-20-10)",
+        "url": "https://bofip.impots.gouv.fr/bofip/ext/pgp/search?q=BOI-IR-LIQ-20-10",
+        "source": "cgi_noyau_ir",
+        "note": "Référence BOFiP associée à l’article 197 du CGI (noyau IR 2026), au niveau du thème ; aucun paragraphe n’est cité. La doctrine est une interprétation administrative distincte de la loi ; un écart avec le texte est un candidat DIVERGENCE_DOCTRINE."
+      },
+      {
+        "bofipRef": "BOI-IR-LIQ-20-20-20",
+        "title": "BOFiP – Impôt sur le revenu – Liquidation (BOI-IR-LIQ-20-20-20)",
+        "url": "https://bofip.impots.gouv.fr/bofip/ext/pgp/search?q=BOI-IR-LIQ-20-20-20",
+        "source": "cgi_noyau_ir",
+        "note": "Référence BOFiP associée à l’article 197 du CGI (noyau IR 2026), au niveau du thème ; aucun paragraphe n’est cité. La doctrine est une interprétation administrative distincte de la loi ; un écart avec le texte est un candidat DIVERGENCE_DOCTRINE."
+      },
+      {
+        "bofipRef": "BOI-IR-LIQ-20-20-30",
+        "title": "BOFiP – Impôt sur le revenu – Liquidation (BOI-IR-LIQ-20-20-30)",
+        "url": "https://bofip.impots.gouv.fr/bofip/ext/pgp/search?q=BOI-IR-LIQ-20-20-30",
+        "source": "cgi_noyau_ir",
+        "note": "Référence BOFiP associée à l’article 197 du CGI (noyau IR 2026), au niveau du thème ; aucun paragraphe n’est cité. La doctrine est une interprétation administrative distincte de la loi ; un écart avec le texte est un candidat DIVERGENCE_DOCTRINE."
+      }
+    ],
+    "LEGIARTI000054373592": [
+      {
+        "bofipRef": "BOI-IR-LIQ-20-10",
+        "title": "BOFiP – Impôt sur le revenu – Liquidation (BOI-IR-LIQ-20-10)",
+        "url": "https://bofip.impots.gouv.fr/bofip/ext/pgp/search?q=BOI-IR-LIQ-20-10",
+        "source": "cgi_noyau_ir",
+        "note": "Référence BOFiP associée à l’article 193 du CGI (noyau IR 2026), au niveau du thème ; aucun paragraphe n’est cité. La doctrine est une interprétation administrative distincte de la loi ; un écart avec le texte est un candidat DIVERGENCE_DOCTRINE."
+      }
+    ]
+  }
+}

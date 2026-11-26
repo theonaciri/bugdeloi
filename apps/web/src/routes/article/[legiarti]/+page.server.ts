@@ -4,7 +4,18 @@ import { isLegiarti } from '#lib/ids.ts'
 import { sanitizeLegalHtml } from '#lib/sanitize.ts'
 import { CACHE } from '#lib/server/http.ts'
 import { article } from '#lib/server/queries.ts'
+import bofipIndex from '../../../../../../corpus/doctrine/bofip-index.json'
 import type { PageServerLoad } from './$types'
+
+type BofipEntry = {
+  bofipRef: string
+  title: string
+  url: string
+  source: string
+  note: string
+}
+
+const bofipByArticle = bofipIndex.articles as Record<string, BofipEntry[]>
 
 export const load: PageServerLoad = async ({ params, setHeaders }) => {
   const a = await article(params.legiarti)
@@ -13,6 +24,7 @@ export const load: PageServerLoad = async ({ params, setHeaders }) => {
   const { contentHtml, notaHtml, ...rest } = a
   return {
     article: rest,
+    doctrine: bofipByArticle[a.id] ?? [],
     // Le HTML DILA est assaini côté serveur, une seule fois, par liste blanche.
     contentSafe: sanitizeLegalHtml(contentHtml),
     notaSafe: sanitizeLegalHtml(notaHtml),

@@ -1,4 +1,6 @@
 import { legifranceArticleUrl } from '@bugdeloi/core/legi'
+import differentialSummary from '../../../../../../replications/c0.6/differential-summary.json'
+import mutationSummary from '../../../../../../replications/c0.6/mutation-summary.json'
 import c06Summary from '../../../../../../replications/c0.6/summary.json'
 import type { PageServerLoad } from './$types'
 
@@ -6,11 +8,13 @@ const repo = 'https://github.com/theonaciri/bugdeloi/blob/j0-fondations'
 
 export const load: PageServerLoad = () => ({
   c06: c06Summary,
+  differential: differentialSummary,
+  mutation: mutationSummary,
   articles: [
     {
       num: 'Article 193',
       id: 'LEGIARTI000054373592',
-      role: 'Division par le nombre de parts et arrondi à l’euro',
+      role: 'Division par le nombre de parts et arrondi du revenu imposable',
       url: legifranceArticleUrl('LEGIARTI000054373592'),
     },
     {
@@ -25,10 +29,17 @@ export const load: PageServerLoad = () => ({
       role: 'Barème 2026, plafonnement du quotient familial, outre-mer et décote',
       url: legifranceArticleUrl('LEGIARTI000053542636'),
     },
+    {
+      num: 'Article 1657',
+      id: 'LEGIARTI000051219510',
+      role: 'Arrondi de la cotisation à l’euro et seuil de recouvrement de 61 € (1 bis)',
+      url: legifranceArticleUrl('LEGIARTI000051219510'),
+    },
   ],
   links: {
     catala: `${repo}/corpus/cgi/livre1/partie1/titre1/chapitre1/section5/noyau_ir.catala_fr`,
     oracles: `${repo}/corpus/oracles/noyau_ir/cgi_197_2026.yaml`,
     report: `${repo}/replications/c0.6/REPORT.md`,
+    backtranslation: `${repo}/replications/c0.6/backtranslation.md`,
   },
 })
