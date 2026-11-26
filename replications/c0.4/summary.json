@@ -1,0 +1,143 @@
+{
+  "sourceCommit": "9e251b932288cf5f4a74af072d203144a057494b",
+  "groundTruthSha256": "e755d0870150bb63f095796ed93dae83cc54eac2f0aa5fc20b60ed9b34bddfb3",
+  "blindPacketSha256": "60c91ed827285e52039fed06b766cb424809805280067ac2cc9857863e18d314",
+  "articleVersions": 25,
+  "caveat": "Un compte, pas une probabilité",
+  "baseline": {
+    "totalGroundTruth": 113,
+    "inPacket": 44,
+    "matched": 2,
+    "recallPercent": 4.55,
+    "observations": 13,
+    "bySuite": {
+      "aides_logement": {
+        "totalGroundTruth": 8,
+        "inPacket": 5,
+        "matched": 1,
+        "recallPercent": 20
+      },
+      "allocations_familiales": {
+        "totalGroundTruth": 3,
+        "inPacket": 3,
+        "matched": 1,
+        "recallPercent": 33.33
+      },
+      "asp": {
+        "totalGroundTruth": 24,
+        "inPacket": 0,
+        "matched": 0,
+        "recallPercent": null
+      },
+      "impot_revenu": {
+        "totalGroundTruth": 77,
+        "inPacket": 35,
+        "matched": 0,
+        "recallPercent": 0
+      },
+      "prestations_familiales": {
+        "totalGroundTruth": 1,
+        "inPacket": 1,
+        "matched": 0,
+        "recallPercent": 0
+      }
+    },
+    "byKind": {
+      "todo_juridique": {
+        "totalGroundTruth": 50,
+        "inPacket": 17,
+        "matched": 2,
+        "recallPercent": 11.76
+      },
+      "dependance_bofip": {
+        "totalGroundTruth": 63,
+        "inPacket": 27,
+        "matched": 0,
+        "recallPercent": 0
+      }
+    },
+    "matches": [
+      {
+        "itemId": "c04-todo-004",
+        "observation": 2,
+        "topics": ["pourcentage réglementaire"]
+      },
+      {
+        "itemId": "c04-todo-010",
+        "observation": 1,
+        "topics": ["charge effective"]
+      }
+    ]
+  },
+  "submissions": [
+    {
+      "name": "baseline-rules",
+      "sha256": "216e0375c8e4eef932bea49d0789a2c63fcc4bfb2e1ccfd9c1a427fd93a51398",
+      "result": {
+        "totalGroundTruth": 113,
+        "inPacket": 44,
+        "matched": 2,
+        "recallPercent": 4.55,
+        "observations": 13,
+        "bySuite": {
+          "aides_logement": {
+            "totalGroundTruth": 8,
+            "inPacket": 5,
+            "matched": 1,
+            "recallPercent": 20
+          },
+          "allocations_familiales": {
+            "totalGroundTruth": 3,
+            "inPacket": 3,
+            "matched": 1,
+            "recallPercent": 33.33
+          },
+          "asp": {
+            "totalGroundTruth": 24,
+            "inPacket": 0,
+            "matched": 0,
+            "recallPercent": null
+          },
+          "impot_revenu": {
+            "totalGroundTruth": 77,
+            "inPacket": 35,
+            "matched": 0,
+            "recallPercent": 0
+          },
+          "prestations_familiales": {
+            "totalGroundTruth": 1,
+            "inPacket": 1,
+            "matched": 0,
+            "recallPercent": 0
+          }
+        },
+        "byKind": {
+          "todo_juridique": {
+            "totalGroundTruth": 50,
+            "inPacket": 17,
+            "matched": 2,
+            "recallPercent": 11.76
+          },
+          "dependance_bofip": {
+            "totalGroundTruth": 63,
+            "inPacket": 27,
+            "matched": 0,
+            "recallPercent": 0
+          }
+        },
+        "matches": [
+          {
+            "itemId": "c04-todo-004",
+            "observation": 2,
+            "topics": ["pourcentage réglementaire"]
+          },
+          {
+            "itemId": "c04-todo-010",
+            "observation": 1,
+            "topics": ["charge effective"]
+          }
+        ]
+      }
+    }
+  ]
+}

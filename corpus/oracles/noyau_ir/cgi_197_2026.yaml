@@ -1,0 +1,1145 @@
+# Cas de travail préparés avec la formalisation (auteur commun, sans aveugle).
+# Les valeurs servent aux tests de régression. Le rôle « translate » documente
+# leur provenance. Un auteur indépendant doit établir de nouveaux cas d’oracle
+# pour le contrôle prévu par AGENTS.md §4.3.
+
+- id: cgi-197-2026-revenu-zero
+  interface: CalculImpotRevenu@v1
+  source:
+    kind: derivation_manuelle
+    ref: "CGI 193, 194 I et II, 197 I.1 à I.4.a (LEGI)"
+    retrieved: 2026-11-26
+    legal_units:
+      [LEGIARTI000054373592@2026-07-01, LEGIARTI000033817781@2018-01-01, LEGIARTI000053542636@2026-02-21]
+  author: { handle: codex, role: translate, family: openai, model_declared: gpt-6.2-sol }
+  blind_to: []
+  inputs:
+    date_de_calcul: "2026-07-01"
+    revenu_net_imposable: "0,00 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 1.0
+    impôt_brut_sans_plafond: "0,00 €"
+    impôt_après_plafond_qf: "0,00 €"
+    réfaction_outre_mer: "0,00 €"
+    décote: "0,00 €"
+    impôt_net_avant_crédits: "0,00 €"
+  derivation: |
+    CGI 193, dernière phrase. Arrondir 0 € à 0 €.
+    CGI 194 I, tableau, et II, première phrase. Parts du foyer 1, parts de référence 1.
+    CGI 193, division et multiplication, et 197 I.1, barème. Revenu par part = 0 / 1 €.
+    Les termes ramenés au foyer donnent 0 = 0 €.
+    Sur 1 part(s) de référence, le même barème donne 0 = 0 €.
+    CGI 197 I.2, premier alinéa. Plafond = (1 − 1) × 2 × 1 807 = 0 €.
+    Retenir le max de 0 € et 0 − 0 € = 0 €.
+    CGI 197 I.3. En métropole, réfaction de 0 €.
+    CGI 197 I.4.a. Après réfaction, 0 − 0 = 0 €.
+    Décote = min(0, max(0, 897 − 0 × 45,25 %)) = 0 €.
+    Impôt net avant réductions et crédits = 0 − 0 = 0 €.
+    Convention de sortie du noyau. Arrondir chaque montant exposé au centime le plus proche.
+
+- id: cgi-197-2026-sous-premier-seuil
+  interface: CalculImpotRevenu@v1
+  source:
+    kind: derivation_manuelle
+    ref: "CGI 193, 194 I et II, 197 I.1 à I.4.a (LEGI)"
+    retrieved: 2026-11-26
+    legal_units:
+      [LEGIARTI000054373592@2026-07-01, LEGIARTI000033817781@2018-01-01, LEGIARTI000053542636@2026-02-21]
+  author: { handle: codex, role: translate, family: openai, model_declared: gpt-6.2-sol }
+  blind_to: []
+  inputs:
+    date_de_calcul: "2026-07-01"
+    revenu_net_imposable: "11599,00 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 1.0
+    impôt_brut_sans_plafond: "0,00 €"
+    impôt_après_plafond_qf: "0,00 €"
+    réfaction_outre_mer: "0,00 €"
+    décote: "0,00 €"
+    impôt_net_avant_crédits: "0,00 €"
+  derivation: |
+    CGI 193, dernière phrase. Arrondir 11599 € à 11599 €.
+    CGI 194 I, tableau, et II, première phrase. Parts du foyer 1, parts de référence 1.
+    CGI 193, division et multiplication, et 197 I.1, barème. Revenu par part = 11599 / 1 €.
+    Les termes ramenés au foyer donnent 0 = 0 €.
+    Sur 1 part(s) de référence, le même barème donne 0 = 0 €.
+    CGI 197 I.2, premier alinéa. Plafond = (1 − 1) × 2 × 1 807 = 0 €.
+    Retenir le max de 0 € et 0 − 0 € = 0 €.
+    CGI 197 I.3. En métropole, réfaction de 0 €.
+    CGI 197 I.4.a. Après réfaction, 0 − 0 = 0 €.
+    Décote = min(0, max(0, 897 − 0 × 45,25 %)) = 0 €.
+    Impôt net avant réductions et crédits = 0 − 0 = 0 €.
+    Convention de sortie du noyau. Arrondir chaque montant exposé au centime le plus proche.
+
+- id: cgi-197-2026-premier-seuil
+  interface: CalculImpotRevenu@v1
+  source:
+    kind: derivation_manuelle
+    ref: "CGI 193, 194 I et II, 197 I.1 à I.4.a (LEGI)"
+    retrieved: 2026-11-26
+    legal_units:
+      [LEGIARTI000054373592@2026-07-01, LEGIARTI000033817781@2018-01-01, LEGIARTI000053542636@2026-02-21]
+  author: { handle: codex, role: translate, family: openai, model_declared: gpt-6.2-sol }
+  blind_to: []
+  inputs:
+    date_de_calcul: "2026-07-01"
+    revenu_net_imposable: "11600,00 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 1.0
+    impôt_brut_sans_plafond: "0,00 €"
+    impôt_après_plafond_qf: "0,00 €"
+    réfaction_outre_mer: "0,00 €"
+    décote: "0,00 €"
+    impôt_net_avant_crédits: "0,00 €"
+  derivation: |
+    CGI 193, dernière phrase. Arrondir 11600 € à 11600 €.
+    CGI 194 I, tableau, et II, première phrase. Parts du foyer 1, parts de référence 1.
+    CGI 193, division et multiplication, et 197 I.1, barème. Revenu par part = 11600 / 1 €.
+    Les termes ramenés au foyer donnent 0 = 0 €.
+    Sur 1 part(s) de référence, le même barème donne 0 = 0 €.
+    CGI 197 I.2, premier alinéa. Plafond = (1 − 1) × 2 × 1 807 = 0 €.
+    Retenir le max de 0 € et 0 − 0 € = 0 €.
+    CGI 197 I.3. En métropole, réfaction de 0 €.
+    CGI 197 I.4.a. Après réfaction, 0 − 0 = 0 €.
+    Décote = min(0, max(0, 897 − 0 × 45,25 %)) = 0 €.
+    Impôt net avant réductions et crédits = 0 − 0 = 0 €.
+    Convention de sortie du noyau. Arrondir chaque montant exposé au centime le plus proche.
+
+- id: cgi-197-2026-premier-seuil-plus-un
+  interface: CalculImpotRevenu@v1
+  source:
+    kind: derivation_manuelle
+    ref: "CGI 193, 194 I et II, 197 I.1 à I.4.a (LEGI)"
+    retrieved: 2026-11-26
+    legal_units:
+      [LEGIARTI000054373592@2026-07-01, LEGIARTI000033817781@2018-01-01, LEGIARTI000053542636@2026-02-21]
+  author: { handle: codex, role: translate, family: openai, model_declared: gpt-6.2-sol }
+  blind_to: []
+  inputs:
+    date_de_calcul: "2026-07-01"
+    revenu_net_imposable: "11601,00 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 1.0
+    impôt_brut_sans_plafond: "0,11 €"
+    impôt_après_plafond_qf: "0,11 €"
+    réfaction_outre_mer: "0,00 €"
+    décote: "0,11 €"
+    impôt_net_avant_crédits: "0,00 €"
+  derivation: |
+    CGI 193, dernière phrase. Arrondir 11601 € à 11601 €.
+    CGI 194 I, tableau, et II, première phrase. Parts du foyer 1, parts de référence 1.
+    CGI 193, division et multiplication, et 197 I.1, barème. Revenu par part = 11601 / 1 €.
+    Les termes ramenés au foyer donnent 1 × 11 % = 0,11 €.
+    Sur 1 part(s) de référence, le même barème donne 1 × 11 % = 0,11 €.
+    CGI 197 I.2, premier alinéa. Plafond = (1 − 1) × 2 × 1 807 = 0 €.
+    Retenir le max de 0,11 € et 0,11 − 0 € = 0,11 €.
+    CGI 197 I.3. En métropole, réfaction de 0 €.
+    CGI 197 I.4.a. Après réfaction, 0,11 − 0 = 0,11 €.
+    Décote = min(0,11, max(0, 897 − 0,11 × 45,25 %)) = 0,11 €.
+    Impôt net avant réductions et crédits = 0,11 − 0,11 = 0 €.
+    Convention de sortie du noyau. Arrondir chaque montant exposé au centime le plus proche.
+
+- id: cgi-197-2026-arrondi-avant-demi-euro
+  interface: CalculImpotRevenu@v1
+  source:
+    kind: derivation_manuelle
+    ref: "CGI 193, 194 I et II, 197 I.1 à I.4.a (LEGI)"
+    retrieved: 2026-11-26
+    legal_units:
+      [LEGIARTI000054373592@2026-07-01, LEGIARTI000033817781@2018-01-01, LEGIARTI000053542636@2026-02-21]
+  author: { handle: codex, role: translate, family: openai, model_declared: gpt-6.2-sol }
+  blind_to: []
+  inputs:
+    date_de_calcul: "2026-07-01"
+    revenu_net_imposable: "11600,49 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 1.0
+    impôt_brut_sans_plafond: "0,00 €"
+    impôt_après_plafond_qf: "0,00 €"
+    réfaction_outre_mer: "0,00 €"
+    décote: "0,00 €"
+    impôt_net_avant_crédits: "0,00 €"
+  derivation: |
+    CGI 193, dernière phrase. Arrondir 11600,49 € à 11600 €.
+    CGI 194 I, tableau, et II, première phrase. Parts du foyer 1, parts de référence 1.
+    CGI 193, division et multiplication, et 197 I.1, barème. Revenu par part = 11600 / 1 €.
+    Les termes ramenés au foyer donnent 0 = 0 €.
+    Sur 1 part(s) de référence, le même barème donne 0 = 0 €.
+    CGI 197 I.2, premier alinéa. Plafond = (1 − 1) × 2 × 1 807 = 0 €.
+    Retenir le max de 0 € et 0 − 0 € = 0 €.
+    CGI 197 I.3. En métropole, réfaction de 0 €.
+    CGI 197 I.4.a. Après réfaction, 0 − 0 = 0 €.
+    Décote = min(0, max(0, 897 − 0 × 45,25 %)) = 0 €.
+    Impôt net avant réductions et crédits = 0 − 0 = 0 €.
+    Convention de sortie du noyau. Arrondir chaque montant exposé au centime le plus proche.
+
+- id: cgi-197-2026-arrondi-au-demi-euro
+  interface: CalculImpotRevenu@v1
+  source:
+    kind: derivation_manuelle
+    ref: "CGI 193, 194 I et II, 197 I.1 à I.4.a (LEGI)"
+    retrieved: 2026-11-26
+    legal_units:
+      [LEGIARTI000054373592@2026-07-01, LEGIARTI000033817781@2018-01-01, LEGIARTI000053542636@2026-02-21]
+  author: { handle: codex, role: translate, family: openai, model_declared: gpt-6.2-sol }
+  blind_to: []
+  inputs:
+    date_de_calcul: "2026-07-01"
+    revenu_net_imposable: "11600,50 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 1.0
+    impôt_brut_sans_plafond: "0,11 €"
+    impôt_après_plafond_qf: "0,11 €"
+    réfaction_outre_mer: "0,00 €"
+    décote: "0,11 €"
+    impôt_net_avant_crédits: "0,00 €"
+  derivation: |
+    CGI 193, dernière phrase. Arrondir 11600,5 € à 11601 €.
+    CGI 194 I, tableau, et II, première phrase. Parts du foyer 1, parts de référence 1.
+    CGI 193, division et multiplication, et 197 I.1, barème. Revenu par part = 11601 / 1 €.
+    Les termes ramenés au foyer donnent 1 × 11 % = 0,11 €.
+    Sur 1 part(s) de référence, le même barème donne 1 × 11 % = 0,11 €.
+    CGI 197 I.2, premier alinéa. Plafond = (1 − 1) × 2 × 1 807 = 0 €.
+    Retenir le max de 0,11 € et 0,11 − 0 € = 0,11 €.
+    CGI 197 I.3. En métropole, réfaction de 0 €.
+    CGI 197 I.4.a. Après réfaction, 0,11 − 0 = 0,11 €.
+    Décote = min(0,11, max(0, 897 − 0,11 × 45,25 %)) = 0,11 €.
+    Impôt net avant réductions et crédits = 0,11 − 0,11 = 0 €.
+    Convention de sortie du noyau. Arrondir chaque montant exposé au centime le plus proche.
+
+- id: cgi-197-2026-entree-moins-un
+  interface: CalculImpotRevenu@v1
+  source:
+    kind: derivation_manuelle
+    ref: "CGI 193, 194 I et II, 197 I.1 à I.4.a (LEGI)"
+    retrieved: 2026-11-26
+    legal_units:
+      [LEGIARTI000054373592@2026-07-01, LEGIARTI000033817781@2018-01-01, LEGIARTI000053542636@2026-02-21]
+  author: { handle: codex, role: translate, family: openai, model_declared: gpt-6.2-sol }
+  blind_to: []
+  inputs:
+    date_de_calcul: "2026-07-01"
+    revenu_net_imposable: "17214,00 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 1.0
+    impôt_brut_sans_plafond: "617,54 €"
+    impôt_après_plafond_qf: "617,54 €"
+    réfaction_outre_mer: "0,00 €"
+    décote: "617,54 €"
+    impôt_net_avant_crédits: "0,00 €"
+  derivation: |
+    CGI 193, dernière phrase. Arrondir 17214 € à 17214 €.
+    CGI 194 I, tableau, et II, première phrase. Parts du foyer 1, parts de référence 1.
+    CGI 193, division et multiplication, et 197 I.1, barème. Revenu par part = 17214 / 1 €.
+    Les termes ramenés au foyer donnent 5614 × 11 % = 617,54 €.
+    Sur 1 part(s) de référence, le même barème donne 5614 × 11 % = 617,54 €.
+    CGI 197 I.2, premier alinéa. Plafond = (1 − 1) × 2 × 1 807 = 0 €.
+    Retenir le max de 617,54 € et 617,54 − 0 € = 617,54 €.
+    CGI 197 I.3. En métropole, réfaction de 0 €.
+    CGI 197 I.4.a. Après réfaction, 617,54 − 0 = 617,54 €.
+    Décote = min(617,54, max(0, 897 − 617,54 × 45,25 %)) = 617,54 €.
+    Impôt net avant réductions et crédits = 617,54 − 617,54 = 0 €.
+    Convention de sortie du noyau. Arrondir chaque montant exposé au centime le plus proche.
+
+- id: cgi-197-2026-entree
+  interface: CalculImpotRevenu@v1
+  source:
+    kind: derivation_manuelle
+    ref: "CGI 193, 194 I et II, 197 I.1 à I.4.a (LEGI)"
+    retrieved: 2026-11-26
+    legal_units:
+      [LEGIARTI000054373592@2026-07-01, LEGIARTI000033817781@2018-01-01, LEGIARTI000053542636@2026-02-21]
+  author: { handle: codex, role: translate, family: openai, model_declared: gpt-6.2-sol }
+  blind_to: []
+  inputs:
+    date_de_calcul: "2026-07-01"
+    revenu_net_imposable: "17215,00 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 1.0
+    impôt_brut_sans_plafond: "617,65 €"
+    impôt_après_plafond_qf: "617,65 €"
+    réfaction_outre_mer: "0,00 €"
+    décote: "617,51 €"
+    impôt_net_avant_crédits: "0,14 €"
+  derivation: |
+    CGI 193, dernière phrase. Arrondir 17215 € à 17215 €.
+    CGI 194 I, tableau, et II, première phrase. Parts du foyer 1, parts de référence 1.
+    CGI 193, division et multiplication, et 197 I.1, barème. Revenu par part = 17215 / 1 €.
+    Les termes ramenés au foyer donnent 5615 × 11 % = 617,65 €.
+    Sur 1 part(s) de référence, le même barème donne 5615 × 11 % = 617,65 €.
+    CGI 197 I.2, premier alinéa. Plafond = (1 − 1) × 2 × 1 807 = 0 €.
+    Retenir le max de 617,65 € et 617,65 − 0 € = 617,65 €.
+    CGI 197 I.3. En métropole, réfaction de 0 €.
+    CGI 197 I.4.a. Après réfaction, 617,65 − 0 = 617,65 €.
+    Décote = min(617,65, max(0, 897 − 617,65 × 45,25 %)) = 617,513375 €.
+    Impôt net avant réductions et crédits = 617,65 − 617,513375 = 0,136625 €.
+    Convention de sortie du noyau. Arrondir chaque montant exposé au centime le plus proche.
+
+- id: cgi-197-2026-decote-celibataire
+  interface: CalculImpotRevenu@v1
+  source:
+    kind: derivation_manuelle
+    ref: "CGI 193, 194 I et II, 197 I.1 à I.4.a (LEGI)"
+    retrieved: 2026-11-26
+    legal_units:
+      [LEGIARTI000054373592@2026-07-01, LEGIARTI000033817781@2018-01-01, LEGIARTI000053542636@2026-02-21]
+  author: { handle: codex, role: translate, family: openai, model_declared: gpt-6.2-sol }
+  blind_to: []
+  inputs:
+    date_de_calcul: "2026-07-01"
+    revenu_net_imposable: "20000,00 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 1.0
+    impôt_brut_sans_plafond: "924,00 €"
+    impôt_après_plafond_qf: "924,00 €"
+    réfaction_outre_mer: "0,00 €"
+    décote: "478,89 €"
+    impôt_net_avant_crédits: "445,11 €"
+  derivation: |
+    CGI 193, dernière phrase. Arrondir 20000 € à 20000 €.
+    CGI 194 I, tableau, et II, première phrase. Parts du foyer 1, parts de référence 1.
+    CGI 193, division et multiplication, et 197 I.1, barème. Revenu par part = 20000 / 1 €.
+    Les termes ramenés au foyer donnent 8400 × 11 % = 924 €.
+    Sur 1 part(s) de référence, le même barème donne 8400 × 11 % = 924 €.
+    CGI 197 I.2, premier alinéa. Plafond = (1 − 1) × 2 × 1 807 = 0 €.
+    Retenir le max de 924 € et 924 − 0 € = 924 €.
+    CGI 197 I.3. En métropole, réfaction de 0 €.
+    CGI 197 I.4.a. Après réfaction, 924 − 0 = 924 €.
+    Décote = min(924, max(0, 897 − 924 × 45,25 %)) = 478,89 €.
+    Impôt net avant réductions et crédits = 924 − 478,89 = 445,11 €.
+    Convention de sortie du noyau. Arrondir chaque montant exposé au centime le plus proche.
+
+- id: cgi-197-2026-deuxieme-seuil-moins-un
+  interface: CalculImpotRevenu@v1
+  source:
+    kind: derivation_manuelle
+    ref: "CGI 193, 194 I et II, 197 I.1 à I.4.a (LEGI)"
+    retrieved: 2026-11-26
+    legal_units:
+      [LEGIARTI000054373592@2026-07-01, LEGIARTI000033817781@2018-01-01, LEGIARTI000053542636@2026-02-21]
+  author: { handle: codex, role: translate, family: openai, model_declared: gpt-6.2-sol }
+  blind_to: []
+  inputs:
+    date_de_calcul: "2026-07-01"
+    revenu_net_imposable: "29578,00 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 1.0
+    impôt_brut_sans_plafond: "1977,58 €"
+    impôt_après_plafond_qf: "1977,58 €"
+    réfaction_outre_mer: "0,00 €"
+    décote: "2,15 €"
+    impôt_net_avant_crédits: "1975,43 €"
+  derivation: |
+    CGI 193, dernière phrase. Arrondir 29578 € à 29578 €.
+    CGI 194 I, tableau, et II, première phrase. Parts du foyer 1, parts de référence 1.
+    CGI 193, division et multiplication, et 197 I.1, barème. Revenu par part = 29578 / 1 €.
+    Les termes ramenés au foyer donnent 17978 × 11 % = 1977,58 €.
+    Sur 1 part(s) de référence, le même barème donne 17978 × 11 % = 1977,58 €.
+    CGI 197 I.2, premier alinéa. Plafond = (1 − 1) × 2 × 1 807 = 0 €.
+    Retenir le max de 1977,58 € et 1977,58 − 0 € = 1977,58 €.
+    CGI 197 I.3. En métropole, réfaction de 0 €.
+    CGI 197 I.4.a. Après réfaction, 1977,58 − 0 = 1977,58 €.
+    Décote = min(1977,58, max(0, 897 − 1977,58 × 45,25 %)) = 2,14505 €.
+    Impôt net avant réductions et crédits = 1977,58 − 2,14505 = 1975,43495 €.
+    Convention de sortie du noyau. Arrondir chaque montant exposé au centime le plus proche.
+
+- id: cgi-197-2026-deuxieme-seuil
+  interface: CalculImpotRevenu@v1
+  source:
+    kind: derivation_manuelle
+    ref: "CGI 193, 194 I et II, 197 I.1 à I.4.a (LEGI)"
+    retrieved: 2026-11-26
+    legal_units:
+      [LEGIARTI000054373592@2026-07-01, LEGIARTI000033817781@2018-01-01, LEGIARTI000053542636@2026-02-21]
+  author: { handle: codex, role: translate, family: openai, model_declared: gpt-6.2-sol }
+  blind_to: []
+  inputs:
+    date_de_calcul: "2026-07-01"
+    revenu_net_imposable: "29579,00 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 1.0
+    impôt_brut_sans_plafond: "1977,69 €"
+    impôt_après_plafond_qf: "1977,69 €"
+    réfaction_outre_mer: "0,00 €"
+    décote: "2,10 €"
+    impôt_net_avant_crédits: "1975,59 €"
+  derivation: |
+    CGI 193, dernière phrase. Arrondir 29579 € à 29579 €.
+    CGI 194 I, tableau, et II, première phrase. Parts du foyer 1, parts de référence 1.
+    CGI 193, division et multiplication, et 197 I.1, barème. Revenu par part = 29579 / 1 €.
+    Les termes ramenés au foyer donnent 17979 × 11 % = 1977,69 €.
+    Sur 1 part(s) de référence, le même barème donne 17979 × 11 % = 1977,69 €.
+    CGI 197 I.2, premier alinéa. Plafond = (1 − 1) × 2 × 1 807 = 0 €.
+    Retenir le max de 1977,69 € et 1977,69 − 0 € = 1977,69 €.
+    CGI 197 I.3. En métropole, réfaction de 0 €.
+    CGI 197 I.4.a. Après réfaction, 1977,69 − 0 = 1977,69 €.
+    Décote = min(1977,69, max(0, 897 − 1977,69 × 45,25 %)) = 2,095275 €.
+    Impôt net avant réductions et crédits = 1977,69 − 2,095275 = 1975,594725 €.
+    Convention de sortie du noyau. Arrondir chaque montant exposé au centime le plus proche.
+
+- id: cgi-197-2026-deuxieme-seuil-plus-un
+  interface: CalculImpotRevenu@v1
+  source:
+    kind: derivation_manuelle
+    ref: "CGI 193, 194 I et II, 197 I.1 à I.4.a (LEGI)"
+    retrieved: 2026-11-26
+    legal_units:
+      [LEGIARTI000054373592@2026-07-01, LEGIARTI000033817781@2018-01-01, LEGIARTI000053542636@2026-02-21]
+  author: { handle: codex, role: translate, family: openai, model_declared: gpt-6.2-sol }
+  blind_to: []
+  inputs:
+    date_de_calcul: "2026-07-01"
+    revenu_net_imposable: "29580,00 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 1.0
+    impôt_brut_sans_plafond: "1977,99 €"
+    impôt_après_plafond_qf: "1977,99 €"
+    réfaction_outre_mer: "0,00 €"
+    décote: "1,96 €"
+    impôt_net_avant_crédits: "1976,03 €"
+  derivation: |
+    CGI 193, dernière phrase. Arrondir 29580 € à 29580 €.
+    CGI 194 I, tableau, et II, première phrase. Parts du foyer 1, parts de référence 1.
+    CGI 193, division et multiplication, et 197 I.1, barème. Revenu par part = 29580 / 1 €.
+    Les termes ramenés au foyer donnent 17979 × 11 % + 1 × 30 % = 1977,99 €.
+    Sur 1 part(s) de référence, le même barème donne 17979 × 11 % + 1 × 30 % = 1977,99 €.
+    CGI 197 I.2, premier alinéa. Plafond = (1 − 1) × 2 × 1 807 = 0 €.
+    Retenir le max de 1977,99 € et 1977,99 − 0 € = 1977,99 €.
+    CGI 197 I.3. En métropole, réfaction de 0 €.
+    CGI 197 I.4.a. Après réfaction, 1977,99 − 0 = 1977,99 €.
+    Décote = min(1977,99, max(0, 897 − 1977,99 × 45,25 %)) = 1,959525 €.
+    Impôt net avant réductions et crédits = 1977,99 − 1,959525 = 1976,030475 €.
+    Convention de sortie du noyau. Arrondir chaque montant exposé au centime le plus proche.
+
+- id: cgi-197-2026-sortie-decote-moins-un
+  interface: CalculImpotRevenu@v1
+  source:
+    kind: derivation_manuelle
+    ref: "CGI 193, 194 I et II, 197 I.1 à I.4.a (LEGI)"
+    retrieved: 2026-11-26
+    legal_units:
+      [LEGIARTI000054373592@2026-07-01, LEGIARTI000033817781@2018-01-01, LEGIARTI000053542636@2026-02-21]
+  author: { handle: codex, role: translate, family: openai, model_declared: gpt-6.2-sol }
+  blind_to: []
+  inputs:
+    date_de_calcul: "2026-07-01"
+    revenu_net_imposable: "29594,00 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 1.0
+    impôt_brut_sans_plafond: "1982,19 €"
+    impôt_après_plafond_qf: "1982,19 €"
+    réfaction_outre_mer: "0,00 €"
+    décote: "0,06 €"
+    impôt_net_avant_crédits: "1982,13 €"
+  derivation: |
+    CGI 193, dernière phrase. Arrondir 29594 € à 29594 €.
+    CGI 194 I, tableau, et II, première phrase. Parts du foyer 1, parts de référence 1.
+    CGI 193, division et multiplication, et 197 I.1, barème. Revenu par part = 29594 / 1 €.
+    Les termes ramenés au foyer donnent 17979 × 11 % + 15 × 30 % = 1982,19 €.
+    Sur 1 part(s) de référence, le même barème donne 17979 × 11 % + 15 × 30 % = 1982,19 €.
+    CGI 197 I.2, premier alinéa. Plafond = (1 − 1) × 2 × 1 807 = 0 €.
+    Retenir le max de 1982,19 € et 1982,19 − 0 € = 1982,19 €.
+    CGI 197 I.3. En métropole, réfaction de 0 €.
+    CGI 197 I.4.a. Après réfaction, 1982,19 − 0 = 1982,19 €.
+    Décote = min(1982,19, max(0, 897 − 1982,19 × 45,25 %)) = 0,059025 €.
+    Impôt net avant réductions et crédits = 1982,19 − 0,059025 = 1982,130975 €.
+    Convention de sortie du noyau. Arrondir chaque montant exposé au centime le plus proche.
+
+- id: cgi-197-2026-sortie-decote
+  interface: CalculImpotRevenu@v1
+  source:
+    kind: derivation_manuelle
+    ref: "CGI 193, 194 I et II, 197 I.1 à I.4.a (LEGI)"
+    retrieved: 2026-11-26
+    legal_units:
+      [LEGIARTI000054373592@2026-07-01, LEGIARTI000033817781@2018-01-01, LEGIARTI000053542636@2026-02-21]
+  author: { handle: codex, role: translate, family: openai, model_declared: gpt-6.2-sol }
+  blind_to: []
+  inputs:
+    date_de_calcul: "2026-07-01"
+    revenu_net_imposable: "29595,00 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 1.0
+    impôt_brut_sans_plafond: "1982,49 €"
+    impôt_après_plafond_qf: "1982,49 €"
+    réfaction_outre_mer: "0,00 €"
+    décote: "0,00 €"
+    impôt_net_avant_crédits: "1982,49 €"
+  derivation: |
+    CGI 193, dernière phrase. Arrondir 29595 € à 29595 €.
+    CGI 194 I, tableau, et II, première phrase. Parts du foyer 1, parts de référence 1.
+    CGI 193, division et multiplication, et 197 I.1, barème. Revenu par part = 29595 / 1 €.
+    Les termes ramenés au foyer donnent 17979 × 11 % + 16 × 30 % = 1982,49 €.
+    Sur 1 part(s) de référence, le même barème donne 17979 × 11 % + 16 × 30 % = 1982,49 €.
+    CGI 197 I.2, premier alinéa. Plafond = (1 − 1) × 2 × 1 807 = 0 €.
+    Retenir le max de 1982,49 € et 1982,49 − 0 € = 1982,49 €.
+    CGI 197 I.3. En métropole, réfaction de 0 €.
+    CGI 197 I.4.a. Après réfaction, 1982,49 − 0 = 1982,49 €.
+    Décote = min(1982,49, max(0, 897 − 1982,49 × 45,25 %)) = 0 €.
+    Impôt net avant réductions et crédits = 1982,49 − 0 = 1982,49 €.
+    Convention de sortie du noyau. Arrondir chaque montant exposé au centime le plus proche.
+
+- id: cgi-197-2026-troisieme-seuil-moins-un
+  interface: CalculImpotRevenu@v1
+  source:
+    kind: derivation_manuelle
+    ref: "CGI 193, 194 I et II, 197 I.1 à I.4.a (LEGI)"
+    retrieved: 2026-11-26
+    legal_units:
+      [LEGIARTI000054373592@2026-07-01, LEGIARTI000033817781@2018-01-01, LEGIARTI000053542636@2026-02-21]
+  author: { handle: codex, role: translate, family: openai, model_declared: gpt-6.2-sol }
+  blind_to: []
+  inputs:
+    date_de_calcul: "2026-07-01"
+    revenu_net_imposable: "84576,00 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 1.0
+    impôt_brut_sans_plafond: "18476,79 €"
+    impôt_après_plafond_qf: "18476,79 €"
+    réfaction_outre_mer: "0,00 €"
+    décote: "0,00 €"
+    impôt_net_avant_crédits: "18476,79 €"
+  derivation: |
+    CGI 193, dernière phrase. Arrondir 84576 € à 84576 €.
+    CGI 194 I, tableau, et II, première phrase. Parts du foyer 1, parts de référence 1.
+    CGI 193, division et multiplication, et 197 I.1, barème. Revenu par part = 84576 / 1 €.
+    Les termes ramenés au foyer donnent 17979 × 11 % + 54997 × 30 % = 18476,79 €.
+    Sur 1 part(s) de référence, le même barème donne 17979 × 11 % + 54997 × 30 % = 18476,79 €.
+    CGI 197 I.2, premier alinéa. Plafond = (1 − 1) × 2 × 1 807 = 0 €.
+    Retenir le max de 18476,79 € et 18476,79 − 0 € = 18476,79 €.
+    CGI 197 I.3. En métropole, réfaction de 0 €.
+    CGI 197 I.4.a. Après réfaction, 18476,79 − 0 = 18476,79 €.
+    Décote = min(18476,79, max(0, 897 − 18476,79 × 45,25 %)) = 0 €.
+    Impôt net avant réductions et crédits = 18476,79 − 0 = 18476,79 €.
+    Convention de sortie du noyau. Arrondir chaque montant exposé au centime le plus proche.
+
+- id: cgi-197-2026-troisieme-seuil
+  interface: CalculImpotRevenu@v1
+  source:
+    kind: derivation_manuelle
+    ref: "CGI 193, 194 I et II, 197 I.1 à I.4.a (LEGI)"
+    retrieved: 2026-11-26
+    legal_units:
+      [LEGIARTI000054373592@2026-07-01, LEGIARTI000033817781@2018-01-01, LEGIARTI000053542636@2026-02-21]
+  author: { handle: codex, role: translate, family: openai, model_declared: gpt-6.2-sol }
+  blind_to: []
+  inputs:
+    date_de_calcul: "2026-07-01"
+    revenu_net_imposable: "84577,00 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 1.0
+    impôt_brut_sans_plafond: "18477,09 €"
+    impôt_après_plafond_qf: "18477,09 €"
+    réfaction_outre_mer: "0,00 €"
+    décote: "0,00 €"
+    impôt_net_avant_crédits: "18477,09 €"
+  derivation: |
+    CGI 193, dernière phrase. Arrondir 84577 € à 84577 €.
+    CGI 194 I, tableau, et II, première phrase. Parts du foyer 1, parts de référence 1.
+    CGI 193, division et multiplication, et 197 I.1, barème. Revenu par part = 84577 / 1 €.
+    Les termes ramenés au foyer donnent 17979 × 11 % + 54998 × 30 % = 18477,09 €.
+    Sur 1 part(s) de référence, le même barème donne 17979 × 11 % + 54998 × 30 % = 18477,09 €.
+    CGI 197 I.2, premier alinéa. Plafond = (1 − 1) × 2 × 1 807 = 0 €.
+    Retenir le max de 18477,09 € et 18477,09 − 0 € = 18477,09 €.
+    CGI 197 I.3. En métropole, réfaction de 0 €.
+    CGI 197 I.4.a. Après réfaction, 18477,09 − 0 = 18477,09 €.
+    Décote = min(18477,09, max(0, 897 − 18477,09 × 45,25 %)) = 0 €.
+    Impôt net avant réductions et crédits = 18477,09 − 0 = 18477,09 €.
+    Convention de sortie du noyau. Arrondir chaque montant exposé au centime le plus proche.
+
+- id: cgi-197-2026-troisieme-seuil-plus-un
+  interface: CalculImpotRevenu@v1
+  source:
+    kind: derivation_manuelle
+    ref: "CGI 193, 194 I et II, 197 I.1 à I.4.a (LEGI)"
+    retrieved: 2026-11-26
+    legal_units:
+      [LEGIARTI000054373592@2026-07-01, LEGIARTI000033817781@2018-01-01, LEGIARTI000053542636@2026-02-21]
+  author: { handle: codex, role: translate, family: openai, model_declared: gpt-6.2-sol }
+  blind_to: []
+  inputs:
+    date_de_calcul: "2026-07-01"
+    revenu_net_imposable: "84578,00 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 1.0
+    impôt_brut_sans_plafond: "18477,50 €"
+    impôt_après_plafond_qf: "18477,50 €"
+    réfaction_outre_mer: "0,00 €"
+    décote: "0,00 €"
+    impôt_net_avant_crédits: "18477,50 €"
+  derivation: |
+    CGI 193, dernière phrase. Arrondir 84578 € à 84578 €.
+    CGI 194 I, tableau, et II, première phrase. Parts du foyer 1, parts de référence 1.
+    CGI 193, division et multiplication, et 197 I.1, barème. Revenu par part = 84578 / 1 €.
+    Les termes ramenés au foyer donnent 17979 × 11 % + 54998 × 30 % + 1 × 41 % = 18477,5 €.
+    Sur 1 part(s) de référence, le même barème donne 17979 × 11 % + 54998 × 30 % + 1 × 41 % = 18477,5 €.
+    CGI 197 I.2, premier alinéa. Plafond = (1 − 1) × 2 × 1 807 = 0 €.
+    Retenir le max de 18477,5 € et 18477,5 − 0 € = 18477,5 €.
+    CGI 197 I.3. En métropole, réfaction de 0 €.
+    CGI 197 I.4.a. Après réfaction, 18477,5 − 0 = 18477,5 €.
+    Décote = min(18477,5, max(0, 897 − 18477,5 × 45,25 %)) = 0 €.
+    Impôt net avant réductions et crédits = 18477,5 − 0 = 18477,5 €.
+    Convention de sortie du noyau. Arrondir chaque montant exposé au centime le plus proche.
+
+- id: cgi-197-2026-quatrieme-seuil-moins-un
+  interface: CalculImpotRevenu@v1
+  source:
+    kind: derivation_manuelle
+    ref: "CGI 193, 194 I et II, 197 I.1 à I.4.a (LEGI)"
+    retrieved: 2026-11-26
+    legal_units:
+      [LEGIARTI000054373592@2026-07-01, LEGIARTI000033817781@2018-01-01, LEGIARTI000053542636@2026-02-21]
+  author: { handle: codex, role: translate, family: openai, model_declared: gpt-6.2-sol }
+  blind_to: []
+  inputs:
+    date_de_calcul: "2026-07-01"
+    revenu_net_imposable: "181916,00 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 1.0
+    impôt_brut_sans_plafond: "58386,08 €"
+    impôt_après_plafond_qf: "58386,08 €"
+    réfaction_outre_mer: "0,00 €"
+    décote: "0,00 €"
+    impôt_net_avant_crédits: "58386,08 €"
+  derivation: |
+    CGI 193, dernière phrase. Arrondir 181916 € à 181916 €.
+    CGI 194 I, tableau, et II, première phrase. Parts du foyer 1, parts de référence 1.
+    CGI 193, division et multiplication, et 197 I.1, barème. Revenu par part = 181916 / 1 €.
+    Les termes ramenés au foyer donnent 17979 × 11 % + 54998 × 30 % + 97339 × 41 % = 58386,08 €.
+    Sur 1 part(s) de référence, le même barème donne 17979 × 11 % + 54998 × 30 % + 97339 × 41 % = 58386,08 €.
+    CGI 197 I.2, premier alinéa. Plafond = (1 − 1) × 2 × 1 807 = 0 €.
+    Retenir le max de 58386,08 € et 58386,08 − 0 € = 58386,08 €.
+    CGI 197 I.3. En métropole, réfaction de 0 €.
+    CGI 197 I.4.a. Après réfaction, 58386,08 − 0 = 58386,08 €.
+    Décote = min(58386,08, max(0, 897 − 58386,08 × 45,25 %)) = 0 €.
+    Impôt net avant réductions et crédits = 58386,08 − 0 = 58386,08 €.
+    Convention de sortie du noyau. Arrondir chaque montant exposé au centime le plus proche.
+
+- id: cgi-197-2026-quatrieme-seuil
+  interface: CalculImpotRevenu@v1
+  source:
+    kind: derivation_manuelle
+    ref: "CGI 193, 194 I et II, 197 I.1 à I.4.a (LEGI)"
+    retrieved: 2026-11-26
+    legal_units:
+      [LEGIARTI000054373592@2026-07-01, LEGIARTI000033817781@2018-01-01, LEGIARTI000053542636@2026-02-21]
+  author: { handle: codex, role: translate, family: openai, model_declared: gpt-6.2-sol }
+  blind_to: []
+  inputs:
+    date_de_calcul: "2026-07-01"
+    revenu_net_imposable: "181917,00 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 1.0
+    impôt_brut_sans_plafond: "58386,49 €"
+    impôt_après_plafond_qf: "58386,49 €"
+    réfaction_outre_mer: "0,00 €"
+    décote: "0,00 €"
+    impôt_net_avant_crédits: "58386,49 €"
+  derivation: |
+    CGI 193, dernière phrase. Arrondir 181917 € à 181917 €.
+    CGI 194 I, tableau, et II, première phrase. Parts du foyer 1, parts de référence 1.
+    CGI 193, division et multiplication, et 197 I.1, barème. Revenu par part = 181917 / 1 €.
+    Les termes ramenés au foyer donnent 17979 × 11 % + 54998 × 30 % + 97340 × 41 % = 58386,49 €.
+    Sur 1 part(s) de référence, le même barème donne 17979 × 11 % + 54998 × 30 % + 97340 × 41 % = 58386,49 €.
+    CGI 197 I.2, premier alinéa. Plafond = (1 − 1) × 2 × 1 807 = 0 €.
+    Retenir le max de 58386,49 € et 58386,49 − 0 € = 58386,49 €.
+    CGI 197 I.3. En métropole, réfaction de 0 €.
+    CGI 197 I.4.a. Après réfaction, 58386,49 − 0 = 58386,49 €.
+    Décote = min(58386,49, max(0, 897 − 58386,49 × 45,25 %)) = 0 €.
+    Impôt net avant réductions et crédits = 58386,49 − 0 = 58386,49 €.
+    Convention de sortie du noyau. Arrondir chaque montant exposé au centime le plus proche.
+
+- id: cgi-197-2026-quatrieme-seuil-plus-un
+  interface: CalculImpotRevenu@v1
+  source:
+    kind: derivation_manuelle
+    ref: "CGI 193, 194 I et II, 197 I.1 à I.4.a (LEGI)"
+    retrieved: 2026-11-26
+    legal_units:
+      [LEGIARTI000054373592@2026-07-01, LEGIARTI000033817781@2018-01-01, LEGIARTI000053542636@2026-02-21]
+  author: { handle: codex, role: translate, family: openai, model_declared: gpt-6.2-sol }
+  blind_to: []
+  inputs:
+    date_de_calcul: "2026-07-01"
+    revenu_net_imposable: "181918,00 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 1.0
+    impôt_brut_sans_plafond: "58386,94 €"
+    impôt_après_plafond_qf: "58386,94 €"
+    réfaction_outre_mer: "0,00 €"
+    décote: "0,00 €"
+    impôt_net_avant_crédits: "58386,94 €"
+  derivation: |
+    CGI 193, dernière phrase. Arrondir 181918 € à 181918 €.
+    CGI 194 I, tableau, et II, première phrase. Parts du foyer 1, parts de référence 1.
+    CGI 193, division et multiplication, et 197 I.1, barème. Revenu par part = 181918 / 1 €.
+    Les termes ramenés au foyer donnent 17979 × 11 % + 54998 × 30 % + 97340 × 41 % + 1 × 45 % = 58386,94 €.
+    Sur 1 part(s) de référence, le même barème donne 17979 × 11 % + 54998 × 30 % + 97340 × 41 % + 1 × 45 % = 58386,94 €.
+    CGI 197 I.2, premier alinéa. Plafond = (1 − 1) × 2 × 1 807 = 0 €.
+    Retenir le max de 58386,94 € et 58386,94 − 0 € = 58386,94 €.
+    CGI 197 I.3. En métropole, réfaction de 0 €.
+    CGI 197 I.4.a. Après réfaction, 58386,94 − 0 = 58386,94 €.
+    Décote = min(58386,94, max(0, 897 − 58386,94 × 45,25 %)) = 0 €.
+    Impôt net avant réductions et crédits = 58386,94 − 0 = 58386,94 €.
+    Convention de sortie du noyau. Arrondir chaque montant exposé au centime le plus proche.
+
+- id: cgi-197-2026-decote-couple
+  interface: CalculImpotRevenu@v1
+  source:
+    kind: derivation_manuelle
+    ref: "CGI 193, 194 I et II, 197 I.1 à I.4.a (LEGI)"
+    retrieved: 2026-11-26
+    legal_units:
+      [LEGIARTI000054373592@2026-07-01, LEGIARTI000033817781@2018-01-01, LEGIARTI000053542636@2026-02-21]
+  author: { handle: codex, role: translate, family: openai, model_declared: gpt-6.2-sol }
+  blind_to: []
+  inputs:
+    date_de_calcul: "2026-07-01"
+    revenu_net_imposable: "40000,00 €"
+    situation_familiale: ImpositionCommune
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 2.0
+    impôt_brut_sans_plafond: "1848,00 €"
+    impôt_après_plafond_qf: "1848,00 €"
+    réfaction_outre_mer: "0,00 €"
+    décote: "646,78 €"
+    impôt_net_avant_crédits: "1201,22 €"
+  derivation: |
+    CGI 193, dernière phrase. Arrondir 40000 € à 40000 €.
+    CGI 194 I, tableau, et II, première phrase. Parts du foyer 2, parts de référence 2.
+    CGI 193, division et multiplication, et 197 I.1, barème. Revenu par part = 40000 / 2 €.
+    Les termes ramenés au foyer donnent 16800 × 11 % = 1848 €.
+    Sur 2 part(s) de référence, le même barème donne 16800 × 11 % = 1848 €.
+    CGI 197 I.2, premier alinéa. Plafond = (2 − 2) × 2 × 1 807 = 0 €.
+    Retenir le max de 1848 € et 1848 − 0 € = 1848 €.
+    CGI 197 I.3. En métropole, réfaction de 0 €.
+    CGI 197 I.4.a. Après réfaction, 1848 − 0 = 1848 €.
+    Décote = min(1848, max(0, 1483 − 1848 × 45,25 %)) = 646,78 €.
+    Impôt net avant réductions et crédits = 1848 − 646,78 = 1201,22 €.
+    Convention de sortie du noyau. Arrondir chaque montant exposé au centime le plus proche.
+
+- id: cgi-197-2026-qf-couple-sous-plafond
+  interface: CalculImpotRevenu@v1
+  source:
+    kind: derivation_manuelle
+    ref: "CGI 193, 194 I et II, 197 I.1 à I.4.a (LEGI)"
+    retrieved: 2026-11-26
+    legal_units:
+      [LEGIARTI000054373592@2026-07-01, LEGIARTI000033817781@2018-01-01, LEGIARTI000053542636@2026-02-21]
+  author: { handle: codex, role: translate, family: openai, model_declared: gpt-6.2-sol }
+  blind_to: []
+  inputs:
+    date_de_calcul: "2026-07-01"
+    revenu_net_imposable: "50000,00 €"
+    situation_familiale: ImpositionCommune
+    enfants_à_charge_exclusive_ou_principale: 2
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 3.0
+    impôt_brut_sans_plafond: "1672,00 €"
+    impôt_après_plafond_qf: "1672,00 €"
+    réfaction_outre_mer: "0,00 €"
+    décote: "726,42 €"
+    impôt_net_avant_crédits: "945,58 €"
+  derivation: |
+    CGI 193, dernière phrase. Arrondir 50000 € à 50000 €.
+    CGI 194 I, tableau, et II, première phrase. Parts du foyer 3, parts de référence 2.
+    CGI 193, division et multiplication, et 197 I.1, barème. Revenu par part = 50000 / 3 €.
+    Les termes ramenés au foyer donnent 15200 × 11 % = 1672 €.
+    Sur 2 part(s) de référence, le même barème donne 26800 × 11 % = 2948 €.
+    CGI 197 I.2, premier alinéa. Plafond = (3 − 2) × 2 × 1 807 = 3614 €.
+    Retenir le max de 1672 € et 2948 − 3614 € = 1672 €.
+    CGI 197 I.3. En métropole, réfaction de 0 €.
+    CGI 197 I.4.a. Après réfaction, 1672 − 0 = 1672 €.
+    Décote = min(1672, max(0, 1483 − 1672 × 45,25 %)) = 726,42 €.
+    Impôt net avant réductions et crédits = 1672 − 726,42 = 945,58 €.
+    Convention de sortie du noyau. Arrondir chaque montant exposé au centime le plus proche.
+
+- id: cgi-197-2026-qf-couple-plafonne
+  interface: CalculImpotRevenu@v1
+  source:
+    kind: derivation_manuelle
+    ref: "CGI 193, 194 I et II, 197 I.1 à I.4.a (LEGI)"
+    retrieved: 2026-11-26
+    legal_units:
+      [LEGIARTI000054373592@2026-07-01, LEGIARTI000033817781@2018-01-01, LEGIARTI000053542636@2026-02-21]
+  author: { handle: codex, role: translate, family: openai, model_declared: gpt-6.2-sol }
+  blind_to: []
+  inputs:
+    date_de_calcul: "2026-07-01"
+    revenu_net_imposable: "100000,00 €"
+    situation_familiale: ImpositionCommune
+    enfants_à_charge_exclusive_ou_principale: 2
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 3.0
+    impôt_brut_sans_plafond: "9311,97 €"
+    impôt_après_plafond_qf: "12593,98 €"
+    réfaction_outre_mer: "0,00 €"
+    décote: "0,00 €"
+    impôt_net_avant_crédits: "12593,98 €"
+  derivation: |
+    CGI 193, dernière phrase. Arrondir 100000 € à 100000 €.
+    CGI 194 I, tableau, et II, première phrase. Parts du foyer 3, parts de référence 2.
+    CGI 193, division et multiplication, et 197 I.1, barème. Revenu par part = 100000 / 3 €.
+    Les termes ramenés au foyer donnent 53937 × 11 % + 11263 × 30 % = 9311,97 €.
+    Sur 2 part(s) de référence, le même barème donne 35958 × 11 % + 40842 × 30 % = 16207,98 €.
+    CGI 197 I.2, premier alinéa. Plafond = (3 − 2) × 2 × 1 807 = 3614 €.
+    Retenir le max de 9311,97 € et 16207,98 − 3614 € = 12593,98 €.
+    CGI 197 I.3. En métropole, réfaction de 0 €.
+    CGI 197 I.4.a. Après réfaction, 12593,98 − 0 = 12593,98 €.
+    Décote = min(12593,98, max(0, 1483 − 12593,98 × 45,25 %)) = 0 €.
+    Impôt net avant réductions et crédits = 12593,98 − 0 = 12593,98 €.
+    Convention de sortie du noyau. Arrondir chaque montant exposé au centime le plus proche.
+
+- id: cgi-197-2026-parent-isole
+  interface: CalculImpotRevenu@v1
+  source:
+    kind: derivation_manuelle
+    ref: "CGI 193, 194 I et II, 197 I.1 à I.4.a (LEGI)"
+    retrieved: 2026-11-26
+    legal_units:
+      [LEGIARTI000054373592@2026-07-01, LEGIARTI000033817781@2018-01-01, LEGIARTI000053542636@2026-02-21]
+  author: { handle: codex, role: translate, family: openai, model_declared: gpt-6.2-sol }
+  blind_to: []
+  inputs:
+    date_de_calcul: "2026-07-01"
+    revenu_net_imposable: "60000,00 €"
+    situation_familiale: Divorcé
+    enfants_à_charge_exclusive_ou_principale: 1
+    appréciation_vit_seul: true
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 2.0
+    impôt_brut_sans_plafond: "4207,98 €"
+    impôt_après_plafond_qf: "6841,99 €"
+    réfaction_outre_mer: "0,00 €"
+    décote: "0,00 €"
+    impôt_net_avant_crédits: "6841,99 €"
+  derivation: |
+    CGI 193, dernière phrase. Arrondir 60000 € à 60000 €.
+    CGI 194 I, tableau, et II, première phrase. Parts du foyer 2, parts de référence 1.
+    CGI 193, division et multiplication, et 197 I.1, barème. Revenu par part = 60000 / 2 €.
+    Les termes ramenés au foyer donnent 35958 × 11 % + 842 × 30 % = 4207,98 €.
+    Sur 1 part(s) de référence, le même barème donne 17979 × 11 % + 30421 × 30 % = 11103,99 €.
+    CGI 197 I.2, premier alinéa. Plafond = 4 262 + (2 − 1 − 1) × 2 × 1 807 = 4262 €.
+    Retenir le max de 4207,98 € et 11103,99 − 4262 € = 6841,99 €.
+    CGI 197 I.3. En métropole, réfaction de 0 €.
+    CGI 197 I.4.a. Après réfaction, 6841,99 − 0 = 6841,99 €.
+    Décote = min(6841,99, max(0, 897 − 6841,99 × 45,25 %)) = 0 €.
+    Impôt net avant réductions et crédits = 6841,99 − 0 = 6841,99 €.
+    Convention de sortie du noyau. Arrondir chaque montant exposé au centime le plus proche.
+
+- id: cgi-197-2026-enfant-et-demi-centime
+  interface: CalculImpotRevenu@v1
+  source:
+    kind: derivation_manuelle
+    ref: "CGI 193, 194 I et II, 197 I.1 à I.4.a (LEGI)"
+    retrieved: 2026-11-26
+    legal_units:
+      [LEGIARTI000054373592@2026-07-01, LEGIARTI000033817781@2018-01-01, LEGIARTI000053542636@2026-02-21]
+  author: { handle: codex, role: translate, family: openai, model_declared: gpt-6.2-sol }
+  blind_to: []
+  inputs:
+    date_de_calcul: "2026-07-01"
+    revenu_net_imposable: "60000,00 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 1
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 1.5
+    impôt_brut_sans_plafond: "7655,99 €"
+    impôt_après_plafond_qf: "9296,99 €"
+    réfaction_outre_mer: "0,00 €"
+    décote: "0,00 €"
+    impôt_net_avant_crédits: "9296,99 €"
+  derivation: |
+    CGI 193, dernière phrase. Arrondir 60000 € à 60000 €.
+    CGI 194 I, tableau, et II, première phrase. Parts du foyer 1,5, parts de référence 1.
+    CGI 193, division et multiplication, et 197 I.1, barème. Revenu par part = 60000 / 1,5 €.
+    Les termes ramenés au foyer donnent 26968,5 × 11 % + 15631,5 × 30 % = 7655,985 €.
+    Sur 1 part(s) de référence, le même barème donne 17979 × 11 % + 30421 × 30 % = 11103,99 €.
+    CGI 197 I.2, premier alinéa. Plafond = (1,5 − 1) × 2 × 1 807 = 1807 €.
+    Retenir le max de 7655,985 € et 11103,99 − 1807 € = 9296,99 €.
+    CGI 197 I.3. En métropole, réfaction de 0 €.
+    CGI 197 I.4.a. Après réfaction, 9296,99 − 0 = 9296,99 €.
+    Décote = min(9296,99, max(0, 897 − 9296,99 × 45,25 %)) = 0 €.
+    Impôt net avant réductions et crédits = 9296,99 − 0 = 9296,99 €.
+    Convention de sortie du noyau. Arrondir chaque montant exposé au centime le plus proche.
+
+- id: cgi-197-2026-veuf-et-deux-enfants
+  interface: CalculImpotRevenu@v1
+  source:
+    kind: derivation_manuelle
+    ref: "CGI 193, 194 I et II, 197 I.1 à I.4.a (LEGI)"
+    retrieved: 2026-11-26
+    legal_units:
+      [LEGIARTI000054373592@2026-07-01, LEGIARTI000033817781@2018-01-01, LEGIARTI000053542636@2026-02-21]
+  author: { handle: codex, role: translate, family: openai, model_declared: gpt-6.2-sol }
+  blind_to: []
+  inputs:
+    date_de_calcul: "2026-07-01"
+    revenu_net_imposable: "100000,00 €"
+    situation_familiale: Veuf
+    enfants_à_charge_exclusive_ou_principale: 2
+    appréciation_vit_seul: true
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 3.0
+    impôt_brut_sans_plafond: "9311,97 €"
+    impôt_après_plafond_qf: "15561,52 €"
+    réfaction_outre_mer: "0,00 €"
+    décote: "0,00 €"
+    impôt_net_avant_crédits: "15561,52 €"
+  derivation: |
+    CGI 193, dernière phrase. Arrondir 100000 € à 100000 €.
+    CGI 194 I, tableau, et II, première phrase. Parts du foyer 3, parts de référence 1.
+    CGI 193, division et multiplication, et 197 I.1, barème. Revenu par part = 100000 / 3 €.
+    Les termes ramenés au foyer donnent 53937 × 11 % + 11263 × 30 % = 9311,97 €.
+    Sur 1 part(s) de référence, le même barème donne 17979 × 11 % + 54998 × 30 % + 15423 × 41 % = 24800,52 €.
+    CGI 197 I.2, premier alinéa. Plafond = (3 − 1) × 2 × 1 807 = 7228 €.
+    Retenir le max de 9311,97 € et 24800,52 − 7228 € = 17572,52 €.
+    CGI 197 I.2, dernier alinéa. Déduire min(2 011, 17572,52 − 9311,97) = 2011 €, reste 15561,52 €.
+    CGI 197 I.3. En métropole, réfaction de 0 €.
+    CGI 197 I.4.a. Après réfaction, 15561,52 − 0 = 15561,52 €.
+    Décote = min(15561,52, max(0, 897 − 15561,52 × 45,25 %)) = 0 €.
+    Impôt net avant réductions et crédits = 15561,52 − 0 = 15561,52 €.
+    Convention de sortie du noyau. Arrondir chaque montant exposé au centime le plus proche.
+
+- id: cgi-197-2026-dom-30-decote-apres-refaction
+  interface: CalculImpotRevenu@v1
+  source:
+    kind: derivation_manuelle
+    ref: "CGI 193, 194 I et II, 197 I.1 à I.4.a (LEGI)"
+    retrieved: 2026-11-26
+    legal_units:
+      [LEGIARTI000054373592@2026-07-01, LEGIARTI000033817781@2018-01-01, LEGIARTI000053542636@2026-02-21]
+  author: { handle: codex, role: translate, family: openai, model_declared: gpt-6.2-sol }
+  blind_to: []
+  inputs:
+    date_de_calcul: "2026-07-01"
+    revenu_net_imposable: "30000,00 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: GuadeloupeMartiniqueRéunion
+  expected:
+    nombre_de_parts: 1.0
+    impôt_brut_sans_plafond: "2103,99 €"
+    impôt_après_plafond_qf: "2103,99 €"
+    réfaction_outre_mer: "631,20 €"
+    décote: "230,56 €"
+    impôt_net_avant_crédits: "1242,23 €"
+  derivation: |
+    CGI 193, dernière phrase. Arrondir 30000 € à 30000 €.
+    CGI 194 I, tableau, et II, première phrase. Parts du foyer 1, parts de référence 1.
+    CGI 193, division et multiplication, et 197 I.1, barème. Revenu par part = 30000 / 1 €.
+    Les termes ramenés au foyer donnent 17979 × 11 % + 421 × 30 % = 2103,99 €.
+    Sur 1 part(s) de référence, le même barème donne 17979 × 11 % + 421 × 30 % = 2103,99 €.
+    CGI 197 I.2, premier alinéa. Plafond = (1 − 1) × 2 × 1 807 = 0 €.
+    Retenir le max de 2103,99 € et 2103,99 − 0 € = 2103,99 €.
+    CGI 197 I.3. Réfaction = min(2450, 2103,99 × 30 %) = 631,197 €.
+    CGI 197 I.4.a. Après réfaction, 2103,99 − 631,197 = 1472,793 €.
+    Décote = min(1472,793, max(0, 897 − 1472,793 × 45,25 %)) = 230,5611675 €.
+    Impôt net avant réductions et crédits = 1472,793 − 230,5611675 = 1242,2318325 €.
+    Convention de sortie du noyau. Arrondir chaque montant exposé au centime le plus proche.
+
+- id: cgi-197-2026-dom-30-avec-plafond
+  interface: CalculImpotRevenu@v1
+  source:
+    kind: derivation_manuelle
+    ref: "CGI 193, 194 I et II, 197 I.1 à I.4.a (LEGI)"
+    retrieved: 2026-11-26
+    legal_units:
+      [LEGIARTI000054373592@2026-07-01, LEGIARTI000033817781@2018-01-01, LEGIARTI000053542636@2026-02-21]
+  author: { handle: codex, role: translate, family: openai, model_declared: gpt-6.2-sol }
+  blind_to: []
+  inputs:
+    date_de_calcul: "2026-07-01"
+    revenu_net_imposable: "70000,00 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: GuadeloupeMartiniqueRéunion
+  expected:
+    nombre_de_parts: 1.0
+    impôt_brut_sans_plafond: "14103,99 €"
+    impôt_après_plafond_qf: "14103,99 €"
+    réfaction_outre_mer: "2450,00 €"
+    décote: "0,00 €"
+    impôt_net_avant_crédits: "11653,99 €"
+  derivation: |
+    CGI 193, dernière phrase. Arrondir 70000 € à 70000 €.
+    CGI 194 I, tableau, et II, première phrase. Parts du foyer 1, parts de référence 1.
+    CGI 193, division et multiplication, et 197 I.1, barème. Revenu par part = 70000 / 1 €.
+    Les termes ramenés au foyer donnent 17979 × 11 % + 40421 × 30 % = 14103,99 €.
+    Sur 1 part(s) de référence, le même barème donne 17979 × 11 % + 40421 × 30 % = 14103,99 €.
+    CGI 197 I.2, premier alinéa. Plafond = (1 − 1) × 2 × 1 807 = 0 €.
+    Retenir le max de 14103,99 € et 14103,99 − 0 € = 14103,99 €.
+    CGI 197 I.3. Réfaction = min(2450, 14103,99 × 30 %) = 2450 €.
+    CGI 197 I.4.a. Après réfaction, 14103,99 − 2450 = 11653,99 €.
+    Décote = min(11653,99, max(0, 897 − 11653,99 × 45,25 %)) = 0 €.
+    Impôt net avant réductions et crédits = 11653,99 − 0 = 11653,99 €.
+    Convention de sortie du noyau. Arrondir chaque montant exposé au centime le plus proche.
+
+- id: cgi-197-2026-dom-40-avec-plafond
+  interface: CalculImpotRevenu@v1
+  source:
+    kind: derivation_manuelle
+    ref: "CGI 193, 194 I et II, 197 I.1 à I.4.a (LEGI)"
+    retrieved: 2026-11-26
+    legal_units:
+      [LEGIARTI000054373592@2026-07-01, LEGIARTI000033817781@2018-01-01, LEGIARTI000053542636@2026-02-21]
+  author: { handle: codex, role: translate, family: openai, model_declared: gpt-6.2-sol }
+  blind_to: []
+  inputs:
+    date_de_calcul: "2026-07-01"
+    revenu_net_imposable: "70000,00 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: GuyaneMayotte
+  expected:
+    nombre_de_parts: 1.0
+    impôt_brut_sans_plafond: "14103,99 €"
+    impôt_après_plafond_qf: "14103,99 €"
+    réfaction_outre_mer: "4050,00 €"
+    décote: "0,00 €"
+    impôt_net_avant_crédits: "10053,99 €"
+  derivation: |
+    CGI 193, dernière phrase. Arrondir 70000 € à 70000 €.
+    CGI 194 I, tableau, et II, première phrase. Parts du foyer 1, parts de référence 1.
+    CGI 193, division et multiplication, et 197 I.1, barème. Revenu par part = 70000 / 1 €.
+    Les termes ramenés au foyer donnent 17979 × 11 % + 40421 × 30 % = 14103,99 €.
+    Sur 1 part(s) de référence, le même barème donne 17979 × 11 % + 40421 × 30 % = 14103,99 €.
+    CGI 197 I.2, premier alinéa. Plafond = (1 − 1) × 2 × 1 807 = 0 €.
+    Retenir le max de 14103,99 € et 14103,99 − 0 € = 14103,99 €.
+    CGI 197 I.3. Réfaction = min(4050, 14103,99 × 40 %) = 4050 €.
+    CGI 197 I.4.a. Après réfaction, 14103,99 − 4050 = 10053,99 €.
+    Décote = min(10053,99, max(0, 897 − 10053,99 × 45,25 %)) = 0 €.
+    Impôt net avant réductions et crédits = 10053,99 − 0 = 10053,99 €.
+    Convention de sortie du noyau. Arrondir chaque montant exposé au centime le plus proche.
+
+- id: cgi-197-2026-dom-40-sous-plafond
+  interface: CalculImpotRevenu@v1
+  source:
+    kind: derivation_manuelle
+    ref: "CGI 193, 194 I et II, 197 I.1 à I.4.a (LEGI)"
+    retrieved: 2026-11-26
+    legal_units:
+      [LEGIARTI000054373592@2026-07-01, LEGIARTI000033817781@2018-01-01, LEGIARTI000053542636@2026-02-21]
+  author: { handle: codex, role: translate, family: openai, model_declared: gpt-6.2-sol }
+  blind_to: []
+  inputs:
+    date_de_calcul: "2026-07-01"
+    revenu_net_imposable: "50000,00 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: GuyaneMayotte
+  expected:
+    nombre_de_parts: 1.0
+    impôt_brut_sans_plafond: "8103,99 €"
+    impôt_après_plafond_qf: "8103,99 €"
+    réfaction_outre_mer: "3241,60 €"
+    décote: "0,00 €"
+    impôt_net_avant_crédits: "4862,39 €"
+  derivation: |
+    CGI 193, dernière phrase. Arrondir 50000 € à 50000 €.
+    CGI 194 I, tableau, et II, première phrase. Parts du foyer 1, parts de référence 1.
+    CGI 193, division et multiplication, et 197 I.1, barème. Revenu par part = 50000 / 1 €.
+    Les termes ramenés au foyer donnent 17979 × 11 % + 20421 × 30 % = 8103,99 €.
+    Sur 1 part(s) de référence, le même barème donne 17979 × 11 % + 20421 × 30 % = 8103,99 €.
+    CGI 197 I.2, premier alinéa. Plafond = (1 − 1) × 2 × 1 807 = 0 €.
+    Retenir le max de 8103,99 € et 8103,99 − 0 € = 8103,99 €.
+    CGI 197 I.3. Réfaction = min(4050, 8103,99 × 40 %) = 3241,596 €.
+    CGI 197 I.4.a. Après réfaction, 8103,99 − 3241,596 = 4862,394 €.
+    Décote = min(4862,394, max(0, 897 − 4862,394 × 45,25 %)) = 0 €.
+    Impôt net avant réductions et crédits = 4862,394 − 0 = 4862,394 €.
+    Convention de sortie du noyau. Arrondir chaque montant exposé au centime le plus proche.

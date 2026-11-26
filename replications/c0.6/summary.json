@@ -1,0 +1,2517 @@
+{
+  "millesime": "2026",
+  "legalUnits": [
+    "LEGIARTI000054373592@2026-07-01",
+    "LEGIARTI000033817781@2018-01-01",
+    "LEGIARTI000053542636@2026-02-21"
+  ],
+  "sweepRangeEuros": [0, 200000],
+  "stepEuros": 1,
+  "totalCliffs": 0,
+  "totalKinks": 18,
+  "note": "Un compte, pas une probabilité. Balayage déterministe au pas de 1 € sur le noyau CGI 193-197 seul (hors seuils de recouvrement de 61 € et hors aides sociales).",
+  "households": [
+    {
+      "id": "celibataire-1p",
+      "label": "Célibataire sans enfant (1 part)",
+      "foyer": {
+        "situationFamiliale": "Célibataire",
+        "enfantsAChargeExclusiveOuPrincipale": 0,
+        "appreciationVitSeul": false,
+        "domicileFiscal": "Métropole"
+      },
+      "parts": 1,
+      "seuilEntreeEuros": 17215,
+      "debutDecotePartielleEuros": 17215,
+      "finDecoteEuros": 29595,
+      "tmeZoneDecotePct": 15.98,
+      "seuilPlafondQfEuros": null,
+      "kinks": [
+        {
+          "revenuEuros": 17214,
+          "tmeAvantPct": 0,
+          "tmeApresPct": 15.98,
+          "cause": "Entrée dans l’impôt (zone de décote, taux majoré × 1,4525)"
+        },
+        {
+          "revenuEuros": 29579,
+          "tmeAvantPct": 15.98,
+          "tmeApresPct": 43.58,
+          "cause": "Changement de tranche du barème (11 % → 30 %)"
+        },
+        {
+          "revenuEuros": 29594,
+          "tmeAvantPct": 43.58,
+          "tmeApresPct": 30,
+          "cause": "Sortie de la décote (retour au taux du barème)"
+        },
+        {
+          "revenuEuros": 84577,
+          "tmeAvantPct": 30,
+          "tmeApresPct": 41,
+          "cause": "Changement de tranche du barème (30 % → 41 %)"
+        },
+        {
+          "revenuEuros": 181917,
+          "tmeAvantPct": 41,
+          "tmeApresPct": 45,
+          "cause": "Changement de tranche du barème (41 % → 45 %)"
+        }
+      ],
+      "cliffs": [],
+      "curve": [
+        {
+          "revenuEuros": 0,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 2000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 4000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 6000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 8000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 10000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 12000,
+          "impotNetEuros": 0,
+          "decoteEuros": 44,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 14000,
+          "impotNetEuros": 0,
+          "decoteEuros": 264,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 16000,
+          "impotNetEuros": 0,
+          "decoteEuros": 484,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 17213,
+          "impotNetEuros": 0,
+          "decoteEuros": 617.43,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 17214,
+          "impotNetEuros": 0,
+          "decoteEuros": 617.54,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 13.66
+        },
+        {
+          "revenuEuros": 17215,
+          "impotNetEuros": 0.14,
+          "decoteEuros": 617.51,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 18000,
+          "impotNetEuros": 125.56,
+          "decoteEuros": 578.44,
+          "tauxMoyenPct": 0.7,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 20000,
+          "impotNetEuros": 445.11,
+          "decoteEuros": 478.89,
+          "tauxMoyenPct": 2.23,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 22000,
+          "impotNetEuros": 764.66,
+          "decoteEuros": 379.34,
+          "tauxMoyenPct": 3.48,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 24000,
+          "impotNetEuros": 1084.21,
+          "decoteEuros": 279.79,
+          "tauxMoyenPct": 4.52,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 26000,
+          "impotNetEuros": 1403.76,
+          "decoteEuros": 180.24,
+          "tauxMoyenPct": 5.4,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 28000,
+          "impotNetEuros": 1723.31,
+          "decoteEuros": 80.69,
+          "tauxMoyenPct": 6.15,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 29578,
+          "impotNetEuros": 1975.43,
+          "decoteEuros": 2.15,
+          "tauxMoyenPct": 6.68,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 29579,
+          "impotNetEuros": 1975.59,
+          "decoteEuros": 2.1,
+          "tauxMoyenPct": 6.68,
+          "tauxMarginalPct": 43.58
+        },
+        {
+          "revenuEuros": 29580,
+          "impotNetEuros": 1976.03,
+          "decoteEuros": 1.96,
+          "tauxMoyenPct": 6.68,
+          "tauxMarginalPct": 43.58
+        },
+        {
+          "revenuEuros": 29593,
+          "impotNetEuros": 1981.7,
+          "decoteEuros": 0.19,
+          "tauxMoyenPct": 6.7,
+          "tauxMarginalPct": 43.58
+        },
+        {
+          "revenuEuros": 29594,
+          "impotNetEuros": 1982.13,
+          "decoteEuros": 0.06,
+          "tauxMoyenPct": 6.7,
+          "tauxMarginalPct": 35.9
+        },
+        {
+          "revenuEuros": 29595,
+          "impotNetEuros": 1982.49,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 6.7,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 30000,
+          "impotNetEuros": 2103.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 7.01,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 32000,
+          "impotNetEuros": 2703.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 8.45,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 34000,
+          "impotNetEuros": 3303.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 9.72,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 36000,
+          "impotNetEuros": 3903.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 10.84,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 38000,
+          "impotNetEuros": 4503.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 11.85,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 40000,
+          "impotNetEuros": 5103.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 12.76,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 42000,
+          "impotNetEuros": 5703.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 13.58,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 44000,
+          "impotNetEuros": 6303.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 14.33,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 46000,
+          "impotNetEuros": 6903.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 15.01,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 48000,
+          "impotNetEuros": 7503.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 15.63,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 50000,
+          "impotNetEuros": 8103.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 16.21,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 52000,
+          "impotNetEuros": 8703.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 16.74,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 54000,
+          "impotNetEuros": 9303.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 17.23,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 56000,
+          "impotNetEuros": 9903.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 17.69,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 58000,
+          "impotNetEuros": 10503.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 18.11,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 60000,
+          "impotNetEuros": 11103.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 18.51,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 62000,
+          "impotNetEuros": 11703.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 18.88,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 64000,
+          "impotNetEuros": 12303.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 19.22,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 66000,
+          "impotNetEuros": 12903.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 19.55,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 68000,
+          "impotNetEuros": 13503.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 19.86,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 70000,
+          "impotNetEuros": 14103.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 20.15,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 72000,
+          "impotNetEuros": 14703.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 20.42,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 74000,
+          "impotNetEuros": 15303.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 20.68,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 76000,
+          "impotNetEuros": 15903.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 20.93,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 78000,
+          "impotNetEuros": 16503.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 21.16,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 80000,
+          "impotNetEuros": 17103.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 21.38,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 82000,
+          "impotNetEuros": 17703.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 21.59,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 84000,
+          "impotNetEuros": 18303.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 21.79,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 84576,
+          "impotNetEuros": 18476.79,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 21.85,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 84577,
+          "impotNetEuros": 18477.09,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 21.85,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 84578,
+          "impotNetEuros": 18477.5,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 21.85,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 86000,
+          "impotNetEuros": 19060.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 22.16,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 88000,
+          "impotNetEuros": 19880.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 22.59,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 90000,
+          "impotNetEuros": 20700.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 23,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 92000,
+          "impotNetEuros": 21520.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 23.39,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 94000,
+          "impotNetEuros": 22340.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 23.77,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 96000,
+          "impotNetEuros": 23160.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 24.13,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 98000,
+          "impotNetEuros": 23980.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 24.47,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 100000,
+          "impotNetEuros": 24800.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 24.8,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 102000,
+          "impotNetEuros": 25620.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 25.12,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 104000,
+          "impotNetEuros": 26440.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 25.42,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 106000,
+          "impotNetEuros": 27260.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 25.72,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 108000,
+          "impotNetEuros": 28080.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 26,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 110000,
+          "impotNetEuros": 28900.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 26.27,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 112000,
+          "impotNetEuros": 29720.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 26.54,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 114000,
+          "impotNetEuros": 30540.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 26.79,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 116000,
+          "impotNetEuros": 31360.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 27.03,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 118000,
+          "impotNetEuros": 32180.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 27.27,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 120000,
+          "impotNetEuros": 33000.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 27.5,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 130000,
+          "impotNetEuros": 37100.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 28.54,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 140000,
+          "impotNetEuros": 41200.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 29.43,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 150000,
+          "impotNetEuros": 45300.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 30.2,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 160000,
+          "impotNetEuros": 49400.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 30.88,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 170000,
+          "impotNetEuros": 53500.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 31.47,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 180000,
+          "impotNetEuros": 57600.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 32,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 181916,
+          "impotNetEuros": 58386.08,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 32.1,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 181917,
+          "impotNetEuros": 58386.49,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 32.1,
+          "tauxMarginalPct": 45
+        },
+        {
+          "revenuEuros": 181918,
+          "impotNetEuros": 58386.94,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 32.1,
+          "tauxMarginalPct": 45
+        },
+        {
+          "revenuEuros": 190000,
+          "impotNetEuros": 62023.84,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 32.64,
+          "tauxMarginalPct": 45
+        },
+        {
+          "revenuEuros": 200000,
+          "impotNetEuros": 66523.84,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 33.26,
+          "tauxMarginalPct": 45
+        }
+      ]
+    },
+    {
+      "id": "couple-2p",
+      "label": "Couple marié ou pacsé sans enfant (2 parts)",
+      "foyer": {
+        "situationFamiliale": "ImpositionCommune",
+        "enfantsAChargeExclusiveOuPrincipale": 0,
+        "appreciationVitSeul": false,
+        "domicileFiscal": "Métropole"
+      },
+      "parts": 2,
+      "seuilEntreeEuros": 32482,
+      "debutDecotePartielleEuros": 32482,
+      "finDecoteEuros": 52995,
+      "tmeZoneDecotePct": 15.98,
+      "seuilPlafondQfEuros": null,
+      "kinks": [
+        {
+          "revenuEuros": 32481,
+          "tmeAvantPct": 0,
+          "tmeApresPct": 15.98,
+          "cause": "Entrée dans l’impôt (zone de décote, taux majoré × 1,4525)"
+        },
+        {
+          "revenuEuros": 52994,
+          "tmeAvantPct": 15.98,
+          "tmeApresPct": 11,
+          "cause": "Sortie de la décote (retour au taux du barème)"
+        },
+        {
+          "revenuEuros": 59158,
+          "tmeAvantPct": 11,
+          "tmeApresPct": 30,
+          "cause": "Changement de tranche du barème (11 % → 30 %)"
+        },
+        {
+          "revenuEuros": 169154,
+          "tmeAvantPct": 30,
+          "tmeApresPct": 41,
+          "cause": "Changement de tranche du barème (30 % → 41 %)"
+        }
+      ],
+      "cliffs": [],
+      "curve": [
+        {
+          "revenuEuros": 0,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 2000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 4000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 6000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 8000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 10000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 12000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 14000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 16000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 18000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 20000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 22000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 24000,
+          "impotNetEuros": 0,
+          "decoteEuros": 88,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 26000,
+          "impotNetEuros": 0,
+          "decoteEuros": 308,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 28000,
+          "impotNetEuros": 0,
+          "decoteEuros": 528,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 30000,
+          "impotNetEuros": 0,
+          "decoteEuros": 748,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 32000,
+          "impotNetEuros": 0,
+          "decoteEuros": 968,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 32480,
+          "impotNetEuros": 0,
+          "decoteEuros": 1020.8,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 32481,
+          "impotNetEuros": 0,
+          "decoteEuros": 1020.91,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 3.16
+        },
+        {
+          "revenuEuros": 32482,
+          "impotNetEuros": 0.03,
+          "decoteEuros": 1020.99,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 34000,
+          "impotNetEuros": 242.57,
+          "decoteEuros": 945.43,
+          "tauxMoyenPct": 0.71,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 36000,
+          "impotNetEuros": 562.12,
+          "decoteEuros": 845.88,
+          "tauxMoyenPct": 1.56,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 38000,
+          "impotNetEuros": 881.67,
+          "decoteEuros": 746.33,
+          "tauxMoyenPct": 2.32,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 40000,
+          "impotNetEuros": 1201.22,
+          "decoteEuros": 646.78,
+          "tauxMoyenPct": 3,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 42000,
+          "impotNetEuros": 1520.77,
+          "decoteEuros": 547.23,
+          "tauxMoyenPct": 3.62,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 44000,
+          "impotNetEuros": 1840.32,
+          "decoteEuros": 447.68,
+          "tauxMoyenPct": 4.18,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 46000,
+          "impotNetEuros": 2159.87,
+          "decoteEuros": 348.13,
+          "tauxMoyenPct": 4.7,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 48000,
+          "impotNetEuros": 2479.42,
+          "decoteEuros": 248.58,
+          "tauxMoyenPct": 5.17,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 50000,
+          "impotNetEuros": 2798.97,
+          "decoteEuros": 149.03,
+          "tauxMoyenPct": 5.6,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 52000,
+          "impotNetEuros": 3118.52,
+          "decoteEuros": 49.48,
+          "tauxMoyenPct": 6,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 52993,
+          "impotNetEuros": 3277.18,
+          "decoteEuros": 0.05,
+          "tauxMoyenPct": 6.18,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 52994,
+          "impotNetEuros": 3277.34,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 6.18,
+          "tauxMarginalPct": 11.37
+        },
+        {
+          "revenuEuros": 52995,
+          "impotNetEuros": 3277.45,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 6.18,
+          "tauxMarginalPct": 11
+        },
+        {
+          "revenuEuros": 54000,
+          "impotNetEuros": 3388,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 6.27,
+          "tauxMarginalPct": 11
+        },
+        {
+          "revenuEuros": 56000,
+          "impotNetEuros": 3608,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 6.44,
+          "tauxMarginalPct": 11
+        },
+        {
+          "revenuEuros": 58000,
+          "impotNetEuros": 3828,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 6.6,
+          "tauxMarginalPct": 11
+        },
+        {
+          "revenuEuros": 59157,
+          "impotNetEuros": 3955.27,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 6.69,
+          "tauxMarginalPct": 11
+        },
+        {
+          "revenuEuros": 59158,
+          "impotNetEuros": 3955.38,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 6.69,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 59159,
+          "impotNetEuros": 3955.68,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 6.69,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 60000,
+          "impotNetEuros": 4207.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 7.01,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 62000,
+          "impotNetEuros": 4807.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 7.75,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 64000,
+          "impotNetEuros": 5407.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 8.45,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 66000,
+          "impotNetEuros": 6007.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 9.1,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 68000,
+          "impotNetEuros": 6607.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 9.72,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 70000,
+          "impotNetEuros": 7207.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 10.3,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 72000,
+          "impotNetEuros": 7807.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 10.84,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 74000,
+          "impotNetEuros": 8407.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 11.36,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 76000,
+          "impotNetEuros": 9007.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 11.85,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 78000,
+          "impotNetEuros": 9607.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 12.32,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 80000,
+          "impotNetEuros": 10207.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 12.76,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 82000,
+          "impotNetEuros": 10807.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 13.18,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 84000,
+          "impotNetEuros": 11407.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 13.58,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 86000,
+          "impotNetEuros": 12007.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 13.96,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 88000,
+          "impotNetEuros": 12607.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 14.33,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 90000,
+          "impotNetEuros": 13207.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 14.68,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 92000,
+          "impotNetEuros": 13807.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 15.01,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 94000,
+          "impotNetEuros": 14407.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 15.33,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 96000,
+          "impotNetEuros": 15007.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 15.63,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 98000,
+          "impotNetEuros": 15607.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 15.93,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 100000,
+          "impotNetEuros": 16207.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 16.21,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 102000,
+          "impotNetEuros": 16807.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 16.48,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 104000,
+          "impotNetEuros": 17407.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 16.74,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 106000,
+          "impotNetEuros": 18007.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 16.99,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 108000,
+          "impotNetEuros": 18607.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 17.23,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 110000,
+          "impotNetEuros": 19207.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 17.46,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 112000,
+          "impotNetEuros": 19807.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 17.69,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 114000,
+          "impotNetEuros": 20407.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 17.9,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 116000,
+          "impotNetEuros": 21007.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 18.11,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 118000,
+          "impotNetEuros": 21607.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 18.31,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 120000,
+          "impotNetEuros": 22207.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 18.51,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 130000,
+          "impotNetEuros": 25207.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 19.39,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 140000,
+          "impotNetEuros": 28207.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 20.15,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 150000,
+          "impotNetEuros": 31207.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 20.81,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 160000,
+          "impotNetEuros": 34207.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 21.38,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 169153,
+          "impotNetEuros": 36953.88,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 21.85,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 169154,
+          "impotNetEuros": 36954.18,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 21.85,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 169155,
+          "impotNetEuros": 36954.59,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 21.85,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 170000,
+          "impotNetEuros": 37301.04,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 21.94,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 180000,
+          "impotNetEuros": 41401.04,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 23,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 190000,
+          "impotNetEuros": 45501.04,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 23.95,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 200000,
+          "impotNetEuros": 49601.04,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 24.8,
+          "tauxMarginalPct": 41
+        }
+      ]
+    },
+    {
+      "id": "couple-2enf-3p",
+      "label": "Couple marié ou pacsé avec 2 enfants (3 parts)",
+      "foyer": {
+        "situationFamiliale": "ImpositionCommune",
+        "enfantsAChargeExclusiveOuPrincipale": 2,
+        "appreciationVitSeul": false,
+        "domicileFiscal": "Métropole"
+      },
+      "parts": 3,
+      "seuilEntreeEuros": 44082,
+      "debutDecotePartielleEuros": 44082,
+      "finDecoteEuros": 64595,
+      "tmeZoneDecotePct": 15.98,
+      "seuilPlafondQfEuros": 71464,
+      "kinks": [
+        {
+          "revenuEuros": 44081,
+          "tmeAvantPct": 0,
+          "tmeApresPct": 15.98,
+          "cause": "Entrée dans l’impôt (zone de décote, taux majoré × 1,4525)"
+        },
+        {
+          "revenuEuros": 64594,
+          "tmeAvantPct": 15.98,
+          "tmeApresPct": 11,
+          "cause": "Sortie de la décote (retour au taux du barème)"
+        },
+        {
+          "revenuEuros": 71463,
+          "tmeAvantPct": 11,
+          "tmeApresPct": 30,
+          "cause": "Déclenchement du plafonnement du quotient familial (1 807 € / demi-part)"
+        },
+        {
+          "revenuEuros": 169154,
+          "tmeAvantPct": 30,
+          "tmeApresPct": 41,
+          "cause": "Changement de tranche du barème de référence (30 % → 41 %)"
+        }
+      ],
+      "cliffs": [],
+      "curve": [
+        {
+          "revenuEuros": 0,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 2000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 4000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 6000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 8000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 10000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 12000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 14000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 16000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 18000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 20000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 22000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 24000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 26000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 28000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 30000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 32000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 34000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 36000,
+          "impotNetEuros": 0,
+          "decoteEuros": 132,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 38000,
+          "impotNetEuros": 0,
+          "decoteEuros": 352,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 40000,
+          "impotNetEuros": 0,
+          "decoteEuros": 572,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 42000,
+          "impotNetEuros": 0,
+          "decoteEuros": 792,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 44000,
+          "impotNetEuros": 0,
+          "decoteEuros": 1012,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 44080,
+          "impotNetEuros": 0,
+          "decoteEuros": 1020.8,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 44081,
+          "impotNetEuros": 0,
+          "decoteEuros": 1020.91,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 3.16
+        },
+        {
+          "revenuEuros": 44082,
+          "impotNetEuros": 0.03,
+          "decoteEuros": 1020.99,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 46000,
+          "impotNetEuros": 306.48,
+          "decoteEuros": 925.52,
+          "tauxMoyenPct": 0.67,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 48000,
+          "impotNetEuros": 626.03,
+          "decoteEuros": 825.97,
+          "tauxMoyenPct": 1.3,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 50000,
+          "impotNetEuros": 945.58,
+          "decoteEuros": 726.42,
+          "tauxMoyenPct": 1.89,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 52000,
+          "impotNetEuros": 1265.13,
+          "decoteEuros": 626.87,
+          "tauxMoyenPct": 2.43,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 54000,
+          "impotNetEuros": 1584.68,
+          "decoteEuros": 527.32,
+          "tauxMoyenPct": 2.93,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 56000,
+          "impotNetEuros": 1904.23,
+          "decoteEuros": 427.77,
+          "tauxMoyenPct": 3.4,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 58000,
+          "impotNetEuros": 2223.78,
+          "decoteEuros": 328.22,
+          "tauxMoyenPct": 3.83,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 60000,
+          "impotNetEuros": 2543.33,
+          "decoteEuros": 228.67,
+          "tauxMoyenPct": 4.24,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 62000,
+          "impotNetEuros": 2862.88,
+          "decoteEuros": 129.12,
+          "tauxMoyenPct": 4.62,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 64000,
+          "impotNetEuros": 3182.43,
+          "decoteEuros": 29.57,
+          "tauxMoyenPct": 4.97,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 64593,
+          "impotNetEuros": 3277.18,
+          "decoteEuros": 0.05,
+          "tauxMoyenPct": 5.07,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 64594,
+          "impotNetEuros": 3277.34,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 5.07,
+          "tauxMarginalPct": 11.37
+        },
+        {
+          "revenuEuros": 64595,
+          "impotNetEuros": 3277.45,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 5.07,
+          "tauxMarginalPct": 11
+        },
+        {
+          "revenuEuros": 66000,
+          "impotNetEuros": 3432,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 5.2,
+          "tauxMarginalPct": 11
+        },
+        {
+          "revenuEuros": 68000,
+          "impotNetEuros": 3652,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 5.37,
+          "tauxMarginalPct": 11
+        },
+        {
+          "revenuEuros": 70000,
+          "impotNetEuros": 3872,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 5.53,
+          "tauxMarginalPct": 11
+        },
+        {
+          "revenuEuros": 71462,
+          "impotNetEuros": 4032.82,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 5.64,
+          "tauxMarginalPct": 11
+        },
+        {
+          "revenuEuros": 71463,
+          "impotNetEuros": 4032.93,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 5.64,
+          "tauxMarginalPct": 25
+        },
+        {
+          "revenuEuros": 71464,
+          "impotNetEuros": 4033.18,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 5.64,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 72000,
+          "impotNetEuros": 4193.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 5.82,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 74000,
+          "impotNetEuros": 4793.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 6.48,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 76000,
+          "impotNetEuros": 5393.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 7.1,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 78000,
+          "impotNetEuros": 5993.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 7.68,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 80000,
+          "impotNetEuros": 6593.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 8.24,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 82000,
+          "impotNetEuros": 7193.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 8.77,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 84000,
+          "impotNetEuros": 7793.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 9.28,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 86000,
+          "impotNetEuros": 8393.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 9.76,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 88000,
+          "impotNetEuros": 8993.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 10.22,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 90000,
+          "impotNetEuros": 9593.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 10.66,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 92000,
+          "impotNetEuros": 10193.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 11.08,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 94000,
+          "impotNetEuros": 10793.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 11.48,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 96000,
+          "impotNetEuros": 11393.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 11.87,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 98000,
+          "impotNetEuros": 11993.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 12.24,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 100000,
+          "impotNetEuros": 12593.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 12.59,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 102000,
+          "impotNetEuros": 13193.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 12.94,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 104000,
+          "impotNetEuros": 13793.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 13.26,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 106000,
+          "impotNetEuros": 14393.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 13.58,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 108000,
+          "impotNetEuros": 14993.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 13.88,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 110000,
+          "impotNetEuros": 15593.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 14.18,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 112000,
+          "impotNetEuros": 16193.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 14.46,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 114000,
+          "impotNetEuros": 16793.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 14.73,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 116000,
+          "impotNetEuros": 17393.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 14.99,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 118000,
+          "impotNetEuros": 17993.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 15.25,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 120000,
+          "impotNetEuros": 18593.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 15.49,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 130000,
+          "impotNetEuros": 21593.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 16.61,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 140000,
+          "impotNetEuros": 24593.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 17.57,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 150000,
+          "impotNetEuros": 27593.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 18.4,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 160000,
+          "impotNetEuros": 30593.98,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 19.12,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 169153,
+          "impotNetEuros": 33339.88,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 19.71,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 169154,
+          "impotNetEuros": 33340.18,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 19.71,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 169155,
+          "impotNetEuros": 33340.59,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 19.71,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 170000,
+          "impotNetEuros": 33687.04,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 19.82,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 180000,
+          "impotNetEuros": 37787.04,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 20.99,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 190000,
+          "impotNetEuros": 41887.04,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 22.05,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 200000,
+          "impotNetEuros": 45987.04,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 22.99,
+          "tauxMarginalPct": 41
+        }
+      ]
+    },
+    {
+      "id": "parent-isole-1enf-2p",
+      "label": "Parent isolé avec 1 enfant à charge (2 parts)",
+      "foyer": {
+        "situationFamiliale": "Célibataire",
+        "enfantsAChargeExclusiveOuPrincipale": 1,
+        "appreciationVitSeul": true,
+        "domicileFiscal": "Métropole"
+      },
+      "parts": 2,
+      "seuilEntreeEuros": 28815,
+      "debutDecotePartielleEuros": 28815,
+      "finDecoteEuros": 41222,
+      "tmeZoneDecotePct": 15.98,
+      "seuilPlafondQfEuros": 45295,
+      "kinks": [
+        {
+          "revenuEuros": 28814,
+          "tmeAvantPct": 0,
+          "tmeApresPct": 15.98,
+          "cause": "Entrée dans l’impôt (zone de décote, taux majoré × 1,4525)"
+        },
+        {
+          "revenuEuros": 41221,
+          "tmeAvantPct": 15.98,
+          "tmeApresPct": 11,
+          "cause": "Sortie de la décote (retour au taux du barème)"
+        },
+        {
+          "revenuEuros": 45294,
+          "tmeAvantPct": 11,
+          "tmeApresPct": 30,
+          "cause": "Déclenchement du plafonnement du quotient familial (1 807 € / demi-part)"
+        },
+        {
+          "revenuEuros": 84577,
+          "tmeAvantPct": 30,
+          "tmeApresPct": 41,
+          "cause": "Changement de tranche du barème de référence (30 % → 41 %)"
+        },
+        {
+          "revenuEuros": 181917,
+          "tmeAvantPct": 41,
+          "tmeApresPct": 45,
+          "cause": "Changement de tranche du barème de référence (41 % → 45 %)"
+        }
+      ],
+      "cliffs": [],
+      "curve": [
+        {
+          "revenuEuros": 0,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 2000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 4000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 6000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 8000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 10000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 12000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 14000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 16000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 18000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 20000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 22000,
+          "impotNetEuros": 0,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 24000,
+          "impotNetEuros": 0,
+          "decoteEuros": 88,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 26000,
+          "impotNetEuros": 0,
+          "decoteEuros": 308,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 28000,
+          "impotNetEuros": 0,
+          "decoteEuros": 528,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 28813,
+          "impotNetEuros": 0,
+          "decoteEuros": 617.43,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 0
+        },
+        {
+          "revenuEuros": 28814,
+          "impotNetEuros": 0,
+          "decoteEuros": 617.54,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 13.66
+        },
+        {
+          "revenuEuros": 28815,
+          "impotNetEuros": 0.14,
+          "decoteEuros": 617.51,
+          "tauxMoyenPct": 0,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 30000,
+          "impotNetEuros": 189.47,
+          "decoteEuros": 558.53,
+          "tauxMoyenPct": 0.63,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 32000,
+          "impotNetEuros": 509.02,
+          "decoteEuros": 458.98,
+          "tauxMoyenPct": 1.59,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 34000,
+          "impotNetEuros": 828.57,
+          "decoteEuros": 359.43,
+          "tauxMoyenPct": 2.44,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 36000,
+          "impotNetEuros": 1148.12,
+          "decoteEuros": 259.88,
+          "tauxMoyenPct": 3.19,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 38000,
+          "impotNetEuros": 1467.67,
+          "decoteEuros": 160.33,
+          "tauxMoyenPct": 3.86,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 40000,
+          "impotNetEuros": 1787.22,
+          "decoteEuros": 60.78,
+          "tauxMoyenPct": 4.47,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 41220,
+          "impotNetEuros": 1982.15,
+          "decoteEuros": 0.05,
+          "tauxMoyenPct": 4.81,
+          "tauxMarginalPct": 15.98
+        },
+        {
+          "revenuEuros": 41221,
+          "impotNetEuros": 1982.31,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 4.81,
+          "tauxMarginalPct": 11.47
+        },
+        {
+          "revenuEuros": 41222,
+          "impotNetEuros": 1982.42,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 4.81,
+          "tauxMarginalPct": 11
+        },
+        {
+          "revenuEuros": 42000,
+          "impotNetEuros": 2068,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 4.92,
+          "tauxMarginalPct": 11
+        },
+        {
+          "revenuEuros": 44000,
+          "impotNetEuros": 2288,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 5.2,
+          "tauxMarginalPct": 11
+        },
+        {
+          "revenuEuros": 45293,
+          "impotNetEuros": 2430.23,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 5.37,
+          "tauxMarginalPct": 11
+        },
+        {
+          "revenuEuros": 45294,
+          "impotNetEuros": 2430.34,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 5.37,
+          "tauxMarginalPct": 15
+        },
+        {
+          "revenuEuros": 45295,
+          "impotNetEuros": 2430.49,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 5.37,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 46000,
+          "impotNetEuros": 2641.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 5.74,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 48000,
+          "impotNetEuros": 3241.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 6.75,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 50000,
+          "impotNetEuros": 3841.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 7.68,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 52000,
+          "impotNetEuros": 4441.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 8.54,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 54000,
+          "impotNetEuros": 5041.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 9.34,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 56000,
+          "impotNetEuros": 5641.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 10.07,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 58000,
+          "impotNetEuros": 6241.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 10.76,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 60000,
+          "impotNetEuros": 6841.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 11.4,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 62000,
+          "impotNetEuros": 7441.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 12,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 64000,
+          "impotNetEuros": 8041.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 12.57,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 66000,
+          "impotNetEuros": 8641.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 13.09,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 68000,
+          "impotNetEuros": 9241.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 13.59,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 70000,
+          "impotNetEuros": 9841.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 14.06,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 72000,
+          "impotNetEuros": 10441.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 14.5,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 74000,
+          "impotNetEuros": 11041.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 14.92,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 76000,
+          "impotNetEuros": 11641.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 15.32,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 78000,
+          "impotNetEuros": 12241.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 15.69,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 80000,
+          "impotNetEuros": 12841.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 16.05,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 82000,
+          "impotNetEuros": 13441.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 16.39,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 84000,
+          "impotNetEuros": 14041.99,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 16.72,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 84576,
+          "impotNetEuros": 14214.79,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 16.81,
+          "tauxMarginalPct": 30
+        },
+        {
+          "revenuEuros": 84577,
+          "impotNetEuros": 14215.09,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 16.81,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 84578,
+          "impotNetEuros": 14215.5,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 16.81,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 86000,
+          "impotNetEuros": 14798.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 17.21,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 88000,
+          "impotNetEuros": 15618.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 17.75,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 90000,
+          "impotNetEuros": 16438.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 18.27,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 92000,
+          "impotNetEuros": 17258.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 18.76,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 94000,
+          "impotNetEuros": 18078.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 19.23,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 96000,
+          "impotNetEuros": 18898.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 19.69,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 98000,
+          "impotNetEuros": 19718.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 20.12,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 100000,
+          "impotNetEuros": 20538.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 20.54,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 102000,
+          "impotNetEuros": 21358.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 20.94,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 104000,
+          "impotNetEuros": 22178.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 21.33,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 106000,
+          "impotNetEuros": 22998.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 21.7,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 108000,
+          "impotNetEuros": 23818.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 22.05,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 110000,
+          "impotNetEuros": 24638.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 22.4,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 112000,
+          "impotNetEuros": 25458.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 22.73,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 114000,
+          "impotNetEuros": 26278.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 23.05,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 116000,
+          "impotNetEuros": 27098.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 23.36,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 118000,
+          "impotNetEuros": 27918.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 23.66,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 120000,
+          "impotNetEuros": 28738.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 23.95,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 130000,
+          "impotNetEuros": 32838.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 25.26,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 140000,
+          "impotNetEuros": 36938.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 26.38,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 150000,
+          "impotNetEuros": 41038.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 27.36,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 160000,
+          "impotNetEuros": 45138.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 28.21,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 170000,
+          "impotNetEuros": 49238.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 28.96,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 180000,
+          "impotNetEuros": 53338.52,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 29.63,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 181916,
+          "impotNetEuros": 54124.08,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 29.75,
+          "tauxMarginalPct": 41
+        },
+        {
+          "revenuEuros": 181917,
+          "impotNetEuros": 54124.49,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 29.75,
+          "tauxMarginalPct": 45
+        },
+        {
+          "revenuEuros": 181918,
+          "impotNetEuros": 54124.94,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 29.75,
+          "tauxMarginalPct": 45
+        },
+        {
+          "revenuEuros": 190000,
+          "impotNetEuros": 57761.84,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 30.4,
+          "tauxMarginalPct": 45
+        },
+        {
+          "revenuEuros": 200000,
+          "impotNetEuros": 62261.84,
+          "decoteEuros": 0,
+          "tauxMoyenPct": 31.13,
+          "tauxMarginalPct": 45
+        }
+      ]
+    }
+  ]
+}

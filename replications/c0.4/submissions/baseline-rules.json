@@ -1,0 +1,80 @@
+[
+  {
+    "legiarti": "LEGIARTI000029962999",
+    "category": "appreciation",
+    "quote": "Les allocations familiales sont dues, pour tout enfant, à la personne qui a effectivement la charge de celui-ci.",
+    "explanation": "Quels faits permettent de décider si le critère cité est rempli ?"
+  },
+  {
+    "legiarti": "LEGIARTI000038814864",
+    "category": "parametre",
+    "quote": "5° Aux ménages ou personnes qui ont à leur charge un ascendant ou un descendant ou un collatéral au deuxième ou au troisième degré vivant au foyer, dont l'incapacité permanente est au moins égale à un pourcentage fixé par voie réglementaire ou qui présente, compte tenu de son handicap, une restriction substantielle et durable dans l'accès à l'emploi au sens de l'article L. 821-2 du code de la sécurité sociale reconnue par la commission des droits et de l'autonomie des personnes handicapées prévue par l'article L. 146-9 du code de l'action sociale et des familles ;",
+    "explanation": "Ce passage associe un paramètre à un texte réglementaire. Quelle valeur faut-il retenir ?"
+  },
+  {
+    "legiarti": "LEGIARTI000039048889",
+    "category": "appreciation",
+    "quote": "L'allocation de logement est accordée au titre de la résidence principale : 1° Aux personnes propriétaires du logement pendant la période au cours de laquelle elles se libèrent de la dette contractée pour accéder à la propriété de ce logement et, le cas échéant, de celle contractée en même temps pour réaliser des travaux permettant de remplir les conditions de décence ;",
+    "explanation": "Quels faits permettent de décider si le critère cité est rempli ?"
+  },
+  {
+    "legiarti": "LEGIARTI000047622381",
+    "category": "arrondi",
+    "quote": "1. Le bénéfice imposable des contribuables qui perçoivent des revenus non commerciaux dont le montant hors taxes de l'année civile précédente ou de la pénultième année, ajusté s'il y a lieu au prorata du temps d'activité au cours de l'année de référence, n'excède pas 77 700 € est égal au montant brut des recettes annuelles diminué d'un abattement forfaitaire de 34 %. Cet abattement ne peut être inférieur à 305 €. Les plus ou moins-values provenant de la cession des biens affectés à l'exploitation sont prises en compte distinctement pour l'assiette de l'impôt sur le revenu dans les conditions prévues à l'article 93 quater, sous réserve des dispositions de l'article 151 septies.",
+    "explanation": "À quelle étape et avec quelle précision faut-il arrondir ? Le passage laisse ce point à préciser."
+  },
+  {
+    "legiarti": "LEGIARTI000048844097",
+    "category": "arrondi",
+    "quote": "1. Sont soumises au régime défini au présent article pour l'imposition de leurs bénéfices les entreprises dont le chiffre d'affaires hors taxes, ajusté s'il y a lieu au prorata du temps d'exploitation au cours de l'année de référence, n'excède pas, l'année civile précédente ou la pénultième année : 1° 188 700 € s'il s'agit d'entreprises dont le commerce principal est de vendre des marchandises, objets, fournitures et denrées à emporter ou à consommer sur place ou de fournir le logement, à l'exclusion de la location directe ou indirecte de locaux d'habitation meublés ou destinés à être loués meublés, autres que ceux mentionnés aux 2° et 3° du III de l'article 1407 ;",
+    "explanation": "À quelle étape et avec quelle précision faut-il arrondir ? Le passage laisse ce point à préciser."
+  },
+  {
+    "legiarti": "LEGIARTI000048844097",
+    "category": "arrondi",
+    "quote": "Les entreprises qui relèvent du présent régime bénéficient d'un abattement supplémentaire de 21 % pour le chiffre d'affaires afférent à leur activité de location de locaux classés meublés de tourisme mentionnés au 2° du III de l'article 1407, lorsque ces derniers ne sont pas situés dans des zones géographiques se caractérisant par un déséquilibre important entre l'offre et la demande de logements, sous réserve que le chiffre d'affaires hors taxes, ajusté s'il y a lieu au prorata du temps d'exploitation au cours de l'année de référence, afférent à l'ensemble des activités de location de locaux meublés mentionnées au présent 1 n'excède pas au cours de l'année civile précédente 15 000 €. Le bénéfice de cet abattement supplémentaire est subordonné au respect du règlement (UE) n° 1407/2013 de la Commission du 18 décembre 2013 relatif à l'application des articles 107 et 108 du traité sur le fonctionnement de l'Union européenne aux aides de minimis.",
+    "explanation": "À quelle étape et avec quelle précision faut-il arrondir ? Le passage laisse ce point à préciser."
+  },
+  {
+    "legiarti": "LEGIARTI000048856832",
+    "category": "parametre",
+    "quote": "Pour la détermination de ce pourcentage, les participations des sociétés de capital-risque, des fonds communs de placement à risques, des fonds professionnels spécialisés relevant de l'article L. 214-37 du code monétaire et financier dans sa rédaction antérieure à l'ordonnance n° 2013-676 du 25 juillet 2013 modifiant le cadre juridique de la gestion d'actifs, des fonds professionnels de capital investissement, des sociétés de libre partenariat, des sociétés de développement régional, des sociétés financières d'innovation et des sociétés unipersonnelles d'investissement à risque ne sont pas prises en compte à la condition qu'il n'existe pas de lien de dépendance au sens du 12 de l'article 39 entre la société en cause et ces dernières sociétés ou ces fonds ;",
+    "explanation": "Ce passage associe un paramètre à un texte réglementaire. Quelle valeur faut-il retenir ?"
+  },
+  {
+    "legiarti": "LEGIARTI000048856832",
+    "category": "arrondi",
+    "quote": "Les salariés employés à temps partiel sont pris en compte au prorata de la durée du travail prévue à leur contrat ;",
+    "explanation": "À quelle étape et avec quelle précision faut-il arrondir ? Le passage laisse ce point à préciser."
+  },
+  {
+    "legiarti": "LEGIARTI000048856832",
+    "category": "renvoi_externe",
+    "quote": "Lorsqu'il répond aux conditions requises pour bénéficier des dispositions de l'un des régimes prévus aux articles 44 sexies, 44 quindecies A, 44 sexdecies et 44 septdecies et du régime prévu au présent article, le contribuable peut opter pour ce dernier régime dans les six mois qui suivent la publication du décret en Conseil d'Etat procédant à la délimitation de la zone conformément à l'article 42 de la loi n° 95-115 du 4 février 1995 précitée, s'il y exerce déjà son activité ou, dans le cas contraire, dans les six mois suivant celui du début d'activité.",
+    "explanation": "Ce passage mentionne un texte réglementaire absent du paquet. Que faut-il en reprendre ?"
+  },
+  {
+    "legiarti": "LEGIARTI000048856832",
+    "category": "renvoi_externe",
+    "quote": "- Les obligations déclaratives des personnes et organismes auxquels s'applique l'exonération sont fixées par décret.",
+    "explanation": "Ce passage mentionne un texte réglementaire absent du paquet. Que faut-il en reprendre ?"
+  },
+  {
+    "legiarti": "LEGIARTI000049641842",
+    "category": "parametre",
+    "quote": "La limite mentionnée au deuxième alinéa du présent 3° est rehaussée, sans pouvoir excéder 21 400 € par an, à concurrence du montant des dépenses déductibles de travaux de rénovation énergétique permettant à un bien de passer d'une classe énergétique E, F ou G, au sens de l'article L. 173-1-1 du code de la construction et de l'habitation, à une classe de performance énergétique A, B, C ou D, au sens du même article L. 173-1-1, au plus tard le 31 décembre 2025, dans des conditions définies par décret.",
+    "explanation": "Ce passage associe un paramètre à un texte réglementaire. Quelle valeur faut-il retenir ?"
+  },
+  {
+    "legiarti": "LEGIARTI000049641842",
+    "category": "renvoi_externe",
+    "quote": "Dans les conditions fixées par décret, les charges foncières afférentes aux immeubles classés monuments historiques ou inscrits au titre des monuments historiques, ainsi qu'aux immeubles faisant partie du patrimoine national ou en raison du label délivré par la \" Fondation du patrimoine \" en application de l'article L. 143-2 du code du patrimoine si ce label a été accordé sur avis favorable du service départemental de l'architecture et du patrimoine ;",
+    "explanation": "Ce passage mentionne un texte réglementaire absent du paquet. Que faut-il en reprendre ?"
+  },
+  {
+    "legiarti": "LEGIARTI000049641842",
+    "category": "renvoi_externe",
+    "quote": "dans la limite de 2 700 € et, dans les conditions fixées par un décret en Conseil d'Etat, les versements destinés à constituer le capital de la rente prévue à l'article 373-2-3 du code civil.",
+    "explanation": "Ce passage mentionne un texte réglementaire absent du paquet. Que faut-il en reprendre ?"
+  }
+]

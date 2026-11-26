@@ -1,0 +1,417 @@
+> Module Noyau_ir
+
+# Noyau Impôt sur le revenu 2026 (CGI, art. 193, 194 et 197)
+
+Formalisation originale écrite à partir des textes en vigueur au 1er juillet 2026 issus de la base publique LEGI (DILA), sous licence Apache-2.0.
+
+```catala-metadata
+déclaration énumération SituationFamiliale:
+  -- Célibataire
+  -- Divorcé
+  -- Veuf
+  -- ImpositionCommune
+
+déclaration énumération DomicileFiscal:
+  -- Métropole
+  -- GuadeloupeMartiniqueRéunion
+  -- GuyaneMayotte
+
+déclaration champ d'application NombreDeParts:
+  entrée situation_familiale contenu SituationFamiliale
+  entrée enfants_à_charge_exclusive_ou_principale contenu entier
+  entrée appréciation_vit_seul contenu booléen
+  résultat parts_de_référence contenu décimal
+  résultat nombre_de_parts contenu décimal
+  résultat parent_isolé contenu booléen
+  résultat veuf_avec_enfants contenu booléen
+
+déclaration champ d'application BarèmeProgressif:
+  entrée revenu_par_part contenu argent
+  résultat cotisation_par_part contenu argent
+
+déclaration champ d'application CalculImpôtRevenu:
+  entrée revenu_net_imposable contenu argent
+  entrée situation_familiale contenu SituationFamiliale
+  entrée enfants_à_charge_exclusive_ou_principale contenu entier
+  entrée appréciation_vit_seul contenu booléen
+  entrée domicile_fiscal contenu DomicileFiscal
+  interne revenu_imposable_arrondi contenu argent
+  parts champ d'application NombreDeParts
+  barème_foyer champ d'application BarèmeProgressif
+  barème_référence champ d'application BarèmeProgressif
+  interne impôt_référence contenu argent
+  interne plafond_avantage_qf contenu argent
+  interne impôt_après_réfaction contenu argent
+  interne décote_théorique contenu argent
+  résultat nombre_de_parts contenu décimal
+  résultat impôt_brut_sans_plafond contenu argent
+  résultat impôt_après_plafond_qf contenu argent
+  résultat réfaction_outre_mer contenu argent
+  résultat décote contenu argent
+  résultat impôt_net_avant_crédits contenu argent
+```
+
+#### Article 193|LEGIARTI000054373592
+
+Sous réserve des dispositions de l'article 196 B, le revenu imposable est pour le calcul de l'impôt sur le revenu, divisé en un certain nombre de parts, fixé conformément à l'article 194, d'après la situation et les charges de famille du contribuable. Le revenu correspondant à une part entière est taxé par application du tarif prévu à l'article 197. L'impôt brut est égal au produit de la cotisation ainsi obtenue par le nombre de parts. L'impôt dû par le contribuable est calculé à partir de l'impôt brut diminué, s'il y a lieu, des réductions d'impôt prévues par les articles 199 quater F à 200, et, le cas échéant, des retenues à la source, prélèvements et crédits d'impôts mentionnés à l'article 117 quater, au I de l'article 125 A, aux articles 182 A, 182 A bis, 182 A ter, 182 B, 199 ter, 199 ter A, 199 quater C, au 4 de l'article 199 sexdecies et aux articles 200 quater à 200 undecies. Pour l'application du premier alinéa, le revenu imposable ainsi que les différents éléments ayant concouru à sa détermination, sont arrondis à l'euro le plus proche. La fraction d'euro égale à 0,50 est comptée pour 1.
+
+```catala
+# Article 193 (LEGIARTI000054373592), alinéa 1 et dernière phrase.
+# Hors périmètre : article 196 B, réductions et crédits d'impôt (art. 199 quater F à 200 undecies).
+champ d'application CalculImpôtRevenu:
+  définition revenu_imposable_arrondi égal à
+    # Article 193 (LEGIARTI000054373592), dernière phrase : arrondi à l'euro le plus proche (0,50 -> 1).
+    arrondi de revenu_net_imposable
+  définition parts.situation_familiale égal à situation_familiale
+  définition parts.enfants_à_charge_exclusive_ou_principale égal à enfants_à_charge_exclusive_ou_principale
+  définition parts.appréciation_vit_seul égal à appréciation_vit_seul
+  définition nombre_de_parts égal à parts.nombre_de_parts
+  définition barème_foyer.revenu_par_part égal à revenu_imposable_arrondi / parts.nombre_de_parts
+  définition impôt_brut_sans_plafond égal à barème_foyer.cotisation_par_part * parts.nombre_de_parts
+```
+
+#### Article 194|LEGIARTI000033817781
+
+I. Le nombre de parts à prendre en considération pour la division du revenu imposable prévue à l'article 193 est déterminé conformément aux dispositions suivantes : SITUATION DE FAMILLE NOMBRE DE PARTS Célibataire, divorcé ou veuf sans enfant à charge 1 Marié sans enfant à charge 2 Célibataire ou divorcé ayant un enfant à charge 1,5 Marié ou veuf ayant un enfant à charge 2,5 Célibataire ou divorcé ayant deux enfants à charge 2 Marié ou veuf ayant deux enfants à charge 3 Célibataire ou divorcé ayant trois enfants à charge 3 Marié ou veuf ayant trois enfants à charge 4 Célibataire ou divorcé ayant quatre enfants à charge 4 Marié ou veuf ayant quatre enfants à charge 5 Célibataire ou divorcé ayant cinq enfants à charge 5 Marié ou veuf ayant cinq enfants à charge 6 Célibataire ou divorcé ayant six enfants à charge 6 et ainsi de suite, en augmentant d'une part par enfant à charge du contribuable. Lorsque les époux font l'objet d'une imposition séparée en application du 4 de l'article 6, chacun d'eux est considéré comme un célibataire ayant à sa charge les enfants dont il assume à titre principal l'entretien. Dans cette situation, ainsi qu'en cas de divorce, de rupture du pacte civil de solidarité ou de toute séparation de fait de parents non mariés, l'enfant est considéré, jusqu'à preuve du contraire, comme étant à la charge du parent chez lequel il réside à titre principal. En cas de résidence alternée au domicile de chacun des parents et sauf disposition contraire dans la convention de divorce mentionnée à l'article 229-1 du code civil, la convention homologuée par le juge, la décision judiciaire ou, le cas échéant, l'accord entre les parents, les enfants mineurs sont réputés être à la charge égale de l'un et de l'autre parent. Cette présomption peut être écartée s'il est justifié que l'un d'entre eux assume la charge principale des enfants. Lorsque les enfants sont réputés être à la charge égale de chacun des parents, ils ouvrent droit à une majoration de : a) 0,25 part pour chacun des deux premiers et 0,5 part à compter du troisième, lorsque par ailleurs le contribuable n'assume la charge exclusive ou principale d'aucun enfant ; b) 0,25 part pour le premier et 0,5 part à compter du deuxième, lorsque par ailleurs le contribuable assume la charge exclusive ou principale d'un enfant ; c) 0,5 part pour chacun des enfants, lorsque par ailleurs le contribuable assume la charge exclusive ou principale d'au moins deux enfants. Pour l'application des dispositions du premier alinéa, sont assimilées à des enfants à charge les personnes considérées comme étant à la charge du contribuable en vertu de l'article 196 A bis. II. Pour l'imposition des contribuables célibataires ou divorcés qui vivent seuls, le nombre de parts prévu au I est augmenté de 0,5 lorsqu'ils supportent à titre exclusif ou principal la charge d'au moins un enfant. Lorsqu'ils entretiennent uniquement des enfants dont la charge est réputée également partagée avec l'autre parent, la majoration est de 0,25 pour un seul enfant et de 0,5 si les enfants sont au moins deux. Ces dispositions s'appliquent nonobstant la perception éventuelle d'une pension alimentaire versée en vertu d'une convention de divorce par consentement mutuel déposée au rang des minutes d'un notaire ou d'une décision de justice pour l'entretien desdits enfants.
+
+```catala
+# Article 194 (LEGIARTI000033817781), I (tableau) et II (parent isolé).
+# Hors périmètre : résidence alternée (a, b, c) et personnes rattachées art. 196 A bis.
+champ d'application NombreDeParts:
+  définition parts_de_référence égal à
+    selon situation_familiale sous forme
+    # Article 194 (LEGIARTI000033817781), I, tableau : 2 parts pour imposition commune, 1 sinon.
+    -- ImpositionCommune : 2,0
+    -- Célibataire : 1,0
+    -- Divorcé : 1,0
+    # Article 194 (LEGIARTI000033817781), I, tableau : 1 part pour veuf sans enfant.
+    -- Veuf : 1,0
+
+  définition parent_isolé égal à
+    (selon situation_familiale sous forme
+      -- Célibataire : vrai
+      -- Divorcé : vrai
+      -- Veuf : faux
+      -- ImpositionCommune : faux)
+    et appréciation_vit_seul
+    # Article 194 (LEGIARTI000033817781), II : au moins 1 enfant à charge.
+    et (enfants_à_charge_exclusive_ou_principale >= 1)
+
+  définition veuf_avec_enfants égal à
+    (selon situation_familiale sous forme
+      -- Veuf : vrai
+      -- Célibataire : faux
+      -- Divorcé : faux
+      -- ImpositionCommune : faux)
+    # Article 194 (LEGIARTI000033817781), I, tableau : veuf ayant au moins 1 enfant à charge.
+    et (enfants_à_charge_exclusive_ou_principale >= 1)
+
+  définition nombre_de_parts égal à
+    # Article 194 (LEGIARTI000033817781), I : 0,5 part pour les 2 premiers enfants.
+    soit parts_enfants égal à
+      si enfants_à_charge_exclusive_ou_principale <= 0 alors 0,0
+      sinon si enfants_à_charge_exclusive_ou_principale <= 2 alors
+        # Article 194 (LEGIARTI000033817781), I : 0,5 part par enfant (1er et 2e).
+        (décimal de enfants_à_charge_exclusive_ou_principale) * 0,5
+      # Article 194 (LEGIARTI000033817781), I : +1 part par enfant à compter du 3e.
+      sinon 1,0 + (décimal de (enfants_à_charge_exclusive_ou_principale - 2)) * 1,0
+    dans
+    # Article 194 (LEGIARTI000033817781), I (veuf +1 part) et II (parent isolé +0,5 part).
+    soit majoration_veuf égal à si veuf_avec_enfants alors 1,0 sinon 0,0 dans
+    soit majoration_isolé égal à si parent_isolé alors 0,5 sinon 0,0 dans
+    parts_de_référence + parts_enfants + majoration_veuf + majoration_isolé
+```
+
+#### Article 197|LEGIARTI000053542636
+
+I. - En ce qui concerne les contribuables visés à l'article 4 B, il est fait application des règles suivantes pour le calcul de l'impôt sur le revenu : 1. L'impôt est calculé en appliquant à la fraction de chaque part de revenu qui excède 11 600 € le taux de : - 11 % pour la fraction supérieure à 11 600 € et inférieure ou égale à 29 579 € ; - 30 % pour la fraction supérieure à 29 579 € et inférieure ou égale à 84 577 € ; - 41 % pour la fraction supérieure à 84 577 € et inférieure ou égale à 181 917 € ; - 45 % pour la fraction supérieure à 181 917 €. 2. La réduction d'impôt résultant de l'application du quotient familial ne peut excéder 1 807 € par demi-part ou la moitié de cette somme par quart de part s'ajoutant à une part pour les contribuables célibataires, divorcés, veufs ou soumis à l'imposition distincte prévue au 4 de l'article 6 et à deux parts pour les contribuables mariés soumis à une imposition commune. Toutefois, pour les contribuables célibataires, divorcés, ou soumis à l'imposition distincte prévue au 4 de l'article 6 qui répondent aux conditions fixées au II de l'article 194, la réduction d'impôt correspondant à la part accordée au titre du premier enfant à charge est limitée à 4 262 €. Lorsque les contribuables entretiennent uniquement des enfants dont la charge est réputée également partagée entre l'un et l'autre des parents, la réduction d'impôt correspondant à la demi-part accordée au titre de chacun des deux premiers enfants est limitée à la moitié de cette somme. Par dérogation aux dispositions du premier alinéa, la réduction d'impôt résultant de l'application du quotient familial, accordée aux contribuables qui bénéficient des dispositions des a, b et e du 1 de l'article 195, ne peut excéder 1 079 € ; Les contribuables qui bénéficient d'une demi-part au titre des a, b, c, d, d bis, e et f du 1 ainsi que des 2 à 6 de l'article 195 ont droit à une réduction d'impôt égale à 1 801 € pour chacune de ces demi-parts lorsque la réduction de leur cotisation d'impôt est plafonnée en application du premier alinéa. La réduction d'impôt est égale à la moitié de cette somme lorsque la majoration visée au 2 de l'article 195 est de un quart de part. Cette réduction d'impôt ne peut toutefois excéder l'augmentation de la cotisation d'impôt résultant du plafonnement. Les contribuables veufs ayant des enfants à charge qui bénéficient d'une part supplémentaire de quotient familial en application du I de l'article 194 ont droit à une réduction d'impôt égale à 2 011 € pour cette part supplémentaire lorsque la réduction de leur cotisation d'impôt est plafonnée en application du premier alinéa du présent 2. Cette réduction d'impôt ne peut toutefois excéder l'augmentation de la cotisation d'impôt résultant du plafonnement. 3. Le montant de l'impôt résultant de l'application des dispositions précédentes est réduit de 30 %, dans la limite de 2 450 €, pour les contribuables domiciliés dans les départements de la Guadeloupe, de la Martinique et de la Réunion ; cette réduction est égale à 40 %, dans la limite de 4 050 €, pour les contribuables domiciliés dans les départements de la Guyane et de Mayotte ; 4. a. Le montant de l'impôt résultant de l'application des dispositions précédentes est diminué, dans la limite de son montant, de la différence entre 897 € et 45,25 % de son montant pour les contribuables célibataires, divorcés ou veufs et de la différence entre 1 483 € et 45,25 % de son montant pour les contribuables soumis à imposition commune. b. (Abrogé) 5. Les réductions d'impôt mentionnées aux articles 199 quater F à 200 s'imputent sur l'impôt résultant de l'application des dispositions précédentes avant imputation des crédits d'impôt et des prélèvements ou retenues non libératoires ; elles ne peuvent pas donner lieu à remboursement. II. - (Abrogé)
+
+```catala
+# Article 197 (LEGIARTI000053542636), I.1 : barème progressif 2026.
+champ d'application BarèmeProgressif:
+  définition cotisation_par_part égal à
+    # Article 197 (LEGIARTI000053542636), I.1, tranche 1 : 11 % entre 11 600 € et 29 579 €.
+    soit t1 égal à
+      si revenu_par_part <= 11 600€ alors 0€
+      sinon si revenu_par_part <= 29 579€ alors (revenu_par_part - 11 600€) * 11%
+      # Article 197 (LEGIARTI000053542636), I.1, tranche 1 pleine.
+      sinon (29 579€ - 11 600€) * 11%
+    dans
+    # Article 197 (LEGIARTI000053542636), I.1, tranche 2 : 30 % entre 29 579 € et 84 577 €.
+    soit t2 égal à
+      si revenu_par_part <= 29 579€ alors 0€
+      sinon si revenu_par_part <= 84 577€ alors (revenu_par_part - 29 579€) * 30%
+      # Article 197 (LEGIARTI000053542636), I.1, tranche 2 pleine.
+      sinon (84 577€ - 29 579€) * 30%
+    dans
+    # Article 197 (LEGIARTI000053542636), I.1, tranche 3 : 41 % entre 84 577 € et 181 917 €.
+    soit t3 égal à
+      si revenu_par_part <= 84 577€ alors 0€
+      sinon si revenu_par_part <= 181 917€ alors (revenu_par_part - 84 577€) * 41%
+      # Article 197 (LEGIARTI000053542636), I.1, tranche 3 pleine.
+      sinon (181 917€ - 84 577€) * 41%
+    dans
+    # Article 197 (LEGIARTI000053542636), I.1, tranche 4 : 45 % au-delà de 181 917 €.
+    soit t4 égal à
+      si revenu_par_part <= 181 917€ alors 0€
+      sinon (revenu_par_part - 181 917€) * 45%
+    dans
+    t1 + t2 + t3 + t4
+
+# Article 197 (LEGIARTI000053542636), I.2 (plafonnement QF), I.3 (outre-mer), I.4.a (décote).
+# Hors périmètre : demi-parts spéciales art. 195 et réductions art. 199 quater F à 200 (I.5).
+champ d'application CalculImpôtRevenu:
+  définition barème_référence.revenu_par_part égal à revenu_imposable_arrondi / parts.parts_de_référence
+  définition impôt_référence égal à barème_référence.cotisation_par_part * parts.parts_de_référence
+
+  définition plafond_avantage_qf égal à
+    # Article 197 (LEGIARTI000053542636), I.2 : nombre de demi-parts supplémentaires.
+    soit demi_parts_supp égal à (parts.nombre_de_parts - parts.parts_de_référence) * 2,0 dans
+    # Article 197 (LEGIARTI000053542636), I.2 : 4 262 € (parent isolé), 1 807 € par demi-part, +2 011 € (veuf).
+    soit plafond_base égal à
+      si parts.parent_isolé alors 4 262€ + (demi_parts_supp - 2,0) * 1 807€
+      sinon demi_parts_supp * 1 807€
+    dans
+    # Article 197 (LEGIARTI000053542636), I.2, dernier alinéa : réduction complémentaire de 2 011 € pour les veufs.
+    soit bonus_veuf égal à si parts.veuf_avec_enfants alors 2 011€ sinon 0€ dans
+    plafond_base + bonus_veuf
+
+  définition impôt_après_plafond_qf égal à
+    # Article 197 (LEGIARTI000053542636), I.2 : l'impôt ne peut être inférieur à impôt_référence - plafond.
+    soit plancher égal à impôt_référence - plafond_avantage_qf dans
+    si plancher > impôt_brut_sans_plafond alors plancher sinon impôt_brut_sans_plafond
+
+  définition réfaction_outre_mer égal à
+    selon domicile_fiscal sous forme
+    # Article 197 (LEGIARTI000053542636), I.3 : 0 € métropole.
+    -- Métropole : 0€
+    -- GuadeloupeMartiniqueRéunion :
+      # Article 197 (LEGIARTI000053542636), I.3 : 30 % dans la limite de 2 450 € (DOM).
+      soit r30 égal à impôt_après_plafond_qf * 30% dans
+      si r30 > 2 450€ alors 2 450€ sinon r30
+    -- GuyaneMayotte :
+      # Article 197 (LEGIARTI000053542636), I.3 : 40 % dans la limite de 4 050 € (Guyane/Mayotte).
+      soit r40 égal à impôt_après_plafond_qf * 40% dans
+      si r40 > 4 050€ alors 4 050€ sinon r40
+
+  définition impôt_après_réfaction égal à impôt_après_plafond_qf - réfaction_outre_mer
+
+  définition décote_théorique égal à
+    soit forfait égal à
+      selon situation_familiale sous forme
+      # Article 197 (LEGIARTI000053542636), I.4.a : forfait décote 1 483 € (couple) ou 897 € (seul).
+      -- ImpositionCommune : 1 483€
+      -- Célibataire : 897€
+      -- Divorcé : 897€
+      # Article 197 (LEGIARTI000053542636), I.4.a : forfait décote 897 € (veuf).
+      -- Veuf : 897€
+    dans
+    # Article 197 (LEGIARTI000053542636), I.4.a : taux de décote 45,25 %.
+    forfait - impôt_après_réfaction * 45,25%
+
+  définition décote égal à
+    # Article 197 (LEGIARTI000053542636), I.4.a : dans la limite du montant de l'impôt, si positif.
+    si décote_théorique <= 0€ alors 0€
+    sinon si décote_théorique >= impôt_après_réfaction alors impôt_après_réfaction
+    sinon décote_théorique
+
+  définition impôt_net_avant_crédits égal à impôt_après_réfaction - décote
+```
+
+##### Tests de vérification du noyau IR 2026
+
+```catala
+# source : dérivation CGI art. 193, 194, 197 (LEGIARTI000053542636)
+#[test]
+déclaration champ d'application TestZero:
+  c champ d'application CalculImpôtRevenu
+
+champ d'application TestZero:
+  # source : CGI article 197 I.1, revenu nul.
+  définition c.revenu_net_imposable égal à 0€
+  définition c.situation_familiale égal à Célibataire
+  définition c.enfants_à_charge_exclusive_ou_principale égal à 0
+  définition c.appréciation_vit_seul égal à faux
+  définition c.domicile_fiscal égal à Métropole
+  # source : CGI article 197 I.1, impôt nul.
+  assertion c.impôt_net_avant_crédits = 0€
+
+# source : dérivation CGI article 197 I.1 (LEGIARTI000053542636)
+#[test]
+déclaration champ d'application TestSousSeuil:
+  c champ d'application CalculImpôtRevenu
+
+champ d'application TestSousSeuil:
+  # source : CGI article 197 I.1, borne 11 600 €.
+  définition c.revenu_net_imposable égal à 11 600€
+  définition c.situation_familiale égal à Célibataire
+  définition c.enfants_à_charge_exclusive_ou_principale égal à 0
+  définition c.appréciation_vit_seul égal à faux
+  définition c.domicile_fiscal égal à Métropole
+  # source : CGI article 197 I.1, impôt nul au seuil.
+  assertion c.impôt_net_avant_crédits = 0€
+
+# source : dérivation CGI article 197 I.4.a (LEGIARTI000053542636)
+#[test]
+déclaration champ d'application TestEntreeImpot:
+  c champ d'application CalculImpôtRevenu
+
+champ d'application TestEntreeImpot:
+  # source : CGI article 197 I.1 et I.4.a, premier impôt net positif célibataire.
+  définition c.revenu_net_imposable égal à 17 624€
+  définition c.situation_familiale égal à Célibataire
+  définition c.enfants_à_charge_exclusive_ou_principale égal à 0
+  définition c.appréciation_vit_seul égal à faux
+  définition c.domicile_fiscal égal à Métropole
+  # source : CGI article 197 I.4.a, 662,64 € - 597,16 € = 65,48 €.
+  assertion c.impôt_brut_sans_plafond = 662,64€
+  assertion c.décote = 597,16€
+  assertion c.impôt_net_avant_crédits = 65,48€
+
+# source : dérivation CGI article 197 I.4.a (LEGIARTI000053542636)
+#[test]
+déclaration champ d'application TestZoneDecoteCelibataire:
+  c champ d'application CalculImpôtRevenu
+
+champ d'application TestZoneDecoteCelibataire:
+  # source : CGI article 197 I.4.a, célibataire dans la zone de décote.
+  définition c.revenu_net_imposable égal à 22 000€
+  définition c.situation_familiale égal à Célibataire
+  définition c.enfants_à_charge_exclusive_ou_principale égal à 0
+  définition c.appréciation_vit_seul égal à faux
+  définition c.domicile_fiscal égal à Métropole
+  # source : CGI article 197 I.4.a, 1 144,00 € - 379,34 € = 764,66 €.
+  assertion c.impôt_brut_sans_plafond = 1 144,00€
+  assertion c.décote = 379,34€
+  assertion c.impôt_net_avant_crédits = 764,66€
+
+# source : dérivation CGI article 197 I.1 et I.4.a (LEGIARTI000053542636)
+#[test]
+déclaration champ d'application TestSortieDecoteCelibataire:
+  c champ d'application CalculImpôtRevenu
+
+champ d'application TestSortieDecoteCelibataire:
+  # source : CGI article 197 I.1, sortie de décote et entrée tranche 30 %.
+  définition c.revenu_net_imposable égal à 30 000€
+  définition c.situation_familiale égal à Célibataire
+  définition c.enfants_à_charge_exclusive_ou_principale égal à 0
+  définition c.appréciation_vit_seul égal à faux
+  définition c.domicile_fiscal égal à Métropole
+  # source : CGI article 197 I.4.a, décote nulle, impôt 2 103,99 €.
+  assertion c.décote = 0€
+  assertion c.impôt_net_avant_crédits = 2 103,99€
+
+# source : dérivation CGI article 197 I.4.a (LEGIARTI000053542636)
+#[test]
+déclaration champ d'application TestZoneDecoteCouple:
+  c champ d'application CalculImpôtRevenu
+
+champ d'application TestZoneDecoteCouple:
+  # source : CGI article 197 I.4.a, couple dans la zone de décote.
+  définition c.revenu_net_imposable égal à 40 000€
+  définition c.situation_familiale égal à ImpositionCommune
+  définition c.enfants_à_charge_exclusive_ou_principale égal à 0
+  définition c.appréciation_vit_seul égal à faux
+  définition c.domicile_fiscal égal à Métropole
+  # source : CGI article 197 I.4.a, 1 848,00 € - 646,78 € = 1 201,22 €.
+  assertion c.décote = 646,78€
+  assertion c.impôt_net_avant_crédits = 1 201,22€
+
+# source : dérivation CGI article 194 I et 197 I.2 (LEGIARTI000053542636)
+#[test]
+déclaration champ d'application TestCoupleSansPlafondQF:
+  c champ d'application CalculImpôtRevenu
+
+champ d'application TestCoupleSansPlafondQF:
+  # source : CGI article 194 I, couple avec 2 enfants (3 parts).
+  définition c.revenu_net_imposable égal à 60 000€
+  définition c.situation_familiale égal à ImpositionCommune
+  définition c.enfants_à_charge_exclusive_ou_principale égal à 2
+  définition c.appréciation_vit_seul égal à faux
+  définition c.domicile_fiscal égal à Métropole
+  # source : CGI article 197 I.4.a, 2 772,00 € - 228,67 € = 2 543,33 €.
+  assertion c.nombre_de_parts = 3,0
+  assertion c.décote = 228,67€
+  assertion c.impôt_net_avant_crédits = 2 543,33€
+
+# source : dérivation CGI article 197 I.2 (LEGIARTI000053542636)
+#[test]
+déclaration champ d'application TestCoupleAvecPlafondQF:
+  c champ d'application CalculImpôtRevenu
+
+champ d'application TestCoupleAvecPlafondQF:
+  # source : CGI article 197 I.2, plafonnement de 2 demi-parts (2 × 1 807 €).
+  définition c.revenu_net_imposable égal à 120 000€
+  définition c.situation_familiale égal à ImpositionCommune
+  définition c.enfants_à_charge_exclusive_ou_principale égal à 2
+  définition c.appréciation_vit_seul égal à faux
+  définition c.domicile_fiscal égal à Métropole
+  # source : CGI article 197 I.2, impôt plafonné à 18 593,98 €.
+  assertion c.impôt_brut_sans_plafond = 15 311,97€
+  assertion c.impôt_après_plafond_qf = 18 593,98€
+  assertion c.impôt_net_avant_crédits = 18 593,98€
+
+# source : dérivation CGI article 194 II et 197 I.2 (LEGIARTI000053542636)
+#[test]
+déclaration champ d'application TestParentIsolePlafonne:
+  c champ d'application CalculImpôtRevenu
+
+champ d'application TestParentIsolePlafonne:
+  # source : CGI article 194 II et 197 I.2, plafond parent isolé 4 262 €.
+  définition c.revenu_net_imposable égal à 60 000€
+  définition c.situation_familiale égal à Célibataire
+  définition c.enfants_à_charge_exclusive_ou_principale égal à 1
+  définition c.appréciation_vit_seul égal à vrai
+  définition c.domicile_fiscal égal à Métropole
+  # source : CGI article 197 I.2, impôt plafonné à 6 841,99 €.
+  assertion c.nombre_de_parts = 2,0
+  assertion c.impôt_net_avant_crédits = 6 841,99€
+
+# source : dérivation CGI article 197 I.2 dernier alinéa (LEGIARTI000053542636)
+#[test]
+déclaration champ d'application TestVeufAvecEnfantPlafonne:
+  c champ d'application CalculImpôtRevenu
+
+champ d'application TestVeufAvecEnfantPlafonne:
+  # source : CGI article 197 I.2, veuf avec 1 enfant (+2 011 € de réduction complémentaire).
+  définition c.revenu_net_imposable égal à 90 000€
+  définition c.situation_familiale égal à Veuf
+  définition c.enfants_à_charge_exclusive_ou_principale égal à 1
+  définition c.appréciation_vit_seul égal à faux
+  définition c.domicile_fiscal égal à Métropole
+  # source : CGI article 197 I.2, impôt plafonné à 13 268,52 €.
+  assertion c.nombre_de_parts = 2,5
+  assertion c.impôt_net_avant_crédits = 13 268,52€
+
+# source : dérivation CGI article 197 I.3 (LEGIARTI000053542636)
+#[test]
+déclaration champ d'application TestRefactionDOM30:
+  c champ d'application CalculImpôtRevenu
+
+champ d'application TestRefactionDOM30:
+  # source : CGI article 197 I.3, réfaction 30 % Guadeloupe/Martinique/Réunion.
+  définition c.revenu_net_imposable égal à 50 000€
+  définition c.situation_familiale égal à Célibataire
+  définition c.enfants_à_charge_exclusive_ou_principale égal à 0
+  définition c.appréciation_vit_seul égal à faux
+  définition c.domicile_fiscal égal à GuadeloupeMartiniqueRéunion
+  # source : CGI article 197 I.3, 8 103,99 € - 2 431,20 € = 5 672,79 €.
+  assertion c.réfaction_outre_mer = 2 431,20€
+  assertion c.impôt_net_avant_crédits = 5 672,79€
+
+# source : dérivation CGI article 197 I.3 (LEGIARTI000053542636)
+#[test]
+déclaration champ d'application TestRefactionGuyaneMayotte40:
+  c champ d'application CalculImpôtRevenu
+
+champ d'application TestRefactionGuyaneMayotte40:
+  # source : CGI article 197 I.3, réfaction 40 % plafonnée à 4 050 € (Guyane/Mayotte).
+  définition c.revenu_net_imposable égal à 80 000€
+  définition c.situation_familiale égal à Célibataire
+  définition c.enfants_à_charge_exclusive_ou_principale égal à 0
+  définition c.appréciation_vit_seul égal à faux
+  définition c.domicile_fiscal égal à GuyaneMayotte
+  # source : CGI article 197 I.3, 17 103,99 € - 4 050,00 € = 13 053,99 €.
+  assertion c.réfaction_outre_mer = 4 050,00€
+  assertion c.impôt_net_avant_crédits = 13 053,99€
+```

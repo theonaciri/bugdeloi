@@ -1,0 +1,11 @@
+[project]
+name = "bugdeloi-corpus"
+include_dirs = [
+  "cgi/livre1/partie1/titre1/chapitre1/section5",
+]
+
+[[target]]
+name = "noyau-ir-2026"
+modules = ["Noyau_ir"]
+backends = ["ocaml"]
+tests = ["cgi/livre1/partie1/titre1/chapitre1/section5/noyau_ir.catala_fr"]
