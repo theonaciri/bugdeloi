@@ -1,0 +1,33 @@
+name: Image Catala 1.3.2 (GHCR)
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "infra/catala/**"
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: infra/catala
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/bugdeloi-catala:1.3.2
+            ghcr.io/${{ github.repository_owner }}/bugdeloi-catala:${{ github.sha }}

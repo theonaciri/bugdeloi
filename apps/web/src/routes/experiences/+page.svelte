@@ -31,6 +31,32 @@ let { data }: PageProps = $props()
       <li class="grid gap-4 py-8 lg:grid-cols-12 lg:items-baseline">
         <div class="lg:col-span-8">
           <h2 class="font-serif text-2xl font-semibold text-ink sm:text-3xl">
+            <a href="/experiences/revenu-disponible" class="no-underline hover:underline">
+              Revenu disponible réel (Impôt + Allocations) et impact d’un amendement
+            </a>
+          </h2>
+          <p class="mt-2.5 max-w-[62ch] text-base leading-relaxed text-muted">
+            Croisez en direct l’impôt sur le revenu 2026 et les allocations familiales pour observer le revenu
+            disponible réel, la falaise de 61 € et la modulation des aides, puis testez l’effet en euros d’un
+            amendement parlementaire sur quatre foyers types.
+          </p>
+          <p class="mt-3 text-sm font-medium text-brand-strong">
+            Simulateur multi-lois · diff d’amendement en euros · 100 % dans le navigateur
+          </p>
+        </div>
+        <div class="lg:col-span-4 lg:text-right">
+          <a
+            href="/experiences/revenu-disponible"
+            class="inline-flex items-center rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
+          >
+            Tester un amendement →
+          </a>
+        </div>
+      </li>
+
+      <li class="grid gap-4 py-8 lg:grid-cols-12 lg:items-baseline">
+        <div class="lg:col-span-8">
+          <h2 class="font-serif text-2xl font-semibold text-ink sm:text-3xl">
             <a href="/experiences/impot-revenu" class="no-underline hover:underline">
               Impôt sur le revenu 2026 : simulateur et détection des coudes
             </a>

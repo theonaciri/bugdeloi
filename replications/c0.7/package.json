@@ -1,0 +1,8 @@
+{
+  "name": "@bugdeloi/c0.7",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "tsc -p tsconfig.json"
+  }
+}

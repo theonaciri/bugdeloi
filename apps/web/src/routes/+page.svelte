@@ -12,6 +12,7 @@ import {
   SinceLastVisit,
   SweepFunnel,
 } from '#lib/components/viz/index.ts'
+import ProjectPipelineIllustration from '#lib/components/viz/ProjectPipelineIllustration.svelte'
 import { getShellActions } from '#lib/context/shell.ts'
 import { formatDateTime, formatInt, formatLegiDate, plural } from '#lib/format.ts'
 import { addCounts, emptyLevelCounts } from '#lib/levels.ts'
@@ -481,6 +482,27 @@ $effect(() => {
   </div>
 </section>
 
+<!-- BANDE 1.5 : COMMENT FONCTIONNE BUGDELOI & ÉTAT DU PROJET -->
+<section id="fonctionnement" class="border-t border-line bg-bg py-16 sm:py-20" aria-labelledby="pipeline-title">
+  <div class="container-wide space-y-8">
+    <div class="max-w-3xl space-y-2.5">
+      <h2 id="pipeline-title" class="font-serif text-3xl font-semibold text-ink sm:text-4xl">
+        Comment fonctionne BugDeLoi et où en est le projet
+      </h2>
+      <p class="text-base leading-relaxed text-muted sm:text-lg">
+        De l’import automatique des lois chaque nuit jusqu’aux simulateurs gratuits dans votre navigateur : chaque
+        étape est publique, reproductible et mesurée en direct.
+      </p>
+    </div>
+    <ProjectPipelineIllustration
+      inForceArticles={inForceTotal}
+      refArticles={totals.REF}
+      reproducedSignals={snap?.pipeline.reproducedCount ?? 0}
+      openDeskTasks={snap?.desk.open ?? 0}
+    />
+  </div>
+</section>
+
 <!-- BANDE 2 : DE LA LOI AU MONTANT EN EUROS & CONSTATS REPRODUITS -->
 <section id="impact-euros" class="border-t border-line bg-surface py-18 sm:py-24" aria-labelledby="impact-title">
   <div class="container-wide space-y-10">
@@ -515,7 +537,7 @@ $effect(() => {
                   </p>
                 {/snippet}
               </HoverCard>.
-              Sur 14 situations chiffrées, <strong class="text-ink">10 tombent juste au centime</strong>, 3 diffèrent d’un centime d’arrondi, et <strong class="text-ink">2 révèlent un désaccord sur ce que prévoit réellement la loi en vigueur</strong> :
+              Sur 14 situations chiffrées, <strong class="text-ink">9 tombent juste au centime</strong>, 3 diffèrent d’un centime d’arrondi, et <strong class="text-ink">2 révèlent un désaccord sur ce que prévoit réellement la loi en vigueur</strong> :
             </p>
 
             <!-- Deux cas phares : Guyane & Mayotte, explicites sur qui donne quel montant -->

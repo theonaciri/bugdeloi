@@ -155,6 +155,9 @@
       "name": "@bugdeloi/c0.6",
       "version": "0.0.0",
     },
+    "replications/c0.7": {
+      "name": "@bugdeloi/c0.7",
+    },
   },
   "packages": {
     "@biomejs/biome": ["@biomejs/biome@2.6.9", "", { "optionalDependencies": { "@biomejs/cli-android-arm64": "2.6.9", "@biomejs/cli-android-x64": "2.6.9", "@biomejs/cli-darwin-arm64": "2.6.9", "@biomejs/cli-darwin-x64": "2.6.9", "@biomejs/cli-linux-arm64": "2.6.9", "@biomejs/cli-linux-arm64-musl": "2.6.9", "@biomejs/cli-linux-x64": "2.6.9", "@biomejs/cli-linux-x64-musl": "2.6.9", "@biomejs/cli-win32-arm64": "2.6.9", "@biomejs/cli-win32-x64": "2.6.9" }, "bin": { "biome": "bin/biome" } }, "sha512-RelCBDzTXu4DBU8c35P4iMrDO80SUjW0OgjDA7CT1z3UcCU5IclWTZ2XnMelI4frQL//xg2K2BQxAhcOKxdPQA=="],
@@ -192,6 +195,8 @@
     "@bugdeloi/c0.4": ["@bugdeloi/c0.4@workspace:replications/c0.4"],
 
     "@bugdeloi/c0.6": ["@bugdeloi/c0.6@workspace:replications/c0.6"],
+
+    "@bugdeloi/c0.7": ["@bugdeloi/c0.7@workspace:replications/c0.7"],
 
     "@bugdeloi/cli": ["@bugdeloi/cli@workspace:packages/cli"],
 
