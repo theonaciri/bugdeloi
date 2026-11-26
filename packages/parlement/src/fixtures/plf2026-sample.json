@@ -1,0 +1,32 @@
+[
+  {
+    "uid": "FICTIF-AN-PLF2026-0001",
+    "numero": "I-FICTIF-1",
+    "dateDepot": "2025-10-17",
+    "chambre": "AN",
+    "texteLegislatifRef": "FICTIF-PLF2026",
+    "articleCible": "Article 197 du code général des impôts",
+    "dispositif": "<p>I.&nbsp;–&nbsp;Au 1 du I de l’article 197 du code général des impôts, les montants sont relevés de 2&nbsp;%.</p><p>II.&nbsp;–&nbsp;La perte de recettes pour l’État est compensée à due concurrence par la création d’une taxe additionnelle à l’accise sur les tabacs prévue au chapitre IV du titre Ier du livre III du code des impositions sur les biens et services.</p>",
+    "exposeSommaire": "<p>Exemple fictif : indexer les seuils du barème de 2 %.</p>"
+  },
+  {
+    "uid": "FICTIF-SENAT-PLF2026-0002",
+    "numero": "I-FICTIF-2",
+    "dateDepot": "2025-11-21",
+    "chambre": "Sénat",
+    "texteLegislatifRef": "FICTIF-PLF2026",
+    "articleCible": "CGI, art. 1657",
+    "dispositif": "<p>I. – Le 1 bis de l’article 1657 du code général des impôts est abrogé.</p><p>II. – La perte de recettes pour l’État est compensée à due concurrence par la majoration de l’accise sur les tabacs.</p>",
+    "exposeSommaire": "<p>Exemple fictif : supprimer le seuil de mise en recouvrement de 61 €.</p>"
+  },
+  {
+    "uid": "FICTIF-AN-PLF2026-0003",
+    "numero": "I-FICTIF-3",
+    "dateDepot": "2025-10-18",
+    "chambre": "AN",
+    "texteLegislatifRef": "FICTIF-PLF2026",
+    "articleCible": "Article 278-0 bis du code général des impôts",
+    "dispositif": "<p>L’article 278-0 bis du code général des impôts est complété par un alinéa ainsi rédigé : « Exemple fictif hors périmètre. »</p>",
+    "exposeSommaire": "<p>Exemple fictif sans rapport avec les articles suivis.</p>"
+  }
+]

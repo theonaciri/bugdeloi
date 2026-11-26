@@ -1,0 +1,177 @@
+{
+  "statut": "compare",
+  "raison": null,
+  "versions": {
+    "openfisca_france": "177.1.4",
+    "openfisca_core": "46.1.0",
+    "numpy": "2.3.5",
+    "python": "3.14.4"
+  },
+  "periode": {
+    "demandee": 2025,
+    "utilisee": 2025,
+    "moisAF": "2026-07"
+  },
+  "tolerances": {
+    "irEuros": 0.005,
+    "afEuros": 0.12
+  },
+  "foyersGeneres": {
+    "ir": 297,
+    "af": 31
+  },
+  "foyersCompares": 328,
+  "foyersAvecEcart": 54,
+  "ecartsParCategorie": {
+    "difference_de_millesime": 0,
+    "difference_de_perimetre": 30,
+    "divergence_simulateur": 24
+  },
+  "groupes": [
+    {
+      "domaine": "ir",
+      "champ": "impot_revenu",
+      "categorie": "divergence_simulateur",
+      "motif": "Non tranché. Disparaît avec des arrondis à l’euro avant et sur la décote (candidat à instruire : ARRONDI).",
+      "nombre": 24,
+      "ecartMaximal": 61,
+      "exemples": [
+        {
+          "bugdeloi": 61,
+          "openfisca": 0,
+          "entree": {
+            "id": "ir-celibataire-17593",
+            "domaine": "ir",
+            "revenuEuros": 17593,
+            "situationFamiliale": "Célibataire",
+            "agesEnfants": [],
+            "appreciationVitSeul": false,
+            "domicileFiscal": "Métropole"
+          }
+        },
+        {
+          "bugdeloi": 61,
+          "openfisca": 0,
+          "entree": {
+            "id": "ir-celibataire-17594",
+            "domaine": "ir",
+            "revenuEuros": 17594,
+            "situationFamiliale": "Célibataire",
+            "agesEnfants": [],
+            "appreciationVitSeul": false,
+            "domicileFiscal": "Métropole"
+          }
+        },
+        {
+          "bugdeloi": 61,
+          "openfisca": 0,
+          "entree": {
+            "id": "ir-celibataire-1-enfant-23393",
+            "domaine": "ir",
+            "revenuEuros": 23393,
+            "situationFamiliale": "Célibataire",
+            "agesEnfants": [10],
+            "appreciationVitSeul": false,
+            "domicileFiscal": "Métropole"
+          }
+        }
+      ]
+    },
+    {
+      "domaine": "ir",
+      "champ": "impot_revenu",
+      "categorie": "difference_de_perimetre",
+      "motif": "OpenFisca ajoute la contribution sur les hauts revenus, hors périmètre de c0.6.",
+      "nombre": 28,
+      "ecartMaximal": 12968,
+      "exemples": [
+        {
+          "bugdeloi": 253360,
+          "openfisca": 266328,
+          "entree": {
+            "id": "ir-divorce-isole-3-636709",
+            "domaine": "ir",
+            "revenuEuros": 636709,
+            "situationFamiliale": "Divorcé",
+            "agesEnfants": [10, 8, 6],
+            "appreciationVitSeul": true,
+            "domicileFiscal": "Métropole"
+          }
+        },
+        {
+          "bugdeloi": 253360,
+          "openfisca": 266328,
+          "entree": {
+            "id": "ir-divorce-isole-3-636710",
+            "domaine": "ir",
+            "revenuEuros": 636710,
+            "situationFamiliale": "Divorcé",
+            "agesEnfants": [10, 8, 6],
+            "appreciationVitSeul": true,
+            "domicileFiscal": "Métropole"
+          }
+        },
+        {
+          "bugdeloi": 253361,
+          "openfisca": 266329,
+          "entree": {
+            "id": "ir-divorce-isole-3-636711",
+            "domaine": "ir",
+            "revenuEuros": 636711,
+            "situationFamiliale": "Divorcé",
+            "agesEnfants": [10, 8, 6],
+            "appreciationVitSeul": true,
+            "domicileFiscal": "Métropole"
+          }
+        }
+      ]
+    },
+    {
+      "domaine": "af",
+      "champ": "af",
+      "categorie": "difference_de_perimetre",
+      "motif": "OpenFisca ajoute l’allocation forfaitaire (enfant de 20 ans), non modélisée par c0.7.",
+      "nombre": 1,
+      "ecartMaximal": 1160.99,
+      "exemples": [
+        {
+          "bugdeloi": 1836.13,
+          "openfisca": 2997.12,
+          "entree": {
+            "id": "af-forfait-20-ans-20.10.8-30000",
+            "domaine": "af",
+            "revenuEuros": 30000,
+            "situationFamiliale": "ImpositionCommune",
+            "agesEnfants": [20, 10, 8],
+            "appreciationVitSeul": false,
+            "domicileFiscal": "Métropole"
+          }
+        }
+      ]
+    },
+    {
+      "domaine": "af",
+      "champ": "af",
+      "categorie": "difference_de_perimetre",
+      "motif": "c0.7 ne modélise que la métropole.",
+      "nombre": 1,
+      "ecartMaximal": 337.44,
+      "exemples": [
+        {
+          "bugdeloi": 0,
+          "openfisca": 337.44,
+          "entree": {
+            "id": "af-outre-mer-10-20000",
+            "domaine": "af",
+            "revenuEuros": 20000,
+            "situationFamiliale": "ImpositionCommune",
+            "agesEnfants": [10],
+            "appreciationVitSeul": false,
+            "domicileFiscal": "GuadeloupeMartiniqueRéunion"
+          }
+        }
+      ]
+    }
+  ],
+  "note": "Un compte, pas une probabilité. Un écart ne dit pas lequel des deux calculs est faux."
+}

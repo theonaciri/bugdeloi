@@ -1,0 +1,4 @@
+# Versions utilisées pour le rejeu consigné dans REPORT.md.
+openfisca-france==177.1.4
+openfisca-core==46.1.0
+numpy==2.3.5

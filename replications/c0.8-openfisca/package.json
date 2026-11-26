@@ -1,0 +1,8 @@
+{
+  "name": "@bugdeloi/c0.8-openfisca",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "tsc -p tsconfig.json"
+  }
+}

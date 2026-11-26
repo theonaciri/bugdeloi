@@ -87,6 +87,10 @@
         "@types/tar-stream": "3.1.4",
       },
     },
+    "packages/parlement": {
+      "name": "@bugdeloi/parlement",
+      "version": "0.0.0",
+    },
     "packages/runner": {
       "name": "@bugdeloi/runner",
       "version": "0.0.0",
@@ -158,6 +162,9 @@
     "replications/c0.7": {
       "name": "@bugdeloi/c0.7",
     },
+    "replications/c0.8-openfisca": {
+      "name": "@bugdeloi/c0.8-openfisca",
+    },
   },
   "packages": {
     "@biomejs/biome": ["@biomejs/biome@2.6.9", "", { "optionalDependencies": { "@biomejs/cli-android-arm64": "2.6.9", "@biomejs/cli-android-x64": "2.6.9", "@biomejs/cli-darwin-arm64": "2.6.9", "@biomejs/cli-darwin-x64": "2.6.9", "@biomejs/cli-linux-arm64": "2.6.9", "@biomejs/cli-linux-arm64-musl": "2.6.9", "@biomejs/cli-linux-x64": "2.6.9", "@biomejs/cli-linux-x64-musl": "2.6.9", "@biomejs/cli-win32-arm64": "2.6.9", "@biomejs/cli-win32-x64": "2.6.9" }, "bin": { "biome": "bin/biome" } }, "sha512-RelCBDzTXu4DBU8c35P4iMrDO80SUjW0OgjDA7CT1z3UcCU5IclWTZ2XnMelI4frQL//xg2K2BQxAhcOKxdPQA=="],
@@ -198,6 +205,8 @@
 
     "@bugdeloi/c0.7": ["@bugdeloi/c0.7@workspace:replications/c0.7"],
 
+    "@bugdeloi/c0.8-openfisca": ["@bugdeloi/c0.8-openfisca@workspace:replications/c0.8-openfisca"],
+
     "@bugdeloi/cli": ["@bugdeloi/cli@workspace:packages/cli"],
 
     "@bugdeloi/core": ["@bugdeloi/core@workspace:packages/core"],
@@ -205,6 +214,8 @@
     "@bugdeloi/db": ["@bugdeloi/db@workspace:packages/db"],
 
     "@bugdeloi/ingest": ["@bugdeloi/ingest@workspace:packages/ingest"],
+
+    "@bugdeloi/parlement": ["@bugdeloi/parlement@workspace:packages/parlement"],
 
     "@bugdeloi/runner": ["@bugdeloi/runner@workspace:packages/runner"],
 

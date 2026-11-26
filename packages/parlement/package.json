@@ -1,0 +1,14 @@
+{
+  "name": "@bugdeloi/parlement",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./tricoteuses": "./src/tricoteuses.ts",
+    "./impact": "./src/impact.ts"
+  },
+  "scripts": {
+    "check": "tsc -p tsconfig.json"
+  },
+  "sideEffects": false
+}
