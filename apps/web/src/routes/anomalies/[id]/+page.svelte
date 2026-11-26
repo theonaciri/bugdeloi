@@ -243,7 +243,9 @@ function articleLabel(ref: typeof item.source, fallback: string) {
           <strong>{ref.id}</strong>
         {/if}
       </p>
-      <p class="text-sm"><a href={ref.url} rel="external">Lire l’article sur Légifrance</a></p>
+      <p class="text-sm">
+        <a href={ref.url} target="_blank" rel="external noopener">Lire l’article sur Légifrance</a>
+      </p>
       <dl class="space-y-1 text-sm">
         <div><dt class="inline text-muted">État.</dt> <dd class="inline">{etatLabel(ref.etat)}</dd></div>
         <div><dt class="inline text-muted">Début de la version.</dt> <dd class="inline">{ref.dateDebut ? formatLegiDate(ref.dateDebut) : 'Date inconnue'}</dd></div>

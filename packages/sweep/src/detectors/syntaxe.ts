@@ -8,6 +8,7 @@
  * Règles d'exclusion (comptées dans les statistiques, jamais candidates) :
  * - `)` fermant sans `(` ouvrant et précédé d'un marqueur d'énumération (« a) », « 1) », « i) », « 1°) »,
  *   « a bis) », « a sexies-0) ») au début d'un alinéa ou après une espace, une virgule ou un point-virgule ;
+ * - `l2°)` et les variantes avec un « l » initial à la place du chiffre 1, en tête d’alinéa ;
  * - `«` en début d'alinéa alors qu'une citation est déjà ouverte : usage français des citations sur
  *   plusieurs alinéas (chaque alinéa rouvre « et seul le dernier ferme) ;
  * - articles dont le numéro commence par « Annexe » (tableaux et formules).
@@ -21,10 +22,12 @@ import { legalUnit, versionRef } from '../certificate.ts'
 import type { Candidate, Detector, ScanOptions, ScanResult, SweepContext, Version } from '../types.ts'
 
 export const NAME = 'syntaxe'
-export const VERSION = '1.0.0'
+export const VERSION = '1.1.0'
 
 const ENUM_BEFORE_CLOSER =
   /(?:^|[\s;:,.-])(?:[a-zA-Z]{1,2}|\d{1,2}°?|[ivxlcIVXLC]{1,6})(?: (?:bis|ter|quater|quinquies|sexies|septies|octies|nonies|decies))?(?:-\d{1,2})?$/u
+
+const ENUM_WITH_INITIAL_L = /^\s*l\d°$/u
 
 export interface Location {
   paragraph: number // 1-based
@@ -78,8 +81,12 @@ export function checkBalance(paragraphs: string[]): {
         else open.quote.push(loc())
       } else if (ch === ')') {
         if (open.paren.length > 0) open.paren.pop()
-        else if (ENUM_BEFORE_CLOSER.test(p.slice(0, i))) exclusions.enumeration_closers++
-        else stray.paren.push(loc())
+        else {
+          const prefix = p.slice(0, i)
+          if (ENUM_BEFORE_CLOSER.test(prefix) || ENUM_WITH_INITIAL_L.test(prefix)) {
+            exclusions.enumeration_closers++
+          } else stray.paren.push(loc())
+        }
       } else if (ch === ']') {
         if (open.bracket.length > 0) open.bracket.pop()
         else stray.bracket.push(loc())

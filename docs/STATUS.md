@@ -29,6 +29,10 @@
 
 ## Journal des décisions
 
+- 2026-11-26 — `syntaxe@1.1.0` reconnaît les marqueurs comme `l2°)` en tête d’alinéa. Le balayage CSS
+  n° 10 a retiré F-2026-1128 (`withdrawn`) et conservé les deux autres constats SYNTAXE du code.
+  Le lien Légifrance de la fiche s’ouvre dans un nouvel onglet.
+
 | Date       | Décision                                                                                                                                                     | Raison                                                                                                                                       |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | 2026-11-25 | Nom public **BugDeLoi**, dépôt `theonaciri/bugdeloi` (GitHub personnel)                                                                                      | Choix du mainteneur                                                                                                                          |

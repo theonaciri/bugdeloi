@@ -495,6 +495,12 @@ describe('syntaxe', () => {
     expect(exclusions.enumeration_closers).toBe(7)
   })
 
+  test('énumération avec un l à la place du chiffre 1 dans un alinéa', () => {
+    const r = checkBalance(['11°) Premier,', 'l2°) Suivant,', '13°) Dernier.'])
+    expect(r.imbalances).toEqual([])
+    expect(r.exclusions.enumeration_closers).toBe(3)
+  })
+
   test('parenthèse non fermée, non ouverte', () => {
     expect(checkBalance(['Le montant (hors taxes est fixé.']).imbalances.map((i) => i.subtype)).toEqual([
       'parenthese_non_fermee',
