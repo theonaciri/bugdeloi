@@ -1,0 +1,28 @@
+#### Article L861-4|LEGIARTI000038814781
+
+Les articles L. 821-4 et L. 823-8, relatifs aux primes de déménagement, ne sont pas applicables à Mayotte.
+
+<!-- Version LEGI du 2019-09-01. Interface ExclusionPrimesDemenagementMayotte@v1.
+     La sortie indique uniquement si l'article L861-4 écarte les dispositions citées. -->
+
+```catala
+déclaration champ d'application ExclusionPrimesDemenagementMayotte:
+  entrée à_mayotte contenu booléen
+  résultat articles_l821_4_et_l823_8_écartés_par_l861_4 contenu booléen
+
+champ d'application ExclusionPrimesDemenagementMayotte:
+  définition articles_l821_4_et_l823_8_écartés_par_l861_4 égal à à_mayotte
+```
+
+```catala
+#[test]
+déclaration champ d'application TestExclusionPrimesDemenagementMayotte:
+  à_mayotte champ d'application ExclusionPrimesDemenagementMayotte
+  hors_mayotte champ d'application ExclusionPrimesDemenagementMayotte
+
+champ d'application TestExclusionPrimesDemenagementMayotte:
+  définition à_mayotte.à_mayotte égal à vrai
+  assertion à_mayotte.articles_l821_4_et_l823_8_écartés_par_l861_4
+  définition hors_mayotte.à_mayotte égal à faux
+  assertion non hors_mayotte.articles_l821_4_et_l823_8_écartés_par_l861_4
+```
