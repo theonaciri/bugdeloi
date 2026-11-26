@@ -21,6 +21,7 @@ import {
 } from '../packages/db/src/index.ts'
 import { runInSandbox } from '../packages/runner/src/index.ts'
 
+const checkOnly = process.argv.includes('--check-only')
 const workdir = 'corpus'
 const files = Array.from(new Bun.Glob('**/*.catala_fr').scanSync({ cwd: workdir })).sort()
 
@@ -46,6 +47,10 @@ interface ParsedFile {
 }
 
 const parsed: ParsedFile[] = []
+const seenLegiarti = new Map<string, string>()
+const seenSymbols = new Map<string, string>()
+const declRe = /^\s*déclaration\s+(structure|énumération|champ d'application)\s+([^\s:]+)\s*:/gm
+
 for (const file of files) {
   const raw = readFileSync(join(workdir, file), 'utf8')
   const headings = [...raw.matchAll(/^#{1,6}\s+.*\|(LEGIARTI\d+)\s*$/gm)].map((m) => m[1]).filter(Boolean)
@@ -61,11 +66,38 @@ for (const file of files) {
     console.error(`[N1 ECHEC] Aucun bloc Catala formalisé dans ${file}`)
     process.exit(1)
   }
+
+  for (const block of codeBlocks) {
+    if (/#\[test\]/.test(block)) continue
+    for (const match of block.matchAll(declRe)) {
+      const kind = match[1]
+      const name = match[2]
+      if (!kind || !name) continue
+      const key = `${kind} ${name}`
+      const prev = seenSymbols.get(key)
+      if (prev && prev !== file) {
+        console.error(`[N1 DOUBLON] "${key}" est déjà défini dans ${prev} et redéfini dans ${file}.`)
+        process.exit(1)
+      }
+      seenSymbols.set(key, file)
+    }
+  }
+
   const prose = raw.replace(/```catala[\s\S]*?```/g, ' ')
   for (const legiarti of headings) {
+    const prev = seenLegiarti.get(legiarti)
+    if (prev && prev !== file) {
+      console.error(`[N1 DOUBLON] ${legiarti} est déjà formalisé dans ${prev} et redéfini dans ${file}.`)
+      process.exit(1)
+    }
+    seenLegiarti.set(legiarti, file)
     parsed.push({ file, legiarti, prose, hasCatalaCode })
   }
 }
+
+console.log(
+  `[N1] Anti-doublon OK : ${seenLegiarti.size} LEGIARTI uniques et ${seenSymbols.size} déclarations Catala uniques.`,
+)
 
 // 1. Contrôle N2 : clerk test dans le bac à sable Catala 1.3.2 épinglé
 console.log(`[N2] Exécution de clerk test sur ${files.length} fichier(s) dans le bac à sable Catala 1.3.2…`)
@@ -117,6 +149,13 @@ try {
       process.exit(1)
     }
     promoted.push({ id: dbRow.id, code: dbRow.code, num: dbRow.num ?? '', file: item.file })
+  }
+
+  if (checkOnly) {
+    console.log(
+      `\n[OK --check-only] ${promoted.length} articles vérifiés (N1 anti-doublon + verbatim LEGI + N2 clerk test).`,
+    )
+    process.exit(0)
   }
 
   const now = new Date()
