@@ -51,7 +51,7 @@ fi
 
 log "installation de l'unité systemd"
 sudo install -m 0644 "$DEST/infra/systemd/$SERVICE.service" "/etc/systemd/system/$SERVICE.service"
-for unit in bugdeloi-nightly.service bugdeloi-nightly.timer; do
+for unit in bugdeloi-nightly.service bugdeloi-nightly.timer bugdeloi-desk.service bugdeloi-desk.timer; do
   sudo install -m 0644 "$DEST/infra/systemd/$unit" "/etc/systemd/system/$unit"
 done
 mkdir -p "$HOME/.cache/bugdeloi"
@@ -80,6 +80,8 @@ if [[ "$ok" != 1 ]]; then
   fi
   exit 1
 fi
+
+sudo systemctl enable --now --no-block bugdeloi-desk.timer >/dev/null
 
 log "en ligne : $SHORT ($HEALTH_URL)"
 

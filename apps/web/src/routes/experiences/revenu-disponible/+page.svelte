@@ -483,7 +483,7 @@ const coche = 'flex items-start gap-2.5 text-sm text-ink'
         S’y ajoutent {balayage.marchesArrondiAideLogement.nombre} petites marches, de
         {euros.format(balayage.marchesArrondiAideLogement.perteMaximaleEuros)} par an au plus : l’aide au logement arrondit
         les ressources à la centaine d’euros supérieure.
-        <a href="https://github.com/theonaciri/bugdeloi/tree/j0-fondations/replications/c0.7">Méthode, code et résultats complets</a>
+        <a href="https://github.com/theonaciri/bugdeloi/tree/main/replications/c0.7">Méthode, code et résultats complets</a>
       </p>
     </div>
 

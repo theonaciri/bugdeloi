@@ -6,7 +6,7 @@ on:
       - "corpus/**"
       - "scripts/check-corpus-pr.ts"
   push:
-    branches: [main, j0-fondations]
+    branches: [main]
     paths:
       - "corpus/**"
       - "scripts/check-corpus-pr.ts"

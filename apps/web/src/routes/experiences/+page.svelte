@@ -200,7 +200,7 @@ let { data }: PageProps = $props()
         </div>
         <div class="lg:col-span-4 lg:text-right">
           <a
-            href="https://github.com/theonaciri/bugdeloi/blob/j0-fondations/replications/c0.4/REPORT.md"
+            href="https://github.com/theonaciri/bugdeloi/blob/main/replications/c0.4/REPORT.md"
             rel="external"
             class="text-sm font-semibold"
           >

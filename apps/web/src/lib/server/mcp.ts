@@ -117,7 +117,7 @@ export function mcpManifest(origin: string) {
 }
 
 function c03Experiment(reports: Record<string, string>) {
-  const reportsUrl = 'https://github.com/theonaciri/bugdeloi/blob/j0-fondations/docs/audits/verifications'
+  const reportsUrl = 'https://github.com/theonaciri/bugdeloi/blob/main/docs/audits/verifications'
   return {
     ...summary,
     currency: 'EUR',

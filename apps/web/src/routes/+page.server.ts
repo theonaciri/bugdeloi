@@ -12,7 +12,7 @@ const reports = import.meta.glob<string>('../../../../docs/audits/verifications/
   query: '?raw',
   import: 'default',
 })
-const reportsUrl = 'https://github.com/theonaciri/bugdeloi/blob/j0-fondations/docs/audits/verifications'
+const reportsUrl = 'https://github.com/theonaciri/bugdeloi/blob/main/docs/audits/verifications'
 
 const c03EuroCases: EuroCase[] = summary.cases
   .filter(
