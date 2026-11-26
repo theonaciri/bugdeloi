@@ -68,11 +68,10 @@ for (const file of files) {
   }
 
   for (const block of codeBlocks) {
-    if (/#\[test\]/.test(block)) continue
     for (const match of block.matchAll(declRe)) {
       const kind = match[1]
       const name = match[2]
-      if (!kind || !name) continue
+      if (!kind || !name || name.startsWith('Test')) continue
       const key = `${kind} ${name}`
       const prev = seenSymbols.get(key)
       if (prev && prev !== file) {
