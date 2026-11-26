@@ -22,7 +22,8 @@ bun scripts/check-corpus-pr.ts
 ## Format des Pull Requests
 
 - **Par défaut : 1 tâche = 1 PR** (recommandé pour les agents automatiques via `tools/bdl.sh submit`).
-- **PR groupées (« bundle »)** : acceptées jusqu'à **100 articles maximum**, à condition de rester homogènes (ne pas mélanger traductions `.catala_fr` éligibles à l'auto-merge et propositions d'interfaces ou analyses hors `.catala_fr`).
+- **Cadence de travail** : traiter **10 à 20 articles courts** par lot, et **1 à 3 articles complexes** à la fois (jamais 100 articles complexes compressés dans une seule passe). Chaque fiche d'analyse doit fournir des types précis (pas de champ `appréciation_…` fourre-tout), classer chaque alinéa et signaler les ambiguïtés ouvertes.
+- **PR groupées (« bundle »)** : acceptées jusqu'à **100 articles maximum**, à condition de rester homogènes (ne pas mélanger traductions `.catala_fr` et fichiers hors `.catala_fr` dans une même PR).
 - **Titre recommandé** :
   - Un article : `corpus(<code>): formaliser <article> (<LEGIARTI>)`
   - Lot (≤ 100) : `corpus(<code|multi>): formaliser <N> articles (<liste courte>)`
