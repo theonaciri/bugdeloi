@@ -1,0 +1,28 @@
+#### Article D861-7|LEGIARTI000044634615
+
+La section 2 du chapitre III du titre II du présent livre n'est pas applicable à Mayotte.
+
+<!-- Version LEGI du 2022-01-01. Interface ExclusionSectionLogementMayotte@v1.
+     La sortie indique uniquement si cet article écarte la section citée. -->
+
+```catala
+déclaration champ d'application ExclusionSectionLogementMayotte:
+  entrée à_mayotte contenu booléen
+  résultat section_écartée_par_d861_7 contenu booléen
+
+champ d'application ExclusionSectionLogementMayotte:
+  définition section_écartée_par_d861_7 égal à à_mayotte
+```
+
+```catala
+#[test]
+déclaration champ d'application TestExclusionSectionLogementMayotte:
+  cas_positif champ d'application ExclusionSectionLogementMayotte
+  cas_négatif champ d'application ExclusionSectionLogementMayotte
+
+champ d'application TestExclusionSectionLogementMayotte:
+  définition cas_positif.à_mayotte égal à vrai
+  assertion cas_positif.section_écartée_par_d861_7
+  définition cas_négatif.à_mayotte égal à faux
+  assertion non cas_négatif.section_écartée_par_d861_7
+```

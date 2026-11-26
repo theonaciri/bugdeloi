@@ -1,0 +1,28 @@
+#### Article L821-2|LEGIARTI000038814974
+
+Les aides personnelles au logement sont accordées au titre de la résidence principale.
+
+<!-- Version LEGI du 2019-09-01. Interface ResidencePrincipaleAidesLogement@v1.
+     L’entrée indique si le logement constitue la résidence principale. La sortie porte uniquement sur cette condition. -->
+
+```catala
+déclaration champ d'application ResidencePrincipaleAidesLogement:
+  entrée appréciation_résidence_principale contenu booléen
+  résultat condition_de_résidence_principale_remplie contenu booléen
+
+champ d'application ResidencePrincipaleAidesLogement:
+  définition condition_de_résidence_principale_remplie égal à appréciation_résidence_principale
+```
+
+```catala
+#[test]
+déclaration champ d'application TestResidencePrincipaleAidesLogement:
+  cas_positif champ d'application ResidencePrincipaleAidesLogement
+  cas_négatif champ d'application ResidencePrincipaleAidesLogement
+
+champ d'application TestResidencePrincipaleAidesLogement:
+  définition cas_positif.appréciation_résidence_principale égal à vrai
+  assertion cas_positif.condition_de_résidence_principale_remplie
+  définition cas_négatif.appréciation_résidence_principale égal à faux
+  assertion non cas_négatif.condition_de_résidence_principale_remplie
+```
