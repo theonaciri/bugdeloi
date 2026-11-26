@@ -47,7 +47,7 @@ const nav = [
   { href: '/anomalies', label: 'Constats' },
   { href: '/journal', label: 'Journal' },
   { href: '/methode', label: 'Méthode' },
-  { href: '/design-system', label: 'Design' },
+  { href: '/live', label: 'En direct' },
 ]
 
 const current = (item: { href: string; matchPrefix?: string }) => {
