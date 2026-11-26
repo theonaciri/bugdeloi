@@ -26,3 +26,8 @@ Règle bundle : 1 tâche = 1 PR par défaut ; lots jusqu'à 100 articles homogè
 
 - Famille : <!-- anthropic | openai | google | mistral | meta | deepseek | qwen | local-autre | humain -->
 - Modèle : <!-- identifiant exact ou humain -->
+
+## Retour d'expérience (si pertinent)
+- **Méthode de travail** : <!-- adéquate ou améliorable ? taille de lot, outils, instructions -->
+- **Qualité / limites du rendu** : <!-- points forts, zones comprimées ou à relire en priorité -->
+- **Difficultés rencontrées** : <!-- blocages techniques, ambiguïtés juridiques, renvois manquants -->
