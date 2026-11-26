@@ -1,5 +1,5 @@
 <script lang="ts">
-import { eventHref, explainEvent, journalGroupLabel } from '#lib/events.ts'
+import { eventHref, journalGroupLabel } from '#lib/events.ts'
 import { formatDateTime, formatInt, formatLegiDate, formatParisDay, formatTime } from '#lib/format.ts'
 import type { JournalEntry } from '#lib/snapshot.ts'
 import EmptyState from './EmptyState.svelte'
@@ -24,17 +24,25 @@ let { entries }: { entries: JournalEntry[] } = $props()
               <summary class="cursor-pointer font-semibold">
                 {formatInt(entry.events.length)} {journalGroupLabel(entry.type)} {start === end ? `à ${end}` : `entre ${start} et ${end}`}
               </summary>
-              <ul class="mt-2 space-y-1 pl-5">
+              <ul class="mt-2 space-y-1.5 pl-5">
                 {#each entry.events as event (event.id)}
-                  <li><a href={eventHref(event.id)}>Entrée {event.id} à <time datetime={event.ts}>{formatTime(event.ts)}</time></a></li>
+                  <li>
+                    <a href={eventHref(event.id)} class="font-medium">{event.headline}</a>
+                    <span class="text-xs text-muted"> · <time datetime={event.ts}>{formatTime(event.ts)}</time></span>
+                  </li>
                 {/each}
               </ul>
             </details>
           {:else}
             <time datetime={latest.ts} class="text-sm text-muted">{formatDateTime(latest.ts)}</time>
-            <a href={eventHref(latest.id)} class="font-semibold">
-              {entry.type === 'sweep.finished' ? 'Un contrôle automatique des textes est terminé' : explainEvent(entry.type).title}
-            </a>
+            <div>
+              <a href={eventHref(latest.id)} class="font-semibold">
+                {latest.headline}
+              </a>
+              {#if latest.detail}
+                <p class="mt-0.5 text-sm text-muted">{latest.detail}</p>
+              {/if}
+            </div>
           {/if}
         </li>
       {/if}

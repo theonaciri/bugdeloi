@@ -12,7 +12,7 @@ const lifecycle = [
   {
     code: 'reproduced',
     label: 'Reproduit',
-    text: 'Une chaîne indépendante confirme le constat. Le certificat indique sa source, sa version et son résultat. Le rejeu en CI publique reste à mettre en place.',
+    text: 'Une chaîne indépendante confirme le constat. Le certificat indique sa source, sa version et son résultat. La reproduction en CI publique reste à mettre en place.',
   },
   {
     code: 'qualified',
@@ -38,7 +38,7 @@ const lifecycle = [
     <h1 class="text-3xl font-semibold sm:text-4xl">Comment nous travaillons, et ce que nous ne prétendons pas</h1>
     <p class="text-lg text-muted">
       Idée directrice : on ne fait jamais confiance à un modèle de langage, on fait confiance à ce qu’un tiers peut
-      rejouer. Les IA produisent des propositions ; le compilateur Catala, des sources indépendantes et des humains
+      reproduire. Les IA produisent des propositions ; le compilateur Catala, des sources indépendantes et des humains
       signataires les transforment en niveaux de preuve explicites.
     </p>
 
@@ -68,7 +68,7 @@ const lifecycle = [
     </p>
     <p>
       Ne comptent jamais comme preuve : l’auto-évaluation d’une IA, « ça compile » seul, un vote seul, un test écrit par
-      l’auteur de la traduction, un chiffre qu’on ne peut pas rejouer, l’accord de deux modèles du même fournisseur.
+      l’auteur de la traduction, un chiffre qu’on ne peut pas reproduire, l’accord de deux modèles du même fournisseur.
     </p>
 
     <h2 id="anomalies">Les anomalies</h2>
@@ -155,11 +155,11 @@ const lifecycle = [
         </dd>
       </div>
       <div id="compteur-rejeux">
-        <dt class="font-semibold">Rejeux de référence réussis</dt>
+        <dt class="font-semibold">Suites de référence dont la dernière exécution a réussi</dt>
         <dd>
           Nombre de suites de tests écrites par des chercheurs ou une administration (par exemple les exemples Catala
-          d’Inria) dont le <strong>dernier</strong> rejeu dans notre image épinglée du compilateur a réussi, sur le nombre de
-          suites rejouées (réussies, en échec ou en erreur). Une suite qui ne contient aucun test n’est pas comptée : elle
+          d’Inria) dont la <strong>dernière</strong> exécution dans notre image épinglée du compilateur a réussi, sur le nombre de
+          suites exécutées (réussies, en échec ou en erreur). Une suite qui ne contient aucun test n’est pas comptée : elle
           ne démontre rien.
         </dd>
       </div>

@@ -31,7 +31,7 @@ const endpoint = '/api/mcp'
 const instructions =
   'BugDeLoi documente la formalisation du droit français. N0 brut, N1 ancré, N2 compilé, N3 testé, ' +
   'N4 éprouvé, N5 revue humaine signée. ★ indique une formalisation de référence externe de la version en vigueur ' +
-  'dont la suite de tests a réussi le rejeu. ' +
+  'dont la suite de tests a réussi dans notre environnement. ' +
   FINDINGS_NOTE
 
 function tool(
@@ -52,7 +52,7 @@ const codeProperty = { type: 'string', enum: CODE_KEYS }
 const tools = [
   tool(
     'get_project_snapshot',
-    'Consulter les codes, les rejeux C0.1, le balayage C0.2, le guichet et le journal.',
+    'Consulter les codes, les exécutions des tests C0.1, le balayage C0.2, le guichet et le journal.',
   ),
   tool(
     'search_articles',
@@ -81,7 +81,7 @@ const tools = [
   }),
   tool(
     'get_finding',
-    'Lire le certificat, les extraits, la reproduction indépendante et la commande de rejeu.',
+    'Lire le certificat, les extraits, la reproduction indépendante et la commande de reproduction.',
     {
       id: { type: 'string', pattern: FINDING_ID_RE.source, examples: ['F-2026-1120'] },
     },

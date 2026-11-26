@@ -139,10 +139,10 @@ const sampleCases: EuroCase[] = [
 const sampleRace: RaceTrack[] = [
   {
     id: 'c01',
-    title: 'C0.1 · Rejeu des tests Inria',
+    title: 'Vérification des tests Inria',
     subtitle: 'Catala 1.3.2 épinglé par digest',
     summary: '171/171 tests verts · 8 suites actives',
-    statusBadge: '100 % rejoué',
+    statusBadge: '100 % exécuté',
     statusTone: 'emerald',
     href: '/references',
     rungs: [

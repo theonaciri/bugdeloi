@@ -8,7 +8,7 @@ type Diagram = {
 
 const diagrams = {
   ingest: { from: 'Archives de la DILA', to: 'Base BugDeLoi', relation: 'Importer' },
-  replication: { from: 'Tests de référence', to: 'Résultats du rejeu', relation: 'Relancer' },
+  replication: { from: 'Tests de référence', to: 'Résultats des tests', relation: 'Relancer' },
   reference: { from: 'Tests de référence', to: 'Article en vigueur', relation: 'Rattacher' },
   sweep: {
     from: 'Article A',
@@ -71,7 +71,7 @@ const events: Record<string, Explanation> = {
     title: 'Les tests de référence ont commencé',
     why: replayWhy,
     meaning: 'Cette entrée consigne le lancement des tests. Leur résultat reste à venir.',
-    next: 'Le résultat est enregistré à la fin du rejeu.',
+    next: 'Le résultat est enregistré à la fin de l’exécution des tests.',
     diagram: diagrams.replication,
   },
   'replication.passed': {
@@ -82,15 +82,15 @@ const events: Record<string, Explanation> = {
     diagram: { ...diagrams.replication, to: 'Tests réussis' },
   },
   'replication.failed': {
-    title: 'Le rejeu des tests de référence a échoué',
+    title: 'Les tests de référence ont échoué',
     why: replayWhy,
     meaning:
-      'Ce rejeu n’a pas abouti au résultat attendu. Cette entrée ne permet pas d’en attribuer la cause au texte de loi.',
+      'Cette exécution n’a pas abouti au résultat attendu. Cette entrée ne permet pas d’en attribuer la cause au texte de loi.',
     next: 'L’équipe peut examiner le résultat avant de relancer les tests.',
-    diagram: { ...diagrams.replication, to: 'Rejeu en échec' },
+    diagram: { ...diagrams.replication, to: 'Tests en échec' },
   },
   'replication.finished': {
-    title: 'Le rejeu des tests de référence est terminé',
+    title: 'L’exécution des tests de référence est terminée',
     why: replayWhy,
     meaning:
       'Chaque suite a son propre résultat. La fin du traitement ne garantit pas que toutes les suites ont réussi.',
@@ -114,7 +114,7 @@ const events: Record<string, Explanation> = {
     title: 'Les marqueurs ★ ont été actualisés',
     why: 'Le projet rapproche les tests réussis de la version en vigueur de chaque article couvert.',
     meaning: referenceMeaning,
-    next: 'Le rattachement pourra être recalculé après une évolution des textes ou des rejeux.',
+    next: 'Le rattachement pourra être recalculé après une évolution des textes ou des résultats des tests.',
     diagram: { ...diagrams.reference, to: 'Article en vigueur ★' },
   },
   'sweep.finished': {
@@ -146,7 +146,7 @@ const events: Record<string, Explanation> = {
     why: 'Le projet rend le constat reproduit et qualifié consultable avec son certificat.',
     meaning:
       'La fiche documente le constat et le verdict humain. Une éventuelle modification du texte relève de la procédure législative ou réglementaire.',
-    next: 'Le lecteur peut consulter le verdict et rejouer le certificat.',
+    next: 'Le lecteur peut consulter le verdict et reproduire le résultat à l’aide du certificat.',
     diagram: diagrams.publication,
   },
   'level.changed': {
@@ -204,7 +204,7 @@ export function replayStatus(status: string) {
     case 'failed':
       return 'Tests en échec'
     case 'error':
-      return 'Impossible de terminer le rejeu'
+      return 'Impossible de terminer l’exécution des tests'
     case 'no_tests':
       return 'Aucun test à lancer'
     default:

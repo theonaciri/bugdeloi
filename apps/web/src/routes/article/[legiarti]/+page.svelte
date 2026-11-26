@@ -192,8 +192,7 @@ const codeParam = $derived(a.text.code ?? 'CGI')
             {/each}
           </ul>
           <p class="mt-2 text-xs text-muted">
-            Être cité par une formalisation de référence ne donne pas le niveau ★ : il faut aussi que sa suite de tests soit
-            rejouée chez nous.
+            Être cité par une formalisation de référence ne donne pas le niveau ★ : il faut aussi que sa suite de tests réussisse dans notre environnement.
           </p>
         {/if}
       </section>

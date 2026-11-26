@@ -11,7 +11,7 @@ const phases = $derived([
   {
     score: data.scores.raw,
     title: 'Premier comptage',
-    explanation: 'Le premier rejeu a compté certaines exécutions répétées du même test.',
+    explanation: 'La première exécution a compté certaines exécutions répétées du même test.',
   },
   {
     score: data.scores.original,
@@ -145,7 +145,7 @@ function classification(test: (typeof data.cases)[number]) {
   </section>
 
   <section class="mt-10" aria-labelledby="cas">
-    <h2 id="cas" class="text-3xl font-semibold">Les {data.scores.completed.total} cas du rejeu corrigé</h2>
+    <h2 id="cas" class="text-3xl font-semibold">Les {data.scores.completed.total} cas de l’évaluation corrigée</h2>
     <!-- svelte-ignore a11y_no_noninteractive_tabindex (Défilement horizontal du tableau au clavier.) -->
     <div class="mt-4 overflow-x-auto rounded-lg border border-line bg-surface" role="region" aria-labelledby="cas" tabindex="0">
       <table class="w-full min-w-[38rem] border-collapse text-sm [&_:is(th,td)]:px-3 [&_:is(th,td)]:py-2.5">
@@ -182,7 +182,7 @@ function classification(test: (typeof data.cases)[number]) {
       <li><a href={data.source}>Programme remis, écrit en Catala</a></li>
       <li><a href={data.declaration}>Déclaration de l’agent</a> · famille OpenAI, modèle gpt-6.2-sol. Il déclare avoir consulté les textes et consignes du projet ainsi que la documentation du langage Catala.</li>
       <li><a href={data.audit}>Rapport d’audit et commandes pour relancer les tests</a></li>
-      <li><a href={data.inria}>Commit Inria utilisé pour le rejeu</a></li>
+      <li><a href={data.inria}>Commit Inria utilisé pour exécuter les tests</a></li>
     </ul>
   </section>
 </div>

@@ -28,12 +28,16 @@ export interface PublicEvent {
   actor: string
   subject: string | null
   summary: string | null
+  /** Titre éditorial concret et chiffré pour le journal en direct. */
+  headline: string
+  /** Explication factuelle en français courant, dérivée du payload réel. */
+  detail: string
 }
 
 export interface JournalEntry {
   id: number
   type: string
-  events: { id: number; ts: string }[]
+  events: { id: number; ts: string; headline: string; detail: string }[]
 }
 
 export interface ReferenceExample {

@@ -13,10 +13,9 @@ import {
   SweepFunnel,
 } from '#lib/components/viz/index.ts'
 import { getShellActions } from '#lib/context/shell.ts'
-import { explainEvent } from '#lib/events.ts'
 import { formatDateTime, formatInt, formatLegiDate, plural } from '#lib/format.ts'
 import { addCounts, emptyLevelCounts } from '#lib/levels.ts'
-import type { PublicEvent, Snapshot } from '#lib/snapshot.ts'
+import type { Snapshot } from '#lib/snapshot.ts'
 import type { PageProps } from './$types'
 
 let { data }: PageProps = $props()
@@ -56,29 +55,14 @@ function relativeTime(iso: string): string {
 }
 
 function humanActor(actor: string): string {
-  if (actor === 'system:c0.1') return 'Rejeu Inria'
-  if (actor === 'system:sweep') return 'Contrôle mécanique'
-  if (actor === 'system:ingest') return 'Import DILA'
-  if (actor.startsWith('claude/')) return 'Vérification indépendante · Anthropic'
-  if (actor.startsWith('codex/')) return 'Vérification indépendante · OpenAI'
-  if (actor.startsWith('google/')) return 'Vérification indépendante · Google'
+  if (actor === 'system:c0.1') return 'Audit des programmes Inria'
+  if (actor === 'system:sweep') return 'Contrôle des trois codes'
+  if (actor === 'system:ingest') return 'Import Légifrance'
+  if (actor.startsWith('claude/')) return 'Vérification croisée · Anthropic'
+  if (actor.startsWith('codex/')) return 'Vérification croisée · OpenAI'
+  if (actor.startsWith('google/')) return 'Vérification croisée · Google'
   if (actor.startsWith('github:')) return `@${actor.slice(7)}`
   return actor
-}
-
-function humanDetail(ev: PublicEvent): string {
-  if (ev.summary) return ev.summary
-  if (ev.type === 'reference.promoted')
-    return 'Articles en vigueur reliés aux suites de tests Inria réussies.'
-  if (ev.type === 'reproduction.finished') {
-    if (ev.subject?.startsWith('c0.2-dila-xml'))
-      return 'Contrôle croisé sur les archives XML brutes de la DILA.'
-    if (ev.subject?.startsWith('c0.2-independent')) return 'Contrôle croisé sur « La loi sous git ».'
-    return 'Vérification indépendante des constats mécaniques.'
-  }
-  if (ev.type === 'replication.finished') return 'Exécution des suites de tests Catala.'
-  if (ev.type === 'ingest.finished') return 'Mise à jour des textes officiels LEGI.'
-  return explainEvent(ev.type).why
 }
 
 const claudeMcpCommand = $derived(`claude mcp add --transport http bugdeloi ${data.origin}/api/mcp`)
@@ -101,14 +85,14 @@ const funnelStages = $derived.by<FunnelStage[]>(() => {
       count: p?.articlesChecked ?? inForceTotal,
       sublabel: 'Impôts, Sécurité sociale, Construction et habitation',
       detail:
-        'Chaque article en vigueur à la date officielle DILA est vérifié par quatre programmes déterministes, sans modèle de langage.',
+        'Chaque article en vigueur à la date officielle est vérifié par quatre programmes déterministes, sans intelligence artificielle.',
       tone: 'neutral',
     },
     {
       id: 'links',
       label: 'Liens entre textes analysés',
       count: p?.linksTotal ?? 0,
-      sublabel: 'Citations, modifications et abrogations résolues par lignée',
+      sublabel: 'Citations, modifications et abrogations suivies dans le temps',
       detail:
         'Un renvoi vers une ancienne version d’un article toujours en vigueur n’est pas signalé comme mort.',
       tone: 'cobalt',
@@ -119,7 +103,7 @@ const funnelStages = $derived.by<FunnelStage[]>(() => {
       count: p?.reproducedCount ?? 0,
       sublabel: `${formatInt(refMorte)} renvois vers un article abrogé · ${formatInt(syntaxe)} défauts typographiques`,
       detail:
-        'Confirmés par une seconde chaîne indépendante (archives XML DILA brutes et Tricoteuses). Consultables avant tout verdict humain.',
+        'Confirmés par une seconde vérification indépendante (archives officielles XML et « La loi sous git »). Consultables avant tout verdict humain.',
       tone: 'amber',
     },
     {
@@ -139,10 +123,10 @@ const raceTracks = $derived.by<RaceTrack[]>(() => {
   return [
     {
       id: 'c01',
-      title: 'Rejeu des programmes Inria',
+      title: 'Vérification des programmes Inria',
       subtitle: 'Allocations, APL, impôt sur le revenu, successions',
       summary: `${formatInt(totalInriaTests)} tests verts · ${activeSuites.length} suites`,
-      statusBadge: '100 % reproduit',
+      statusBadge: '100 % exécuté',
       statusTone: 'emerald',
       href: '/references',
       rungs: [
@@ -150,7 +134,8 @@ const raceTracks = $derived.by<RaceTrack[]>(() => {
           id: 'img',
           label: 'Compilateur Catala 1.3.2 figé',
           state: 'done',
-          detail: 'Image verrouillée par empreinte cryptographique pour rejouer à l’identique.',
+          detail:
+            'Environnement verrouillé par empreinte cryptographique pour obtenir exactement les mêmes résultats.',
         },
         {
           id: 'af',
@@ -207,15 +192,15 @@ const raceTracks = $derived.by<RaceTrack[]>(() => {
         },
         {
           id: 'ind1',
-          label: 'Contre-vérification n° 1',
+          label: 'Vérification croisée n° 1',
           state: 'done',
-          detail: '9 défauts typographiques confirmés ; 7 faux positifs détectés et écartés.',
+          detail: '9 défauts typographiques confirmés ; 7 faux signalements détectés et retirés.',
         },
         {
           id: 'ind2',
-          label: 'Contre-vérification XML DILA',
+          label: 'Vérification XML Légifrance',
           state: 'done',
-          detail: '1 110 renvois vers articles abrogés confirmés sur les archives brutes DILA.',
+          detail: '1 110 renvois vers articles abrogés confirmés sur les archives brutes.',
         },
         {
           id: 'qual',
@@ -234,7 +219,7 @@ const raceTracks = $derived.by<RaceTrack[]>(() => {
     {
       id: 'c03',
       title: 'Allocations familiales à l’aveugle',
-      subtitle: 'Traduire LEGI sans voir le code Inria',
+      subtitle: 'Traduire la loi sans voir le code Inria',
       summary: `${data.c03.scores.completed.passed}/${data.c03.scores.completed.total} cas · 2 écarts contre Inria`,
       statusBadge: 'Contre-vérifié',
       statusTone: 'cobalt',
@@ -242,15 +227,15 @@ const raceTracks = $derived.by<RaceTrack[]>(() => {
       rungs: [
         {
           id: 'pack',
-          label: 'Paquet légal isolé',
+          label: 'Textes officiels isolés',
           state: 'done',
-          detail: 'Seuls les articles LEGI et l’interface de calcul sont fournis.',
+          detail: 'Seuls les articles en vigueur et les données d’entrée sont fournis.',
         },
         {
           id: 'sub',
-          label: 'Traduction Catala',
+          label: 'Traduction exécutable',
           state: 'done',
-          detail: 'Programme remis et compilé sans erreur.',
+          detail: 'Programme compilé sans erreur sous Catala 1.3.2.',
         },
         {
           id: 'audit',
@@ -364,11 +349,11 @@ $effect(() => {
   <title>BugDeLoi — vérifier la loi française comme un logiciel</title>
   <meta
     name="description"
-    content="Nous traduisons les codes officiels français en programmes vérifiables pour mesurer leur impact réel en euros et documenter chaque anomalie reproductible."
+    content="La loi française fixe des milliers de calculs — impôts, allocations, aides au logement. BugDeLoi les traduit en formules vérifiables pour mesurer leur effet en euros et repérer les erreurs dans les textes officiels."
   />
 </svelte:head>
 
-<!-- BANDE 0 : Dernière avancée (plein bord) -->
+<!-- BANDE 0 : Dernière nouvelle concrète (plein bord) -->
 {#if latestEvent}
   <div class="bg-obs-bg text-obs-ink">
     <div class="container-wide flex flex-wrap items-center justify-between gap-x-6 gap-y-1.5 py-2.5 text-xs sm:text-[0.82rem]">
@@ -381,7 +366,7 @@ $effect(() => {
           href={`/evenement/${latestEvent.id}`}
           class="truncate text-obs-ink/95 no-underline hover:text-obs-emerald hover:underline"
         >
-          {explainEvent(latestEvent.type).title} — {humanDetail(latestEvent)}
+          {latestEvent.headline}
         </a>
       </div>
       <div class="flex shrink-0 items-center gap-3 text-obs-muted">
@@ -390,7 +375,7 @@ $effect(() => {
           href={`/evenement/${latestEvent.id}`}
           class="inline-flex items-center gap-1 font-semibold text-obs-amber no-underline hover:underline"
         >
-          Voir la preuve
+          Voir le détail
           <ArrowRight class="size-3.5" aria-hidden="true" />
         </a>
       </div>
@@ -398,11 +383,11 @@ $effect(() => {
   </div>
 {/if}
 
-<!-- BANDE 1 : HERO ÉDITORIAL & FLUX EN DIRECT (zéro boîte, zéro doublon de chiffres) -->
+<!-- BANDE 1 : HERO CLAIR POUR TOUS & JOURNAL EN DIRECT CONCRET -->
 <section class="bg-bg" aria-labelledby="hero-title">
   <div class="container-wide py-14 sm:py-20 lg:py-24">
     <div class="grid gap-14 lg:grid-cols-12 lg:items-start">
-      <div class="lg:col-span-7 space-y-8">
+      <div class="lg:col-span-7 space-y-7">
         <div class="space-y-5">
           <h1
             id="hero-title"
@@ -410,27 +395,20 @@ $effect(() => {
           >
             Vérifier la loi française comme un logiciel.
           </h1>
-          <p class="max-w-[58ch] font-serif text-xl leading-relaxed text-muted sm:text-[1.45rem]">
-            Nous traduisons les codes officiels de la DILA en règles de calcul exécutables
-            (<HoverCard>
-              {#snippet trigger()}Catala{/snippet}
-              {#snippet content()}
-                <p class="font-semibold text-ink">Langage Catala (Inria)</p>
-                <p class="mt-1 text-xs leading-relaxed text-muted">
-                  Créé par des chercheurs d’Inria pour écrire le code directement sous chaque alinéa de loi, lisible par les juristes comme par la machine.
-                </p>
-              {/snippet}
-            </HoverCard>) pour mesurer leur effet en euros et repérer leurs contradictions. Les IA proposent ; les tests reproductibles et les juristes tranchent.
+          <p class="max-w-[58ch] font-serif text-xl leading-relaxed text-ink/90 sm:text-[1.42rem]">
+            La loi fixe des milliers de calculs — impôts, allocations familiales, aides au logement — mais personne ne les teste comme un programme informatique. BugDeLoi traduit chaque article en formule vérifiable pour calculer son effet réel en euros et repérer les erreurs dans les textes officiels.
+          </p>
+          <p class="max-w-[58ch] text-base leading-relaxed text-muted">
+            Des intelligences artificielles aident à lire et traduire les articles ; des tests automatiques et des juristes vérifient chaque résultat.
           </p>
         </div>
 
         {#if snap}
-          <!-- Une seule synthèse chiffrée, sobre, directement sur la page -->
           <div class="space-y-3 border-y border-line py-6">
             <p class="flex flex-wrap items-baseline gap-x-3 gap-y-2 text-base text-ink sm:text-lg tabular">
               <span><strong class="font-serif text-2xl font-semibold sm:text-3xl">{formatInt(inForceTotal)}</strong> articles en vigueur</span>
               <span class="text-line-strong" aria-hidden="true">·</span>
-              <span><strong class="font-serif text-2xl font-semibold text-brand-strong sm:text-3xl">{formatInt(totals.REF)} ★</strong> reliés aux tests Inria</span>
+              <span><strong class="font-serif text-2xl font-semibold text-brand-strong sm:text-3xl">{formatInt(totals.REF)} ★</strong> couverts par les tests Inria</span>
               <span class="text-line-strong" aria-hidden="true">·</span>
               <span><strong class="font-serif text-2xl font-semibold text-notice-ink sm:text-3xl">{formatInt(snap.pipeline.reproducedCount)}</strong> constats reproduits</span>
             </p>
@@ -457,7 +435,7 @@ $effect(() => {
         </div>
       </div>
 
-      <!-- Flux éditorial en direct, épuré -->
+      <!-- Journal en direct : titres factuels et chiffrés -->
       <aside
         class="min-w-0 lg:col-span-5 lg:border-l lg:border-line lg:pl-12 space-y-5"
         aria-labelledby="live-panel-title"
@@ -465,7 +443,7 @@ $effect(() => {
         <div class="flex items-baseline justify-between gap-3">
           <h2 id="live-panel-title" class="flex items-center gap-2 text-sm font-semibold text-ink">
             <span class="live-dot" aria-hidden="true"></span>
-            {sseConnected ? 'Journal en direct' : 'Dernières opérations'}
+            {sseConnected ? 'Journal en direct' : 'Dernières vérifications'}
           </h2>
           <a href="/journal" class="text-xs font-semibold text-brand-strong no-underline hover:underline">
             Tout le journal →
@@ -484,10 +462,10 @@ $effect(() => {
                   href={`/evenement/${ev.id}`}
                   class="mt-1 block font-serif text-[1.12rem] font-medium leading-snug text-ink no-underline hover:text-brand-strong hover:underline"
                 >
-                  {explainEvent(ev.type).title}
+                  {ev.headline}
                 </a>
-                <p class="mt-1 line-clamp-2 text-xs leading-relaxed text-muted">
-                  {humanDetail(ev)}
+                <p class="mt-1 text-xs leading-relaxed text-muted">
+                  {ev.detail}
                 </p>
               </li>
             {/each}
@@ -500,7 +478,7 @@ $effect(() => {
   </div>
 </section>
 
-<!-- BANDE 2 : DE LA LOI AU MONTANT EN EUROS & CONSTATS REPRODUITS (plein fond blanc) -->
+<!-- BANDE 2 : DE LA LOI AU MONTANT EN EUROS & CONSTATS REPRODUITS -->
 <section id="impact-euros" class="border-t border-line bg-surface py-18 sm:py-24" aria-labelledby="impact-title">
   <div class="container-wide space-y-10">
     <div class="max-w-3xl space-y-3">
@@ -508,13 +486,13 @@ $effect(() => {
         De l’article de loi au montant en euros
       </h2>
       <p class="text-base leading-relaxed text-muted sm:text-lg">
-        Trois preuves concrètes tirées de nos données actuelles : des écarts chiffrés sur les allocations familiales, les constats mécaniques ouverts avant verdict humain, et un programme de recherche rejoué.
+        Consultez nos premiers résultats vérifiables : des écarts chiffrés sur les allocations familiales, les constats mécaniques ouverts avant verdict humain, et un exemple d’article traduit par la recherche publique.
       </p>
     </div>
 
     <Tabs
       defaultValue="c03"
-      ariaLabel="Preuves et explorations de BugDeLoi"
+      ariaLabel="Résultats vérifiables de BugDeLoi"
       items={[
         { value: 'c03', label: 'Allocations familiales (impact €)', badge: `${data.c03.scores.completed.passed}/${data.c03.scores.completed.total}` },
         { value: 'constats', label: 'Constats reproduits avant verdict', badge: formatInt(snap?.pipeline.reproducedCount ?? 0) },
@@ -524,34 +502,50 @@ $effect(() => {
       {#snippet panel(tab)}
         {#if tab === 'c03'}
           <div class="space-y-12 pt-4">
-            <!-- Deux cas phares à fort impact citoyen : Guyane & Mayotte -->
+            <p class="max-w-[75ch] text-sm leading-relaxed text-muted">
+              Pour tester notre méthode, nous avons fait programmer les allocations familiales à partir du texte de loi seul, puis comparé chaque montant à celui du programme de référence écrit par les chercheurs d’<HoverCard>
+                {#snippet trigger()}Inria{/snippet}
+                {#snippet content()}
+                  <p class="font-semibold text-ink">Inria (Institut national de recherche en sciences du numérique)</p>
+                  <p class="mt-1 text-xs leading-relaxed text-muted">
+                    Les chercheurs d’Inria ont créé le langage Catala et codé plusieurs prestations françaises publiques (allocations familiales, APL, impôt sur le revenu). Leurs programmes nous servent de base de comparaison.
+                  </p>
+                {/snippet}
+              </HoverCard>.
+              Sur 14 situations chiffrées, <strong class="text-ink">10 tombent juste au centime</strong>, 3 diffèrent d’un centime d’arrondi, et <strong class="text-ink">2 révèlent un désaccord sur ce que prévoit réellement la loi en vigueur</strong> :
+            </p>
+
+            <!-- Deux cas phares : Guyane & Mayotte, explicites sur qui donne quel montant -->
             <div class="grid gap-8 lg:grid-cols-2">
               {#each data.c03.spotlights as spot (spot.name)}
                 {@const delta = spot.actualCents - spot.expectedCents}
                 <article class="flex flex-col justify-between gap-6 rounded-[var(--radius-xl)] bg-bg p-7 sm:p-9">
-                  <div class="space-y-4">
+                  <div class="space-y-5">
                     <div class="flex flex-wrap items-baseline justify-between gap-3">
                       <h3 class="font-serif text-2xl font-semibold text-ink">{spot.territory}</h3>
                       <span class="font-serif text-2xl font-semibold tabular text-ko">
                         {fmtDelta(delta)} <span class="text-sm font-normal text-muted">/ mois</span>
                       </span>
                     </div>
-                    <p class="text-sm leading-relaxed text-muted">{spot.summary}</p>
 
-                    <dl class="grid grid-cols-2 gap-6 border-t border-line pt-4">
+                    <dl class="grid gap-6 border-y border-line py-5 sm:grid-cols-2">
                       <div>
-                        <dt class="text-xs text-muted">Attendu (témoin Inria)</dt>
-                        <dd class="font-serif mt-1 text-2xl font-semibold tabular text-ink">
+                        <dt class="text-xs font-semibold text-muted">Montant du programme Inria</dt>
+                        <dd class="font-serif mt-1 text-3xl font-semibold tabular text-ink">
                           {fmtEur(spot.expectedCents)}
                         </dd>
+                        <dd class="mt-1.5 text-xs leading-relaxed text-muted">{spot.inriaWhy}</dd>
                       </div>
                       <div>
-                        <dt class="text-xs text-muted">Calculé depuis la loi (LEGI)</dt>
-                        <dd class="font-serif mt-1 text-2xl font-semibold tabular text-brand-strong">
+                        <dt class="text-xs font-semibold text-brand-strong">Ce que donne la loi en vigueur</dt>
+                        <dd class="font-serif mt-1 text-3xl font-semibold tabular text-brand-strong">
                           {fmtEur(spot.actualCents)}
                         </dd>
+                        <dd class="mt-1.5 text-xs leading-relaxed text-muted">{spot.lawWhy}</dd>
                       </div>
                     </dl>
+
+                    <p class="text-sm leading-relaxed text-ink">{spot.summary}</p>
                   </div>
 
                   <div class="flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4 text-xs text-muted">
@@ -575,7 +569,7 @@ $effect(() => {
                     Les 14 montants mensuels comparés
                   </h3>
                   <p class="mt-1 text-sm text-muted">
-                    Résultat provisoire non relu par un humain · cliquez sur une ligne pour lire l’explication.
+                    Résultat provisoire en attente de validation par un juriste · cliquez sur une ligne pour lire l’explication.
                   </p>
                 </div>
                 <a
@@ -595,7 +589,7 @@ $effect(() => {
               <div class="flex items-start gap-3 max-w-4xl">
                 <AlertTriangle class="mt-0.5 size-4.5 shrink-0" aria-hidden="true" />
                 <p class="leading-relaxed">
-                  <strong>En attente de verdict humain :</strong> ces constats sont reproduits indépendamment sur les données DILA et ouverts à tous (juristes, journalistes, agents). Ils ne comptent pas encore parmi les anomalies qualifiées ({formatInt(snap?.findings.public ?? 0)}).
+                  <strong>En attente de verdict humain :</strong> ces constats ont été confirmés par une vérification indépendante sur les fichiers officiels de Légifrance et sont ouverts à tous (juristes, journalistes, agents). Ils ne comptent pas encore parmi les anomalies qualifiées ({formatInt(snap?.findings.public ?? 0)}).
                 </p>
               </div>
               <a href="/api/findings?status=reproduced&limit=20" class="shrink-0 text-xs font-semibold text-notice-ink underline">
@@ -621,7 +615,7 @@ $effect(() => {
                       { value: 'REF_MORTE', label: 'Renvois abrogés', badge: snap?.pipeline.reproducedByType.REF_MORTE ?? 0 },
                     ]}
                   />
-                  <span class="text-xs text-muted">Ouvrir un constat affiche son certificat rejouable</span>
+                  <span class="text-xs text-muted">Ouvrir un constat affiche son certificat reproductible</span>
                 </div>
 
                 <div class="divide-y divide-line border-y border-line">
@@ -665,13 +659,13 @@ $effect(() => {
               </div>
               <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-strong">
                 <CheckCircle2 class="size-4" aria-hidden="true" />
-                {plural(example.tests, 'test Inria rejoué', 'tests Inria rejoués')}
+                {plural(example.tests, 'test Inria exécuté', 'tests Inria exécutés')}
               </span>
             </div>
 
             <div class="grid gap-10 md:grid-cols-2 md:items-start">
               <div class="space-y-4">
-                <h4 class="text-sm font-semibold text-ink">Texte officiel (DILA)</h4>
+                <h4 class="text-sm font-semibold text-ink">Texte officiel (Légifrance)</h4>
                 <blockquote cite={example.legifranceUrl} class="legal-text text-ink wrap-anywhere">
                   {@html example.textHtml}
                 </blockquote>
@@ -688,7 +682,7 @@ $effect(() => {
                 <h4 class="text-sm font-semibold text-ink">Règle calculée par le programme Inria</h4>
                 <p class="font-serif text-xl leading-relaxed text-ink">{example.description}</p>
                 <p class="text-sm leading-relaxed text-muted">
-                  Rejoué avec succès le <time datetime={example.replayDate}>{formatDateTime(example.replayDate)}</time> sous Catala 1.3.2.
+                  Tests exécutés avec succès le <time datetime={example.replayDate}>{formatDateTime(example.replayDate)}</time> sous Catala 1.3.2.
                 </p>
                 <div class="flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4 text-sm">
                   <a href={example.sourceUrl} rel="external" class="inline-flex items-center gap-1 font-semibold">
@@ -719,7 +713,7 @@ $effect(() => {
           Où en sont les chantiers
         </h2>
         <p class="text-base leading-relaxed text-obs-muted">
-          Avant de publier des constats inédits, nous vérifions notre méthode en rejouant ce que la recherche publique a déjà établi.
+          Avant de publier des constats inédits, nous vérifions notre méthode en exécutant les programmes et tests que la recherche publique a déjà établis.
         </p>
       </div>
       <a
@@ -737,7 +731,7 @@ $effect(() => {
       <div class="space-y-4 border-t border-obs-line/80 pt-10">
         <div class="flex flex-wrap items-baseline justify-between gap-2">
           <p class="text-sm font-medium text-obs-ink">
-            Suites de tests Inria et DGFiP rejouées
+            Suites de tests Inria et DGFiP exécutées chez nous
           </p>
           <span class="text-sm font-semibold tabular text-obs-emerald">
             {formatInt(totalInriaTests)} sur {formatInt(totalInriaTests)} réussis
@@ -766,7 +760,7 @@ $effect(() => {
         La carte des trois codes
       </h2>
       <p class="text-base text-obs-muted">
-        Chaque rectangle reflète la taille d’une section ; activez les étoiles ★ pour situer les programmes déjà rejoués.
+        Chaque rectangle reflète la taille d’une section ; activez les étoiles ★ pour situer les articles déjà couverts par des tests.
       </p>
     </div>
 
@@ -780,7 +774,7 @@ $effect(() => {
   </div>
 </section>
 
-<!-- BANDE 5 : ÉCHELLE DE PREUVE (plein fond blanc, sans redite) -->
+<!-- BANDE 5 : ÉCHELLE DE PREUVE -->
 <section class="bg-surface py-18 sm:py-24" aria-labelledby="proof-title">
   <div class="container-wide space-y-10">
     <div class="flex flex-wrap items-end justify-between gap-4">
@@ -801,10 +795,9 @@ $effect(() => {
   </div>
 </section>
 
-<!-- BANDE 6 : MÉMOIRE DU PROJET & PARTICIPATION (Juristes / Citoyens + Agents MCP) -->
+<!-- BANDE 6 : MÉMOIRE DU PROJET & PARTICIPATION -->
 <section class="border-t border-line bg-bg py-18 sm:py-24" aria-labelledby="join-title">
   <div class="container-wide space-y-12">
-    <!-- Deux repères éditoriaux sans redite : Depuis votre dernière visite + Cimetière -->
     <div class="grid gap-6 lg:grid-cols-2">
       <SinceLastVisit events={snap?.events ?? []} />
 
@@ -826,14 +819,13 @@ $effect(() => {
       </article>
     </div>
 
-    <!-- Double accès : Juristes & Citoyens / Agents IA & MCP -->
     <div class="grid gap-8 border-t border-line pt-12 lg:grid-cols-2">
       <div class="space-y-5">
         <h2 id="join-title" class="font-serif text-3xl font-semibold text-ink sm:text-4xl">
           Relire comme juriste, journaliste ou citoyen
         </h2>
         <p class="max-w-[54ch] text-base leading-relaxed text-muted">
-          Les machines balaient des milliers d’articles, mais le verdict final reste humain. Chaque fiche donne accès à l’extrait officiel, au lien Légifrance et à la commande de rejeu.
+          Les machines balaient des milliers d’articles, mais le verdict final reste humain. Chaque fiche donne accès à l’extrait officiel, au lien Légifrance et à la commande de vérification.
         </p>
         <div class="flex flex-wrap items-center gap-3 pt-1">
           <Button href="/anomalies" variant="ink" size="md">

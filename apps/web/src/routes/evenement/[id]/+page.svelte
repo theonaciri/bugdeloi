@@ -30,9 +30,9 @@ const replayCounts = $derived(Object.entries(Object.groupBy(entry.replayStatuses
 <article class="container-page mt-8">
   <div class="prose-page">
     <p><a href="/#journal">Journal des événements</a></p>
-    <h1 class="text-3xl font-semibold sm:text-4xl">{explanation.title}</h1>
+    <h1 class="text-3xl font-semibold sm:text-4xl">{entry.headline}</h1>
     <p class="text-muted"><time datetime={entry.ts}>{formatDateTime(entry.ts)}</time></p>
-    {#if entry.summary && entry.type !== 'sweep.finished'}<p>{entry.summary}</p>{/if}
+    {#if entry.detail}<p>{entry.detail}</p>{/if}
     {#if explanation.diagram}
       {@const diagram = explanation.diagram}
       <figure class="mt-6">
@@ -67,7 +67,7 @@ const replayCounts = $derived(Object.entries(Object.groupBy(entry.replayStatuses
           <li>{plural(runs?.length ?? 0, 'suite')} · {replayStatus(status)} <code class="text-muted">{status}</code></li>
         {/each}
       </ul>
-      <p class="text-sm"><a href="/methode#compteur-rejeux">Méthode de calcul des rejeux</a></p>
+      <p class="text-sm"><a href="/methode#compteur-rejeux">Méthode de calcul du compteur des tests de référence</a></p>
     {/if}
     <h2>Ce que montre cette entrée</h2>
     <p>{explanation.meaning}</p>

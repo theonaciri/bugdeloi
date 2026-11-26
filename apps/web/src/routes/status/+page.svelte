@@ -62,7 +62,7 @@ const runLabel: Record<string, string> = {
     </div>
 
     <div class="py-4">
-      <dt class="font-semibold">Dernier rejeu de référence</dt>
+      <dt class="font-semibold">Dernière exécution des tests de référence</dt>
       <dd class="mt-1">
         {#if h.lastReplication}
           <p>
@@ -71,7 +71,7 @@ const runLabel: Record<string, string> = {
           </p>
           <p class="mono break-all text-xs text-muted">{h.lastReplication.status} · {h.lastReplication.subject}</p>
         {:else if h.database.ok}
-          <EmptyState title="Aucun rejeu enregistré." />
+          <EmptyState title="Aucune exécution enregistrée." />
         {:else}
           <span class="text-muted">Inconnu (base injoignable).</span>
         {/if}

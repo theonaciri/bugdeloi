@@ -90,7 +90,128 @@ const ISO = (d: Date | string | null | undefined): string | null =>
 /** Filtre des événements publiables : tout sauf les anomalies non encore qualifiées. */
 const publicEventFilter: SQL = sql`(${event.type} NOT LIKE 'finding.%' OR ${event.type} IN ('finding.qualified', 'finding.published'))`
 
+const frInt = new Intl.NumberFormat('fr-FR')
+
+function formatEventCopy(r: typeof event.$inferSelect): { headline: string; detail: string } {
+  const p = r.payload
+  const num = (k: string): number | null => (typeof p[k] === 'number' ? p[k] : null)
+
+  if (r.type === 'reference.promoted') {
+    const promoted = num('promoted')
+    const demoted = num('demoted')
+    if (promoted !== null && demoted !== null && demoted > 0) {
+      return {
+        headline: `Audit des étoiles ★ : ${frInt.format(promoted)} articles confirmés, ${frInt.format(demoted)} retirés`,
+        detail: `${frInt.format(demoted)} articles cités par Inria mais sans code effectif ont été retirés ; ${frInt.format(promoted)} articles en vigueur restent couverts par des tests réussis.`,
+      }
+    }
+    if (promoted !== null) {
+      return {
+        headline: `${frInt.format(promoted)} articles en vigueur reliés aux programmes Inria`,
+        detail:
+          'Chaque étoile ★ indique un article couvert par un programme de recherche dont les tests passent chez nous.',
+      }
+    }
+  }
+
+  if (r.type === 'reproduction.finished') {
+    const confirmed = num('confirmé')
+    const refuted = num('infirmé')
+    const undetermined = num('indéterminé')
+    const isDila = r.subject?.startsWith('c0.2-dila-xml')
+    const isTricoteuses = r.subject?.startsWith('c0.2-independent')
+    if (confirmed !== null && refuted !== null) {
+      if (isDila) {
+        return {
+          headline: `${frInt.format(confirmed)} renvois vers des articles abrogés confirmés sur les archives officielles`,
+          detail: `Vérification croisée sur les fichiers XML bruts de Légifrance : ${frInt.format(confirmed)} confirmés, ${frInt.format(refuted)} infirmé${refuted > 1 ? 's' : ''}${undetermined ? `, ${frInt.format(undetermined)} indéterminés` : ''}.`,
+        }
+      }
+      if (isTricoteuses) {
+        return {
+          headline: `${frInt.format(confirmed)} fautes de ponctuation confirmées, ${frInt.format(refuted)} faux signalements écartés`,
+          detail: `Vérification croisée sur « La loi sous git » : les ${frInt.format(confirmed)} défauts typographiques sont confirmés et ${frInt.format(refuted)} erreurs de nos détecteurs ont été retirées.`,
+        }
+      }
+      return {
+        headline: `Vérification indépendante : ${frInt.format(confirmed)} confirmés, ${frInt.format(refuted)} écartés`,
+        detail: undetermined
+          ? `${frInt.format(undetermined)} cas restent indéterminés sur cette source.`
+          : 'Contrôle croisé terminé sur des données traitées séparément.',
+      }
+    }
+  }
+
+  if (r.type === 'sweep.finished') {
+    const checked = p.articlesChecked
+    if (checked && typeof checked === 'object' && !Array.isArray(checked)) {
+      const rec = checked as Record<string, unknown>
+      const cgi = typeof rec.CGI === 'number' ? rec.CGI : null
+      const css = typeof rec.CSS === 'number' ? rec.CSS : null
+      const cch = typeof rec.CCH === 'number' ? rec.CCH : null
+      const total = [cgi, css, cch].reduce<number>((sum, v) => sum + (v ?? 0), 0)
+      if (total > 0) {
+        const parts = [
+          cgi !== null ? `Impôts (${frInt.format(cgi)})` : null,
+          css !== null ? `Sécurité sociale (${frInt.format(css)})` : null,
+          cch !== null ? `Logement (${frInt.format(cch)})` : null,
+        ].filter(Boolean)
+        return {
+          headline: `${frInt.format(total)} articles en vigueur passés au crible`,
+          detail: `Contrôle automatique des renvois abrogés et de la typographie : ${parts.join(', ')}.`,
+        }
+      }
+    }
+  }
+
+  if (r.type === 'replication.finished') {
+    const runs = Array.isArray(p.runs) ? p.runs : []
+    const passed = runs.filter(
+      (item) => item && typeof item === 'object' && (item as Record<string, unknown>).status === 'passed',
+    ).length
+    if (runs.length > 0) {
+      return {
+        headline: `Programmes Inria vérifiés : ${frInt.format(passed)} suites exécutées avec succès`,
+        detail: 'Exécution des suites de tests officielles dans notre environnement Catala 1.3.2.',
+      }
+    }
+  }
+
+  if (r.type === 'ingest.finished') {
+    const archive = typeof p.archive === 'string' ? p.archive : null
+    return {
+      headline: 'Mise à jour des textes officiels de loi',
+      detail: archive
+        ? `Lot officiel Légifrance chargé (${archive}).`
+        : 'Nouvelles versions d’articles chargées depuis la base officielle.',
+    }
+  }
+
+  if (r.type === 'finding.qualified' && r.subject) {
+    return {
+      headline: `Anomalie ${r.subject} validée par un juriste`,
+      detail: 'Verdict motivé enregistré et consultable dans le registre public.',
+    }
+  }
+
+  if (r.type === 'finding.published' && r.subject) {
+    return {
+      headline: `Anomalie ${r.subject} publiée au registre`,
+      detail: 'Constat reproduit, validé par un humain et accompagné de son certificat.',
+    }
+  }
+
+  return {
+    headline:
+      r.type !== 'reproduction.finished' && typeof p.summary === 'string'
+        ? p.summary
+        : 'Mise à jour enregistrée dans le journal',
+    detail: 'Consultez la fiche pour voir les données et la provenance complète.',
+  }
+}
+
 function publicEvent(r: typeof event.$inferSelect): PublicEvent {
+  const { headline, detail } = formatEventCopy(r)
   return {
     id: r.id,
     ts: r.ts.toISOString(),
@@ -99,6 +220,8 @@ function publicEvent(r: typeof event.$inferSelect): PublicEvent {
     subject: r.subject,
     summary:
       r.type !== 'reproduction.finished' && typeof r.payload.summary === 'string' ? r.payload.summary : null,
+    headline,
+    detail,
   }
 }
 
@@ -111,13 +234,13 @@ export async function latestEvents(limit = 10): Promise<PublicEvent[]> {
 /** Opérations répétitives regroupées par type et par jour à Paris, par dernier événement. */
 export async function journalEntries(limit: number, before?: number): Promise<JournalEntry[]> {
   const repeatable = inArray(event.type, Object.keys(journalGroupLabels))
-  return db()
+  const rows = await db()
     .select({
       id: sql<number>`max(${event.id})`.mapWith(Number),
       type: event.type,
       events: sql<
-        JournalEntry['events']
-      >`jsonb_agg(jsonb_build_object('id', ${event.id}, 'ts', ${event.ts}) order by ${event.ts} desc, ${event.id} desc)`,
+        { id: number; ts: string; subject: string | null; payload: Record<string, unknown> }[]
+      >`jsonb_agg(jsonb_build_object('id', ${event.id}, 'ts', ${event.ts}, 'subject', ${event.subject}, 'payload', ${event.payload}) order by ${event.ts} desc, ${event.id} desc)`,
     })
     .from(event)
     .where(publicEventFilter)
@@ -129,6 +252,19 @@ export async function journalEntries(limit: number, before?: number): Promise<Jo
     .having(before === undefined ? undefined : sql`max(${event.id}) < ${before}`)
     .orderBy(sql`max(${event.id}) desc`)
     .limit(limit)
+
+  return rows.map((row) => ({
+    id: row.id,
+    type: row.type,
+    events: row.events.map((ev) => {
+      const { headline, detail } = formatEventCopy({
+        type: row.type,
+        subject: ev.subject,
+        payload: ev.payload ?? {},
+      } as typeof event.$inferSelect)
+      return { id: ev.id, ts: ev.ts, headline, detail }
+    }),
+  }))
 }
 
 /** Le détail applique le filtre du journal et ne transmet pas le payload brut. */

@@ -32,26 +32,31 @@ const c03EuroCases: EuroCase[] = summary.cases
 const c03Spotlights = [
   {
     name: 'Test3',
-    territory: 'Guyane · enfant unique de 13 ans',
-    articleLabel: 'CSS art. D755-5, II, alinéa 2',
+    territory: 'Guyane · famille avec 1 enfant de 13 ans',
+    articleLabel: 'Code de la sécurité sociale, art. D755-5, II, al. 2',
     articleId: 'LEGIARTI000006738575',
     articleUrl: legifranceArticleUrl('LEGIARTI000006738575'),
     expectedCents: 2437,
     actualCents: 3966,
+    inriaWhy: 'Applique le filtre de métropole qui exclut l’enfant unique de la majoration d’âge.',
+    lawWhy: 'L’article D755-5 en vigueur prévoit une majoration de 3,69 % dès 11 ans en Guyane.',
     summary:
-      'Le barème spécial fixe une majoration de 3,69 % à partir de 11 ans ; le filtre Inria applique la règle métropolitaine qui exclut l’aîné.',
+      'Deux relectures indépendantes confirment que le texte en vigueur prévoit bien 39,66 € et que le programme Inria applique un filtre trop restrictif. Un juriste doit trancher avant publication.',
     verifications: readVerifications('Test3', reports, reportsUrl),
   },
   {
     name: 'Test12',
-    territory: 'Mayotte · 4 enfants à charge',
-    articleLabel: 'Ordonnance du 7 fév. 2002, art. 7, al. 5',
+    territory: 'Mayotte · famille avec 4 enfants à charge',
+    articleLabel: 'Ordonnance du 7 février 2002, art. 7, al. 5',
     articleId: 'LEGIARTI000034109930',
     articleUrl: 'https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000034109930',
     expectedCents: 31584,
     actualCents: 19245,
+    inriaWhy:
+      'Cumule un ancien montant maintenu (57,28 €) et une majoration d’âge métropolitaine avec le barème 4 enfants.',
+    lawWhy: 'L’ordonnance en vigueur réserve ce maintien au cas d’un enfant resté seul à charge.',
     summary:
-      'Le texte limite le maintien de l’ancien montant à un enfant resté seul à charge ; le témoin Inria cumule 57,28 € de maintien et la majoration d’âge au barème 4 enfants.',
+      'Les deux relectures indépendantes confirment que la loi en vigueur ne prévoit pas ce cumul pour 4 enfants. En attente d’arbitrage par un juriste.',
     verifications: readVerifications('Test12', reports, reportsUrl),
   },
 ]

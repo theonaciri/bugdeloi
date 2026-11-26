@@ -116,7 +116,7 @@ function articleLabel(ref: typeof item.source, fallback: string) {
     <h2>Reproduction indépendante</h2>
     {#if typeof item.reproduction.verdict === 'string'}
       <dl>
-        <dt>Verdict du rejeu</dt>
+        <dt>Résultat de la reproduction</dt>
         <dd>
           {item.reproduction.verdict === 'confirmé' ? 'La chaîne indépendante a retrouvé le constat.' : 'Le certificat consigne le résultat du contrôle.'}
           <code class="ml-2 text-xs text-muted">{item.reproduction.verdict}</code>
@@ -126,7 +126,7 @@ function articleLabel(ref: typeof item.source, fallback: string) {
           <dd>{item.reproduction.source}</dd>
         {/if}
         {#if typeof item.reproduction.checked_at === 'string'}
-          <dt>Date du rejeu</dt>
+          <dt>Date de la reproduction</dt>
           <dd>{formatDateTime(item.reproduction.checked_at)}</dd>
         {/if}
       </dl>
@@ -148,11 +148,11 @@ function articleLabel(ref: typeof item.source, fallback: string) {
       <p>Détail du verdict indisponible dans le certificat.</p>
     {/if}
 
-    <h2>Rejouer le certificat</h2>
+    <h2>Reproduire le résultat à l’aide du certificat</h2>
     {#if item.replay}
       <pre class="wrap-anywhere whitespace-pre-wrap rounded-lg bg-surface-2 p-4"><code>{item.replay}</code></pre>
     {:else}
-      <p>Aucune commande de rejeu dans le certificat.</p>
+      <p>Aucune commande de reproduction dans le certificat.</p>
     {/if}
 
     <details class="mt-6">

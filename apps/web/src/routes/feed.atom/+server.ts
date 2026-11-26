@@ -18,8 +18,8 @@ export const GET: RequestHandler = async ({ url }) => {
   const updated = events[0]?.ts ?? new Date(0).toISOString()
   const entries = events
     .map((e) => {
-      const title = `${explainEvent(e.type).title}${e.subject ? ` · ${e.subject}` : ''}`
-      const summary = [e.summary ?? explainEvent(e.type).why, `Type : ${e.type}`, `Acteur : ${e.actor}`]
+      const title = e.headline
+      const summary = [e.detail || explainEvent(e.type).why, `Type : ${e.type}`, `Acteur : ${e.actor}`]
         .filter(Boolean)
         .join(' — ')
       const link = `${origin}${eventHref(e.id)}`

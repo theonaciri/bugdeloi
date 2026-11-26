@@ -71,19 +71,19 @@ const counts = $derived({
     <div class="flex flex-wrap items-center gap-x-5 gap-y-1.5 text-xs text-muted">
       <span class="inline-flex items-center gap-2">
         <span class="h-1.5 w-4 rounded-full bg-ink/45"></span>
-        Témoin Inria
+        Programme Inria
       </span>
       <span class="inline-flex items-center gap-2">
         <span class="h-1.5 w-4 rounded-full bg-brand"></span>
-        Traduction LEGI identique
+        Loi en vigueur (identique)
       </span>
       <span class="inline-flex items-center gap-2">
         <span class="h-1.5 w-4 rounded-full bg-notice-line"></span>
-        Écart d’arrondi
+        Écart d’arrondi (0,01 €)
       </span>
       <span class="inline-flex items-center gap-2">
         <span class="h-1.5 w-4 rounded-full bg-ko"></span>
-        Désaccord substantiel
+        Désaccord sur la loi
       </span>
     </div>
   </div>
@@ -190,34 +190,34 @@ const counts = $derived({
 
         <dl class="grid grid-cols-2 gap-4 border-y border-line py-4">
           <div>
-            <dt class="text-xs text-muted">Attendu (Inria)</dt>
+            <dt class="text-xs text-muted">Programme Inria</dt>
             <dd class="font-serif mt-1 text-2xl font-semibold tabular text-ink">{fmtEur(active.expected)}</dd>
           </div>
           <div>
-            <dt class="text-xs text-muted">Calculé depuis LEGI</dt>
+            <dt class="text-xs text-muted">Lecture de la loi en vigueur</dt>
             <dd class="font-serif mt-1 text-2xl font-semibold tabular text-ink">{fmtEur(active.actual)}</dd>
           </div>
         </dl>
 
         <div>
-          <p class="text-xs text-muted">Impact mensuel sur le foyer</p>
+          <p class="text-xs text-muted">Écart mensuel entre les deux calculs</p>
           <p
             class={cn(
               'font-serif mt-0.5 text-2xl font-semibold tabular',
               delta === 0 ? 'text-ok' : active.classification === 'erreur_oracle' ? 'text-ko' : 'text-notice-ink',
             )}
           >
-            {delta === 0 ? '0,00 € — exact au centime' : `${fmtDelta(delta)} / mois`}
+            {delta === 0 ? '0,00 € — montants identiques' : `${fmtDelta(delta)} / mois`}
           </p>
         </div>
 
         <p class="text-sm leading-relaxed text-muted">
           {#if active.status === 'passed'}
-            Le programme généré uniquement à partir des textes officiels retrouve exactement le montant du témoin Inria.
+            La traduction automatique de la loi en vigueur donne exactement le même montant que le programme de référence d’Inria.
           {:else if active.classification === 'erreur_oracle'}
-            La lecture directe de l’article officiel diverge du programme témoin Inria. Deux contre-vérifications indépendantes ont examiné le cas ; l’arbitrage final revient à un juriste.
+            La lecture littérale de l’article en vigueur contredit le programme de référence d’Inria. Deux relectures indépendantes ont confirmé l’écart ; un juriste doit trancher.
           {:else}
-            Écart d’un centime lié à l’ordre des arrondis (arrondi de chaque composante avant somme chez Inria, contre arrondi final dans la remise).
+            Écart d’un centime : Inria arrondit chaque composante avant d’additionner, tandis que notre programme arrondit uniquement le total final.
           {/if}
         </p>
       </aside>
