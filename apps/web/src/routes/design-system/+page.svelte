@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Bot, CheckCircle2, Layers, Palette, Play, Sparkles, Terminal, Type } from '@lucide/svelte'
+import { Bot, CheckCircle2, Play } from '@lucide/svelte'
 import { agentTools } from '@ui-sdk/svelte/agent'
 import { DATA_TOOLS, executeDataTool, getAgent } from '#lib/agent/webmcp.ts'
 import LevelBadge from '#lib/components/LevelBadge.svelte'
@@ -8,7 +8,6 @@ import {
   Accordion,
   Badge,
   Button,
-  Card,
   CopyButton,
   Dialog,
   Drawer,
@@ -269,28 +268,20 @@ $effect(() => {
   />
 </svelte:head>
 
-<!-- En-tête éditorial -->
 <section class="border-b border-line bg-surface">
-  <div class="container-page py-10 sm:py-14">
-    <div class="flex flex-wrap items-center justify-between gap-4">
-      <div class="space-y-3 max-w-3xl">
-        <div class="flex flex-wrap items-center gap-2">
-          <Badge variant="brand" pulse>Design System v1 · @ui-sdk/svelte + Tailwind 4</Badge>
-          <Badge variant="outline">WCAG 2.2 AA · Zéro DSFR</Badge>
-          <Badge variant="amber">Agent-first · MCP + WebMCP</Badge>
-        </div>
+  <div class="container-wide py-12 sm:py-16">
+    <div class="flex flex-wrap items-end justify-between gap-6">
+      <div class="max-w-3xl space-y-3">
         <h1 class="text-4xl font-semibold sm:text-5xl">
-          Imprimerie civique × Observatoire scientifique
+          Design System et interface agents
         </h1>
-        <p class="text-base text-muted sm:text-lg leading-relaxed">
-          Chaque composant est conçu à double lecture : <strong class="text-ink">structuré et pilotable par des LLMs</strong> via
-          <code class="text-ink">@ui-sdk/svelte/agent</code> (WebMCP) et <code class="text-ink">/api/mcp</code>, et
-          <strong class="text-ink">illustré, contrasté et immédiatement lisible pour les humains</strong>.
+        <p class="text-base leading-relaxed text-muted sm:text-lg">
+          Composants accessibles bâtis sur <code class="text-ink">@ui-sdk/svelte</code> et Tailwind 4 : lisibles et aérés pour le grand public, pilotables sans clic pixel par les agents (WebMCP et <code class="text-ink">/api/mcp</code>).
         </p>
       </div>
-      <div class="flex flex-wrap items-center gap-2">
+      <div class="flex flex-wrap items-center gap-2.5">
         <ThemeToggle />
-        <Button variant="primary" size="sm" onclick={() => shell?.openAgent()}>
+        <Button variant="ink" size="sm" onclick={() => shell?.openAgent()}>
           <Bot class="size-4" aria-hidden="true" />
           Inspecteur MCP
         </Button>
@@ -299,20 +290,16 @@ $effect(() => {
   </div>
 </section>
 
-<div class="container-page mt-12 space-y-16">
-  <!-- 1. Palette & Jetons -->
-  <section aria-labelledby="ds-palette" class="space-y-5">
+<div class="container-wide mt-14 space-y-20">
+  <section aria-labelledby="ds-palette" class="space-y-6">
     <div class="flex items-baseline justify-between gap-4">
-      <div>
-        <p class="kicker flex items-center gap-1.5"><Palette class="size-3.5 text-brand" aria-hidden="true" /> 01 · Couleurs & surfaces</p>
-        <h2 id="ds-palette" class="mt-1 text-3xl font-semibold">Jetons sémantiques & contraste</h2>
-      </div>
+      <h2 id="ds-palette" class="text-3xl font-semibold">Couleurs et surfaces</h2>
       <span class="mono text-xs text-muted">apps/web/src/tokens.css</span>
     </div>
 
     <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
       {#each paletteTokens as t (t.token)}
-        <div class="rounded-[var(--radius)] border p-4 flex flex-col justify-between min-h-26 {t.cls}">
+        <div class="flex min-h-24 flex-col justify-between rounded-[var(--radius)] border p-4 {t.cls}">
           <span class="font-semibold text-sm">{t.name}</span>
           <div class="flex items-baseline justify-between gap-2 pt-4">
             <span class="mono text-xs opacity-80">{t.token}</span>
@@ -322,18 +309,18 @@ $effect(() => {
       {/each}
     </div>
 
-    <Card variant="editorial" padding="md" class="space-y-3">
-      <p class="kicker">Échelle de preuve N0–N5 + ★ (couleurs toujours doublées d’un motif SVG)</p>
-      <div class="flex flex-wrap items-center gap-3">
+    <div class="space-y-4 border-t border-line pt-6">
+      <p class="text-sm font-semibold text-ink">Niveaux de preuve N0–N5 et ★ (chaque couleur est doublée d’un motif SVG)</p>
+      <div class="flex flex-wrap items-center gap-2.5">
         {#each LEVELS as lvl (lvl)}
-          <div class="inline-flex items-center gap-2 rounded-full border border-line bg-bg px-3 py-1.5">
-            <LevelSwatch level={lvl} size={20} />
+          <div class="inline-flex items-center gap-2 rounded-full bg-surface-2 px-3 py-1.5">
+            <LevelSwatch level={lvl} size={18} />
             <span class="text-xs font-semibold text-ink">{levelName(lvl)}</span>
             <span class="mono text-[0.68rem] text-muted">{LEVEL_INFO[lvl].colorToken}</span>
           </div>
         {/each}
       </div>
-      <div class="flex flex-wrap items-center gap-2 pt-1">
+      <div class="flex flex-wrap items-center gap-2">
         <LevelBadge level="N0" />
         <LevelBadge level="N2" />
         <LevelBadge level="N4" />
@@ -341,82 +328,70 @@ $effect(() => {
         <LevelBadge level="REF" />
         <LevelBadge level="N3" flags={['contested']} />
       </div>
-    </Card>
+    </div>
   </section>
 
-  <!-- 2. Typographie -->
-  <section aria-labelledby="ds-typo" class="space-y-5">
-    <div>
-      <p class="kicker flex items-center gap-1.5"><Type class="size-3.5 text-brand" aria-hidden="true" /> 02 · Typographie auto-hébergée</p>
-      <h2 id="ds-typo" class="mt-1 text-3xl font-semibold">Trois voix complémentaires (OFL, font-src 'self')</h2>
-    </div>
-    <div class="grid gap-4 lg:grid-cols-3">
-      <Card variant="editorial">
-        <p class="kicker">Titres & texte de loi</p>
-        <p class="mt-2 font-serif text-3xl font-semibold tracking-tight">Newsreader Variable</p>
-        <p class="mt-3 font-serif text-base leading-relaxed text-muted">
-          « Les allocations familiales sont dues à partir du deuxième enfant à charge. » — autorité éditoriale et confort de lecture juridique.
+  <section aria-labelledby="ds-typo" class="space-y-6 border-t border-line pt-14">
+    <h2 id="ds-typo" class="text-3xl font-semibold">Typographie auto-hébergée</h2>
+    <div class="grid gap-8 lg:grid-cols-3">
+      <div class="space-y-2">
+        <p class="font-serif text-3xl font-semibold tracking-tight">Newsreader</p>
+        <p class="text-xs text-muted">Titres éditoriaux et textes de loi</p>
+        <p class="pt-2 font-serif text-base leading-relaxed text-ink">
+          « Les allocations familiales sont dues à partir du deuxième enfant à charge. »
         </p>
-      </Card>
-      <Card variant="editorial">
-        <p class="kicker">Interface & données</p>
-        <p class="mt-2 font-sans text-2xl font-bold tracking-tight">Plus Jakarta Sans</p>
-        <p class="mt-3 text-sm leading-relaxed text-muted">
-          Chiffres alignés en colonnes (<span class="tabular font-semibold text-ink">13 950 · 285,24 € · 171/171</span>), lisibilité haute densité dans les tableaux et légendes.
+      </div>
+      <div class="space-y-2">
+        <p class="font-sans text-2xl font-bold tracking-tight">Plus Jakarta Sans</p>
+        <p class="text-xs text-muted">Interface, navigation et chiffres tabulaires</p>
+        <p class="pt-2 text-sm leading-relaxed text-ink tabular">
+          13 950 articles · 285,24 € · 171/171 tests
         </p>
-      </Card>
-      <Card variant="editorial">
-        <p class="kicker">Identifiants, preuves & code</p>
-        <p class="mt-2 font-mono text-xl font-semibold">JetBrains Mono</p>
-        <p class="mt-3 font-mono text-xs leading-relaxed text-muted">
+      </div>
+      <div class="space-y-2">
+        <p class="font-mono text-xl font-semibold">JetBrains Mono</p>
+        <p class="text-xs text-muted">Identifiants officiels, empreintes et code Catala</p>
+        <p class="pt-2 font-mono text-xs leading-relaxed text-muted">
           LEGIARTI000006738575<br />
-          sha256:d62905c562db64c7…<br />
           POST /api/mcp → tools/call
         </p>
-      </Card>
+      </div>
     </div>
   </section>
 
-  <!-- 3. Primitives UI @ui-sdk/svelte -->
-  <section aria-labelledby="ds-primitives" class="space-y-5">
-    <div>
-      <p class="kicker flex items-center gap-1.5"><Layers class="size-3.5 text-brand" aria-hidden="true" /> 03 · Composants @ui-sdk/svelte</p>
-      <h2 id="ds-primitives" class="mt-1 text-3xl font-semibold">Primitives accessibles & pilotables par agents</h2>
-    </div>
+  <section aria-labelledby="ds-primitives" class="space-y-8 border-t border-line pt-14">
+    <h2 id="ds-primitives" class="text-3xl font-semibold">Composants interactifs</h2>
 
-    <div class="grid gap-5 lg:grid-cols-2">
-      <Card variant="editorial" class="space-y-5">
-        <div>
-          <p class="kicker mb-3">Boutons & actions</p>
+    <div class="grid gap-10 lg:grid-cols-2">
+      <div class="space-y-6">
+        <div class="space-y-3">
+          <h3 class="text-lg font-semibold">Boutons et actions</h3>
           <div class="flex flex-wrap items-center gap-2.5">
-            <Button variant="primary">Primaire</Button>
-            <Button variant="ink">Encre</Button>
+            <Button variant="ink">Principal</Button>
+            <Button variant="primary">Accent</Button>
             <Button variant="secondary">Secondaire</Button>
-            <Button variant="soft">Émeraude doux</Button>
-            <Button variant="outline">Contour</Button>
-            <Button variant="ghost">Fantôme</Button>
+            <Button variant="soft">Doux</Button>
+            <Button variant="ghost">Discret</Button>
             <Button variant="destructive" size="sm">Rejet</Button>
             <CopyButton text="https://bugdeloi.theonaciri.fr/api/mcp" label="Copier MCP" />
           </div>
         </div>
 
-        <div class="border-t border-line pt-4">
-          <p class="kicker mb-3">Badges & états</p>
+        <div class="space-y-3 border-t border-line pt-5">
+          <h3 class="text-lg font-semibold">Étiquettes d’état (usage sobre)</h3>
           <div class="flex flex-wrap items-center gap-2">
-            <Badge variant="brand" pulse>En direct · SSE</Badge>
-            <Badge variant="amber">Reproduit · non qualifié</Badge>
-            <Badge variant="danger">Désaccord oracle</Badge>
-            <Badge variant="info">C0.3 · Blind test</Badge>
+            <Badge variant="brand" pulse>En direct</Badge>
+            <Badge variant="amber">Avant verdict humain</Badge>
+            <Badge variant="danger">Désaccord</Badge>
             <Badge variant="default">LEGIARTI</Badge>
-            <Badge variant="outline">Un compte, pas une probabilité</Badge>
           </div>
         </div>
 
-        <div class="border-t border-line pt-4 flex flex-wrap items-center gap-6">
+        <div class="flex flex-wrap items-center gap-6 border-t border-line pt-5">
           <Switch
             bind:checked={demoSwitch}
             label="Mode agent actif"
-            description="Pilotable par agent.act() ci-dessous"
+            description="Pilotable par agent.act() en bas de page"
           />
           <SegmentedControl
             bind:value={demoSegment}
@@ -429,47 +404,47 @@ $effect(() => {
             ]}
           />
         </div>
-      </Card>
+      </div>
 
-      <Card variant="editorial" class="space-y-5">
-        <div>
-          <p class="kicker mb-3">Overlays, info-bulles & glossaire contextuel</p>
+      <div class="space-y-6">
+        <div class="space-y-3">
+          <h3 class="text-lg font-semibold">Panneaux, info-bulles et glossaire</h3>
           <div class="flex flex-wrap items-center gap-3">
             <Button variant="secondary" size="sm" onclick={() => (demoDialogOpen = true)}>
-              Ouvrir Dialog
+              Ouvrir un dialogue
             </Button>
             <Button variant="secondary" size="sm" onclick={() => (demoDrawerOpen = true)}>
-              Ouvrir Drawer
+              Ouvrir un panneau latéral
             </Button>
             <Tooltip text="Chaque constante d’un programme Catala doit citer l’alinéa LEGI qui la fixe.">
-              <span class="rounded-full border border-line bg-surface-2 px-3 py-1.5 text-xs font-medium cursor-help">
-                Survoler (Tooltip)
+              <span class="rounded-full bg-surface-2 px-3 py-1.5 text-xs font-medium cursor-help">
+                Survoler (info-bulle)
               </span>
             </Tooltip>
           </div>
-          <p class="mt-4 text-sm text-muted leading-relaxed">
-            Glossaire intégré sans quitter la lecture : un constat
+          <p class="pt-1 text-sm leading-relaxed text-muted">
+            Définition contextuelle au survol : un constat
             <HoverCard>
               {#snippet trigger()}reproduit{/snippet}
               {#snippet content()}
-                <p class="font-semibold text-ink">Constat reproduit (non qualifié)</p>
-                <p class="mt-1 text-xs text-muted leading-relaxed">
-                  Confirmé par une chaîne indépendante (autre code, autre famille de modèles ou XML DILA bruts), mais encore en attente d’un verdict humain signé.
+                <p class="font-semibold text-ink">Constat reproduit</p>
+                <p class="mt-1 text-xs leading-relaxed text-muted">
+                  Confirmé par une chaîne indépendante, en attente d’un verdict humain signé.
                 </p>
               {/snippet}
             </HoverCard>
-            reste distinct d’une anomalie qualifiée par un humain.
+            reste distinct d’une anomalie qualifiée.
           </p>
         </div>
 
-        <div class="border-t border-line pt-4">
+        <div class="border-t border-line pt-5">
           <Tabs
             defaultValue="un"
-            ariaLabel="Exemple d’onglets du design system"
+            ariaLabel="Exemple d’onglets"
             items={[
-              { value: 'un', label: 'Texte de loi', badge: 'LEGI' },
-              { value: 'deux', label: 'Code Catala', badge: '1.3.2' },
-              { value: 'trois', label: 'Impact €', badge: '17 cas' },
+              { value: 'un', label: 'Texte de loi' },
+              { value: 'deux', label: 'Code Catala' },
+              { value: 'trois', label: 'Impact €' },
             ]}
           >
             {#snippet panel(tab)}
@@ -479,12 +454,12 @@ $effect(() => {
                 <pre class="mono rounded bg-obs-bg p-3 text-xs text-obs-ink"><code>champ d'application CalculAllocations:
   définition montant_mensuel égal à ...</code></pre>
               {:else}
-                <p class="text-sm text-muted">Écart observé sur Guyane (enfant unique 13 ans) : <strong class="mono text-ko">+15,29 € / mois</strong>.</p>
+                <p class="text-sm text-muted">Guyane (enfant unique 13 ans) : <strong class="text-ko">+15,29 € / mois</strong>.</p>
               {/if}
             {/snippet}
           </Tabs>
         </div>
-      </Card>
+      </div>
     </div>
 
     <Accordion
@@ -492,87 +467,75 @@ $effect(() => {
       items={[
         {
           value: 'a1',
-          title: 'Pourquoi @ui-sdk/svelte plutôt qu’une librairie classique ?',
-          meta: 'vercel-labs/ui · Apache-2.0',
+          title: 'Pourquoi @ui-sdk/svelte ?',
+          meta: 'Apache-2.0',
           content:
-            'Chaque primitive embarque nativement le registre agent (@ui-sdk/svelte/agent) : un LLM inspecte l’état exact de la page via snapshot() et pilote les contrôles via act() sans fragile scraping DOM, tout en garantissant zéro style en ligne côté serveur (CSP stricte).',
+            'Chaque composant rejoint automatiquement le registre WebMCP : un agent inspecte l’état de la page via snapshot() et active les contrôles via act() sans scraping DOM.',
         },
         {
           value: 'a2',
-          title: 'Comment fonctionne l’accessibilité daltonienne ?',
-          meta: 'RGAA / WCAG 2.2 AA',
+          title: 'Accessibilité et daltonisme',
+          meta: 'WCAG 2.2 AA',
           content:
-            'Chaque niveau de preuve combine couleur, motif SVG géométrique (PatternDefs) et code texte (N0 à N5, ★). Tous les composants sont navigables au clavier et respectent prefers-reduced-motion.',
+            'Chaque niveau de preuve associe couleur, motif géométrique SVG et texte. Tous les composants fonctionnent au clavier et respectent prefers-reduced-motion.',
         },
       ]}
     />
   </section>
 
-  <!-- 4. Visualisations de données -->
-  <section aria-labelledby="ds-viz" class="space-y-6">
-    <div>
-      <p class="kicker flex items-center gap-1.5"><Sparkles class="size-3.5 text-brand" aria-hidden="true" /> 04 · Visualisations interactives</p>
-      <h2 id="ds-viz" class="mt-1 text-3xl font-semibold">Donner sens aux données juridiques</h2>
-    </div>
+  <section aria-labelledby="ds-viz" class="space-y-10 border-t border-line pt-14">
+    <h2 id="ds-viz" class="text-3xl font-semibold">Visualisations de données</h2>
 
-    <div class="grid gap-6 lg:grid-cols-2">
-      <Card variant="editorial" class="space-y-4">
+    <div class="grid gap-12 lg:grid-cols-[24rem_1fr]">
+      <div class="space-y-4">
         <div class="flex items-center justify-between gap-2">
-          <h3 class="text-xl font-semibold">Entonnoir de contrôle (SweepFunnel)</h3>
-          <Sparkline points={sampleSpark} label="Rythme 14 j" />
+          <h3 class="text-xl font-semibold">Entonnoir de contrôle</h3>
+          <Sparkline points={sampleSpark} label="14 j" />
         </div>
         <SweepFunnel stages={sampleFunnel} />
-      </Card>
+      </div>
 
-      <Card variant="editorial" class="space-y-4">
-        <h3 class="text-xl font-semibold">Comparateur en euros (C03EuroBars)</h3>
+      <div class="space-y-4">
+        <h3 class="text-xl font-semibold">Comparateur de montants en euros</h3>
         <C03EuroBars cases={sampleCases} />
-      </Card>
+      </div>
     </div>
 
-    <Card variant="editorial" class="space-y-4">
-      <h3 class="text-xl font-semibold">Échelle de preuve interactive (ProofScaleInteractive)</h3>
+    <div class="border-t border-line pt-10 space-y-4">
+      <h3 class="text-xl font-semibold">Échelle de preuve interactive</h3>
       <ProofScaleInteractive
         counts={{ N0: 13840, N1: 0, N2: 0, N3: 0, N4: 0, N5: 0, REF: 110 }}
       />
-    </Card>
+    </div>
   </section>
 </div>
 
-<!-- Bande Observatoire sombre : Race + Laboratoire MCP/WebMCP -->
-<section class="band-observatory mt-16 py-16" aria-labelledby="ds-obs">
-  <div class="container-page space-y-12">
-    <div class="space-y-4">
-      <div class="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <p class="mono text-xs uppercase tracking-widest text-obs-emerald">05 · Bande Observatoire & Course</p>
-          <h2 id="ds-obs" class="mt-1 font-serif text-3xl font-semibold text-obs-ink">
-            ChantierRace — suivi des jalons en direct
-          </h2>
-        </div>
-        <Badge variant="observatoryEmerald" pulse>Surface sombre haut contraste</Badge>
-      </div>
+<section class="band-observatory mt-20 py-18" aria-labelledby="ds-obs">
+  <div class="container-wide space-y-14">
+    <div class="space-y-6">
+      <h2 id="ds-obs" class="font-serif text-3xl font-semibold text-obs-ink">
+        Course des chantiers
+      </h2>
       <ChantierRace tracks={sampleRace} />
     </div>
 
-    <div class="border-t border-obs-line pt-10 space-y-5">
-      <div class="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <p class="mono text-xs uppercase tracking-widest text-obs-amber flex items-center gap-1.5">
-            <Terminal class="size-3.5" aria-hidden="true" />
-            06 · Laboratoire MCP & WebMCP en direct
-          </p>
-          <h2 class="mt-1 font-serif text-3xl font-semibold text-obs-ink">
-            Contrôler cette page comme un LLM
+    <div class="space-y-6 border-t border-obs-line pt-12">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <div class="space-y-1">
+          <h2 class="font-serif text-3xl font-semibold text-obs-ink">
+            Tester MCP et WebMCP en direct
           </h2>
+          <p class="text-sm text-obs-muted">
+            Pilotez l’interrupteur ci-dessus par code agent ou appelez le serveur MCP en lecture seule.
+          </p>
         </div>
         <div class="flex flex-wrap gap-2">
           <Button variant="observatory" size="sm" onclick={demoAgentAct}>
             <Play class="size-3.5" aria-hidden="true" />
-            Tester agent.act() sur le Switch
+            Basculer le Switch via agent.act()
           </Button>
           <Button variant="observatoryOutline" size="sm" onclick={captureLiveSnapshot}>
-            Capturer agent.snapshot()
+            Capturer snapshot()
           </Button>
           <Button variant="observatoryOutline" size="sm" onclick={testMcpSnapshot}>
             Appeler POST /api/mcp
@@ -581,37 +544,37 @@ $effect(() => {
       </div>
 
       {#if actLog}
-        <p class="flex items-center gap-2 rounded-[var(--radius)] border border-obs-emerald/40 bg-obs-emerald/10 px-4 py-2.5 text-xs text-obs-emerald">
+        <p class="flex items-center gap-2 rounded-[var(--radius)] bg-obs-surface px-4 py-3 text-xs text-obs-emerald">
           <CheckCircle2 class="size-4 shrink-0" aria-hidden="true" />
           <span>{actLog}</span>
         </p>
       {/if}
 
-      <div class="grid gap-5 lg:grid-cols-2">
-        <div class="card-obs p-4 space-y-2.5">
+      <div class="grid gap-6 lg:grid-cols-2">
+        <div class="card-obs p-5 space-y-3">
           <div class="flex items-center justify-between gap-2">
             <span class="mono text-xs font-semibold text-obs-ink">
-              WebMCP · agent.snapshot() ({agentTools.length} outils UI + {DATA_TOOLS.length} outils données)
+              WebMCP · agent.snapshot() ({agentTools.length} outils UI · {DATA_TOOLS.length} outils données)
             </span>
             <CopyButton text={liveSnapshotText} label="Copier" tone="observatory" size="xs" />
           </div>
-          <pre class="max-h-72 overflow-auto rounded bg-black/50 p-3 text-[0.72rem] leading-relaxed text-obs-ink/90"><code>{liveSnapshotText || 'Chargement du registre @ui-sdk/svelte…'}</code></pre>
+          <pre class="max-h-72 overflow-auto rounded bg-black/40 p-3.5 text-[0.72rem] leading-relaxed text-obs-ink/90"><code>{liveSnapshotText || 'Chargement du registre @ui-sdk/svelte…'}</code></pre>
         </div>
 
-        <div class="card-obs p-4 space-y-2.5">
+        <div class="card-obs p-5 space-y-3">
           <div class="flex items-center justify-between gap-2">
             <span class="mono text-xs font-semibold text-obs-ink">
-              Serveur MCP · POST /api/mcp (list_findings · pre-qualification)
+              Serveur MCP · POST /api/mcp (list_findings)
             </span>
             <a href="/api/mcp" class="mono text-xs text-obs-emerald no-underline hover:underline">GET /api/mcp →</a>
           </div>
           {#if mcpLoading}
             <p class="mono py-6 text-xs text-obs-emerald">Appel JSON-RPC 2.0 en cours…</p>
           {:else if mcpResponse}
-            <pre class="max-h-72 overflow-auto rounded bg-black/50 p-3 text-[0.72rem] leading-relaxed text-obs-ink/90"><code>{mcpResponse}</code></pre>
+            <pre class="max-h-72 overflow-auto rounded bg-black/40 p-3.5 text-[0.72rem] leading-relaxed text-obs-ink/90"><code>{mcpResponse}</code></pre>
           {:else}
-            <p class="py-6 text-xs text-obs-muted">
-              Cliquez sur <strong class="text-obs-ink">Appeler POST /api/mcp</strong> pour interroger le serveur MCP de BugDeLoi en direct et inspecter les constats reproduits avant qualification humaine.
+            <p class="py-6 text-sm text-obs-muted">
+              Cliquez sur <strong class="text-obs-ink">Appeler POST /api/mcp</strong> pour consulter les constats reproduits avant qualification humaine.
             </p>
           {/if}
         </div>

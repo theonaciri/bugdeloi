@@ -73,11 +73,8 @@ const neverProof = [
   <div class="grid gap-10 lg:grid-cols-[1.35fr_1fr] lg:items-start">
     <div class="space-y-4">
       <div class="flex items-center gap-3.5">
-        <LevelSwatch level={currentLevel} size={36} />
-        <div>
-          <p class="kicker">Niveau sélectionné</p>
-          <h3 class="font-serif text-3xl font-semibold text-ink">{levelName(currentLevel)}</h3>
-        </div>
+        <LevelSwatch level={currentLevel} size={34} />
+        <h3 class="font-serif text-3xl font-semibold text-ink">{levelName(currentLevel)}</h3>
       </div>
 
       <p class="font-serif text-xl leading-relaxed text-ink">{info.meaning}</p>

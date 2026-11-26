@@ -46,21 +46,21 @@ const unseen = $derived.by(() => {
 
 <article class="flex h-full flex-col justify-between rounded-[var(--radius-xl)] bg-surface-2/70 p-7 sm:p-8">
   <div>
-    <p class="kicker flex items-center gap-2">
-      <Clock class="size-3.5 text-brand" aria-hidden="true" />
+    <h2 class="flex items-center gap-2 font-serif text-2xl font-semibold text-ink">
+      <Clock class="size-4.5 text-brand" aria-hidden="true" />
       Depuis votre dernière visite
-    </p>
+    </h2>
     {#if !hydrated || !previous}
-      <p class="mt-4 font-serif text-xl leading-snug text-ink">
-        C’est votre première visite. Lors de votre prochain passage, cette carte résumera directement ce qui aura avancé depuis aujourd’hui.
+      <p class="mt-3 text-sm leading-relaxed text-muted">
+        Première visite sur cet appareil. Dès votre prochain passage, cette zone listera les nouvelles opérations publiées depuis aujourd’hui.
       </p>
     {:else if unseen.length === 0}
-      <p class="mt-4 font-serif text-xl leading-snug text-ink">
-        Aucune nouvelle opération publique depuis votre visite du <time datetime={previous.visitedAt}>{formatDateTime(previous.visitedAt)}</time>.
+      <p class="mt-3 text-sm leading-relaxed text-muted">
+        Aucune nouvelle opération publique depuis le <time datetime={previous.visitedAt}>{formatDateTime(previous.visitedAt)}</time>.
       </p>
     {:else}
-      <p class="mt-4 font-serif text-xl leading-snug text-ink">
-        <strong>{unseen.length}</strong> nouvel{unseen.length > 1 ? 'les avancées' : 'le avancée'} depuis le
+      <p class="mt-3 text-sm leading-relaxed text-muted">
+        <strong class="text-ink">{unseen.length}</strong> nouvel{unseen.length > 1 ? 'les avancées' : 'le avancée'} depuis le
         <time datetime={previous.visitedAt}>{formatDateTime(previous.visitedAt)}</time>.
       </p>
       <ul class="mt-4 divide-y divide-line text-sm">
@@ -75,6 +75,6 @@ const unseen = $derived.by(() => {
     {/if}
   </div>
   <p class="mt-6 text-xs text-muted">
-    Mémorisé uniquement sur votre appareil, sans cookie ni suivi.
+    Mémorisé localement dans votre navigateur, sans cookie ni suivi.
   </p>
 </article>

@@ -164,20 +164,20 @@ const counts = $derived({
     {#if active}
       {@const delta = active.actual - active.expected}
       <aside class="rounded-[var(--radius-xl)] bg-surface-2/75 p-6 sm:p-7 space-y-5 lg:sticky lg:top-24">
-        <div class="flex items-center justify-between gap-2">
-          <span class="kicker text-ink">{active.name}</span>
+        <div class="flex items-baseline justify-between gap-2">
+          <h4 class="font-serif text-xl font-semibold text-ink">{active.name}</h4>
           <span
             class={cn(
-              'rounded-full px-2.5 py-0.5 text-xs font-semibold',
+              'text-xs font-semibold',
               active.status === 'passed'
-                ? 'bg-ok-soft text-ok'
+                ? 'text-ok'
                 : active.classification === 'erreur_oracle'
-                  ? 'bg-ko-soft text-ko'
-                  : 'bg-notice text-notice-ink',
+                  ? 'text-ko'
+                  : 'text-notice-ink',
             )}
           >
             {active.status === 'passed'
-              ? 'Montant identique'
+              ? 'Identique'
               : active.classification === 'erreur_oracle'
                 ? 'Désaccord à arbitrer'
                 : 'Écart d’arrondi'}
@@ -185,7 +185,7 @@ const counts = $derived({
         </div>
 
         {#if active.contextLabel}
-          <p class="font-serif text-xl font-medium leading-snug text-ink">{active.contextLabel}</p>
+          <p class="text-sm font-medium leading-snug text-ink">{active.contextLabel}</p>
         {/if}
 
         <dl class="grid grid-cols-2 gap-4 border-y border-line py-4">

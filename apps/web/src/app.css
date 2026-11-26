@@ -56,6 +56,9 @@
     font-family: var(--font-sans);
     -webkit-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;
+    caret-color: var(--brand);
+    scrollbar-color: var(--line-strong) transparent;
+    scrollbar-width: thin;
   }
 
   body {
