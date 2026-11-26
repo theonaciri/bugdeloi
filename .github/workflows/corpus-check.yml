@@ -166,14 +166,36 @@ jobs:
               return;
             }
             try {
-              await github.rest.pulls.merge({
-                ...context.repo,
-                pull_number: pr.number,
-                merge_method: 'squash',
-                sha: pr.head.sha,
-              });
-              core.notice(`PR #${pr.number} fusionnée automatiquement (ACCEPTED N2 Compilé, corpus/ uniquement).`);
+              await github.graphql(
+                `mutation($pullRequestId: ID!, $expectedHeadOid: GitObjectID!) {
+                  enablePullRequestAutoMerge(input: {
+                    pullRequestId: $pullRequestId,
+                    mergeMethod: SQUASH,
+                    expectedHeadOid: $expectedHeadOid
+                  }) {
+                    pullRequest { number }
+                  }
+                }`,
+                {
+                  pullRequestId: pr.node_id,
+                  expectedHeadOid: pr.head.sha,
+                }
+              );
+              core.notice(
+                `Auto-merge armé sur PR #${pr.number} : fusion automatique dès que verify, corpus-check et CodeRabbit sont verts.`
+              );
             } catch (error) {
+              const msg = String(error?.message || '');
+              if (msg.includes('Pull request is in clean status')) {
+                await github.rest.pulls.merge({
+                  ...context.repo,
+                  pull_number: pr.number,
+                  merge_method: 'squash',
+                  sha: pr.head.sha,
+                });
+                core.notice(`PR #${pr.number} fusionnée immédiatement (tous les contrôles déjà verts).`);
+                return;
+              }
               if (error.status === 403 && pr.head.repo?.fork) {
                 core.notice('Auto-merge ignoré pour cette PR de fork (jeton GitHub en lecture seule).');
                 return;
