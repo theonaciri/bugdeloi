@@ -20,6 +20,7 @@
 import { findingArticle, findingEvidence } from '@bugdeloi/core/finding-certificate'
 import {
   FINDING_ID_RE,
+  FINDING_STATUSES,
   FINDING_TYPE_LABEL,
   FINDING_TYPES,
   findingQualification,
@@ -31,6 +32,8 @@ import { CODES, LEGIARTI_RE, LEGISCTA_RE, legifranceArticleUrl } from '@bugdeloi
 import { articleInForce } from '@bugdeloi/db/predicates'
 import {
   articleStatus,
+  DESK_ROLES,
+  deskTask,
   event,
   finding,
   ingestRun,
@@ -42,18 +45,22 @@ import {
   replicationRun,
   sweepRun,
 } from '@bugdeloi/db/schema'
-import { and, asc, count, desc, eq, inArray, isNull, or, type SQL, sql } from 'drizzle-orm'
+import { and, asc, count, desc, eq, ilike, inArray, isNotNull, isNull, or, type SQL, sql } from 'drizzle-orm'
 import { journalGroupLabels } from '../events.ts'
 import { asLevel, countAtLeast, emptyLevelCounts, type Level } from '../levels.ts'
 import { MAP_WINDOW, type MapArticleRow, type MapCountRow, type MapSectionRow } from '../map-tree.ts'
 import { sanitizeLegalHtml } from '../sanitize.ts'
 import type {
   CodeProgress,
+  DeskPublicStats,
+  FindingPreview,
   JournalEntry,
+  PipelineStats,
   PublicEvent,
   ReferenceExample,
   RunInfo,
   Snapshot,
+  SuiteInfo,
 } from '../snapshot.ts'
 import { db } from './db.ts'
 
@@ -70,7 +77,7 @@ export type CodeKey = keyof typeof CODES
 export const CODE_KEYS = Object.keys(CODES) as CodeKey[]
 
 export function isCodeKey(value: string | null): value is CodeKey {
-  return value !== null && value in CODES
+  return value !== null && Object.hasOwn(CODES, value)
 }
 
 const ISO = (d: Date | string | null | undefined): string | null =>
@@ -239,15 +246,6 @@ export async function codeProgress(): Promise<CodeProgress[]> {
 export async function publicFindingCount(): Promise<number> {
   const [r] = await db().select({ n: count() }).from(finding).where(publicFindingFilter)
   return Number(r?.n ?? 0)
-}
-
-/** Charge de relecture : signalements encore candidats ou reproduits, sans identifier les cas. */
-async function pendingReviewCount(): Promise<number> {
-  const [r] = await db()
-    .select({ n: count() })
-    .from(finding)
-    .where(inArray(finding.status, ['candidate', 'reproduced']))
-  return r?.n ?? 0
 }
 
 const referenceCommit = '9e251b932288cf5f4a74af072d203144a057494b'
@@ -431,30 +429,217 @@ export async function hasFictionalData(): Promise<boolean> {
   return rows.length > 0
 }
 
+// Le compte exact parcourt l’index entier. Les instantanés simultanés partagent le calcul.
+let linkCount: { expiresAt: number; result: Promise<number> } | undefined
+
+function legalLinkCount(): Promise<number> {
+  if (linkCount && Date.now() < linkCount.expiresAt) return linkCount.result
+  const result = db()
+    .select({ total: count() })
+    .from(legalLink)
+    .then(([row]) => row?.total ?? 0)
+    .catch((error: unknown) => {
+      if (linkCount?.result === result) linkCount = undefined
+      throw error
+    })
+  linkCount = { expiresAt: Date.now() + 5_000, result }
+  return result
+}
+
+/** Dernier balayage abouti, inventaire des liens et état de chaque constat dans le registre de travail. */
+async function pipelineStats(): Promise<PipelineStats> {
+  const [runs, links, counts] = await Promise.all([
+    db()
+      .select({
+        id: sweepRun.id,
+        finishedAt: sweepRun.finishedAt,
+        articlesChecked: sweepRun.articlesChecked,
+        detectors: sweepRun.detectors,
+      })
+      .from(sweepRun)
+      .where(eq(sweepRun.status, 'success'))
+      .orderBy(desc(sweepRun.startedAt), desc(sweepRun.id))
+      .limit(1),
+    legalLinkCount(),
+    db()
+      .select({ status: finding.status, type: finding.type, total: count() })
+      .from(finding)
+      .groupBy(finding.status, finding.type),
+  ])
+  const latest = runs[0]
+  const totalFor = (status: string) =>
+    counts.reduce((total, row) => total + (row.status === status ? row.total : 0), 0)
+
+  return {
+    articlesChecked: Object.values(latest?.articlesChecked ?? {}).reduce((total, n) => total + n, 0),
+    linksTotal: links,
+    reproducedByType: Object.fromEntries(
+      counts.filter(({ status }) => status === 'reproduced').map(({ type, total }) => [type, total]),
+    ),
+    candidateCount: totalFor('candidate'),
+    reproducedCount: totalFor('reproduced'),
+    withdrawnCount: totalFor('withdrawn'),
+    rejectedCount: totalFor('rejected'),
+    qualifiedCount: totalFor('qualified'),
+    publishedCount: totalFor('published'),
+    lastSweepAt: ISO(latest?.finishedAt),
+    lastSweepId: latest?.id ?? null,
+    detectors: latest?.detectors ?? {},
+  }
+}
+
+function nonnegativeInteger(value: unknown): number | null {
+  return typeof value === 'number' && Number.isSafeInteger(value) && value >= 0 ? value : null
+}
+
+/** Dernier rejeu C0.1 terminé par sujet, y compris les suites sans test. */
+async function referenceSuites(): Promise<SuiteInfo[]> {
+  const rows = await db()
+    .selectDistinctOn([replicationRun.subject], {
+      subject: replicationRun.subject,
+      status: replicationRun.status,
+      summary: replicationRun.summary,
+      catalaVersion: replicationRun.catalaVersion,
+      imageDigest: replicationRun.imageDigest,
+      finishedAt: replicationRun.finishedAt,
+    })
+    .from(replicationRun)
+    .where(and(eq(replicationRun.kind, 'C0.1-inria-replay'), sql`${replicationRun.status} <> 'running'`))
+    .orderBy(replicationRun.subject, desc(replicationRun.startedAt), desc(replicationRun.id))
+  return rows.map(({ summary, finishedAt, ...row }) => ({
+    ...row,
+    folder:
+      typeof summary?.folder === 'string' && summary.folder
+        ? summary.folder
+        : (row.subject.split('/').at(-1) ?? ''),
+    tests: nonnegativeInteger(summary?.tests) ?? 0,
+    passed: nonnegativeInteger(summary?.passed) ?? 0,
+    failed: nonnegativeInteger(summary?.failed) ?? 0,
+    durationMs: nonnegativeInteger(summary?.durationMs),
+    finishedAt: ISO(finishedAt),
+  }))
+}
+
+/** Une tâche est disponible si elle n'est ni terminée ni couverte par un bail actif. */
+async function deskPublicStats(): Promise<DeskPublicStats> {
+  const active = sql`(${deskTask.completedAt} is null and coalesce(${deskTask.leaseExpiresAt} > statement_timestamp(), false))`
+  const [roles, recent] = await Promise.all([
+    db()
+      .select({
+        role: deskTask.role,
+        open: sql<number>`count(*) filter (where ${deskTask.completedAt} is null and not ${active})`.mapWith(
+          Number,
+        ),
+        active: sql<number>`count(*) filter (where ${active})`.mapWith(Number),
+        completed: sql<number>`count(${deskTask.completedAt})`.mapWith(Number),
+      })
+      .from(deskTask)
+      .groupBy(deskTask.role),
+    db()
+      .select({
+        role: deskTask.role,
+        handle: deskTask.leaseHandle,
+        family: deskTask.leaseFamily,
+        startedAt: deskTask.leaseStartedAt,
+        active: sql<boolean>`${active}`,
+      })
+      .from(deskTask)
+      .where(and(isNotNull(deskTask.leaseHandle), isNotNull(deskTask.leaseStartedAt)))
+      .orderBy(desc(deskTask.leaseStartedAt), asc(deskTask.role), asc(deskTask.leaseHandle))
+      .limit(10),
+  ])
+  return {
+    enabled: process.env.DESK_ENABLED === '1',
+    open: roles.reduce((total, row) => total + row.open, 0),
+    activeLeases: roles.reduce((total, row) => total + row.active, 0),
+    completed: roles.reduce((total, row) => total + row.completed, 0),
+    byRole: Object.fromEntries(
+      DESK_ROLES.map((role) => {
+        const row = roles.find((row) => row.role === role)
+        return [role, { open: row?.open ?? 0, active: row?.active ?? 0, completed: row?.completed ?? 0 }]
+      }),
+    ),
+    recentHandles: recent.flatMap(({ handle, startedAt, ...row }) =>
+      handle && startedAt ? [{ ...row, handle, startedAt: startedAt.toISOString() }] : [],
+    ),
+  }
+}
+
+/** Événements du journal pendant les 14 jours civils à Paris, jour courant compris. */
+async function publicActivity(): Promise<Snapshot['activitySeries']> {
+  const day = sql<string>`to_char(${event.ts} at time zone 'Europe/Paris', 'YYYY-MM-DD')`
+  const today = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Europe/Paris', dateStyle: 'short' }).format(
+    new Date(),
+  )
+  const rows = await db()
+    .select({ day, count: count() })
+    .from(event)
+    .where(
+      and(
+        publicEventFilter,
+        sql`
+      ${event.ts} >= ((${today}::date - 13)::timestamp at time zone 'Europe/Paris')
+      and ${event.ts} < ((${today}::date + 1)::timestamp at time zone 'Europe/Paris')
+    `,
+      ),
+    )
+    .groupBy(day)
+  const byDay = new Map(rows.map((row) => [row.day, row.count]))
+  return Array.from({ length: 14 }, (_, index) => {
+    const date = new Date(today)
+    date.setUTCDate(date.getUTCDate() + index - 13)
+    const day = date.toISOString().slice(0, 10)
+    return { day, count: byDay.get(day) ?? 0 }
+  })
+}
+
 /** Instantané complet de l'accueil (servi aussi par /api/snapshot.json et /api/stream). */
 export async function snapshot(): Promise<Snapshot> {
-  const [codes, findings, pendingReview, replications, coverage, events, journal, example, fictional] =
-    await Promise.all([
-      codeProgress(),
-      publicFindingCount(),
-      pendingReviewCount(),
-      replicationStats(),
-      coverageStats(),
-      latestEvents(10),
-      journalEntries(3),
-      referenceExample(),
-      hasFictionalData(),
-    ])
+  const [
+    codes,
+    replications,
+    coverage,
+    events,
+    journal,
+    example,
+    fictional,
+    pipeline,
+    suites,
+    desk,
+    activitySeries,
+    reproducedPreview,
+  ] = await Promise.all([
+    codeProgress(),
+    replicationStats(),
+    coverageStats(),
+    latestEvents(10),
+    journalEntries(3),
+    referenceExample(),
+    hasFictionalData(),
+    pipelineStats(),
+    referenceSuites(),
+    deskPublicStats(),
+    publicActivity(),
+    reproducedPreviews(),
+  ])
   return {
     generatedAt: new Date().toISOString(),
     fictional,
     codes,
-    findings: { public: findings, pendingReview },
+    findings: {
+      public: pipeline.qualifiedCount + pipeline.publishedCount,
+      pendingReview: pipeline.candidateCount + pipeline.reproducedCount,
+    },
     replications,
     coverage,
     events,
     journal,
     referenceExample: example,
+    pipeline,
+    suites,
+    desk,
+    activitySeries,
+    reproducedPreview,
   }
 }
 
@@ -745,6 +930,7 @@ export interface ArticleData {
   dateDebut: string | null
   dateFin: string | null
   contentHtml: string
+  contentText: string
   notaHtml: string | null
   textSha256: string
   updatedAt: string
@@ -855,6 +1041,7 @@ export async function article(legiarti: string): Promise<ArticleData | null> {
     dateDebut: art.dateDebut,
     dateFin: art.dateFin,
     contentHtml: art.contentHtml,
+    contentText: art.contentText,
     notaHtml: art.notaHtml,
     textSha256: art.textSha256,
     updatedAt: ISO(art.updatedAt) as string,
@@ -947,24 +1134,260 @@ export async function rejectedFindings(database = db()) {
   })
 }
 
-/** Certificat public ou rejet humain documenté. Les autres statuts sont traités comme absents. */
+export const FINDINGS_NOTE = 'Les statuts candidate et reproduced ne sont pas qualifiés par un humain.'
+export const SEARCH_QUERY_MAX = 200
+export const SEARCH_LIMIT_MAX = 25
+export const FINDINGS_LIMIT_MAX = 100
+export const FINDINGS_OFFSET_MAX = 2_147_483_647
+
+export function isSearchQuery(query: unknown): query is string {
+  return (
+    typeof query === 'string' &&
+    query.length <= SEARCH_QUERY_MAX &&
+    !!query.trim() &&
+    !query.includes('\u0000')
+  )
+}
+
+export function isFindingStatus(status: unknown) {
+  return FINDING_STATUSES.some((value) => value === status)
+}
+
+export function isFindingType(type: unknown) {
+  return FINDING_TYPES.some((value) => value === type)
+}
+
+const previewFields = {
+  id: finding.id,
+  type: finding.type,
+  status: finding.status,
+  claim: finding.claim,
+  detector: finding.detector,
+  legalUnits: finding.legalUnits,
+  proof: sql<unknown>`${finding.certificate}->'proof'`,
+  reproduction: sql<unknown>`${finding.certificate}->'independent_reproduction'`,
+  reproductionDila: sql<unknown>`${finding.certificate}->'independent_reproduction_dila_xml'`,
+  articleCode: legalText.shortTitle,
+  articleNum: legalArticle.num,
+}
+
+const previewArticleId = sql<string>`split_part(${finding.legalUnits}[1], '@', 1)`
+const previewSourceCode = sql<string>`coalesce(
+  ${finding.certificate} #>> '{proof,source,code}',
+  ${finding.certificate} #>> '{proof,versions,0,code}'
+)`
+
+function findingPreviewQuery(database = db()) {
+  return database
+    .select(previewFields)
+    .from(finding)
+    .leftJoin(legalArticle, eq(legalArticle.id, previewArticleId))
+    .leftJoin(legalText, eq(legalText.id, legalArticle.textId))
+}
+
+type FindingPreviewRow = Awaited<ReturnType<typeof findingPreviewQuery>>[number]
+
+/** La seconde reproduction C0.2, à partir des XML DILA, complète le premier contrôle. */
+function workingEvidence(certificate: Record<string, unknown>) {
+  const dila = findingEvidence({ independent_reproduction: certificate.independent_reproduction_dila_xml })
+  const evidence = findingEvidence(certificate)
+  return typeof dila.reproduction.verdict === 'string'
+    ? { ...evidence, reproduction: dila.reproduction }
+    : evidence
+}
+
+function findingPreview(row: FindingPreviewRow): FindingPreview {
+  const type = FINDING_TYPES.find((type) => type === row.type)
+  const { source, excerpts, reproduction } = workingEvidence({
+    proof: row.proof,
+    independent_reproduction: row.reproduction,
+    independent_reproduction_dila_xml: row.reproductionDila,
+  })
+  const unit = findingArticle(row.legalUnits[0] ?? '')
+  const firstArticle = source?.id === unit?.id || !source
+  return {
+    id: row.id,
+    type: row.type,
+    typeLabel: type ? FINDING_TYPE_LABEL[type] : row.type,
+    status: row.status,
+    claim: row.claim,
+    detector: row.detector,
+    articleId: source?.id ?? unit?.id ?? null,
+    articleCode: source?.code ?? (firstArticle ? row.articleCode : null),
+    articleNum: source?.num ?? (firstArticle ? row.articleNum : null),
+    excerpt: excerpts[0] ?? null,
+    reproductionSource: typeof reproduction.source === 'string' ? reproduction.source : null,
+    reproductionVerdict: typeof reproduction.verdict === 'string' ? reproduction.verdict : null,
+    humanQualified: PUBLIC_FINDING_STATUSES.some((status) => status === row.status),
+  }
+}
+
+function findingCodeFilter(code: CodeKey | undefined) {
+  if (!code) return undefined
+  return or(eq(legalArticle.textId, CODES[code].id), eq(previewSourceCode, code))
+}
+
+async function reproducedPreviews(): Promise<FindingPreview[]> {
+  const priority = ['SYNTAXE', 'REF_MORTE']
+  const grouped = await Promise.all(
+    priority.map((type) =>
+      findingPreviewQuery()
+        .where(and(eq(finding.status, 'reproduced'), eq(finding.type, type)))
+        .orderBy(asc(finding.id))
+        .limit(6),
+    ),
+  )
+  const rows = grouped.flat()
+  if (rows.length < 12) {
+    const others = await findingPreviewQuery()
+      .where(and(eq(finding.status, 'reproduced'), sql`not ${inArray(finding.type, priority)}`))
+      .orderBy(asc(finding.id))
+      .limit(12 - rows.length)
+    rows.push(...others)
+  }
+  return rows.sort((a, b) => a.id.localeCompare(b.id)).map(findingPreview)
+}
+
+export interface WorkingFindingsOptions {
+  status?: string
+  type?: string
+  code?: string
+  limit?: number
+  offset?: number
+}
+
+/** Registre de travail. Les statuts exposés ici ne changent ni le registre public ni le cimetière. */
+export async function workingFindings(
+  { status = 'reproduced', type, code, limit = 20, offset = 0 }: WorkingFindingsOptions = {},
+  database = db(),
+): Promise<{ total: number; items: FindingPreview[] }> {
+  if (
+    !isFindingStatus(status) ||
+    (type !== undefined && !isFindingType(type)) ||
+    (code !== undefined && !isCodeKey(code)) ||
+    !Number.isInteger(limit) ||
+    limit < 1 ||
+    limit > FINDINGS_LIMIT_MAX ||
+    !Number.isInteger(offset) ||
+    offset < 0 ||
+    offset > FINDINGS_OFFSET_MAX
+  )
+    throw new RangeError('Filtres de constats invalides')
+
+  const filter = and(
+    eq(finding.status, status),
+    type === undefined ? undefined : eq(finding.type, type),
+    findingCodeFilter(code && isCodeKey(code) ? code : undefined),
+  )
+  const [rows, totals] = await Promise.all([
+    findingPreviewQuery(database).where(filter).orderBy(asc(finding.id)).limit(limit).offset(offset),
+    database
+      .select({ total: count() })
+      .from(finding)
+      .leftJoin(legalArticle, eq(legalArticle.id, previewArticleId))
+      .where(filter),
+  ])
+  return { total: totals[0]?.total ?? 0, items: rows.map(findingPreview) }
+}
+
+/** Recherche de versions en vigueur et de constats reproduits ou qualifiés. Les extraits sont en texte brut. */
+export async function searchCatalog(
+  query: string,
+  { code, limit = 10 }: { code?: CodeKey; limit?: number } = {},
+) {
+  if (
+    !isSearchQuery(query) ||
+    (code !== undefined && !isCodeKey(code)) ||
+    !Number.isInteger(limit) ||
+    limit < 1 ||
+    limit > SEARCH_LIMIT_MAX
+  ) {
+    throw new RangeError('Paramètres de recherche invalides')
+  }
+  query = query.trim()
+  const term = sql`websearch_to_tsquery('french', ${query})`
+  const exactId = eq(legalArticle.id, query.toUpperCase())
+  const exactNum = sql`lower(${legalArticle.num}) = lower(${query})`
+  const numPrefix = sql`starts_with(lower(${legalArticle.num}), lower(${query}))`
+  const fullText = sql`${legalArticle.search} @@ ${term}`
+  const exactFinding = eq(finding.id, query.toUpperCase())
+  const claimPattern = `%${query.replace(/[\\%_]/gu, '\\$&')}%`
+  const [articles, findings] = await Promise.all([
+    db()
+      .select({
+        id: legalArticle.id,
+        num: legalArticle.num,
+        code: legalText.shortTitle,
+        codeTitle: legalText.title,
+        dateDebut: legalArticle.dateDebut,
+        level: articleStatus.level,
+        snippet: sql<string>`ts_headline('french', ${legalArticle.contentText}, ${term},
+          'StartSel=«, StopSel=», MaxWords=32, MinWords=12, MaxFragments=1')`,
+      })
+      .from(legalArticle)
+      .innerJoin(legalText, eq(legalText.id, legalArticle.textId))
+      .leftJoin(articleStatus, eq(articleStatus.articleId, legalArticle.id))
+      .where(
+        and(
+          articleInForce(),
+          code ? eq(legalArticle.textId, CODES[code].id) : undefined,
+          or(exactId, exactNum, numPrefix, fullText),
+        ),
+      )
+      .orderBy(
+        desc(sql`case when ${exactId} then 3 when ${exactNum} then 2 when ${numPrefix} then 1 else 0 end`),
+        desc(sql`ts_rank(${legalArticle.search}, ${term})`),
+        asc(legalArticle.id),
+      )
+      .limit(limit),
+    findingPreviewQuery()
+      .where(
+        and(
+          inArray(finding.status, ['reproduced', ...PUBLIC_FINDING_STATUSES]),
+          findingCodeFilter(code),
+          or(exactFinding, ilike(finding.claim, claimPattern)),
+        ),
+      )
+      .orderBy(desc(exactFinding), asc(finding.id))
+      .limit(limit),
+  ])
+
+  return {
+    query,
+    articles: articles.map((row) => ({
+      ...row,
+      level: asLevel(row.level),
+      url: legifranceArticleUrl(row.id),
+    })),
+    findings: findings.map(findingPreview),
+  }
+}
+
+/** Certificat de travail, constat qualifié ou rejet humain documenté. */
 export async function findingDetail(id: string, database = db()) {
   if (!FINDING_ID_RE.test(id)) return null
   const [row] = await database
     .select()
     .from(finding)
-    .where(and(eq(finding.id, id), or(publicFindingFilter, rejectedFindingFilter)))
+    .where(
+      and(
+        eq(finding.id, id),
+        or(inArray(finding.status, ['candidate', 'reproduced']), publicFindingFilter, rejectedFindingFilter),
+      ),
+    )
     .limit(1)
   if (!row) return null
 
-  const summary = findingSummary(row, row.certificate.qualification)
+  const preQualification = row.status === 'candidate' || row.status === 'reproduced'
+  const summary = findingSummary(row, preQualification ? null : row.certificate.qualification)
   const q = summary.qualification
   if (row.status === 'rejected' && (!q || qualifiedStatus(q.verdict) !== 'rejected')) return null
 
   return {
     ...summary,
     type: row.type,
-    ...findingEvidence(row.certificate),
+    humanQualified: PUBLIC_FINDING_STATUSES.some((status) => status === row.status),
+    ...workingEvidence(row.certificate),
     certificate: JSON.stringify(row.certificate, null, 2),
     replay: typeof row.certificate.replay === 'string' ? row.certificate.replay : null,
   }

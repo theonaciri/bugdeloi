@@ -1,28 +1,53 @@
+@import "@fontsource-variable/newsreader";
+@import "@fontsource-variable/plus-jakarta-sans";
+@import "@fontsource-variable/jetbrains-mono";
 @import "tailwindcss";
 @import "./tokens.css";
 
-/* Utilitaires Tailwind branchés sur les jetons (bg-surface, text-muted, border-line…). */
+/* Utilitaires Tailwind v4 branchés sur les jetons du Design System BugDeLoi. */
 @theme inline {
   --font-sans: var(--font-sans);
   --font-serif: var(--font-serif);
   --font-mono: var(--font-mono);
+
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
   --color-ink: var(--ink);
   --color-muted: var(--ink-muted);
+  --color-subtle: var(--ink-subtle);
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
+
   --color-brand: var(--brand);
   --color-brand-strong: var(--brand-strong);
   --color-brand-ink: var(--brand-ink);
   --color-brand-soft: var(--brand-soft);
+  --color-brand-line: var(--brand-line);
+
   --color-notice: var(--notice-bg);
   --color-notice-line: var(--notice-line);
   --color-notice-ink: var(--notice-ink);
   --color-ok: var(--ok);
+  --color-ok-soft: var(--ok-soft);
   --color-ko: var(--ko);
+  --color-ko-soft: var(--ko-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
   --color-contested: var(--flag-contested);
+
+  --color-obs-bg: var(--obs-bg);
+  --color-obs-surface: var(--obs-surface);
+  --color-obs-surface-2: var(--obs-surface-2);
+  --color-obs-ink: var(--obs-ink);
+  --color-obs-muted: var(--obs-muted);
+  --color-obs-line: var(--obs-line);
+  --color-obs-line-strong: var(--obs-line-strong);
+  --color-obs-emerald: var(--obs-emerald);
+  --color-obs-amber: var(--obs-amber);
+  --color-obs-cobalt: var(--obs-cobalt);
+  --color-obs-rose: var(--obs-rose);
 }
 
 @layer base {
@@ -32,51 +57,63 @@
     font-family: var(--font-sans);
     -webkit-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
+
   body {
     min-height: 100dvh;
     line-height: 1.55;
+    overflow-x: clip;
   }
+
   h1,
   h2,
   h3 {
     font-family: var(--font-serif);
-    line-height: 1.2;
+    line-height: 1.15;
     text-wrap: balance;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.018em;
   }
+
   p {
     text-wrap: pretty;
   }
+
   a {
     color: var(--brand-strong);
     text-decoration: underline;
-    text-underline-offset: 0.15em;
+    text-underline-offset: 0.18em;
     text-decoration-thickness: from-font;
   }
+
   a:hover {
     text-decoration-thickness: 2px;
   }
+
   :focus-visible {
-    outline: 3px solid var(--focus);
+    outline: 2.5px solid var(--focus);
     outline-offset: 2px;
-    border-radius: 2px;
+    border-radius: 3px;
   }
+
   code,
   kbd,
   samp,
   pre {
     font-family: var(--font-mono);
-    font-size: 0.92em;
+    font-size: 0.9em;
   }
+
   ::selection {
     background: var(--brand-soft);
+    color: var(--ink);
   }
+
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
     *::after {
-      /* biome-ignore lint/complexity/noImportantStyles: préférence utilisateur « réduire les animations », doit l'emporter */
+      /* biome-ignore lint/complexity/noImportantStyles: préférence utilisateur « réduire les animations » */
       animation: none !important;
       /* biome-ignore lint/complexity/noImportantStyles: idem */
       transition: none !important;
@@ -90,14 +127,16 @@
   .container-page {
     margin-inline: auto;
     width: 100%;
-    max-width: 72rem;
+    max-width: 78rem;
     padding-inline: 1rem;
   }
+
   @media (min-width: 640px) {
     .container-page {
       padding-inline: 1.5rem;
     }
   }
+
   .prose-page {
     max-width: 46rem;
   }
@@ -105,7 +144,7 @@
     margin-top: 1rem;
   }
   .prose-page h2 {
-    font-size: 1.5rem;
+    font-size: 1.55rem;
     margin-top: 2.5rem;
   }
   .prose-page h3 {
@@ -123,22 +162,53 @@
   .prose-page li + li {
     margin-top: 0.35rem;
   }
+
+  /* Bande Observatoire sombre (style pequalnp.com : contraste fort pour dataviz & course) */
+  .band-observatory {
+    background: var(--obs-bg);
+    color: var(--obs-ink);
+    border-block: 1px solid var(--obs-line);
+  }
+
+  .band-observatory a {
+    color: var(--obs-emerald);
+  }
+
+  .band-observatory :focus-visible {
+    outline-color: var(--obs-amber);
+  }
+
   .card {
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: var(--radius);
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-xs);
   }
+
+  .card-obs {
+    background: var(--obs-surface);
+    border: 1px solid var(--obs-line);
+    border-radius: var(--radius);
+  }
+
+  /* Compatibilité classes historiques (pages secondaires) */
   .btn {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
     border-radius: 999px;
-    padding: 0.6rem 1.1rem;
+    padding: 0.6rem 1.15rem;
     font-weight: 600;
+    font-size: 0.92rem;
     text-decoration: none;
     line-height: 1.2;
-    border: 2px solid transparent;
+    border: 1.5px solid transparent;
+    transition:
+      background-color 150ms ease,
+      border-color 150ms ease,
+      color 150ms ease;
+    cursor: pointer;
   }
   .btn-primary {
     background: var(--brand);
@@ -149,23 +219,32 @@
     color: var(--brand-ink);
   }
   .btn-secondary {
-    border-color: var(--brand);
-    color: var(--brand-strong);
-    background: transparent;
+    border-color: var(--line-strong);
+    color: var(--ink);
+    background: var(--surface);
   }
   .btn-secondary:hover {
-    background: var(--brand-soft);
+    background: var(--surface-2);
+    border-color: var(--ink);
   }
+
   .kicker {
-    font-size: 0.8rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
     font-weight: 600;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--ink-muted);
   }
+
   .mono {
     font-family: var(--font-mono);
   }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
   .sr-only-focusable:not(:focus):not(:focus-within) {
     position: absolute;
     width: 1px;
@@ -174,15 +253,76 @@
     clip: rect(0 0 0 0);
     white-space: nowrap;
   }
+
   .badge-draft {
-    display: inline-block;
-    border: 2px dashed var(--notice-line);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    border: 1.5px dashed var(--notice-line);
     background: var(--notice-bg);
     color: var(--notice-ink);
     border-radius: 999px;
-    padding: 0.1rem 0.7rem;
+    padding: 0.12rem 0.7rem;
     font-weight: 700;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
+  }
+
+  /* Pastille en direct */
+  .live-dot {
+    position: relative;
+    display: inline-flex;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 9999px;
+    background: var(--ok);
+    flex-shrink: 0;
+  }
+  .live-dot::after {
+    content: "";
+    position: absolute;
+    inset: -3px;
+    border-radius: 9999px;
+    border: 2px solid var(--ok);
+    opacity: 0.55;
+    animation: bdl-pulse 2.2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  }
+
+  .band-observatory .live-dot {
+    background: var(--obs-emerald);
+  }
+  .band-observatory .live-dot::after {
+    border-color: var(--obs-emerald);
+  }
+
+  /* Texture discrète façon papier millimétré dans les bandes observatoire */
+  .obs-grid-bg {
+    background-image:
+      linear-gradient(to right, rgb(148 163 184 / 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(148 163 184 / 0.06) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  /* Ruban défilant doux pour les puces d'activité */
+  .ticker-strip {
+    scrollbar-width: none;
+  }
+  .ticker-strip::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@keyframes bdl-pulse {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.7;
+  }
+  70% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
   }
 }
 
@@ -208,6 +348,7 @@
 .lvl-fill-ref {
   fill: var(--level-ref);
 }
+
 .lvl-ink-n0 {
   fill: var(--level-n0-ink);
 }
@@ -230,11 +371,40 @@
   fill: var(--level-ref-ink);
 }
 
-/* Texte DILA assaini (fiche article). */
+.lvl-bg-n0 {
+  background: var(--level-n0);
+  color: var(--level-n0-ink);
+}
+.lvl-bg-n1 {
+  background: var(--level-n1);
+  color: var(--level-n1-ink);
+}
+.lvl-bg-n2 {
+  background: var(--level-n2);
+  color: var(--level-n2-ink);
+}
+.lvl-bg-n3 {
+  background: var(--level-n3);
+  color: var(--level-n3-ink);
+}
+.lvl-bg-n4 {
+  background: var(--level-n4);
+  color: var(--level-n4-ink);
+}
+.lvl-bg-n5 {
+  background: var(--level-n5);
+  color: var(--level-n5-ink);
+}
+.lvl-bg-ref {
+  background: var(--level-ref);
+  color: var(--level-ref-ink);
+}
+
+/* Texte DILA assaini (fiche article & split-view). */
 .legal-text {
   font-family: var(--font-serif);
   font-size: 1.08rem;
-  line-height: 1.7;
+  line-height: 1.72;
 }
 .legal-text p + p,
 .legal-text div + p,
@@ -245,7 +415,7 @@
   border-collapse: collapse;
   margin: 1rem 0;
   font-family: var(--font-sans);
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   display: block;
   overflow-x: auto;
 }
@@ -276,6 +446,8 @@
   border-left: 3px solid var(--line);
   padding-left: 1rem;
 }
+
+/* Helpers SVG (carte, graphiques) */
 .bdl-stroke {
   stroke: var(--line-strong);
 }
@@ -299,6 +471,20 @@
   fill: var(--surface);
   stroke: var(--line-strong);
 }
+.band-observatory .bdl-frame {
+  fill: var(--obs-surface);
+  stroke: var(--obs-line-strong);
+}
+.band-observatory .bdl-text {
+  fill: var(--obs-ink);
+}
+.band-observatory .bdl-text-muted {
+  fill: var(--obs-muted);
+}
+.band-observatory .bdl-tile-stroke {
+  stroke: var(--obs-bg);
+}
+
 a.bdl-tile {
   text-decoration: none;
   cursor: pointer;
@@ -333,7 +519,7 @@ a.bdl-tile {
 .bdl-tile:hover .bdl-tile-hl,
 .bdl-tile-hl.is-active {
   stroke: var(--focus);
-  stroke-width: 3px;
+  stroke-width: 2.5px;
   fill: none;
 }
 .bdl-contested {

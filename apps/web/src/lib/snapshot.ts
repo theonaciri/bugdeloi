@@ -59,6 +59,59 @@ export interface RunInfo {
   finishedAt: string | null
 }
 
+export interface PipelineStats {
+  articlesChecked: number
+  linksTotal: number
+  reproducedByType: Record<string, number>
+  candidateCount: number
+  reproducedCount: number
+  withdrawnCount: number
+  rejectedCount: number
+  qualifiedCount: number
+  publishedCount: number
+  lastSweepAt: string | null
+  lastSweepId: number | null
+  detectors: Record<string, string>
+}
+
+export interface SuiteInfo {
+  folder: string
+  subject: string
+  status: string
+  tests: number
+  passed: number
+  failed: number
+  durationMs: number | null
+  catalaVersion: string | null
+  imageDigest: string | null
+  finishedAt: string | null
+}
+
+export interface DeskPublicStats {
+  enabled: boolean
+  open: number
+  activeLeases: number
+  completed: number
+  byRole: Record<string, { open: number; active: number; completed: number }>
+  recentHandles: { handle: string; family: string | null; role: string; startedAt: string; active: boolean }[]
+}
+
+export interface FindingPreview {
+  id: string
+  type: string
+  typeLabel: string
+  status: string
+  claim: string
+  detector: string
+  articleId: string | null
+  articleCode: string | null
+  articleNum: string | null
+  excerpt: { before: string; marked: string; after: string } | null
+  reproductionSource: string | null
+  reproductionVerdict: string | null
+  humanQualified: boolean
+}
+
 export interface Snapshot {
   generatedAt: string
   /** Vrai si la base contient les données fictives de `scripts/seed-dev.ts`. */
@@ -70,4 +123,9 @@ export interface Snapshot {
   events: PublicEvent[]
   journal: JournalEntry[]
   referenceExample: ReferenceExample | null
+  pipeline: PipelineStats
+  suites: SuiteInfo[]
+  desk: DeskPublicStats
+  activitySeries: { day: string; count: number }[]
+  reproducedPreview: FindingPreview[]
 }

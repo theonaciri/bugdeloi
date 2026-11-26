@@ -1,7 +1,7 @@
 import { expect, test } from 'bun:test'
 import { createSql, type Db, event, finding, schema } from '@bugdeloi/db'
 import { drizzle } from 'drizzle-orm/postgres-js'
-import { eventDetail, findingDetail, publicFindings, rejectedFindings } from './queries.ts'
+import { eventDetail, findingDetail, publicFindings, rejectedFindings, workingFindings } from './queries.ts'
 
 const url =
   process.env.TEST_DATABASE_URL ?? 'postgres://ubuntu@localhost:5432/bugdeloi_test?host=/var/run/postgresql'
@@ -44,11 +44,21 @@ test.skipIf(!reachable)('requêtes publiques et cimetière sur bugdeloi_test', a
             status,
             claim: 'Donnée fictive',
             detector: 'test',
-            type: 'REF_MORTE',
+            type: 'AMBIGUITE',
             legalUnits: ['LEGIARTI999999999801@2020-01-01'],
             certificate: {
               qualification,
+              ...(status === 'reproduced'
+                ? {
+                    independent_reproduction: { source: 'première source fictive', verdict: 'indéterminé' },
+                    independent_reproduction_dila_xml: {
+                      source: 'seconde source fictive',
+                      verdict: 'confirmé',
+                    },
+                  }
+                : {}),
               proof: {
+                source: { id: 'LEGIARTI999999999801', code: status === 'reproduced' ? 'CGI' : 'CSS' },
                 text_mentions: {
                   first: { excerpt: 'avant L. 1 après', cited: 'L. 1', start: 106, excerpt_offset: 100 },
                 },
@@ -66,8 +76,27 @@ test.skipIf(!reachable)('requêtes publiques et cimetière sur bugdeloi_test', a
             .filter(({ id }) => ids.has(id))
             .map(({ id, qualification }) => [id, qualification.note]),
         ).toEqual([['F-2099-7028', 'Motif fictif']])
-        for (const { id } of fixtures.slice(0, 6)) expect(await findingDetail(id, db)).toBeNull()
+        for (const { id, status } of fixtures.slice(0, 2)) {
+          expect(await findingDetail(id, db)).toMatchObject({ id, status, qualification: null })
+        }
+        for (const { id } of fixtures.slice(2, 6)) expect(await findingDetail(id, db)).toBeNull()
         for (const { id } of fixtures.slice(6)) expect((await findingDetail(id, db))?.id).toBe(id)
+        const reproducedDetail = await findingDetail('F-2099-7021', db)
+        expect(reproducedDetail?.reproduction).toEqual({
+          source: 'seconde source fictive',
+          verdict: 'confirmé',
+        })
+        const reproduced = await workingFindings({ type: 'AMBIGUITE', code: 'CGI', limit: 100 }, db)
+        expect(reproduced.items.filter(({ id }) => ids.has(id))).toEqual([
+          expect.objectContaining({
+            id: 'F-2099-7021',
+            humanQualified: false,
+            reproductionSource: 'seconde source fictive',
+            reproductionVerdict: 'confirmé',
+          }),
+        ])
+        const beyond = await workingFindings({ type: 'AMBIGUITE', code: 'CGI', offset: reproduced.total }, db)
+        expect(beyond).toEqual({ total: reproduced.total, items: [] })
         expect(await findingDetail('id-invalide', db)).toBeNull()
         const detail = await findingDetail('F-2099-7026', db)
         expect(detail?.articles[0]?.url).toContain('https://www.legifrance.gouv.fr/')

@@ -23,6 +23,19 @@ function announcerStyleHash(): `sha256-${string}` {
 }
 
 /**
+ * Les contrôles de formulaire de `@ui-sdk/svelte` (`Switch`, `SegmentedControl`…) posent un `<input>`
+ * masqué visuellement via `hiddenInputStyle` dans `@ui-sdk/core`. On autorise cette seule chaîne par
+ * empreinte SHA-256, sans jamais ouvrir `'unsafe-inline'`.
+ */
+function uiSdkHiddenInputStyleHash(): `sha256-${string}` {
+  const coreDir = dirname(createRequire(import.meta.url).resolve('@ui-sdk/core/package.json'))
+  const formJs = readFileSync(join(coreDir, 'dist/foundation/forms/form.js'), 'utf8')
+  const style = /hiddenInputStyle\s*=\s*"([^"]+)"/.exec(formJs)?.[1]
+  if (!style) throw new Error('vite.config.ts : hiddenInputStyle introuvable (@ui-sdk/core a changé ?)')
+  return `sha256-${createHash('sha256').update(style).digest('base64')}`
+}
+
+/**
  * SvelteKit 3 : plus de svelte.config.js, toute la configuration passe par le plugin `sveltekit()`.
  * Le serveur de dev n'écoute que sur 127.0.0.1:19070 (19069 est réservé à la production).
  */
@@ -39,7 +52,7 @@ export default defineConfig({
         directives: {
           'default-src': ['none'],
           'script-src': ['self'],
-          'style-src': ['self', 'unsafe-hashes', announcerStyleHash()],
+          'style-src': ['self', 'unsafe-hashes', announcerStyleHash(), uiSdkHiddenInputStyleHash()],
           'img-src': ['self', 'data:'],
           'font-src': ['self'],
           'connect-src': ['self'],

@@ -19,9 +19,20 @@
   "dependencies": {
     "@bugdeloi/core": "workspace:*",
     "@bugdeloi/db": "workspace:*",
+    "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "@fontsource-variable/newsreader": "^5.3.0",
+    "@fontsource-variable/plus-jakarta-sans": "^5.3.0",
+    "@lucide/svelte": "^1.80.0",
+    "@ui-sdk/core": "^0.1.0-beta.17",
+    "@ui-sdk/svelte": "^0.1.0-beta.17",
+    "clsx": "^2.1.1",
     "d3-hierarchy": "3.1.3",
+    "d3-scale": "^4.0.3",
+    "d3-shape": "^3.2.1",
     "drizzle-orm": "0.45.4",
-    "postgres": "4.1.1"
+    "postgres": "4.1.1",
+    "tailwind-merge": "^3.7.1",
+    "tailwind-variants": "^4.0.2"
   },
   "devDependencies": {
     "@sveltejs/adapter-node": "6.0.5",
@@ -29,6 +40,8 @@
     "@sveltejs/vite-plugin-svelte": "7.3.2",
     "@tailwindcss/vite": "4.3.5",
     "@types/d3-hierarchy": "3.1.7",
+    "@types/d3-scale": "^4.0.9",
+    "@types/d3-shape": "^3.2.0",
     "svelte": "5.59.1",
     "svelte-check": "4.7.8",
     "tailwindcss": "4.3.5",

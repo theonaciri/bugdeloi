@@ -8,6 +8,7 @@ import type { PageProps } from './$types'
 let { data }: PageProps = $props()
 let item = $derived(data.finding)
 let rejected = $derived(item.status === 'rejected')
+let pending = $derived(item.status === 'candidate' || item.status === 'reproduced')
 const currentStep = $derived(findingSteps.findIndex((step) => step.status === item.status))
 const abrogation = $derived(
   item.target?.etat === 'ABROGE' && item.target.dateFin && !item.target.dateFin.startsWith('2999')
@@ -29,9 +30,17 @@ function articleLabel(ref: typeof item.source, fallback: string) {
     <h1 class="text-3xl font-semibold sm:text-4xl">{item.typeLabel}</h1>
     <p class="text-muted">
       <code class="mr-2 text-xs">{item.id}</code>
-      {rejected ? 'Rejeté par un humain' : item.status === 'published' ? 'Publié après verdict humain' : 'Qualifié par un humain'}
+      {pending ? 'En attente de qualification' : rejected ? 'Rejeté par un humain' : item.status === 'published' ? 'Publié après verdict humain' : 'Qualifié par un humain'}
       <code class="ml-2 text-xs">{item.type} · {item.status}</code>
     </p>
+
+    {#if pending}
+      <p class="rounded-lg border border-line bg-surface-2 p-4">
+        {item.status === 'reproduced'
+          ? 'Constat non qualifié par un humain — reproduit par machine, en attente de verdict humain (pas encore compté parmi les anomalies qualifiées)'
+          : 'Constat non qualifié par un humain — candidat détecté par machine, en attente de reproduction et de verdict humain (pas encore compté parmi les anomalies qualifiées)'}
+      </p>
+    {/if}
 
     <h2>Ce que le contrôle a relevé</h2>
     {#if item.type === 'REF_MORTE'}
@@ -47,7 +56,7 @@ function articleLabel(ref: typeof item.source, fallback: string) {
         />
         <figcaption class="mt-2 text-sm text-muted">Le schéma reprend les versions enregistrées dans le certificat.</figcaption>
       </figure>
-      <p>Un renvoi vers une ancienne version peut être volontaire. Le verdict humain précise ce qui a été retenu dans ce cas.</p>
+      <p>Un renvoi vers une ancienne version peut être volontaire. {pending ? 'La relecture humaine doit examiner ce renvoi.' : 'Le verdict humain précise ce qui a été retenu dans ce cas.'}</p>
       <details>
         <summary>Constat enregistré par le programme</summary>
         <p class="mt-2">{item.claim}</p>
@@ -73,7 +82,7 @@ function articleLabel(ref: typeof item.source, fallback: string) {
       <p>Le relecteur a écarté le constat après sa reproduction. <a href="#verdict">Lire son motif</a>.</p>
     {:else if item.status === 'qualified'}
       <p><a href="#verdict">Lire le verdict</a>. Une entrée de publication pourra ensuite être ajoutée au journal.</p>
-    {:else}
+    {:else if item.status === 'published'}
       <p>Vous pouvez <a href="#verdict">lire le verdict</a> et relancer le contrôle à partir du certificat.</p>
     {/if}
 
@@ -133,6 +142,8 @@ function articleLabel(ref: typeof item.source, fallback: string) {
       </p>
       <p class="whitespace-pre-wrap">{item.qualification.note}</p>
       <p><a href="https://github.com/theonaciri/bugdeloi/commit/{item.qualification.commit}">Commit du verdict sur GitHub</a> · <code class="wrap-anywhere">{item.qualification.file}</code></p>
+    {:else if pending}
+      <p>En attente de verdict humain.</p>
     {:else}
       <p>Détail du verdict indisponible dans le certificat.</p>
     {/if}
