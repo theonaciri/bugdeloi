@@ -97,7 +97,17 @@ export interface DeskPublicStats {
   activeLeases: number
   completed: number
   byRole: Record<string, { open: number; active: number; completed: number }>
-  recentHandles: { handle: string; family: string | null; role: string; startedAt: string; active: boolean }[]
+  recentHandles: {
+    taskId: string
+    node: string | null
+    legiarti: string | null
+    handle: string
+    family: string | null
+    role: string
+    startedAt: string
+    expiresAt: string | null
+    active: boolean
+  }[]
 }
 
 export interface FindingPreview {

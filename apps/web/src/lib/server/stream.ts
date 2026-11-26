@@ -54,6 +54,11 @@ function hub(): HubState {
   return g.__bugdeloiHub
 }
 
+/** Déclenche une diffusion immédiate (coalescée ≤ 1/s) vers tous les clients SSE connectés. */
+export function notifyDeskUpdate(): void {
+  hub().coalescer.signal()
+}
+
 async function broadcast(): Promise<void> {
   const h = hub()
   if (h.clients.size === 0) return

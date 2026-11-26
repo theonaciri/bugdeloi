@@ -673,16 +673,19 @@ async function deskPublicStats(): Promise<DeskPublicStats> {
       .groupBy(deskTask.role),
     db()
       .select({
+        taskId: deskTask.id,
+        payload: deskTask.payload,
         role: deskTask.role,
         handle: deskTask.leaseHandle,
         family: deskTask.leaseFamily,
         startedAt: deskTask.leaseStartedAt,
+        expiresAt: deskTask.leaseExpiresAt,
         active: sql<boolean>`${active}`,
       })
       .from(deskTask)
       .where(and(isNotNull(deskTask.leaseHandle), isNotNull(deskTask.leaseStartedAt)))
       .orderBy(desc(deskTask.leaseStartedAt), asc(deskTask.role), asc(deskTask.leaseHandle))
-      .limit(10),
+      .limit(20),
   ])
   return {
     enabled: process.env.DESK_ENABLED === '1',
@@ -695,9 +698,22 @@ async function deskPublicStats(): Promise<DeskPublicStats> {
         return [role, { open: row?.open ?? 0, active: row?.active ?? 0, completed: row?.completed ?? 0 }]
       }),
     ),
-    recentHandles: recent.flatMap(({ handle, startedAt, ...row }) =>
-      handle && startedAt ? [{ ...row, handle, startedAt: startedAt.toISOString() }] : [],
-    ),
+    recentHandles: recent.flatMap(({ handle, startedAt, expiresAt, payload, ...row }) => {
+      if (!handle || !startedAt) return []
+      const firstUnit = payload?.legal_units?.[0]
+      const legiarti = typeof firstUnit?.legiarti === 'string' ? firstUnit.legiarti : null
+      const node = typeof payload?.node === 'string' ? payload.node : null
+      return [
+        {
+          ...row,
+          node,
+          legiarti,
+          handle,
+          startedAt: startedAt.toISOString(),
+          expiresAt: expiresAt ? expiresAt.toISOString() : null,
+        },
+      ]
+    }),
   }
 }
 
