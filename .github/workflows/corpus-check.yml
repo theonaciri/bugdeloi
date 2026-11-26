@@ -179,11 +179,12 @@ jobs:
               pull_number: pr.number,
               per_page: 100,
             });
-            const nonCatala = files.filter(
-              f => !f.filename.startsWith('corpus/') || !f.filename.endsWith('.catala_fr')
-            );
-            if (files.length === 0 || nonCatala.length > 0) {
-              const msg = `**Auto-merge ignoré** : la PR touche des fichiers hors \`corpus/**/*.catala_fr\` (${nonCatala.map(f => `\`${f.filename}\``).join(', ')}). Revue humaine requise.`;
+            const isAllowedAutoMerge = (filename) =>
+              (filename.startsWith('corpus/') && filename.endsWith('.catala_fr')) ||
+              (filename.startsWith('corpus/analyses/') && filename.endsWith('.md'));
+            const blocked = files.filter(f => !isAllowedAutoMerge(f.filename));
+            if (files.length === 0 || blocked.length > 0) {
+              const msg = `**Auto-merge ignoré** : la PR touche des fichiers hors \`corpus/**/*.catala_fr\` et \`corpus/analyses/*.md\` (${blocked.map(f => `\`${f.filename}\``).join(', ')}). Revue humaine requise.`;
               core.notice(msg);
               await postMergeNote(msg);
               return;
