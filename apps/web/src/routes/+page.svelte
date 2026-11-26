@@ -426,16 +426,46 @@ $effect(() => {
         {/if}
 
         <div class="flex flex-wrap items-center gap-3.5 pt-1">
-          <Button href="/experiences/impot-revenu" variant="ink" size="lg">
-            Simuler l’impôt 2026
+          <Button href="/experiences/revenu-disponible" variant="ink" size="lg">
+            Simuler le revenu disponible
             <ArrowRight class="size-4" aria-hidden="true" />
           </Button>
-          <Button href="#impact-euros" variant="secondary" size="lg">
-            Voir l’impact en euros
+          <Button href="/experiences/openfisca" variant="secondary" size="lg">
+            Comparaison OpenFisca
           </Button>
-          <Button href="#carte-vivante" variant="ghost" size="lg">
-            Explorer les codes
+          <Button href="/experiences/parlement" variant="ghost" size="lg">
+            Veille parlementaire
           </Button>
+        </div>
+
+        <div class="grid gap-3 pt-2 sm:grid-cols-3">
+          <a
+            href="/experiences/revenu-disponible"
+            class="rounded-xl border border-line bg-surface p-3.5 no-underline transition hover:border-brand"
+          >
+            <p class="text-xs font-semibold uppercase tracking-wide text-brand-strong">Simulateur multi-lois</p>
+            <p class="mt-1 text-xs leading-relaxed text-muted">
+              Impôt 2026, allocations, APL, RSA, Prime d’activité et effets de seuil en direct.
+            </p>
+          </a>
+          <a
+            href="/experiences/openfisca"
+            class="rounded-xl border border-line bg-surface p-3.5 no-underline transition hover:border-brand"
+          >
+            <p class="text-xs font-semibold uppercase tracking-wide text-brand-strong">Oracle OpenFisca</p>
+            <p class="mt-1 text-xs leading-relaxed text-muted">
+              328 foyers comparés, 100 % d’accord sur les allocations et un candidat d’arrondi à 17 593 €.
+            </p>
+          </a>
+          <a
+            href="/experiences/parlement"
+            class="rounded-xl border border-line bg-surface p-3.5 no-underline transition hover:border-brand"
+          >
+            <p class="text-xs font-semibold uppercase tracking-wide text-brand-strong">Amendements (Tricoteuses)</p>
+            <p class="mt-1 text-xs leading-relaxed text-muted">
+              Lecture stricte des amendements et calcul de l’écart en euros sur 4 foyers types.
+            </p>
+          </a>
         </div>
       </div>
 

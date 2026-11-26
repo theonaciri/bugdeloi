@@ -567,3 +567,34 @@ const coche = 'flex items-start gap-2.5 text-sm text-ink'
     {/if}
   </div>
 </section>
+
+<section class="border-t border-line bg-surface">
+  <div class="container-wide py-12">
+    <h2 class="font-serif text-2xl font-semibold text-ink">Vérifier nos données et aller plus loin</h2>
+    <p class="mt-3 max-w-[68ch] text-sm leading-relaxed text-muted">
+      Ce simulateur croise plusieurs textes de loi en vigueur en 2026. Pour garantir l’exactitude des calculs et
+      suivre les débats budgétaires, nous publions aussi nos vérifications croisées et nos données brutes :
+    </p>
+    <div class="mt-5 flex flex-wrap gap-3">
+      <a
+        href="/experiences/openfisca"
+        class="inline-flex items-center rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
+      >
+        Comparaison OpenFisca-France (C0.8) →
+      </a>
+      <a
+        href="/experiences/parlement"
+        class="inline-flex items-center rounded-full border border-line bg-bg px-5 py-2.5 text-sm font-semibold text-ink no-underline hover:border-brand"
+      >
+        Veille parlementaire (Tricoteuses) →
+      </a>
+      <a
+        href="https://github.com/theonaciri/bugdeloi/blob/main/replications/c0.7/summary.json"
+        rel="external"
+        class="inline-flex items-center rounded-full border border-line bg-bg px-5 py-2.5 text-sm font-semibold text-ink no-underline hover:border-brand"
+      >
+        Données brutes du balayage C0.7 (JSON) →
+      </a>
+    </div>
+  </div>
+</section>

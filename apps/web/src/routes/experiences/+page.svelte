@@ -32,16 +32,24 @@ let { data }: PageProps = $props()
         <div class="lg:col-span-8">
           <h2 class="font-serif text-2xl font-semibold text-ink sm:text-3xl">
             <a href="/experiences/revenu-disponible" class="no-underline hover:underline">
-              Revenu disponible réel (Impôt + Allocations) et impact d’un amendement
+              Revenu disponible réel (Impôt, Allocations, APL, RSA, Prime d’activité)
             </a>
           </h2>
           <p class="mt-2.5 max-w-[62ch] text-base leading-relaxed text-muted">
-            Croisez en direct l’impôt sur le revenu 2026 et les allocations familiales pour observer le revenu
-            disponible réel, la falaise de 61 € et la modulation des aides, puis testez l’effet en euros d’un
-            amendement parlementaire sur quatre foyers types.
+            Croisez en direct l’impôt sur le revenu 2026 (avec garde alternée et demi-parts art. 195), les allocations
+            familiales, l’APL, le RSA et la Prime d’activité. Le balayage de 0 € à 100 000 € met au jour
+            <strong>{data.c07.effetsDeSeuilEnBaisse} effets de seuil en baisse</strong> candidats, dont une chute de
+            1 055,96 € à 12 192 € à la sortie du RSA (CCH art. R822-17).
           </p>
           <p class="mt-3 text-sm font-medium text-brand-strong">
-            Simulateur multi-lois · diff d’amendement en euros · 100 % dans le navigateur
+            Simulateur multi-lois (C0.7) · 100 % dans le navigateur ·
+            <a
+              href="https://github.com/theonaciri/bugdeloi/blob/main/replications/c0.7/summary.json"
+              rel="external"
+              class="underline"
+            >
+              données brutes JSON
+            </a>
           </p>
         </div>
         <div class="lg:col-span-4 lg:text-right">
@@ -49,7 +57,75 @@ let { data }: PageProps = $props()
             href="/experiences/revenu-disponible"
             class="inline-flex items-center rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
           >
-            Tester un amendement →
+            Ouvrir le simulateur →
+          </a>
+        </div>
+      </li>
+
+      <li class="grid gap-4 py-8 lg:grid-cols-12 lg:items-baseline">
+        <div class="lg:col-span-8">
+          <h2 class="font-serif text-2xl font-semibold text-ink sm:text-3xl">
+            <a href="/experiences/openfisca" class="no-underline hover:underline">
+              Comparaison croisée avec OpenFisca-France (C0.8)
+            </a>
+          </h2>
+          <p class="mt-2.5 max-w-[62ch] text-base leading-relaxed text-muted">
+            Confrontation automatique de nos moteurs sur <strong>{data.c08.foyersCompares} foyers</strong> face à
+            OpenFisca-France {data.c08.openfiscaVersion} : 100 % d’accord exact sur les allocations familiales dans le
+            périmètre, {data.c08.differencesPerimetre} différences de périmètre documentées et
+            <strong>{data.c08.divergencesSimulateur} écarts d’arrondi</strong> qui révèlent un candidat
+            <code>ARRONDI</code> à 17 593 € (61 € contre 0 €).
+          </p>
+          <p class="mt-3 text-sm font-medium text-brand-strong">
+            Oracle indépendant · 23 tests ·
+            <a
+              href="https://github.com/theonaciri/bugdeloi/blob/main/replications/c0.8-openfisca/REPORT.md"
+              rel="external"
+              class="underline"
+            >
+              rapport complet
+            </a>
+          </p>
+        </div>
+        <div class="lg:col-span-4 lg:text-right">
+          <a
+            href="/experiences/openfisca"
+            class="inline-flex items-center rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
+          >
+            Voir la comparaison →
+          </a>
+        </div>
+      </li>
+
+      <li class="grid gap-4 py-8 lg:grid-cols-12 lg:items-baseline">
+        <div class="lg:col-span-8">
+          <h2 class="font-serif text-2xl font-semibold text-ink sm:text-3xl">
+            <a href="/experiences/parlement" class="no-underline hover:underline">
+              Veille parlementaire : impact en euros d’un amendement
+            </a>
+          </h2>
+          <p class="mt-2.5 max-w-[62ch] text-base leading-relaxed text-muted">
+            Lecture automatique d’amendements au format ouvert Tricoteuses ciblant nos 7 articles formalisés (CGI et
+            CSS). Toute clause non reconnue ou contradictoire bascule en <code>non_calculable</code> ; pour les autres,
+            l’écart en euros est calculé sur quatre foyers types.
+          </p>
+          <p class="mt-3 text-sm font-medium text-brand-strong">
+            42 tests unitaires · lecture stricte ·
+            <a
+              href="https://github.com/theonaciri/bugdeloi/tree/main/packages/parlement"
+              rel="external"
+              class="underline"
+            >
+              code packages/parlement
+            </a>
+          </p>
+        </div>
+        <div class="lg:col-span-4 lg:text-right">
+          <a
+            href="/experiences/parlement"
+            class="inline-flex items-center rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
+          >
+            Voir les exemples →
           </a>
         </div>
       </li>
