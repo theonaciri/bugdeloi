@@ -1,0 +1,37 @@
+#### Article 757 C|LEGIARTI000036428850
+
+Les droits de mutation à titre gratuit ne s'appliquent pas aux dons pris en compte pour la détermination de l'avantage fiscal prévu à l'article 978.
+
+Interface `ExclusionMutationDonIfi@v1`. Version applicable à compter du 2018-01-01.
+
+La date d’application correspond à l’année au titre de laquelle l’impôt sur la fortune immobilière est dû. La prise en compte du don au titre de l’article 978 est fournie en entrée. La sortie indique uniquement l’exclusion au titre de l’article 757 C.
+
+```catala
+déclaration champ d'application ExclusionMutationDonIfi:
+  entrée date_d_application contenu date
+  entrée don_pris_en_compte_pour_l_avantage_fiscal contenu booléen
+  résultat exclu_des_droits_de_mutation contenu booléen
+
+champ d'application ExclusionMutationDonIfi:
+  # LEGIARTI000036428850, début de validité de la version.
+  assertion date_d_application >= |2018-01-01|
+  # CGI, article 757 C, alinéa unique.
+  définition exclu_des_droits_de_mutation égal à don_pris_en_compte_pour_l_avantage_fiscal
+
+#[test]
+déclaration champ d'application TestExclusionMutationDonIfi:
+  retenu champ d'application ExclusionMutationDonIfi
+  non_retenu champ d'application ExclusionMutationDonIfi
+
+champ d'application TestExclusionMutationDonIfi:
+  # LEGIARTI000036428850, premier jour de validité et cas d’essai de l’alinéa.
+  définition retenu.date_d_application égal à |2018-01-01|
+  définition retenu.don_pris_en_compte_pour_l_avantage_fiscal égal à vrai
+  # LEGIARTI000036428850, règle de l’alinéa.
+  assertion retenu.exclu_des_droits_de_mutation
+  # LEGIARTI000036428850, premier jour de validité et cas d’essai de l’alinéa.
+  définition non_retenu.date_d_application égal à |2018-01-01|
+  définition non_retenu.don_pris_en_compte_pour_l_avantage_fiscal égal à faux
+  # LEGIARTI000036428850, règle de l’alinéa.
+  assertion non non_retenu.exclu_des_droits_de_mutation
+```

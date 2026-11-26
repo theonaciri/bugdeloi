@@ -32,9 +32,11 @@ jobs:
 
       - name: Contrôle N2 (clerk test dans Catala 1.3.2)
         run: |
-          IMAGE="ghcr.io/${{ github.repository_owner }}/bugdeloi-catala:1.3.2"
+          IMAGE="ghcr.io/${{ github.repository_owner }}/bugdeloi-catala@sha256:5f3f6572d073596f3f2b4b3b3ac6205f3743a7bf9cf81720c4d46744f7e48328"
           FILES=$(cd corpus && find . -name '*.catala_fr' | sed 's|^\./||' | sort | tr '\n' ' ')
           docker run --rm --network=none \
+            --tmpfs /build:rw,exec,mode=1777 \
+            -e CLERK_BUILD_DIR=/build -e CLERK_TARGET_DIR=/build \
             -v "$PWD/corpus:/work:ro" \
             -w /work \
             "$IMAGE" \

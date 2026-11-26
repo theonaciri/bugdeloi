@@ -132,6 +132,12 @@
 | 2026-11-25 | Données LEGI vs « La loi sous git » (Tricoteuses) + 17 textes                                   | codex/gpt-6.2-sol (low)    | CGI et CCH identiques ; CSS +1 (R611-2, corrigé) ; textes identiques après normalisation ; Légifrance renvoie 403 aux accès automatisés                                                    |
 | 2026-11-25 | Reproduction indépendante des 1 128 candidats C0.2 sur Tricoteuses (code séparé, autre famille) | codex/gpt-6.2-sol (medium) | SYNTAXE 9/9 confirmés → `reproduced` ; 7 infirmés (5 REF_MORTE : numéro réattribué ; 2 NUMEROTATION : citation, III/III bis) ; 1 112 indéterminés (instantanés sans historique des cibles) |
 
+## Lot de cinq traductions du 26 novembre 2026
+
+- CGI 278 (`LEGIARTI000026950057`, 2014-01-01) et 757 C (`LEGIARTI000036428850`, 2018-01-01).
+- CSS R. 160-20 (`LEGIARTI000031797331`), D. 846-1 (`LEGIARTI000031673946`) et D. 846-3 (`LEGIARTI000031674243`), versions du 2016-01-01.
+- Traductions et tests d’exemple par OpenAI, modèle `gpt-6.2-sol`. Les cinq extraits concordent avec les empreintes de la projection LEGI. `clerk test` réussit les 24 tests du corpus avec Catala 1.3.2 et l’image GitHub amd64 épinglée dans `corpus-check.yml`. Revue indépendante et promotion des niveaux de preuve en attente.
+
 ## Prochaines étapes (ordre)
 
 1. ✔ Détecteurs C0.2 en 1.1.0 : les 7 infirmés sont `withdrawn` (balayage n° 8). Base : 1 112 REF_MORTE
