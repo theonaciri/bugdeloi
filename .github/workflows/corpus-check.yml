@@ -145,10 +145,12 @@ jobs:
               pull_number: pr.number,
               per_page: 100,
             });
-            const nonCorpus = files.filter(f => !f.filename.startsWith('corpus/'));
-            if (files.length === 0 || nonCorpus.length > 0) {
+            const nonCatala = files.filter(
+              f => !f.filename.startsWith('corpus/') || !f.filename.endsWith('.catala_fr')
+            );
+            if (files.length === 0 || nonCatala.length > 0) {
               core.notice(
-                `Auto-merge ignoré : la PR touche des fichiers hors corpus/ (${nonCorpus.map(f => f.filename).join(', ')}).`
+                `Auto-merge ignoré : la PR touche des fichiers hors corpus/**/*.catala_fr (${nonCatala.map(f => f.filename).join(', ')}).`
               );
               return;
             }
