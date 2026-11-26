@@ -346,10 +346,10 @@ $effect(() => {
 </script>
 
 <svelte:head>
-  <title>BugDeLoi — vérifier la loi française comme un logiciel</title>
+  <title>BugDeLoi · vérifier la loi française comme un logiciel</title>
   <meta
     name="description"
-    content="La loi française fixe des milliers de calculs — impôts, allocations, aides au logement. BugDeLoi les traduit en formules vérifiables pour mesurer leur effet en euros et repérer les erreurs dans les textes officiels."
+    content="La loi française fixe des milliers de calculs (impôts, allocations familiales, aides au logement). BugDeLoi les traduit en formules vérifiables pour mesurer leur effet en euros et repérer les erreurs dans les textes officiels."
   />
 </svelte:head>
 
@@ -396,7 +396,7 @@ $effect(() => {
             Vérifier la loi française comme un logiciel.
           </h1>
           <p class="max-w-[58ch] font-serif text-xl leading-relaxed text-ink/90 sm:text-[1.42rem]">
-            La loi fixe des milliers de calculs — impôts, allocations familiales, aides au logement — mais personne ne les teste comme un programme informatique. BugDeLoi traduit chaque article en formule vérifiable pour calculer son effet réel en euros et repérer les erreurs dans les textes officiels.
+            La loi fixe des milliers de calculs (impôts, allocations familiales, aides au logement), mais personne ne les teste comme un programme informatique. BugDeLoi traduit chaque article en formule vérifiable pour calculer son effet réel en euros et repérer les erreurs dans les textes officiels.
           </p>
           <p class="max-w-[58ch] text-base leading-relaxed text-muted">
             Des intelligences artificielles aident à lire et traduire les articles ; des tests automatiques et des juristes vérifient chaque résultat.

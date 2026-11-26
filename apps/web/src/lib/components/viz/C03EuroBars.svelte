@@ -207,7 +207,7 @@ const counts = $derived({
               delta === 0 ? 'text-ok' : active.classification === 'erreur_oracle' ? 'text-ko' : 'text-notice-ink',
             )}
           >
-            {delta === 0 ? '0,00 € — montants identiques' : `${fmtDelta(delta)} / mois`}
+            {delta === 0 ? '0,00 € (montants identiques)' : `${fmtDelta(delta)} / mois`}
           </p>
         </div>
 

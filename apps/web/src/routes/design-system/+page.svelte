@@ -235,7 +235,7 @@ async function demoAgentAct() {
     steps: [{ ref: 'Mode agent actif', action: 'toggle' }],
   })
   actLog = res.ok
-    ? `agent.act() réussi — valeur de l’interrupteur basculée à ${String(demoSwitch)} sans clic utilisateur.`
+    ? `agent.act() réussi : valeur de l’interrupteur basculée à ${String(demoSwitch)} sans clic utilisateur.`
     : `Échec : ${res.error ?? 'inconnu'}`
   captureLiveSnapshot()
 }
@@ -449,7 +449,7 @@ $effect(() => {
           >
             {#snippet panel(tab)}
               {#if tab === 'un'}
-                <p class="font-serif text-sm text-ink">Article D755-5, II, alinéa 2 — version en vigueur identifiée par son empreinte SHA-256.</p>
+                <p class="font-serif text-sm text-ink">Article D755-5, II, alinéa 2 : version en vigueur identifiée par son empreinte SHA-256.</p>
               {:else if tab === 'deux'}
                 <pre class="mono rounded bg-obs-bg p-3 text-xs text-obs-ink"><code>champ d'application CalculAllocations:
   définition montant_mensuel égal à ...</code></pre>

@@ -53,7 +53,7 @@ let { class: className = '' }: { class?: string } = $props()
 
 <UiButton
   type="button"
-  aria-label={`${LABELS[theme]} — cliquer pour changer`}
+  aria-label={`${LABELS[theme]} (cliquer pour changer)`}
   title={LABELS[theme]}
   onclick={cycle}
   class={cn(

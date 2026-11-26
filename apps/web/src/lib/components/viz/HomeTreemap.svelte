@@ -216,7 +216,7 @@ const hasRef = (r: TreemapRect) => (r.node.counts.REF ?? 0) > 0
         </div>
       {:else}
         <p class="text-xs text-obs-muted">
-          <strong class="text-obs-ink">{current.codeTitle}</strong> — Survolez une section pour voir le détail, cliquez pour plonger dans les articles.
+          <strong class="text-obs-ink">{current.codeTitle}.</strong> Survolez une section pour voir le détail, cliquez pour plonger dans les articles.
         </p>
       {/if}
       <span class="inline-flex shrink-0 items-center gap-1.5 text-xs font-semibold text-obs-amber tabular">
