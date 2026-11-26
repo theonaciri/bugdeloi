@@ -151,6 +151,29 @@ jobs:
         with:
           script: |
             const pr = context.payload.pull_request;
+            const issue = { ...context.repo, issue_number: pr.number };
+            const marker = '<!-- bugdeloi-auto-merge -->';
+
+            async function postMergeNote(message) {
+              try {
+                const body = `${marker}\n${message}`;
+                const comments = await github.paginate(github.rest.issues.listComments, {
+                  ...issue,
+                  per_page: 100,
+                });
+                const existing = comments.find(
+                  c => c.user?.login === 'github-actions[bot]' && c.body?.startsWith(marker)
+                );
+                if (existing) {
+                  await github.rest.issues.updateComment({ ...context.repo, comment_id: existing.id, body });
+                } else {
+                  await github.rest.issues.createComment({ ...issue, body });
+                }
+              } catch (commentErr) {
+                core.notice(`Impossible de commenter l'état auto-merge : ${commentErr.message}`);
+              }
+            }
+
             const files = await github.paginate(github.rest.pulls.listFiles, {
               ...context.repo,
               pull_number: pr.number,
@@ -160,9 +183,9 @@ jobs:
               f => !f.filename.startsWith('corpus/') || !f.filename.endsWith('.catala_fr')
             );
             if (files.length === 0 || nonCatala.length > 0) {
-              core.notice(
-                `Auto-merge ignoré : la PR touche des fichiers hors corpus/**/*.catala_fr (${nonCatala.map(f => f.filename).join(', ')}).`
-              );
+              const msg = `**Auto-merge ignoré** : la PR touche des fichiers hors \`corpus/**/*.catala_fr\` (${nonCatala.map(f => `\`${f.filename}\``).join(', ')}). Revue humaine requise.`;
+              core.notice(msg);
+              await postMergeNote(msg);
               return;
             }
             try {
@@ -197,8 +220,11 @@ jobs:
                 return;
               }
               if (error.status === 403 && pr.head.repo?.fork) {
-                core.notice('Auto-merge ignoré pour cette PR de fork (jeton GitHub en lecture seule).');
+                const forkMsg = '**Auto-merge ignoré** : PR issue d’un fork (jeton GitHub en lecture seule).';
+                core.notice(forkMsg);
+                await postMergeNote(forkMsg);
                 return;
               }
+              await postMergeNote(`**Auto-merge en échec** : \`${msg}\``);
               throw error;
             }
