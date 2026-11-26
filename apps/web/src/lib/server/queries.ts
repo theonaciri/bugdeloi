@@ -722,7 +722,7 @@ async function deskPublicStats(): Promise<DeskPublicStats> {
           .from(deskTask)
           .where(and(isNotNull(deskTask.leaseHandle), isNotNull(deskTask.leaseStartedAt)))
           .orderBy(desc(deskTask.leaseStartedAt), asc(deskTask.role), asc(deskTask.leaseHandle))
-          .limit(20),
+          .limit(100),
         tx.select({ total: count() }).from(legalArticle).where(newDeskTaskFilter('analyst')),
         tx.select({ total: count() }).from(legalArticle).where(newDeskTaskFilter('translate')),
       ]),

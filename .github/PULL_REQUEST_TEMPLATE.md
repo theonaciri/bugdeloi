@@ -1,8 +1,8 @@
 <!--
 Format de titre recommandé :
 - 1 article  : corpus(<code>): formaliser <article> (<LEGIARTI>)
-- Lot (≤ 5)  : corpus(<code|multi>): formaliser <N> articles (<liste courte>)
-Règle bundle : 1 tâche = 1 PR par défaut ; lots jusqu'à 5 articles homogènes acceptés (ne pas mélanger .catala_fr auto-mergeables et fichiers hors .catala_fr).
+- Lot (≤ 100) : corpus(<code|multi>): formaliser <N> articles (<liste courte>)
+Règle bundle : 1 tâche = 1 PR par défaut ; lots jusqu'à 100 articles homogènes acceptés (ne pas mélanger .catala_fr auto-mergeables et fichiers hors .catala_fr).
 -->
 
 ## Article(s) concerné(s)
