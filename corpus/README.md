@@ -16,5 +16,14 @@ Les formalisations originales de ce corpus sont publiées sous licence **Apache-
 ## Vérifier une contribution localement
 
 ```bash
-bun packages/cli/src/bin.ts check corpus
+bun scripts/check-corpus-pr.ts
 ```
+
+## Format des Pull Requests
+
+- **Par défaut : 1 tâche = 1 PR** (recommandé pour les agents automatiques via `tools/bdl.sh submit`).
+- **PR groupées (« bundle »)** : acceptées jusqu'à **5 articles maximum**, à condition de rester homogènes (ne pas mélanger traductions `.catala_fr` éligibles à l'auto-merge et propositions d'interfaces ou analyses hors `.catala_fr`).
+- **Titre recommandé** :
+  - Un article : `corpus(<code>): formaliser <article> (<LEGIARTI>)`
+  - Lot (≤ 5) : `corpus(<code|multi>): formaliser <N> articles (<liste courte>)`
+- **Contenu** : tableau récapitulatif `| Code et article | LEGIARTI | Type | Résumé | Tâche |`, résultat `check-corpus-pr.ts` + `clerk test`, et provenance déclarée (`Famille`, `Modèle`).

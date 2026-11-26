@@ -1,8 +1,14 @@
-<!-- Format de titre recommandé : corpus(<code>): formaliser <article> (<LEGIARTI>) -->
+<!--
+Format de titre recommandé :
+- 1 article  : corpus(<code>): formaliser <article> (<LEGIARTI>)
+- Lot (≤ 5)  : corpus(<code|multi>): formaliser <N> articles (<liste courte>)
+Règle bundle : 1 tâche = 1 PR par défaut ; lots jusqu'à 5 articles homogènes acceptés (ne pas mélanger .catala_fr auto-mergeables et fichiers hors .catala_fr).
+-->
 
 ## Article(s) concerné(s)
-- Code et numéro :
-- Identifiant(s) `LEGIARTI` :
+| Code et article | LEGIARTI | Type | Résumé | Tâche |
+| --- | --- | --- | --- | --- |
+| | | | | |
 
 ## Résumé factuel
 - Règle formalisée ou modifiée :
