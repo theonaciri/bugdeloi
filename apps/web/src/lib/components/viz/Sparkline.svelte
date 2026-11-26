@@ -10,7 +10,7 @@ let {
   points,
   label = 'Activité sur 14 jours',
   tone = 'light',
-  height = 42,
+  height = 36,
 }: {
   points: SparkPoint[]
   label?: string
@@ -18,40 +18,40 @@ let {
   height?: number
 } = $props()
 
-const W = 224
+const W = 210
 const H = $derived(height)
 const maxVal = $derived(Math.max(1, ...points.map((p) => p.count)))
 const yScale = $derived(
   scaleLinear()
     .domain([0, maxVal])
-    .range([3, H - 4]),
+    .range([4, H - 4]),
 )
 const step = $derived(points.length > 0 ? W / points.length : W)
-const barWidth = $derived(Math.max(4, step - 4))
+const barWidth = $derived(Math.max(5, step - 5))
 let active = $state<SparkPoint | null>(null)
 const total = $derived(points.reduce((sum, p) => sum + p.count, 0))
 </script>
 
-<div class="inline-flex flex-col gap-1">
-  <div class="flex items-baseline justify-between gap-3 text-[0.7rem]">
-    <span class={tone === 'observatory' ? 'mono text-obs-muted' : 'mono text-muted'}>
+<div class="inline-flex flex-col gap-1.5">
+  <div class="flex items-baseline justify-between gap-3 text-xs">
+    <span class={tone === 'observatory' ? 'text-obs-muted' : 'text-muted'}>
       {#if active}
         {active.day} · <strong class={tone === 'observatory' ? 'text-obs-ink' : 'text-ink'}>{active.count}</strong>
       {:else}
         {label}
       {/if}
     </span>
-    <span class="mono tabular font-semibold {tone === 'observatory' ? 'text-obs-emerald' : 'text-brand-strong'}">
-      {total} évts
+    <span class="tabular font-semibold {tone === 'observatory' ? 'text-obs-ink' : 'text-ink'}">
+      {total} opérations
     </span>
   </div>
   <svg
     viewBox="0 0 {W} {H}"
     width={W}
     height={H}
-    class="block h-auto w-full max-w-[14rem] overflow-visible"
+    class="block h-[36px] w-[210px] max-w-full overflow-visible"
     role="img"
-    aria-label={`${label} : ${total} événements au total`}
+    aria-label={`${label} : ${total} opérations au total`}
   >
     <line
       x1="0"
@@ -63,7 +63,7 @@ const total = $derived(points.reduce((sum, p) => sum + p.count, 0))
     />
     {#each points as point, index (point.day)}
       {@const h = point.count > 0 ? yScale(point.count) : 2}
-      {@const x = index * step + 2}
+      {@const x = index * step + 2.5}
       {@const y = H - 1 - h}
       <rect
         {x}
@@ -82,7 +82,7 @@ const total = $derived(points.reduce((sum, p) => sum + p.count, 0))
           : tone === 'observatory'
             ? 'var(--obs-line)'
             : 'var(--line)'}
-        opacity={point.count > 0 ? (active && active !== point ? 0.55 : 1) : 0.6}
+        opacity={point.count > 0 ? (active && active !== point ? 0.45 : 0.9) : 0.65}
         role="presentation"
         onpointerenter={() => (active = point)}
         onpointerleave={() => (active = null)}

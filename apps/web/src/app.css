@@ -4,7 +4,6 @@
 @import "tailwindcss";
 @import "./tokens.css";
 
-/* Utilitaires Tailwind v4 branchés sur les jetons du Design System BugDeLoi. */
 @theme inline {
   --font-sans: var(--font-sans);
   --font-serif: var(--font-serif);
@@ -57,12 +56,11 @@
     font-family: var(--font-sans);
     -webkit-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
   body {
     min-height: 100dvh;
-    line-height: 1.55;
+    line-height: 1.6;
     overflow-x: clip;
   }
 
@@ -70,9 +68,9 @@
   h2,
   h3 {
     font-family: var(--font-serif);
-    line-height: 1.15;
+    line-height: 1.12;
     text-wrap: balance;
-    letter-spacing: -0.018em;
+    letter-spacing: -0.02em;
   }
 
   p {
@@ -82,7 +80,7 @@
   a {
     color: var(--brand-strong);
     text-decoration: underline;
-    text-underline-offset: 0.18em;
+    text-underline-offset: 0.2em;
     text-decoration-thickness: from-font;
   }
 
@@ -93,7 +91,7 @@
   :focus-visible {
     outline: 2.5px solid var(--focus);
     outline-offset: 2px;
-    border-radius: 3px;
+    border-radius: 4px;
   }
 
   code,
@@ -101,7 +99,7 @@
   samp,
   pre {
     font-family: var(--font-mono);
-    font-size: 0.9em;
+    font-size: 0.88em;
   }
 
   ::selection {
@@ -124,16 +122,42 @@
 }
 
 @layer components {
+  /* Conteneurs amples et respirants, pleine largeur sur les grands écrans */
   .container-page {
     margin-inline: auto;
     width: 100%;
-    max-width: 78rem;
-    padding-inline: 1rem;
+    max-width: 86rem;
+    padding-inline: 1.25rem;
   }
 
   @media (min-width: 640px) {
     .container-page {
-      padding-inline: 1.5rem;
+      padding-inline: 2rem;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .container-page {
+      padding-inline: 3rem;
+    }
+  }
+
+  .container-wide {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 96rem;
+    padding-inline: 1.25rem;
+  }
+
+  @media (min-width: 640px) {
+    .container-wide {
+      padding-inline: 2rem;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .container-wide {
+      padding-inline: 3rem;
     }
   }
 
@@ -144,11 +168,11 @@
     margin-top: 1rem;
   }
   .prose-page h2 {
-    font-size: 1.55rem;
+    font-size: 1.6rem;
     margin-top: 2.5rem;
   }
   .prose-page h3 {
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     margin-top: 1.75rem;
   }
   .prose-page ul {
@@ -163,11 +187,10 @@
     margin-top: 0.35rem;
   }
 
-  /* Bande Observatoire sombre (style pequalnp.com : contraste fort pour dataviz & course) */
+  /* Bande sombre éditoriale (charbon chaud, plein bord, sans grille cyber) */
   .band-observatory {
     background: var(--obs-bg);
     color: var(--obs-ink);
-    border-block: 1px solid var(--obs-line);
   }
 
   .band-observatory a {
@@ -181,29 +204,27 @@
   .card {
     background: var(--surface);
     border: 1px solid var(--line);
-    border-radius: var(--radius);
+    border-radius: var(--radius-lg);
     box-shadow: var(--shadow-xs);
   }
 
   .card-obs {
     background: var(--obs-surface);
-    border: 1px solid var(--obs-line);
-    border-radius: var(--radius);
+    border-radius: var(--radius-lg);
   }
 
-  /* Compatibilité classes historiques (pages secondaires) */
   .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
     border-radius: 999px;
-    padding: 0.6rem 1.15rem;
+    padding: 0.65rem 1.25rem;
     font-weight: 600;
     font-size: 0.92rem;
     text-decoration: none;
     line-height: 1.2;
-    border: 1.5px solid transparent;
+    border: 1px solid transparent;
     transition:
       background-color 150ms ease,
       border-color 150ms ease,
@@ -211,28 +232,26 @@
     cursor: pointer;
   }
   .btn-primary {
-    background: var(--brand);
-    color: var(--brand-ink);
+    background: var(--ink);
+    color: var(--bg);
   }
   .btn-primary:hover {
-    background: var(--brand-strong);
-    color: var(--brand-ink);
+    opacity: 0.9;
   }
   .btn-secondary {
     border-color: var(--line-strong);
     color: var(--ink);
-    background: var(--surface);
+    background: transparent;
   }
   .btn-secondary:hover {
     background: var(--surface-2);
-    border-color: var(--ink);
   }
 
   .kicker {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
+    font-family: var(--font-sans);
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--ink-muted);
   }
@@ -258,21 +277,20 @@
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    border: 1.5px dashed var(--notice-line);
+    border: 1px dashed var(--notice-line);
     background: var(--notice-bg);
     color: var(--notice-ink);
     border-radius: 999px;
-    padding: 0.12rem 0.7rem;
-    font-weight: 700;
+    padding: 0.15rem 0.75rem;
+    font-weight: 600;
     font-size: 0.8rem;
   }
 
-  /* Pastille en direct */
   .live-dot {
     position: relative;
     display: inline-flex;
-    width: 0.55rem;
-    height: 0.55rem;
+    width: 0.5rem;
+    height: 0.5rem;
     border-radius: 9999px;
     background: var(--ok);
     flex-shrink: 0;
@@ -282,9 +300,9 @@
     position: absolute;
     inset: -3px;
     border-radius: 9999px;
-    border: 2px solid var(--ok);
-    opacity: 0.55;
-    animation: bdl-pulse 2.2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+    border: 1.5px solid var(--ok);
+    opacity: 0.5;
+    animation: bdl-pulse 2.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
   }
 
   .band-observatory .live-dot {
@@ -294,15 +312,6 @@
     border-color: var(--obs-emerald);
   }
 
-  /* Texture discrète façon papier millimétré dans les bandes observatoire */
-  .obs-grid-bg {
-    background-image:
-      linear-gradient(to right, rgb(148 163 184 / 0.06) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(148 163 184 / 0.06) 1px, transparent 1px);
-    background-size: 28px 28px;
-  }
-
-  /* Ruban défilant doux pour les puces d'activité */
   .ticker-strip {
     scrollbar-width: none;
   }
@@ -314,7 +323,7 @@
 @keyframes bdl-pulse {
   0% {
     transform: scale(0.85);
-    opacity: 0.7;
+    opacity: 0.65;
   }
   70% {
     transform: scale(1.9);
@@ -326,7 +335,7 @@
   }
 }
 
-/* Niveaux de preuve : remplissage SVG (tuiles, pastilles, barres). Motifs : <PatternDefs>. */
+/* Niveaux de preuve : remplissage SVG */
 .lvl-fill-n0 {
   fill: var(--level-n0);
 }
@@ -400,16 +409,15 @@
   color: var(--level-ref-ink);
 }
 
-/* Texte DILA assaini (fiche article & split-view). */
 .legal-text {
   font-family: var(--font-serif);
-  font-size: 1.08rem;
-  line-height: 1.72;
+  font-size: 1.1rem;
+  line-height: 1.75;
 }
 .legal-text p + p,
 .legal-text div + p,
 .legal-text p + div {
-  margin-top: 0.75rem;
+  margin-top: 0.8rem;
 }
 .legal-text table {
   border-collapse: collapse;
@@ -443,8 +451,8 @@
   padding-left: 1.5rem;
 }
 .legal-text blockquote {
-  border-left: 3px solid var(--line);
-  padding-left: 1rem;
+  border-left: 2px solid var(--line-strong);
+  padding-left: 1.1rem;
 }
 
 /* Helpers SVG (carte, graphiques) */
@@ -469,7 +477,7 @@
 }
 .bdl-frame {
   fill: var(--surface);
-  stroke: var(--line-strong);
+  stroke: var(--line);
 }
 .band-observatory .bdl-frame {
   fill: var(--obs-surface);

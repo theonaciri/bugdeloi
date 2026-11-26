@@ -44,38 +44,37 @@ const unseen = $derived.by(() => {
 })
 </script>
 
-<article class="flex h-full flex-col justify-between rounded-[var(--radius-lg)] border border-line bg-surface p-5 shadow-xs">
+<article class="flex h-full flex-col justify-between rounded-[var(--radius-xl)] bg-surface-2/70 p-7 sm:p-8">
   <div>
-    <p class="kicker flex items-center gap-1.5">
+    <p class="kicker flex items-center gap-2">
       <Clock class="size-3.5 text-brand" aria-hidden="true" />
       Depuis votre dernière visite
     </p>
     {#if !hydrated || !previous}
-      <p class="mt-3 font-serif text-lg leading-snug text-ink">
-        C’est votre première visite sur ce navigateur. Dès la prochaine, cette carte résumera les nouvelles opérations vérifiées depuis aujourd’hui.
+      <p class="mt-4 font-serif text-xl leading-snug text-ink">
+        C’est votre première visite. Lors de votre prochain passage, cette carte résumera directement ce qui aura avancé depuis aujourd’hui.
       </p>
     {:else if unseen.length === 0}
-      <p class="mt-3 font-serif text-lg leading-snug text-ink">
-        Aucun nouvel événement public depuis votre passage du <time datetime={previous.visitedAt}>{formatDateTime(previous.visitedAt)}</time>.
+      <p class="mt-4 font-serif text-xl leading-snug text-ink">
+        Aucune nouvelle opération publique depuis votre visite du <time datetime={previous.visitedAt}>{formatDateTime(previous.visitedAt)}</time>.
       </p>
     {:else}
-      <p class="mt-3 font-serif text-lg leading-snug text-ink">
-        <strong>{unseen.length}</strong> nouvel{unseen.length > 1 ? 'les entrées' : 'le entrée'} dans le journal depuis le
+      <p class="mt-4 font-serif text-xl leading-snug text-ink">
+        <strong>{unseen.length}</strong> nouvel{unseen.length > 1 ? 'les avancées' : 'le avancée'} depuis le
         <time datetime={previous.visitedAt}>{formatDateTime(previous.visitedAt)}</time>.
       </p>
-      <ul class="mt-3 space-y-1.5 text-xs">
+      <ul class="mt-4 divide-y divide-line text-sm">
         {#each unseen.slice(0, 4) as ev (ev.id)}
-          <li class="flex items-baseline justify-between gap-2 border-t border-line pt-1.5">
-            <a href={`/evenement/${ev.id}`} class="font-medium text-ink no-underline hover:text-brand-strong hover:underline truncate">
+          <li class="py-2">
+            <a href={`/evenement/${ev.id}`} class="font-medium text-ink no-underline hover:text-brand-strong hover:underline">
               {explainEvent(ev.type).title}
             </a>
-            <span class="mono shrink-0 text-[0.68rem] text-muted">#{ev.id}</span>
           </li>
         {/each}
       </ul>
     {/if}
   </div>
-  <p class="mt-4 border-t border-line pt-3 text-[0.72rem] text-muted">
-    Calculé localement dans votre navigateur (<code class="text-ink">localStorage</code>). Aucun cookie, aucun traceur.
+  <p class="mt-6 text-xs text-muted">
+    Mémorisé uniquement sur votre appareil, sans cookie ni suivi.
   </p>
 </article>

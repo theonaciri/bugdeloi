@@ -20,23 +20,30 @@ let {
 } = $props()
 
 let activeId = $state<string | null>(null)
+let trackWidth = $state(280)
 const active = $derived(
   (activeId ? stages.find((s) => s.id === activeId) : undefined) ?? stages[2] ?? stages[0],
 )
 const maxCount = $derived(Math.max(1, ...stages.map((s) => s.count)))
+const barW = $derived(Math.max(120, Math.round(trackWidth)))
 
-function barPercent(count: number): number {
-  if (count <= 0) return 4
-  // Échelle racine pour rester lisible quand les ordres de grandeur vont de 10^4 à 10^0
+function barPx(count: number): number {
+  if (count <= 0) return 8
   const ratio = Math.sqrt(count) / Math.sqrt(maxCount)
-  return Math.max(8, Math.min(100, Math.round(ratio * 100)))
+  return Math.max(14, Math.min(barW, Math.round(ratio * barW)))
 }
 </script>
 
-<div class="space-y-4">
-  <ol class="space-y-2.5" aria-label="Entonnoir du contrôle mécanique C0.2">
+<div class="space-y-5">
+  <ol
+    class={cn(
+      'divide-y border-y',
+      tone === 'observatory' ? 'divide-obs-line border-obs-line' : 'divide-line border-line',
+    )}
+    aria-label="Entonnoir du contrôle mécanique C0.2"
+  >
     {#each stages as stage, index (stage.id)}
-      {@const pct = barPercent(stage.count)}
+      {@const w = barPx(stage.count)}
       {@const isSelected = active?.id === stage.id}
       <li>
         <button
@@ -44,43 +51,49 @@ function barPercent(count: number): number {
           onclick={() => (activeId = stage.id)}
           aria-pressed={isSelected}
           class={cn(
-            'w-full rounded-[var(--radius)] border p-3.5 text-left transition-colors cursor-pointer',
+            'w-full px-3 py-4 text-left transition-colors cursor-pointer',
             tone === 'observatory'
               ? isSelected
-                ? 'border-obs-emerald/70 bg-obs-surface-2'
-                : 'border-obs-line bg-obs-surface hover:border-obs-line-strong'
+                ? 'bg-obs-surface-2/80'
+                : 'hover:bg-obs-surface/60'
               : isSelected
-                ? 'border-brand bg-brand-soft/45'
-                : 'border-line bg-surface hover:border-line-strong',
+                ? 'bg-surface-2/85'
+                : 'hover:bg-surface-2/40',
           )}
         >
           <div class="flex flex-wrap items-baseline justify-between gap-2">
             <div class="flex items-baseline gap-2.5">
-              <span class="mono text-[0.7rem] font-bold opacity-60">0{index + 1}</span>
+              <span class="text-xs font-bold opacity-50 tabular">0{index + 1}</span>
               <span class="font-semibold text-sm">{stage.label}</span>
             </div>
-            <span class="mono text-lg font-bold tabular">{formatInt(stage.count)}</span>
+            <span class="font-serif text-2xl font-semibold tabular">{formatInt(stage.count)}</span>
           </div>
           <p class={cn('mt-1 text-xs', tone === 'observatory' ? 'text-obs-muted' : 'text-muted')}>
             {stage.sublabel}
           </p>
-          <div class={cn('mt-2.5 h-2 w-full overflow-hidden rounded-full', tone === 'observatory' ? 'bg-obs-bg' : 'bg-surface-2')}>
-            <svg viewBox="0 0 100 8" preserveAspectRatio="none" class="block h-full w-full" aria-hidden="true">
+          <div class="mt-3" bind:clientWidth={trackWidth}>
+            <svg viewBox="0 0 {barW} 6" width={barW} height="6" class="block h-[6px] w-full" aria-hidden="true">
               <rect
                 x="0"
                 y="0"
-                width={pct}
-                height="8"
-                rx="4"
-                class={cn(
-                  stage.tone === 'emerald'
-                    ? 'fill-brand'
-                    : stage.tone === 'amber'
-                      ? 'fill-notice-line'
-                      : stage.tone === 'cobalt'
-                        ? 'fill-info'
-                        : 'fill-line-strong',
-                )}
+                width={barW}
+                height="6"
+                rx="3"
+                fill={tone === 'observatory' ? 'var(--obs-line)' : 'var(--surface-2)'}
+              />
+              <rect
+                x="0"
+                y="0"
+                width={w}
+                height="6"
+                rx="3"
+                fill={stage.tone === 'emerald'
+                  ? 'var(--brand)'
+                  : stage.tone === 'amber'
+                    ? 'var(--notice-line)'
+                    : stage.tone === 'cobalt'
+                      ? 'var(--info)'
+                      : 'var(--line-strong)'}
               />
             </svg>
           </div>
@@ -92,16 +105,16 @@ function barPercent(count: number): number {
   {#if active}
     <div
       class={cn(
-        'rounded-[var(--radius)] border p-3.5 text-xs leading-relaxed',
+        'rounded-[var(--radius)] p-4 text-sm leading-relaxed',
         tone === 'observatory'
-          ? 'border-obs-line bg-obs-surface text-obs-muted'
-          : 'border-line bg-surface-2/70 text-muted',
+          ? 'bg-obs-surface text-obs-muted'
+          : 'bg-surface-2/75 text-muted',
       )}
     >
-      <p class={cn('font-semibold', tone === 'observatory' ? 'text-obs-ink' : 'text-ink')}>
+      <p class={cn('font-semibold text-xs uppercase tracking-wider', tone === 'observatory' ? 'text-obs-ink' : 'text-ink')}>
         Étape sélectionnée · {active.label}
       </p>
-      <p class="mt-1">{active.detail}</p>
+      <p class="mt-1.5">{active.detail}</p>
     </div>
   {/if}
 </div>

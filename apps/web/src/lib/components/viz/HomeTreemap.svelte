@@ -14,7 +14,6 @@ import {
   type MapSectionRow,
   type TreemapRect,
 } from '#lib/map-tree.ts'
-import { cn } from '#lib/utils/cn.ts'
 
 export interface CodeMapPreview {
   code: string
@@ -37,7 +36,7 @@ let {
 
 let selectedCode = $state<string | undefined>(undefined)
 let highlightRef = $state(false)
-let width = $state(1080)
+let width = $state(1240)
 let active = $state<TreemapRect | null>(null)
 
 const activeCode = $derived(selectedCode ?? previews[0]?.code ?? 'CGI')
@@ -46,7 +45,7 @@ const tree = $derived(
   current ? buildMapTree(current.focus, current.sections, current.counts, current.articles) : null,
 )
 const W = $derived(Math.max(300, Math.round(width)))
-const H = $derived(Math.round(Math.max(340, Math.min(540, W * 0.48))))
+const H = $derived(Math.round(Math.max(360, Math.min(580, W * 0.44))))
 const rects = $derived(tree ? layoutTreemap(tree, W, H) : [])
 
 const CHAR = 6.5
@@ -61,8 +60,8 @@ const hasRef = (r: TreemapRect) => (r.node.counts.REF ?? 0) > 0
 </script>
 
 {#if current && tree}
-  <div class="space-y-4">
-    <div class="flex flex-wrap items-center justify-between gap-3">
+  <div class="space-y-5">
+    <div class="flex flex-wrap items-center justify-between gap-4">
       <SegmentedControl
         value={activeCode}
         onchange={(next) => (selectedCode = next)}
@@ -76,37 +75,30 @@ const hasRef = (r: TreemapRect) => (r.node.counts.REF ?? 0) > 0
         }))}
       />
 
-      <div class="flex flex-wrap items-center gap-3">
-        <Switch
-          bind:checked={highlightRef}
-          tone="observatory"
-          label="Surligner les ★"
-        />
+      <div class="flex flex-wrap items-center gap-4">
+        <Switch bind:checked={highlightRef} tone="observatory" label="Mettre en avant les ★" />
         {#if onOpenSearch}
           <button
             type="button"
             onclick={onOpenSearch}
-            class="inline-flex h-8.5 items-center gap-2 rounded-full border border-obs-line-strong bg-obs-surface px-3 text-xs text-obs-muted transition-colors hover:border-obs-emerald/60 hover:text-obs-ink cursor-pointer"
+            class="inline-flex h-9 items-center gap-2 rounded-full bg-obs-surface px-4 text-xs text-obs-muted transition-colors hover:bg-obs-surface-2 hover:text-obs-ink cursor-pointer"
           >
             <Search class="size-3.5" aria-hidden="true" />
-            <span>Chercher un article…</span>
-            <kbd class="mono rounded border border-obs-line-strong px-1.5 py-0.5 text-[0.65rem] text-obs-ink">/</kbd>
+            <span>Trouver un article…</span>
+            <kbd class="mono rounded bg-obs-bg px-1.5 py-0.5 text-[0.65rem] text-obs-ink">/</kbd>
           </button>
         {/if}
         <a
           href={`/carte?code=${current.code}`}
-          class="inline-flex items-center gap-1.5 text-xs font-semibold text-obs-emerald no-underline hover:underline"
+          class="inline-flex items-center gap-1.5 text-sm font-semibold text-obs-emerald no-underline hover:underline"
         >
-          Carte plein écran
-          <ArrowUpRight class="size-3.5" aria-hidden="true" />
+          Ouvrir en plein écran
+          <ArrowUpRight class="size-4" aria-hidden="true" />
         </a>
       </div>
     </div>
 
-    <div
-      class="relative overflow-hidden rounded-[var(--radius-lg)] border border-obs-line bg-obs-surface p-2"
-      bind:clientWidth={width}
-    >
+    <div class="relative overflow-hidden rounded-[var(--radius-lg)] bg-obs-surface p-2" bind:clientWidth={width}>
       <svg
         viewBox="0 0 {W} {H}"
         width={W}
@@ -129,7 +121,7 @@ const hasRef = (r: TreemapRect) => (r.node.counts.REF ?? 0) > 0
                 width={rw(r)}
                 height={rh(r)}
                 class="bdl-frame"
-                opacity={highlightRef && !hasRef(r) ? 0.35 : 1}
+                opacity={highlightRef && !hasRef(r) ? 0.3 : 1}
               />
               <text
                 x={r.x0 + 6}
@@ -137,7 +129,7 @@ const hasRef = (r: TreemapRect) => (r.node.counts.REF ?? 0) > 0
                 class="bdl-text"
                 font-size={r.depth === 1 ? 11.5 : 10.5}
                 font-weight={r.depth === 1 ? 600 : 500}
-                opacity={highlightRef && !hasRef(r) ? 0.45 : 0.95}
+                opacity={highlightRef && !hasRef(r) ? 0.4 : 0.95}
               >
                 {fit(`${r.node.label} · ${formatInt(totalOf(r.node.counts))}`, rw(r))}
               </text>
@@ -160,7 +152,7 @@ const hasRef = (r: TreemapRect) => (r.node.counts.REF ?? 0) > 0
               onpointerenter={() => (active = r)}
               onfocus={() => (active = r)}
             >
-              <g opacity={dimmed ? 0.22 : 1}>
+              <g opacity={dimmed ? 0.2 : 1}>
                 {#each levelBands(r.x0, r.y0, rw(r), rh(r), r.node.counts) as b (b.level)}
                   <rect x={b.x} y={b.y} width={b.width} height={b.height} class="lvl-fill-{levelSlug(b.level)}" />
                   {#if patternUrl(b.level)}
@@ -180,11 +172,11 @@ const hasRef = (r: TreemapRect) => (r.node.counts.REF ?? 0) > 0
                   />
                 {/if}
                 {#if rw(r) > 48 && rh(r) > 22}
-                  <text x={r.x0 + 5} y={r.y0 + 15} font-size="11.5" font-weight="600" class="tile-label lvl-ink-{dom} lvl-halo-{dom}">
+                  <text x={r.x0 + 6} y={r.y0 + 16} font-size="11.5" font-weight="600" class="tile-label lvl-ink-{dom} lvl-halo-{dom}">
                     {fit(r.node.label, rw(r))}
                   </text>
                   {#if rh(r) > 38}
-                    <text x={r.x0 + 5} y={r.y0 + 30} font-size="10.5" class="tile-label lvl-ink-{dom} lvl-halo-{dom}">
+                    <text x={r.x0 + 6} y={r.y0 + 31} font-size="10.5" class="tile-label lvl-ink-{dom} lvl-halo-{dom}">
                       {fit(
                         r.node.counts.REF > 0
                           ? `${formatInt(totalOf(r.node.counts))} · ${r.node.counts.REF} ★`
@@ -210,29 +202,27 @@ const hasRef = (r: TreemapRect) => (r.node.counts.REF ?? 0) > 0
       </svg>
     </div>
 
-    <div class="flex flex-wrap items-center justify-between gap-3 rounded-[var(--radius)] border border-obs-line bg-obs-surface px-4 py-3 text-xs">
+    <div class="flex flex-wrap items-center justify-between gap-4 pt-1 text-sm">
       {#if active}
         <div class="min-w-0">
           <p class="font-semibold text-obs-ink truncate">{active.node.label}</p>
-          <p class="mt-0.5 text-obs-muted">
+          <p class="text-xs text-obs-muted">
             {#if active.node.kind === 'article' && active.node.level}
               {levelName(active.node.level)} · cliquer pour ouvrir l’article
             {:else}
-              {plural(totalOf(active.node.counts), 'article en vigueur', 'articles en vigueur')} ({describeCounts(active.node.counts)}) · cliquer pour descendre
+              {plural(totalOf(active.node.counts), 'article en vigueur', 'articles en vigueur')} ({describeCounts(active.node.counts)}) · cliquer pour explorer cette section
             {/if}
           </p>
         </div>
       {:else}
-        <p class="text-obs-muted">
-          <strong class="text-obs-ink">{current.codeTitle}</strong> — Survolez ou parcourez au clavier une section pour voir la répartition des niveaux ; cliquez pour zoomer dans la carte complète.
+        <p class="text-xs text-obs-muted">
+          <strong class="text-obs-ink">{current.codeTitle}</strong> — Survolez une section pour voir le détail, cliquez pour plonger dans les articles.
         </p>
       {/if}
-      <div class="flex items-center gap-3 shrink-0">
-        <span class={cn('mono inline-flex items-center gap-1.5 rounded-full border border-obs-amber/40 bg-obs-amber/12 px-2.5 py-0.5 text-obs-amber')}>
-          <Sparkles class="size-3" aria-hidden="true" />
-          {formatInt(current.refCount)} ★ sur {formatInt(current.inForce)}
-        </span>
-      </div>
+      <span class="inline-flex shrink-0 items-center gap-1.5 text-xs font-semibold text-obs-amber tabular">
+        <Sparkles class="size-3.5" aria-hidden="true" />
+        {formatInt(current.refCount)} ★ sur {formatInt(current.inForce)} articles
+      </span>
     </div>
   </div>
 {/if}

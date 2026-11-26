@@ -194,33 +194,33 @@ const sampleRace: RaceTrack[] = [
 ]
 
 const paletteTokens = [
-  { name: 'Papier éditorial', token: '--bg', cls: 'bg-bg border-line text-ink', hex: '#FAF8F3' },
-  { name: 'Surface carte', token: '--surface', cls: 'bg-surface border-line text-ink', hex: '#FFFFFF' },
+  { name: 'Papier ivoire', token: '--bg', cls: 'bg-bg border-line text-ink', hex: '#FAF8F2' },
+  { name: 'Surface blanche', token: '--surface', cls: 'bg-surface border-line text-ink', hex: '#FFFFFF' },
   {
-    name: 'Papier secondaire',
+    name: 'Lin secondaire',
     token: '--surface-2',
     cls: 'bg-surface-2 border-line text-ink',
-    hex: '#F1EEE6',
+    hex: '#F3EFE6',
   },
-  { name: 'Encre profonde', token: '--ink', cls: 'bg-ink border-ink text-bg', hex: '#12171E' },
-  { name: 'Émeraude civique', token: '--brand', cls: 'bg-brand border-brand text-brand-ink', hex: '#047857' },
+  { name: 'Encre chaude', token: '--ink', cls: 'bg-ink border-ink text-bg', hex: '#181715' },
+  { name: 'Forêt éditoriale', token: '--brand', cls: 'bg-brand border-brand text-brand-ink', hex: '#1B6B50' },
   {
-    name: 'Vigilance ambre',
+    name: 'Ambre vigilance',
     token: '--notice-bg',
     cls: 'bg-notice border-notice-line text-notice-ink',
-    hex: '#FEF4D7',
+    hex: '#FDF3DC',
   },
   {
-    name: 'Obsidienne Observatoire',
+    name: 'Charbon chaud',
     token: '--obs-bg',
     cls: 'bg-obs-bg border-obs-line-strong text-obs-ink',
-    hex: '#0C1016',
+    hex: '#161513',
   },
   {
-    name: 'Émeraude Observatoire',
+    name: 'Sauge douce',
     token: '--obs-emerald',
     cls: 'bg-obs-emerald border-obs-emerald text-obs-bg',
-    hex: '#34D399',
+    hex: '#6EC4A4',
   },
 ]
 
@@ -540,7 +540,7 @@ $effect(() => {
 </div>
 
 <!-- Bande Observatoire sombre : Race + Laboratoire MCP/WebMCP -->
-<section class="band-observatory obs-grid-bg mt-16 py-14" aria-labelledby="ds-obs">
+<section class="band-observatory mt-16 py-16" aria-labelledby="ds-obs">
   <div class="container-page space-y-12">
     <div class="space-y-4">
       <div class="flex flex-wrap items-center justify-between gap-3">

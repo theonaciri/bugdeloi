@@ -22,108 +22,133 @@ let {
 } = $props()
 
 let filter = $state('all')
+let chartWidth = $state(420)
 
 const euros = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' })
 const fmtEur = (cents: number) => euros.format(cents / 100)
 const fmtDelta = (cents: number) => `${cents > 0 ? '+' : ''}${euros.format(cents / 100)}`
 
-const numericCases = $derived(cases)
 const filtered = $derived.by(() => {
-  if (filter === 'passed') return numericCases.filter((c) => c.status === 'passed')
-  if (filter === 'rounding') return numericCases.filter((c) => c.classification === 'ambiguïté')
-  if (filter === 'disagreement') return numericCases.filter((c) => c.classification === 'erreur_oracle')
-  return numericCases
+  if (filter === 'passed') return cases.filter((c) => c.status === 'passed')
+  if (filter === 'rounding') return cases.filter((c) => c.classification === 'ambiguïté')
+  if (filter === 'disagreement') return cases.filter((c) => c.classification === 'erreur_oracle')
+  return cases
 })
 
-const maxCents = $derived(Math.max(100, ...numericCases.flatMap((c) => [c.expected, c.actual])))
-const barScale = $derived(scaleLinear().domain([0, maxCents]).range([0, 100]))
+const maxCents = $derived(Math.max(100, ...cases.flatMap((c) => [c.expected, c.actual])))
+const barW = $derived(Math.max(140, Math.round(chartWidth)))
+const barScale = $derived(scaleLinear().domain([0, maxCents]).range([0, barW]))
+
 const active = $derived(
   filtered.find((c) => c.name === selectedName) ??
-    numericCases.find((c) => c.name === selectedName) ??
+    cases.find((c) => c.name === selectedName) ??
     filtered[0] ??
     null,
 )
 
 const counts = $derived({
-  all: numericCases.length,
-  passed: numericCases.filter((c) => c.status === 'passed').length,
-  rounding: numericCases.filter((c) => c.classification === 'ambiguïté').length,
-  disagreement: numericCases.filter((c) => c.classification === 'erreur_oracle').length,
+  all: cases.length,
+  passed: cases.filter((c) => c.status === 'passed').length,
+  rounding: cases.filter((c) => c.classification === 'ambiguïté').length,
+  disagreement: cases.filter((c) => c.classification === 'erreur_oracle').length,
 })
 </script>
 
-<div class="space-y-4">
-  <div class="flex flex-wrap items-center justify-between gap-3">
+<div class="space-y-6">
+  <!-- Filtres + légende complète sans troncature -->
+  <div class="flex flex-wrap items-center justify-between gap-4">
     <SegmentedControl
       bind:value={filter}
-      ariaLabel="Filtrer les cas chiffrés C0.3"
+      ariaLabel="Filtrer les cas chiffrés de l’expérience C0.3"
       size="sm"
       options={[
-        { value: 'all', label: 'Tous', badge: counts.all },
+        { value: 'all', label: 'Tous les cas', badge: counts.all },
         { value: 'disagreement', label: 'Désaccords', badge: counts.disagreement },
         { value: 'rounding', label: 'Arrondi 0,01 €', badge: counts.rounding },
         { value: 'passed', label: 'Identiques', badge: counts.passed },
       ]}
     />
-    <div class="flex items-center gap-4 text-xs text-muted">
-      <span class="inline-flex items-center gap-1.5">
-        <span class="size-2.5 rounded-xs bg-ink/80"></span>
-        Inria (témoin)
+    <div class="flex flex-wrap items-center gap-x-5 gap-y-1.5 text-xs text-muted">
+      <span class="inline-flex items-center gap-2">
+        <span class="h-1.5 w-4 rounded-full bg-ink/45"></span>
+        Témoin Inria
       </span>
-      <span class="inline-flex items-center gap-1.5">
-        <span class="size-2.5 rounded-xs bg-brand"></span>
-        Agent IA (identique)
+      <span class="inline-flex items-center gap-2">
+        <span class="h-1.5 w-4 rounded-full bg-brand"></span>
+        Traduction LEGI identique
       </span>
-      <span class="inline-flex items-center gap-1.5">
-        <span class="size-2.5 rounded-xs bg-notice-line"></span>
-        Écart à vérifier
+      <span class="inline-flex items-center gap-2">
+        <span class="h-1.5 w-4 rounded-full bg-notice-line"></span>
+        Écart d’arrondi
+      </span>
+      <span class="inline-flex items-center gap-2">
+        <span class="h-1.5 w-4 rounded-full bg-ko"></span>
+        Désaccord substantiel
       </span>
     </div>
   </div>
 
-  <div class="grid gap-4 lg:grid-cols-[1fr_19rem]">
-    <div class="space-y-1.5">
+  <div class="grid gap-8 lg:grid-cols-[1fr_22rem] lg:items-start">
+    <!-- Lignes éditoriales aérées, sans boîtes ni déformation SVG -->
+    <div class="divide-y divide-line/80 border-y border-line">
       {#each filtered as item (item.id)}
         {@const delta = item.actual - item.expected}
         {@const isSelected = active?.name === item.name}
-        {@const wExp = barScale(item.expected)}
-        {@const wAct = barScale(item.actual)}
+        {@const wExp = Math.max(4, Math.round(barScale(item.expected)))}
+        {@const wAct = Math.max(4, Math.round(barScale(item.actual)))}
         <button
           type="button"
           onclick={() => (selectedName = item.name)}
           aria-pressed={isSelected}
           class={cn(
-            'grid w-full grid-cols-[4.5rem_1fr_6.5rem] items-center gap-3 rounded-[var(--radius-sm)] border px-3 py-2 text-left transition-colors cursor-pointer',
-            isSelected
-              ? 'border-brand bg-brand-soft/45'
-              : 'border-line bg-surface hover:border-line-strong hover:bg-surface-2/40',
+            'grid w-full grid-cols-[4.5rem_1fr_6.5rem] items-center gap-4 px-3 py-3 text-left transition-colors cursor-pointer sm:grid-cols-[5.5rem_1fr_7.5rem]',
+            isSelected ? 'bg-surface-2/90' : 'hover:bg-surface-2/45',
           )}
         >
-          <span class="mono text-xs font-semibold text-ink">{item.name}</span>
+          <span class="flex items-center gap-2">
+            <span
+              class={cn(
+                'h-4 w-0.5 rounded-full transition-colors',
+                isSelected ? 'bg-brand' : 'bg-transparent',
+              )}
+              aria-hidden="true"
+            ></span>
+            <span class="text-sm font-semibold text-ink">{item.name}</span>
+          </span>
 
-          <svg viewBox="0 0 100 18" preserveAspectRatio="none" class="block h-4.5 w-full" aria-hidden="true">
-            <rect x="0" y="1" width="100" height="6" rx="3" fill="var(--surface-2)" />
-            <rect x="0" y="1" width={Math.max(1.5, wExp)} height="6" rx="3" fill="var(--ink)" opacity="0.72" />
-            <rect x="0" y="10" width="100" height="6" rx="3" fill="var(--surface-2)" />
-            <rect
-              x="0"
-              y="10"
-              width={Math.max(1.5, wAct)}
-              height="6"
-              rx="3"
-              fill={item.status === 'passed'
-                ? 'var(--brand)'
-                : item.classification === 'erreur_oracle'
-                  ? 'var(--ko)'
-                  : 'var(--notice-line)'}
-            />
-          </svg>
+          <div class="min-w-0" bind:clientWidth={chartWidth}>
+            <svg
+              viewBox="0 0 {barW} 18"
+              width={barW}
+              height="18"
+              class="block h-[18px] w-full overflow-visible"
+              aria-hidden="true"
+            >
+              <!-- Piste discrète -->
+              <rect x="0" y="2" width={barW} height="5" rx="2.5" fill="var(--surface-2)" />
+              <rect x="0" y="2" width={wExp} height="5" rx="2.5" fill="var(--ink)" opacity="0.45" />
+
+              <rect x="0" y="11" width={barW} height="5" rx="2.5" fill="var(--surface-2)" />
+              <rect
+                x="0"
+                y="11"
+                width={wAct}
+                height="5"
+                rx="2.5"
+                fill={item.status === 'passed'
+                  ? 'var(--brand)'
+                  : item.classification === 'erreur_oracle'
+                    ? 'var(--ko)'
+                    : 'var(--notice-line)'}
+              />
+            </svg>
+          </div>
 
           <span
             class={cn(
-              'mono text-right text-xs font-semibold tabular',
+              'text-right text-sm font-semibold tabular',
               delta === 0
-                ? 'text-ok'
+                ? 'text-muted'
                 : item.classification === 'erreur_oracle'
                   ? 'text-ko'
                   : 'text-notice-ink',
@@ -135,65 +160,64 @@ const counts = $derived({
       {/each}
     </div>
 
+    <!-- Panneau éditorial du cas sélectionné (sans bordure lourde) -->
     {#if active}
       {@const delta = active.actual - active.expected}
-      <aside class="rounded-[var(--radius-lg)] border border-line bg-surface-2/70 p-4 flex flex-col justify-between gap-4">
-        <div class="space-y-3">
-          <div class="flex items-center justify-between gap-2">
-            <span class="mono text-xs font-bold text-ink">{active.name}</span>
-            <span
-              class={cn(
-                'mono rounded-full px-2 py-0.5 text-[0.68rem] font-semibold',
-                active.status === 'passed'
-                  ? 'bg-ok-soft text-ok'
-                  : active.classification === 'erreur_oracle'
-                    ? 'bg-ko-soft text-ko'
-                    : 'bg-notice text-notice-ink',
-              )}
-            >
-              {active.status === 'passed'
-                ? 'Montant identique'
+      <aside class="rounded-[var(--radius-xl)] bg-surface-2/75 p-6 sm:p-7 space-y-5 lg:sticky lg:top-24">
+        <div class="flex items-center justify-between gap-2">
+          <span class="kicker text-ink">{active.name}</span>
+          <span
+            class={cn(
+              'rounded-full px-2.5 py-0.5 text-xs font-semibold',
+              active.status === 'passed'
+                ? 'bg-ok-soft text-ok'
                 : active.classification === 'erreur_oracle'
-                  ? 'Désaccord oracle'
-                  : 'Écart d’arrondi'}
-            </span>
-          </div>
-
-          {#if active.contextLabel}
-            <p class="font-serif text-base font-semibold leading-snug text-ink">{active.contextLabel}</p>
-          {/if}
-
-          <dl class="grid grid-cols-2 gap-2.5 border-y border-line py-3">
-            <div>
-              <dt class="text-[0.7rem] text-muted">Attendu (Inria)</dt>
-              <dd class="mono mt-0.5 text-lg font-bold tabular text-ink">{fmtEur(active.expected)}</dd>
-            </div>
-            <div>
-              <dt class="text-[0.7rem] text-muted">Programme remis</dt>
-              <dd class="mono mt-0.5 text-lg font-bold tabular text-ink">{fmtEur(active.actual)}</dd>
-            </div>
-          </dl>
-
-          <div>
-            <p class="text-xs text-muted">Écart mensuel observé</p>
-            <p
-              class={cn(
-                'mono text-xl font-bold tabular',
-                delta === 0 ? 'text-ok' : active.classification === 'erreur_oracle' ? 'text-ko' : 'text-notice-ink',
-              )}
-            >
-              {delta === 0 ? '0,00 € (exact)' : `${fmtDelta(delta)} / mois`}
-            </p>
-          </div>
+                  ? 'bg-ko-soft text-ko'
+                  : 'bg-notice text-notice-ink',
+            )}
+          >
+            {active.status === 'passed'
+              ? 'Montant identique'
+              : active.classification === 'erreur_oracle'
+                ? 'Désaccord à arbitrer'
+                : 'Écart d’arrondi'}
+          </span>
         </div>
 
-        <p class="text-xs leading-relaxed text-muted">
+        {#if active.contextLabel}
+          <p class="font-serif text-xl font-medium leading-snug text-ink">{active.contextLabel}</p>
+        {/if}
+
+        <dl class="grid grid-cols-2 gap-4 border-y border-line py-4">
+          <div>
+            <dt class="text-xs text-muted">Attendu (Inria)</dt>
+            <dd class="font-serif mt-1 text-2xl font-semibold tabular text-ink">{fmtEur(active.expected)}</dd>
+          </div>
+          <div>
+            <dt class="text-xs text-muted">Calculé depuis LEGI</dt>
+            <dd class="font-serif mt-1 text-2xl font-semibold tabular text-ink">{fmtEur(active.actual)}</dd>
+          </div>
+        </dl>
+
+        <div>
+          <p class="text-xs text-muted">Impact mensuel sur le foyer</p>
+          <p
+            class={cn(
+              'font-serif mt-0.5 text-2xl font-semibold tabular',
+              delta === 0 ? 'text-ok' : active.classification === 'erreur_oracle' ? 'text-ko' : 'text-notice-ink',
+            )}
+          >
+            {delta === 0 ? '0,00 € — exact au centime' : `${fmtDelta(delta)} / mois`}
+          </p>
+        </div>
+
+        <p class="text-sm leading-relaxed text-muted">
           {#if active.status === 'passed'}
-            Le programme produit à l’aveugle à partir de LEGI retrouve au centime près le montant du témoin Inria.
+            Le programme généré uniquement à partir des textes officiels retrouve exactement le montant du témoin Inria.
           {:else if active.classification === 'erreur_oracle'}
-            Désaccord substantiel entre le texte LEGI et le témoin Inria — contre-vérifié par Anthropic et Google, en attente de verdict humain.
+            La lecture directe de l’article officiel diverge du programme témoin Inria. Deux contre-vérifications indépendantes ont examiné le cas ; l’arbitrage final revient à un juriste.
           {:else}
-            Écart de 0,01 € dû au placement de l’arrondi (composantes arrondies avant somme chez Inria vs arrondi final dans la remise).
+            Écart d’un centime lié à l’ordre des arrondis (arrondi de chaque composante avant somme chez Inria, contre arrondi final dans la remise).
           {/if}
         </p>
       </aside>

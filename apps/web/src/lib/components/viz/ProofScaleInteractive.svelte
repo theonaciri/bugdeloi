@@ -18,27 +18,32 @@ const currentLevel = $derived(selected ?? initial)
 const info = $derived(LEVEL_INFO[currentLevel])
 
 const checkerByLevel: Record<Level, string> = {
-  N0: 'ingest · empreinte SHA-256 LEGI',
-  N1: 'check anchor · texte identique à LEGI',
-  N2: 'check compile · clerk test (image épinglée)',
-  N3: 'check oracles · ≥ 2 sources indépendantes (≥ 1 non-LLM)',
-  N4: 'check differential · ≥ 10 000 entrées + mutations ≥ 80 % + 7 j red team',
-  N5: 'check human · revue signée par un juriste identifié',
-  REF: 'replications/c0.1/promote.ts · suite externe verte chez nous',
+  N0: 'Texte officiel chargé depuis la DILA avec son empreinte cryptographique.',
+  N1: 'Interface figée et texte officiel cité à l’identique, alinéa par alinéa.',
+  N2: 'Compilation Catala et tests verts dans l’environnement épinglé ; chaque constante est sourcée.',
+  N3: 'Validation contre au moins deux sources indépendantes (dont une non issue d’une IA).',
+  N4: '10 000 cas testés contre une implémentation tierce, tests de mutation ≥ 80 % et 7 jours de contre-attaques.',
+  N5: 'Relecture juridique complète et signée par un juriste identifié.',
+  REF: 'Formalisation réalisée par des chercheurs ou une administration (Inria, DGFiP…) dont les tests réussissent chez nous.',
 }
 
 const neverProof = [
-  'L’auto-évaluation d’un LLM',
-  '« Ça compile » seul',
-  'Un vote ou accord entre deux modèles de la même famille',
-  'Un test écrit par l’auteur de la traduction',
-  'Un chiffre qu’un tiers ne peut pas rejouer',
+  'L’auto-évaluation d’une intelligence artificielle',
+  'Le seul fait qu’un programme compile sans erreur',
+  'L’accord de deux modèles issus du même fournisseur',
+  'Un test rédigé par l’auteur même de la traduction',
+  'Un résultat qu’un tiers ne peut pas reproduire',
 ]
 </script>
 
-<div class="grid gap-5 lg:grid-cols-[1.25fr_1fr]">
-  <div class="space-y-2" role="tablist" aria-label="Niveaux de preuve N0 à N5 et Référence">
-    {#each LEVELS as lvl, idx (lvl)}
+<div class="space-y-8">
+  <!-- Barre horizontale aérée (sans empilement de boîtes) -->
+  <div
+    class="flex flex-wrap items-center gap-2 border-b border-line pb-5"
+    role="tablist"
+    aria-label="Niveaux de preuve N0 à N5 et Référence"
+  >
+    {#each LEVELS as lvl (lvl)}
       {@const isSelected = currentLevel === lvl}
       {@const count = counts?.[lvl]}
       <button
@@ -47,65 +52,51 @@ const neverProof = [
         aria-selected={isSelected}
         onclick={() => (selected = lvl)}
         class={cn(
-          'flex w-full items-center justify-between gap-3 rounded-[var(--radius)] border px-3.5 py-2.5 text-left transition-all cursor-pointer',
+          'inline-flex items-center gap-2.5 rounded-full px-4 py-2 text-sm transition-colors cursor-pointer',
           isSelected
-            ? 'border-brand bg-brand-soft/50 shadow-xs'
-            : 'border-line bg-surface hover:border-line-strong hover:bg-surface-2/50',
+            ? 'bg-ink text-bg font-semibold'
+            : 'bg-surface-2/75 text-ink hover:bg-surface-3',
         )}
       >
-        <span class="flex items-center gap-3 min-w-0">
-          <LevelSwatch level={lvl} size={26} />
-          <span class="min-w-0">
-            <span class="flex items-center gap-2">
-              <span class="font-semibold text-sm text-ink">{levelName(lvl)}</span>
-              {#if lvl === 'REF'}
-                <span class="mono rounded bg-notice px-1.5 py-0.5 text-[0.65rem] text-notice-ink">
-                  marqueur externe
-                </span>
-              {:else}
-                <span class="mono text-[0.68rem] text-subtle">palier {idx}/5</span>
-              {/if}
-            </span>
-            <span class="block truncate text-xs text-muted">{checkerByLevel[lvl]}</span>
-          </span>
-        </span>
+        <LevelSwatch level={lvl} size={18} />
+        <span>{levelName(lvl)}</span>
         {#if count !== undefined}
-          <span class="mono shrink-0 text-sm font-bold tabular text-ink">{formatInt(count)}</span>
+          <span class={cn('text-xs tabular', isSelected ? 'opacity-75' : 'text-muted')}>
+            {formatInt(count)}
+          </span>
         {/if}
       </button>
     {/each}
   </div>
 
-  <div class="flex flex-col justify-between gap-4 rounded-[var(--radius-lg)] border border-line bg-surface p-5">
-    <div class="space-y-3">
-      <div class="flex items-center gap-3">
+  <!-- Lecture éditoriale ouverte sur deux colonnes -->
+  <div class="grid gap-10 lg:grid-cols-[1.35fr_1fr] lg:items-start">
+    <div class="space-y-4">
+      <div class="flex items-center gap-3.5">
         <LevelSwatch level={currentLevel} size={36} />
         <div>
-          <p class="kicker">Contrôle mécanique sélectionné</p>
-          <h3 class="font-serif text-2xl font-semibold text-ink">{levelName(currentLevel)}</h3>
+          <p class="kicker">Niveau sélectionné</p>
+          <h3 class="font-serif text-3xl font-semibold text-ink">{levelName(currentLevel)}</h3>
         </div>
       </div>
 
-      <p class="text-sm leading-relaxed text-ink">{info.meaning}</p>
+      <p class="font-serif text-xl leading-relaxed text-ink">{info.meaning}</p>
 
-      <div class="rounded-[var(--radius-sm)] border border-line bg-surface-2/70 px-3 py-2.5">
-        <p class="flex items-center gap-1.5 text-xs font-semibold text-brand-strong">
-          <ShieldCheck class="size-3.5" aria-hidden="true" />
-          Vérification correspondante
-        </p>
-        <p class="mono mt-1 text-xs text-muted">{checkerByLevel[currentLevel]}</p>
+      <div class="flex items-start gap-2.5 pt-2 text-sm text-brand-strong">
+        <ShieldCheck class="mt-0.5 size-4.5 shrink-0" aria-hidden="true" />
+        <p>{checkerByLevel[currentLevel]}</p>
       </div>
     </div>
 
-    <div class="border-t border-line pt-4">
-      <p class="flex items-center gap-1.5 text-xs font-semibold text-ko">
-        <ShieldOff class="size-3.5" aria-hidden="true" />
-        Ce qui n’est jamais un marqueur de preuve
+    <div class="rounded-[var(--radius-xl)] bg-surface-2/70 p-6 space-y-3">
+      <p class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-ko">
+        <ShieldOff class="size-4" aria-hidden="true" />
+        Ce qui ne compte jamais comme preuve
       </p>
-      <ul class="mt-2 space-y-1 text-xs text-muted">
+      <ul class="space-y-2 text-sm text-muted">
         {#each neverProof as item (item)}
-          <li class="flex items-start gap-2">
-            <span class="mt-1 size-1.5 shrink-0 rounded-full bg-ko/70" aria-hidden="true"></span>
+          <li class="flex items-start gap-2.5">
+            <span class="mt-2 size-1.5 shrink-0 rounded-full bg-ko/60" aria-hidden="true"></span>
             <span>{item}</span>
           </li>
         {/each}
