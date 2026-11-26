@@ -194,6 +194,23 @@ function formatEventCopy(r: typeof event.$inferSelect): { headline: string; deta
     }
   }
 
+  if (r.type === 'article_promoted') {
+    const level = typeof p.level === 'string' ? p.level : 'N2'
+    const articles = Array.isArray(p.articles) ? p.articles : []
+    const count = typeof p.count === 'number' ? p.count : articles.length
+    const list = articles
+      .map((a) =>
+        a && typeof a === 'object' && 'code' in a && 'num' in a ? `${String(a.code)} ${String(a.num)}` : null,
+      )
+      .filter((s): s is string => Boolean(s))
+    return {
+      headline: `${count} ${count > 1 ? 'articles promus' : 'article promu'} au niveau ${level} Compilé`,
+      detail: list.length
+        ? `Ancrage LEGI verbatim (N1) et clerk test Catala 1.3.2 vert (N2) : ${list.join(', ')}.`
+        : 'Ancrage LEGI verbatim (N1) et compilation Catala 1.3.2 (N2) vérifiés mécaniquement.',
+    }
+  }
+
   if (r.type === 'finding.published' && r.subject) {
     return {
       headline: `Anomalie ${r.subject} publiée au registre`,
@@ -316,6 +333,23 @@ export async function eventDetail(id: number, database = db()) {
         : [],
     article: article && subject ? { id: subject, num: article.num } : null,
     findingHref,
+    promotedLevel: type === 'article_promoted' && typeof payload.level === 'string' ? payload.level : null,
+    promotedArticles:
+      type === 'article_promoted' && Array.isArray(payload.articles)
+        ? payload.articles.flatMap((item: unknown) => {
+            if (!item || typeof item !== 'object') return []
+            const rec = item as Record<string, unknown>
+            if (typeof rec.id !== 'string' || typeof rec.code !== 'string') return []
+            return [
+              {
+                id: rec.id,
+                code: rec.code,
+                num: typeof rec.num === 'string' ? rec.num : '',
+                file: typeof rec.file === 'string' ? rec.file : '',
+              },
+            ]
+          })
+        : [],
   }
 }
 

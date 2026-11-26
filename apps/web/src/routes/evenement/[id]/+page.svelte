@@ -83,6 +83,48 @@ const replayCounts = $derived(Object.entries(Object.groupBy(entry.replayStatuses
             </ul>
             <p class="text-sm"><a href="/methode#compteur-rejeux">Méthode de calcul du compteur des tests de référence</a></p>
           {/if}
+          {#if entry.promotedArticles.length}
+            <div class="overflow-x-auto rounded-xl border border-line bg-bg">
+              <table class="w-full min-w-[34rem] border-collapse text-left text-sm">
+                <thead>
+                  <tr class="border-b border-line bg-surface text-xs uppercase tracking-wide text-muted">
+                    <th scope="col" class="px-4 py-3 font-semibold">Article</th>
+                    <th scope="col" class="px-4 py-3 font-semibold">Identifiant LEGIARTI</th>
+                    <th scope="col" class="px-4 py-3 font-semibold">Niveau</th>
+                    <th scope="col" class="px-4 py-3 font-semibold">Source Catala</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-line">
+                  {#each entry.promotedArticles as art (art.id)}
+                    <tr>
+                      <td class="px-4 py-3 font-semibold text-ink">
+                        <a href="/article/{art.id}" class="text-brand-strong no-underline hover:underline">
+                          {art.code} {art.num}
+                        </a>
+                      </td>
+                      <td class="px-4 py-3 font-mono text-xs text-muted">{art.id}</td>
+                      <td class="px-4 py-3">
+                        <span class="rounded-full bg-brand-soft px-2.5 py-0.5 text-xs font-semibold text-brand-strong">
+                          {entry.promotedLevel ?? 'N2'}
+                        </span>
+                      </td>
+                      <td class="px-4 py-3 text-xs">
+                        {#if art.file}
+                          <a
+                            href="https://github.com/theonaciri/bugdeloi/blob/main/corpus/{art.file}"
+                            rel="external"
+                            class="font-mono text-brand-strong no-underline hover:underline"
+                          >
+                            corpus/{art.file} →
+                          </a>
+                        {/if}
+                      </td>
+                    </tr>
+                  {/each}
+                </tbody>
+              </table>
+            </div>
+          {/if}
           {#if entry.findingHref}
             <p><a href={entry.findingHref}>Lire la fiche {entry.subject}</a></p>
           {:else if entry.article}

@@ -44,6 +44,14 @@ const referenceMeaning =
   'Ce résultat porte sur des programmes écrits par des chercheurs ou des administrations. Les niveaux N0 à N5 mesurent séparément les vérifications réalisées par BugDeLoi.'
 
 const events: Record<string, Explanation> = {
+  article_promoted: {
+    title: 'Promotion d’articles formalisés en Catala',
+    why: 'Chaque article traduit en Catala passe une chaîne de contrôles mécaniques cumulatifs : ancrage verbatim sur le texte officiel LEGI (N1), puis compilation et exécution des tests dans le bac à sable Catala 1.3.2 épinglé sans réseau (N2).',
+    meaning:
+      'Ces articles ont franchi les contrôles mécaniques N1 et N2 sans erreur de compilation, de conflit ni de cas vide. Ils comptent désormais dans le taux de progression Catala du site.',
+    next: 'Les étapes suivantes sont l’ajout d’oracles indépendants d’une autre famille ou source officielle (N3), les tests différentiels et de mutation (N4), puis la revue juridique humaine signée (N5).',
+    diagram: diagrams.level,
+  },
   'ingest.started': {
     title: 'Le chargement des textes officiels a commencé',
     why: importWhy,
