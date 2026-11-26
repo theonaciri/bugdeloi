@@ -123,9 +123,23 @@ jobs:
               } else {
                 await github.rest.issues.createComment({ ...issue, body });
               }
+
+              const reviewEvent =
+                EXIT_STATUS === '0'
+                  ? 'APPROVE'
+                  : VERDICT === 'REJECTED'
+                    ? 'REQUEST_CHANGES'
+                    : 'COMMENT';
+              await github.rest.pulls.createReview({
+                ...context.repo,
+                pull_number: pr.number,
+                commit_id: pr.head.sha,
+                event: reviewEvent,
+                body,
+              });
             } catch (error) {
-              if (error.status !== 403 || !pr.head.repo?.fork) throw error;
-              core.notice('Commentaire ignoré pour cette PR de fork avec un jeton en lecture seule.');
+              if (error.status !== 403 && error.status !== 422) throw error;
+              core.notice(`Commentaire/approbation ignoré (${error.status}) : ${error.message}`);
             }
 
   auto-merge:
