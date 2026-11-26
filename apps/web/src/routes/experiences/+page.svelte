@@ -15,12 +15,12 @@ let { data }: PageProps = $props()
 <section class="bg-bg">
   <div class="container-wide py-12 sm:py-16">
     <h1 class="max-w-4xl font-serif text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-      Expériences d’étalonnage
+      Annexes : simulateurs et étalonnage
     </h1>
     <p class="mt-5 max-w-[68ch] text-lg leading-relaxed text-muted">
-      Avant d’appliquer nos outils sur des pans entiers de la loi encore jamais programmés, nous mesurons publiquement
-      ce qu’ils savent faire et où ils se trompent. Chaque expérience publie ses chiffres bruts, ses limites et les
-      moyens de tout vérifier soi-même.
+      Le cœur de BugDeLoi est la formalisation incrémentale des articles de loi en Catala avec la communauté pour
+      détecter les incompatibilités entre textes. Cette page rassemble nos annexes d’étalonnage : simulateurs
+      d’effets de seuil, comparaison OpenFisca-France et veille parlementaire.
     </p>
   </div>
 </section>

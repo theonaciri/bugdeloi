@@ -36,6 +36,10 @@ const totals = $derived.by(() => {
 })
 
 const inForceTotal = $derived((snap?.codes ?? []).reduce((sum, code) => sum + code.inForce, 0))
+const catalaFormalized = $derived(totals.REF + totals.N1 + totals.N2 + totals.N3 + totals.N4 + totals.N5)
+const catalaProgressPct = $derived(
+  inForceTotal > 0 ? ((catalaFormalized / inForceTotal) * 100).toFixed(2).replace('.', ',') : '0,00',
+)
 const totalInriaTests = $derived((snap?.suites ?? []).reduce((sum, suite) => sum + suite.passed, 0))
 const activeSuites = $derived((snap?.suites ?? []).filter((s) => s.tests > 0))
 const latestEvent = $derived(snap?.events?.[0] ?? null)
@@ -394,27 +398,33 @@ $effect(() => {
             id="hero-title"
             class="font-serif text-[2.85rem] font-semibold leading-[1.03] tracking-tight text-ink sm:text-[4rem] lg:text-[4.65rem]"
           >
-            Vérifier la loi française comme un logiciel.
+            Traduire la loi française en Catala, article par article.
           </h1>
           <p class="max-w-[58ch] font-serif text-xl leading-relaxed text-ink/90 sm:text-[1.42rem]">
-            La loi fixe des milliers de calculs (impôts, allocations familiales, aides au logement), mais personne ne les teste comme un programme informatique. BugDeLoi traduit chaque article en formule vérifiable pour calculer son effet réel en euros et repérer les erreurs dans les textes officiels.
+            BugDeLoi formalise progressivement les articles de loi en code Catala vérifiable avec l’aide de la
+            communauté, afin de détecter les incompatibilités, contradictions et renvois cassés entre les textes.
           </p>
           <p class="max-w-[58ch] text-base leading-relaxed text-muted">
-            Des intelligences artificielles aident à lire et traduire les articles ; des tests automatiques et des juristes vérifient chaque résultat.
+            Chaque contribution fait avancer le taux de couverture Catala : des agents et contributeurs traduisent,
+            le compilateur et des juristes vérifient.
           </p>
         </div>
 
         {#if snap}
           <div class="space-y-3 border-y border-line py-6">
             <p class="flex flex-wrap items-baseline gap-x-3 gap-y-2 text-base text-ink sm:text-lg tabular">
-              <span><strong class="font-serif text-2xl font-semibold sm:text-3xl">{formatInt(inForceTotal)}</strong> articles en vigueur</span>
+              <span>
+                <strong class="font-serif text-2xl font-semibold text-brand-strong sm:text-3xl">{catalaProgressPct} %</strong>
+                en Catala ({formatInt(catalaFormalized)} / {formatInt(inForceTotal)} articles)
+              </span>
               <span class="text-line-strong" aria-hidden="true">·</span>
-              <span><strong class="font-serif text-2xl font-semibold text-brand-strong sm:text-3xl">{formatInt(totals.REF)} ★</strong> couverts par les tests Inria</span>
-              <span class="text-line-strong" aria-hidden="true">·</span>
-              <span><strong class="font-serif text-2xl font-semibold text-notice-ink sm:text-3xl">{formatInt(snap.pipeline.reproducedCount)}</strong> constats reproduits</span>
+              <span>
+                <strong class="font-serif text-2xl font-semibold text-notice-ink sm:text-3xl">{formatInt(snap.pipeline.reproducedCount)}</strong>
+                incompatibilités &amp; renvois cassés reproduits
+              </span>
             </p>
             <p class="text-xs text-muted">
-              {formatInt(totalInriaTests)} tests de recherche réussis · {formatInt(snap.findings.public)} anomalie qualifiée par un humain à ce jour ·
+              {formatInt(totals.REF)} articles ★ Référence ({formatInt(totalInriaTests)} tests Catala verts) · {formatInt(snap.findings.public)} anomalie qualifiée par un humain à ce jour ·
               <strong class="font-medium text-ink">Un compte, pas une probabilité.</strong>
               <a href="/methode#compteurs">Méthode →</a>
             </p>
@@ -426,15 +436,15 @@ $effect(() => {
         {/if}
 
         <div class="flex flex-wrap items-center gap-3.5 pt-1">
-          <Button href="/experiences/revenu-disponible" variant="ink" size="lg">
-            Simuler le revenu disponible
+          <Button href="/join" variant="ink" size="lg">
+            Contribuer en Catala
             <ArrowRight class="size-4" aria-hidden="true" />
           </Button>
-          <Button href="/experiences/openfisca" variant="secondary" size="lg">
-            Comparaison OpenFisca
+          <Button href="#carte-vivante" variant="secondary" size="lg">
+            Progression par code
           </Button>
-          <Button href="/experiences/parlement" variant="ghost" size="lg">
-            Veille parlementaire
+          <Button href="/anomalies" variant="ghost" size="lg">
+            Voir les incompatibilités
           </Button>
         </div>
       </div>
@@ -488,15 +498,15 @@ $effect(() => {
     <div class="flex flex-wrap items-end justify-between gap-4">
       <div class="max-w-3xl space-y-2">
         <h2 id="outils-title" class="font-serif text-3xl font-semibold text-ink sm:text-4xl">
-          Explorer nos simulateurs et données ouvertes
+          Annexes : simulateurs, oracle externe et veille parlementaire
         </h2>
         <p class="text-base leading-relaxed text-muted">
-          Trois portes d’entrée concrètes pour tester la loi en euros, vérifier nos calculs face à un moteur
-          indépendant et mesurer l’effet d’un amendement parlementaire.
+          En complément de la formalisation incrémentale en Catala, ces trois outils permettent de vérifier nos
+          calculs face à OpenFisca, de suivre les amendements et d’observer les effets de seuil en annexe.
         </p>
       </div>
       <a href="/experiences" class="text-sm font-semibold text-brand-strong no-underline hover:underline">
-        Toutes les expériences →
+        Toutes les annexes →
       </a>
     </div>
 

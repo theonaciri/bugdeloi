@@ -7,6 +7,7 @@
       "devDependencies": {
         "@biomejs/biome": "2.6.9",
         "@types/bun": "1.4.5",
+        "impeccable": "^4.11.1",
         "typescript": "7.0.2",
       },
     },
@@ -293,6 +294,16 @@
 
     "@fontsource-variable/plus-jakarta-sans": ["@fontsource-variable/plus-jakarta-sans@5.3.0", "", {}, "sha512-/l/4r0yyWK9JzAlmA0LiYgGgmJe/Gswt4jTJEzr5QhJfwMbvJZDmYWyW0M4X7yCK69BajMVlV/Lx8g7WDc1+sw=="],
 
+    "@impeccable/cli-darwin-arm64": ["@impeccable/cli-darwin-arm64@0.1.31", "", { "os": "darwin", "cpu": "arm64", "bin": { "impeccable-darwin-arm64": "bin/impeccable" } }, "sha512-nQkINgvZvyoTsnbU7SQQIZYRmcuEX76YoVz3Chr+wwe+X7Wu+70RLruk8Ej8bk3HUPTq2VQbZyDs+Z+Eq4/m+A=="],
+
+    "@impeccable/cli-darwin-x64": ["@impeccable/cli-darwin-x64@0.1.31", "", { "os": "darwin", "cpu": "x64", "bin": { "impeccable-darwin-x64": "bin/impeccable" } }, "sha512-K0k8UAtqWtIgVq3CFRFO3zXJZ9BT/JiXy+372D84p7hwQg1qrop1c2rnNTgGja+Ax9r8KpRTOSIMZY+u3TtYmw=="],
+
+    "@impeccable/cli-linux-arm64": ["@impeccable/cli-linux-arm64@0.1.31", "", { "os": "linux", "cpu": "arm64", "bin": { "impeccable-linux-arm64": "bin/impeccable" } }, "sha512-C4n+n1GGbotWrnXKQ9TtjWjWj4XalUtcmsIZKCnS5m9kzz7rIZFMEZsrlxqMbqeaWl3n9FeR/WdYT5Ajm0SU9g=="],
+
+    "@impeccable/cli-linux-x64": ["@impeccable/cli-linux-x64@0.1.31", "", { "os": "linux", "cpu": "x64", "bin": { "impeccable-linux-x64": "bin/impeccable" } }, "sha512-/c45wcM4EG2WUSfS9d7jhHF4k/yrL3sjxj0PZAGvKalj2YTz6R10tDM4JIft74XLr9lX1DWOSEGHtJXsfawxuQ=="],
+
+    "@impeccable/cli-windows-x64": ["@impeccable/cli-windows-x64@0.1.31", "", { "os": "win32", "cpu": "x64", "bin": { "impeccable-windows-x64": "bin/impeccable.exe" } }, "sha512-97DvZHzlxE+68m/68tkKs74ceIl78RjMq2XJXFWLP8Y6Fy0MdHzIW5RB/SvyThdgUrKgeL/y2WRKJ1EBsvofhw=="],
+
     "@jridgewell/gen-mapping": ["@jridgewell/gen-mapping@0.3.13", "", { "dependencies": { "@jridgewell/sourcemap-codec": "^1.5.0", "@jridgewell/trace-mapping": "^0.3.24" } }, "sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA=="],
 
     "@jridgewell/remapping": ["@jridgewell/remapping@2.3.5", "", { "dependencies": { "@jridgewell/gen-mapping": "^0.3.5", "@jridgewell/trace-mapping": "^0.3.24" } }, "sha512-LI9u/+laYG4Ds1TDKSJW2YPrIlcVYOwi2fUC6xB43lueCjgxV4lffOCZCtYFiH6TNOX+tQKXx97T4IKHbhyHEQ=="],
@@ -532,6 +543,8 @@
     "get-tsconfig": ["get-tsconfig@4.14.3", "", { "dependencies": { "resolve-pkg-maps": "^1.0.0" } }, "sha512-++QEw4DIY7WGoukz+/+A/8dGYPT9l9yIadnmSgZ8Rjr3YVSVDipQSO9CdnJo9ePqFqUUqh+wk9uIaoiAwsiPkA=="],
 
     "graceful-fs": ["graceful-fs@4.2.12", "", {}, "sha512-iuyGF2E4oafQfPsRrG2wtY2ILupMhvtdrhzrxB+0VcjsPpSPttpfYdjnGFGsTi5MaJFjI1jOKHPQ6UTbTj9TAw=="],
+
+    "impeccable": ["impeccable@4.11.1", "", { "optionalDependencies": { "@impeccable/cli-darwin-arm64": "0.1.31", "@impeccable/cli-darwin-x64": "0.1.31", "@impeccable/cli-linux-arm64": "0.1.31", "@impeccable/cli-linux-x64": "0.1.31", "@impeccable/cli-windows-x64": "0.1.31" }, "bin": { "impeccable": "cli/bin/cli.js" } }, "sha512-XpoQPgPjwgtc9+x/UbWA8crLvbCYThQ+5CJPQeYGJUyGOt4o2wZ6QSnBzsT9Rv3lnXsfdrS2cJxxdyMqpOPA3g=="],
 
     "internmap": ["internmap@2.0.3", "", {}, "sha512-5Hh7Y1wQbvY5ooGgPbDaL5iYLAPzMTUrjMulskHLH6wnv/A+1q5rgEaiuqEjB+oxGXIVZs1FF+R/KPN3ZSQYYg=="],
 
