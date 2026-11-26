@@ -2,9 +2,6 @@ name: Vérification du corpus Catala
 
 on:
   pull_request:
-    paths:
-      - "corpus/**"
-      - "scripts/check-corpus-pr.ts"
   push:
     branches: [main]
     paths:
