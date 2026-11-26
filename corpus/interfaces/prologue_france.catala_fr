@@ -1,0 +1,23 @@
+> Module Prologue_france
+
+# Prologue France — Définitions partagées du corpus BugDeLoi
+
+Ce module regroupe les types transversaux partagés par plusieurs lois françaises
+(inspiré de `prologue_france` d'Inria). Les fichiers d'articles importent ce module
+via `> Usage de Prologue_france` au lieu de redéfinir ces notions.
+
+```catala
+déclaration énumération CollectivitéTerritoriale:
+  -- Métropole
+  -- Guadeloupe
+  -- Guyane
+  -- Martinique
+  -- LaRéunion
+  -- Mayotte
+
+déclaration énumération SituationFamiliale:
+  -- Célibataire
+  -- MariéOuPacsé
+  -- DivorcéOuSéparé
+  -- Veuf
+```

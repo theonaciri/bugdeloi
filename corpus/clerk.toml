@@ -1,6 +1,7 @@
 [project]
 name = "bugdeloi-corpus"
 include_dirs = [
+  "interfaces",
   "cgi/livre1/partie1/titre1/chapitre1/section5",
   "cgi/livre1/partie1/titre2/chapitre1/section5/i",
   "cgi/livre1/partie1/titre4/chapitre1/section2/vi/b/2/b/3",

@@ -53,8 +53,9 @@ const declRe = /^\s*déclaration\s+(structure|énumération|champ d'application)
 
 for (const file of files) {
   const raw = readFileSync(join(workdir, file), 'utf8')
+  const isInterface = file.startsWith('interfaces/')
   const headings = [...raw.matchAll(/^#{1,6}\s+.*\|(LEGIARTI\d+)\s*$/gm)].map((m) => m[1]).filter(Boolean)
-  if (headings.length === 0) {
+  if (!isInterface && headings.length === 0) {
     console.error(`[N1 ECHEC] En-tête LEGIARTI introuvable dans ${file}`)
     process.exit(1)
   }

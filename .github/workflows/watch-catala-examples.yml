@@ -1,0 +1,87 @@
+name: Veille CatalaLang/catala-examples
+
+on:
+  schedule:
+    # Vérification quotidienne à 06:15 UTC
+    - cron: "15 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check-upstream:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+
+      - name: Vérifier le dernier commit de CatalaLang/catala-examples
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PINNED=$(grep -oE "sourceCommit = '[0-9a-f]{40}'" replications/c0.1/source.ts | cut -d"'" -f2)
+          if [ -z "$PINNED" ]; then
+            echo "Impossible de lire sourceCommit dans replications/c0.1/source.ts"
+            exit 1
+          fi
+
+          DEFAULT_BRANCH=$(gh api repos/CatalaLang/catala-examples --jq '.default_branch')
+          LATEST=$(gh api "repos/CatalaLang/catala-examples/commits/${DEFAULT_BRANCH}" --jq '.sha')
+          LATEST_DATE=$(gh api "repos/CatalaLang/catala-examples/commits/${DEFAULT_BRANCH}" --jq '.commit.committer.date')
+          LATEST_MSG=$(gh api "repos/CatalaLang/catala-examples/commits/${DEFAULT_BRANCH}" --jq '.commit.message | split("\n")[0]')
+
+          echo "Épinglé : $PINNED"
+          echo "Amont   : $LATEST ($LATEST_DATE) - $LATEST_MSG"
+
+          if [ "$PINNED" = "$LATEST" ]; then
+            echo "Déjà à jour avec CatalaLang/catala-examples."
+            exit 0
+          fi
+
+          SHORT="${LATEST:0:12}"
+          LABEL="catala-upstream-sync"
+
+          # Créer le label indicateur spécial s'il n'existe pas encore
+          gh label create "$LABEL" \
+            --description "Mise à jour amont depuis CatalaLang/catala-examples (tâche agent/PR)" \
+            --color "0e8a16" \
+            --force || true
+
+          # Éviter les doublons d'issues ouvertes pour ce même commit
+          EXISTING=$(gh issue list --label "$LABEL" --state open --search "$SHORT" --json number --jq 'length')
+          if [ "$EXISTING" -gt 0 ]; then
+            echo "Une issue ouverte existe déjà pour $SHORT."
+            exit 0
+          fi
+
+          BODY=$(cat <<EOF
+          <!-- indicator: catala-upstream-sync -->
+          Un nouveau commit a été publié par les chercheurs dans **\`CatalaLang/catala-examples\`** (\`${DEFAULT_BRANCH}\`).
+
+          - **Commit épinglé actuel** : \`${PINNED}\`
+          - **Nouveau commit amont** : \`${LATEST}\` (${LATEST_DATE})
+          - **Dernier message** : ${LATEST_MSG}
+          - **Diff complet** : https://github.com/CatalaLang/catala-examples/compare/${PINNED}...${LATEST}
+
+          ### Procédure normale de mise à jour (pour un agent LLM ou un contributeur)
+          1. Créer une branche dédiée (ex. \`sync/catala-examples-${SHORT}\`).
+          2. Mettre à jour \`sourceCommit\` dans \`replications/c0.1/source.ts\` vers \`${LATEST}\`.
+          3. Relancer les tests et la couverture Inria :
+             \`\`\`bash
+             bun replications/c0.1/run.ts
+             bun replications/c0.1/promote.ts --dry-run
+             \`\`\`
+          4. Vérifier que notre propre corpus reste vert et sans doublon :
+             \`\`\`bash
+             bun scripts/promote-corpus.ts --check-only
+             bun run verify
+             \`\`\`
+          5. Ouvrir une Pull Request normale avec le label \`${LABEL}\` résumant les articles ajoutés, mis à jour ou retirés.
+          EOF
+          )
+
+          gh issue create \
+            --title "[catala-upstream-sync] Mise à jour CatalaLang/catala-examples vers ${SHORT}" \
+            --label "$LABEL" \
+            --body "$BODY"
