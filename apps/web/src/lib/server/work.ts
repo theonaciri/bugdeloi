@@ -219,7 +219,6 @@ export async function taskJourney(id: string): Promise<TaskJourney | null> {
   if (!parsed) return null
   const { role, legiarti } = parsed
   const canonicalId = virtualTaskId(role, legiarti)
-  if (role === 'translate' && canonicalId !== id) return null
   const stage = stageOfRole(role) as Stage
   const target = ROLE_TARGET[role]
 
@@ -265,6 +264,9 @@ export async function taskJourney(id: string): Promise<TaskJourney | null> {
       .orderBy(asc(event.ts), asc(event.id)),
   ])
   if (!art) return null
+  // Une tâche d'une version antérieure de l'interface (translate-…-v1 après une fiche v2) reste
+  // consultable si le guichet l'a inscrite ; un identifiant inventé ne l'est pas.
+  if (role === 'translate' && canonicalId !== id && !row) return null
 
   const level = asLevel(art.level)
   const reached = level !== 'REF' && LEVEL_RANK[level] >= LEVEL_RANK[target]
