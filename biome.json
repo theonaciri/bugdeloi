@@ -10,7 +10,8 @@
       "!replications/**/raw",
       "!.agent",
       "!.agents",
-      "!.claude"
+      "!.claude",
+      "!docs/DESIGN.md"
     ]
   },
   "formatter": { "enabled": true, "indentStyle": "space", "indentWidth": 2, "lineWidth": 110 },

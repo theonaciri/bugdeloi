@@ -37,7 +37,7 @@ const title = $derived(a.num ? `Article ${a.num}` : a.id)
       </nav>
 
       <div class="space-y-3">
-        <h1 class="font-display text-4xl font-semibold tracking-tight sm:text-5xl">{title}</h1>
+        <h1 class="text-4xl tracking-tight sm:text-5xl">{title}</h1>
         <p class="font-display text-xl leading-relaxed text-ink/90">{a.text.title}</p>
         <p class="text-muted">
           <strong class="text-ink">{etatLabel(a.etat)}</strong> · version applicable {formatPeriod(a.dateDebut, a.dateFin)}
@@ -52,7 +52,7 @@ const title = $derived(a.num ? `Article ${a.num}` : a.id)
           <a
             href="https://github.com/theonaciri/bugdeloi/blob/main/{a.catalaFile}"
             rel="external"
-            class="inline-flex items-center rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
+            class="inline-flex items-center rounded-[var(--radius)] bg-brand px-4 py-2 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
           >
             Voir le code Catala ({a.level}) →
           </a>
@@ -65,7 +65,7 @@ const title = $derived(a.num ? `Article ${a.num}` : a.id)
     <div class="container-wide grid gap-12 py-12 sm:py-16 lg:grid-cols-[minmax(0,1fr)_21rem]">
       <div class="min-w-0 space-y-12">
         <section aria-labelledby="texte">
-          <h2 id="texte" class="font-display text-2xl font-semibold sm:text-3xl">Texte officiel de l’article</h2>
+          <h2 id="texte" class="text-2xl sm:text-3xl">Texte officiel de l’article</h2>
           <p class="mt-1 text-sm text-muted">Texte issu des archives publiques de Légifrance, présenté sans mise en page complexe.</p>
           {#if data.contentSafe}
             <div class="legal-text mt-4 overflow-x-auto rounded-xl bg-bg p-6 sm:p-8">{@html data.contentSafe}</div>
@@ -73,13 +73,13 @@ const title = $derived(a.num ? `Article ${a.num}` : a.id)
             <div class="mt-3"><EmptyState title="Les archives ne contiennent pas de texte pour cette version." /></div>
           {/if}
           {#if data.notaSafe}
-            <h3 class="mt-6 font-display text-xl font-semibold">Nota</h3>
+            <h3 class="mt-6 text-xl">Nota</h3>
             <div class="legal-text mt-2 text-base">{@html data.notaSafe}</div>
           {/if}
         </section>
 
         <section aria-labelledby="versions">
-          <h2 id="versions" class="font-display text-2xl font-semibold sm:text-3xl">Historique des versions</h2>
+          <h2 id="versions" class="text-2xl sm:text-3xl">Historique des versions</h2>
           <p class="mt-1 text-sm text-muted">
             Quand le Parlement ou le gouvernement modifie un article, une nouvelle version datée est créée.
             Chaque version possède son propre identifiant officiel.
@@ -118,7 +118,7 @@ const title = $derived(a.num ? `Article ${a.num}` : a.id)
         </section>
 
         <section aria-labelledby="liens">
-          <h2 id="liens" class="font-display text-2xl font-semibold sm:text-3xl">Articles liés</h2>
+          <h2 id="liens" class="text-2xl sm:text-3xl">Articles liés</h2>
           <p class="mt-1 text-sm text-muted">
             Les textes de loi se citent et se modifient entre eux. « Cet article cite » indique un renvoi fait par cet
             article. « Cité par » indique qu’un autre texte fait référence à celui-ci.
@@ -178,7 +178,7 @@ const title = $derived(a.num ? `Article ${a.num}` : a.id)
 
       <aside class="min-w-0 space-y-8 lg:border-l lg:border-line lg:pl-8">
         <section class="space-y-3" aria-labelledby="niveau">
-          <h2 id="niveau" class="font-display text-xl font-semibold">Où en est la vérification ?</h2>
+          <h2 id="niveau" class="text-xl">Où en sont les contrôles ?</h2>
           <LevelBadge level={a.level} flags={a.flags} />
           {#if a.level === 'N0'}
             <p class="text-sm leading-relaxed text-muted">
@@ -193,7 +193,7 @@ const title = $derived(a.num ? `Article ${a.num}` : a.id)
         </section>
 
         <section class="space-y-3 border-t border-line pt-6" aria-labelledby="couverture">
-          <h2 id="couverture" class="font-display text-xl font-semibold">Déjà programmé par la recherche ?</h2>
+          <h2 id="couverture" class="text-xl">Déjà programmé par la recherche ?</h2>
           {#if a.level === 'REF'}
             <p class="text-sm leading-relaxed text-muted">
               Une équipe de recherche ou une administration a traduit cette version en programme. Ses tests
@@ -230,7 +230,7 @@ const title = $derived(a.num ? `Article ${a.num}` : a.id)
 
         {#if data.doctrine.length > 0}
           <section class="space-y-3 border-t border-line pt-6" aria-labelledby="doctrine">
-            <h2 id="doctrine" class="font-display text-xl font-semibold">Doctrine fiscale (BOFiP)</h2>
+            <h2 id="doctrine" class="text-xl">Doctrine fiscale (BOFiP)</h2>
             <p class="text-sm leading-relaxed text-muted">
               L’administration fiscale publie des commentaires officiels pour expliquer comment elle applique la loi.
               BugDeLoi les présente séparément du texte voté : tout écart entre la loi et la doctrine peut faire l’objet
@@ -251,7 +251,7 @@ const title = $derived(a.num ? `Article ${a.num}` : a.id)
         {/if}
 
         <section class="space-y-3 border-t border-line pt-6" aria-labelledby="empreinte">
-          <h2 id="empreinte" class="font-display text-xl font-semibold">Preuve d’authenticité technique</h2>
+          <h2 id="empreinte" class="text-xl">Empreinte du texte officiel</h2>
           <details class="text-sm">
             <summary class="cursor-pointer font-semibold">Afficher l’identifiant officiel et l’empreinte numérique</summary>
             <p class="mt-3 leading-relaxed text-muted">

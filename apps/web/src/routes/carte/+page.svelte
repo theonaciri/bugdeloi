@@ -26,7 +26,7 @@ const breakdown = $derived(
 
 <header class="bg-bg">
   <div class="container-wide space-y-6 py-12 sm:py-16">
-    <h1 class="font-display text-4xl font-semibold tracking-tight sm:text-5xl">Explorer les codes de la loi</h1>
+    <h1 class="text-4xl tracking-tight sm:text-5xl">Explorer les codes de la loi</h1>
     <p class="max-w-3xl font-display text-xl leading-relaxed text-ink/90">
       Chaque rectangle représente un chapitre, une section ou un article. Plus un chapitre contient d’articles en
       vigueur, plus son rectangle est grand. Les couleurs et les motifs indiquent où en sont les vérifications.
@@ -42,7 +42,7 @@ const breakdown = $derived(
               href="/carte?code={c.key}"
               aria-current={map.code === c.key ? 'page' : undefined}
               title={c.title}
-              class="block rounded-full border border-line px-4 py-2 text-sm font-semibold text-ink no-underline hover:bg-surface-2 aria-[current=page]:border-brand aria-[current=page]:bg-brand-soft aria-[current=page]:text-brand-strong"
+              class="block rounded-[var(--radius)] border border-line px-4 py-2 text-sm font-semibold text-ink no-underline hover:bg-surface-2 aria-[current=page]:border-brand aria-[current=page]:bg-brand-soft aria-[current=page]:text-brand-strong"
             >
               {c.title}
             </a>
@@ -70,7 +70,7 @@ const breakdown = $derived(
 <section class="border-t border-line bg-surface" aria-labelledby="carte-titre">
   <div class="container-wide space-y-6 py-10 sm:py-14">
     <div class="max-w-3xl space-y-2">
-      <h2 id="carte-titre" class="font-display text-2xl font-semibold sm:text-3xl">{map.focus.title}</h2>
+      <h2 id="carte-titre" class="text-2xl sm:text-3xl">{map.focus.title}</h2>
       {#if map.ingested}
         <p><strong>{plural(total, 'article en vigueur', 'articles en vigueur')}</strong> sur la carte.</p>
         {#if total > 0}
@@ -110,7 +110,7 @@ const breakdown = $derived(
           </figcaption>
         </figure>
         <aside class="space-y-4 border-t border-line pt-5 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0" aria-labelledby="legende">
-          <h3 id="legende" class="font-display text-xl font-semibold">Lire la légende</h3>
+          <h3 id="legende" class="text-xl">Lire la légende</h3>
           <LevelLegend compact />
           <p class="text-sm leading-relaxed text-muted">
             Les bandes colorées ou hachurées montrent la part des articles à chaque niveau de vérification.
@@ -126,7 +126,7 @@ const breakdown = $derived(
 {#if map.ingested}
   <section id="liste" class="border-t border-line bg-bg" aria-labelledby="liste-titre">
     <div class="container-wide space-y-4 py-12 sm:py-16">
-      <h2 id="liste-titre" class="font-display text-2xl font-semibold sm:text-3xl">Parcourir par chapitre et par article</h2>
+      <h2 id="liste-titre" class="text-2xl sm:text-3xl">Parcourir par chapitre et par article</h2>
       <p class="max-w-3xl leading-relaxed text-muted">
         Utilisez les flèches haut et bas pour parcourir la liste. La flèche droite déplie une section, la flèche
         gauche la replie. Appuyez sur Entrée pour ouvrir la section ou lire l’article sélectionné.

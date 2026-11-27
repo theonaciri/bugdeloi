@@ -180,15 +180,8 @@ $effect(() => {
     perSeat = width < 640 ? 40 : 10
   })
   ro.observe(wrap)
-  const mq = matchMedia('(prefers-color-scheme: dark)')
-  const repaint = () => draw(1)
-  mq.addEventListener('change', repaint)
-  const mo = new MutationObserver(repaint)
-  mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] })
   return () => {
     ro.disconnect()
-    mq.removeEventListener('change', repaint)
-    mo.disconnect()
     cancelAnimationFrame(raf)
   }
 })

@@ -52,7 +52,7 @@ const neverProof = [
         aria-selected={isSelected}
         onclick={() => (selected = lvl)}
         class={cn(
-          'inline-flex items-center gap-2.5 rounded-full px-4 py-2 text-sm transition-colors cursor-pointer',
+          'inline-flex items-center gap-2.5 rounded-[var(--radius)] px-4 py-2 text-sm transition-colors cursor-pointer',
           isSelected
             ? 'bg-ink text-bg font-semibold'
             : 'bg-surface-2/75 text-ink hover:bg-surface-3',
@@ -74,7 +74,7 @@ const neverProof = [
     <div class="space-y-4">
       <div class="flex items-center gap-3.5">
         <LevelSwatch level={currentLevel} size={34} />
-        <h3 class="font-display text-3xl font-semibold text-ink">{levelName(currentLevel)}</h3>
+        <h3 class="text-3xl text-ink">{levelName(currentLevel)}</h3>
       </div>
 
       <p class="font-display text-xl leading-relaxed text-ink">{info.meaning}</p>

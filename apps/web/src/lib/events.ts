@@ -65,10 +65,10 @@ const events: Record<string, Explanation> = {
   },
   article_promoted: {
     title: 'Promotion d’articles formalisés en Catala',
-    why: 'Chaque article traduit en Catala passe une chaîne de contrôles mécaniques cumulatifs : ancrage verbatim sur le texte officiel LEGI (N1), puis compilation et exécution des tests dans le bac à sable Catala 1.3.2 épinglé sans réseau (N2).',
+    why: 'Un article traduit en Catala monte de niveau quand des programmes le contrôlent : le texte cité doit être identique à celui de Légifrance, puis le code doit compiler et passer ses tests avec la version épinglée de Catala (1.3.2), sans accès au réseau.',
     meaning:
-      'Ces articles ont franchi les contrôles mécaniques N1 et N2 sans erreur de compilation, de conflit ni de cas vide. Ils comptent désormais dans le taux de progression Catala du site.',
-    next: 'Les étapes suivantes sont l’ajout d’oracles indépendants d’une autre famille ou source officielle (N3), les tests différentiels et de mutation (N4), puis la revue juridique humaine signée (N5).',
+      'Ces articles ont passé ces contrôles sans erreur de compilation, sans conflit entre règles et sans cas laissé sans réponse. Ils sont désormais comptés au niveau N2.',
+    next: 'Viennent ensuite des cas de test écrits sans voir le code, à partir de sources officielles (N3), des comparaisons sur des milliers de cas (N4), puis la relecture signée d’un juriste (N5).',
     diagram: diagrams.level,
   },
   'ingest.started': {

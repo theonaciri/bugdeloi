@@ -24,7 +24,7 @@ const roleLabels: Record<(typeof data.tasks)[number]['role'], string> = {
 <section class="bg-bg">
   <div class="container-wide py-12 sm:py-16">
     <a href="/live" class="text-sm font-semibold text-brand-strong">← Activité en direct</a>
-    <h1 class="mt-5 wrap-anywhere font-display text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
+    <h1 class="mt-5 wrap-anywhere text-4xl tracking-tight text-ink sm:text-5xl">
       @{data.handle}
     </h1>
     {#if data.families.length > 0}
@@ -53,7 +53,7 @@ const roleLabels: Record<(typeof data.tasks)[number]['role'], string> = {
 
 <section class="border-t border-line bg-surface" aria-labelledby="taches-recentes">
   <div class="container-wide py-10 sm:py-12">
-    <h2 id="taches-recentes" class="font-display text-2xl font-semibold text-ink sm:text-3xl">Tâches récentes</h2>
+    <h2 id="taches-recentes" class="text-2xl text-ink sm:text-3xl">Tâches récentes</h2>
     {#if data.tasks.length > 0}
       <!-- svelte-ignore a11y_no_noninteractive_tabindex (Défilement horizontal du tableau au clavier.) -->
       <div class="mt-5 overflow-x-auto rounded-lg border border-line bg-bg" role="region" aria-labelledby="taches-recentes" tabindex="0">

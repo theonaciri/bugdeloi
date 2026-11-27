@@ -65,7 +65,7 @@ function classify(test: (typeof data.cases)[number]) {
 <header class="bg-bg">
   <div class="container-wide space-y-5 py-12 sm:py-16">
     <a href="/experiences" class="text-sm font-semibold text-brand-strong no-underline hover:underline">← Toutes les expériences</a>
-    <h1 class="font-display text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
+    <h1 class="text-4xl tracking-tight text-ink sm:text-5xl">
       Allocations familiales : le test à l’aveugle
     </h1>
     <p class="max-w-3xl text-lg leading-relaxed text-muted">
@@ -83,7 +83,7 @@ function classify(test: (typeof data.cases)[number]) {
 
 <section class="border-t border-line bg-surface" aria-labelledby="protocole">
   <div class="container-wide space-y-6 py-12 sm:py-16">
-    <h2 id="protocole" class="font-display text-3xl font-semibold text-ink sm:text-4xl">Comment fonctionne le test à l’aveugle ?</h2>
+    <h2 id="protocole" class="text-3xl text-ink sm:text-4xl">Comment fonctionne le test à l’aveugle ?</h2>
     <figure class="max-w-xl">
       <svg class="block h-auto w-full" viewBox="0 0 390 110" role="img" aria-labelledby="c03-schema c03-parcours">
         <title id="c03-schema">Les trois étapes du test à l’aveugle</title>
@@ -123,7 +123,7 @@ function classify(test: (typeof data.cases)[number]) {
 <section class="border-t border-line bg-bg" aria-labelledby="score">
   <div class="container-wide space-y-8 py-12 sm:py-16">
     <div class="max-w-3xl space-y-3">
-      <h2 id="score" class="font-display text-3xl font-semibold text-ink sm:text-4xl">Comparaison en euros, cas par cas</h2>
+      <h2 id="score" class="text-3xl text-ink sm:text-4xl">Comparaison en euros, cas par cas</h2>
       <p class="leading-relaxed text-muted">
         Sélectionnez un cas pour lire les deux montants et leur différence. Le graphique affiche les
         {data.euroCases.length} cas qui donnent un montant. Il compare les résultats d’Inria et ceux obtenus par
@@ -136,7 +136,7 @@ function classify(test: (typeof data.cases)[number]) {
     <ol class="grid divide-y divide-line border-y border-line md:grid-cols-3 md:divide-x md:divide-y-0">
       {#each phases as phase (phase.title)}
         <li class="space-y-2 py-5 md:px-6 md:first:pl-0 md:last:pr-0">
-          <h3 class="font-semibold text-ink">{phase.title}</h3>
+          <h3 class="text-ink">{phase.title}</h3>
           <p class="font-display text-3xl font-semibold tabular text-ink">{phase.score.passed} sur {phase.score.total}</p>
           <p class="text-sm leading-relaxed text-muted">{phase.explanation}</p>
         </li>
@@ -153,8 +153,8 @@ function classify(test: (typeof data.cases)[number]) {
 <section class="border-t border-line bg-surface" aria-labelledby="desaccords">
   <div class="container-wide space-y-8 py-12 sm:py-16">
     <div class="max-w-3xl space-y-3">
-      <h2 id="desaccords" class="font-display text-3xl font-semibold text-ink sm:text-4xl">
-        Les deux vrais écarts en cours d’examen (Guyane et Mayotte)
+      <h2 id="desaccords" class="text-3xl text-ink sm:text-4xl">
+        Deux écarts à trancher : Guyane et Mayotte
       </h2>
       <p class="leading-relaxed text-muted">
         Un juriste doit encore déterminer si chaque écart vient d’une version différente du texte, d’un choix
@@ -165,7 +165,7 @@ function classify(test: (typeof data.cases)[number]) {
     <div class="grid divide-y divide-line border-y border-line lg:grid-cols-2 lg:divide-x lg:divide-y-0">
       {#each data.disagreements as { result, article, verifications } (result.name)}
         <article id={result.name.toLowerCase()} class="min-w-0 scroll-mt-24 space-y-5 py-6 lg:px-8 lg:first:pl-0 lg:last:pr-0">
-          <h3 class="font-display text-2xl font-semibold text-ink">{article.territory}</h3>
+          <h3 class="text-2xl text-ink">{article.territory}</h3>
           <p class="text-sm text-muted">{result.name} · {article.question}</p>
           <dl class="grid grid-cols-2 gap-4 border-y border-line py-5 sm:gap-6">
             <div>
@@ -207,7 +207,7 @@ function classify(test: (typeof data.cases)[number]) {
 <section class="border-t border-line bg-bg" aria-labelledby="cas">
   <div class="container-wide space-y-10 py-12 sm:space-y-12 sm:py-16">
     <div class="space-y-4">
-      <h2 id="cas" class="font-display text-3xl font-semibold text-ink sm:text-4xl">Tableau complet des {data.scores.completed.total} cas</h2>
+      <h2 id="cas" class="text-3xl text-ink sm:text-4xl">Tableau complet des {data.scores.completed.total} cas</h2>
       <p class="max-w-3xl leading-relaxed text-muted">
         La colonne « Ce que donne la loi » présente le résultat de notre programme. Les lignes sans montant
         portent sur le droit aux allocations ou sur la structure du programme.
@@ -244,7 +244,7 @@ function classify(test: (typeof data.cases)[number]) {
     </div>
 
     <div class="space-y-4">
-      <h2 id="sources" class="font-display text-3xl font-semibold text-ink sm:text-4xl">Sources vérifiables</h2>
+      <h2 id="sources" class="text-3xl text-ink sm:text-4xl">Sources</h2>
       <ul class="max-w-3xl divide-y divide-line border-y border-line text-sm">
         <li class="py-3"><a href={data.source}>Programme remis en Catala</a></li>
         <li class="py-3"><a href={data.declaration}>Déclaration de transparence de l’agent</a></li>

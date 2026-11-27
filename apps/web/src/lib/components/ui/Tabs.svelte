@@ -39,8 +39,8 @@ let {
 const tabClasses = $derived(
   variant === 'pill'
     ? tone === 'observatory'
-      ? 'inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-sm font-medium text-obs-muted transition-colors cursor-pointer hover:text-obs-ink data-[selected]:bg-obs-ink data-[selected]:text-obs-bg'
-      : 'inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-sm font-medium text-muted transition-colors cursor-pointer hover:text-ink data-[selected]:bg-ink data-[selected]:text-bg'
+      ? 'inline-flex items-center gap-2 rounded-[var(--radius)] px-3.5 py-1.5 text-sm font-medium text-obs-muted transition-colors cursor-pointer hover:text-obs-ink data-[selected]:bg-obs-ink data-[selected]:text-obs-bg'
+      : 'inline-flex items-center gap-2 rounded-[var(--radius)] px-3.5 py-1.5 text-sm font-medium text-muted transition-colors cursor-pointer hover:text-ink data-[selected]:bg-ink data-[selected]:text-bg'
     : tone === 'observatory'
       ? 'relative inline-flex items-center gap-2 px-1 py-2.5 text-sm font-semibold text-obs-muted transition-colors cursor-pointer border-b-2 border-transparent hover:text-obs-ink data-[selected]:text-obs-ink data-[selected]:border-obs-emerald'
       : 'relative inline-flex items-center gap-2 px-1 py-2.5 text-sm font-semibold text-muted transition-colors cursor-pointer border-b-2 border-transparent hover:text-ink data-[selected]:text-ink data-[selected]:border-brand',
@@ -76,7 +76,7 @@ const tabClasses = $derived(
         {#if item.badge !== undefined}
           <span
             class={cn(
-              'mono rounded-full px-1.5 py-0.5 text-[0.68rem] leading-none tabular',
+              'mono rounded-[var(--radius)] px-1.5 py-0.5 text-[0.68rem] leading-none tabular',
               tone === 'observatory' ? 'bg-obs-surface-2 text-obs-muted' : 'bg-surface-2 text-muted',
             )}
           >

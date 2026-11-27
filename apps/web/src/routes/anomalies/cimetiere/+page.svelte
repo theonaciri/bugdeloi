@@ -14,7 +14,7 @@ let { data }: PageProps = $props()
 <header class="bg-bg">
   <div class="container-wide space-y-5 py-12 sm:py-16">
     <p class="text-sm"><a href="/anomalies">← Retour aux anomalies</a></p>
-    <h1 class="font-display text-4xl font-semibold tracking-tight sm:text-5xl">Cimetière des signalements écartés</h1>
+    <h1 class="text-4xl tracking-tight sm:text-5xl">Cimetière des signalements écartés</h1>
     <p class="max-w-3xl font-display text-xl leading-relaxed text-ink/90">
       Un juriste peut écarter un signalement parce que le renvoi à une ancienne loi était volontaire
       ou parce que notre programme a fait une erreur. Nous conservons ces dossiers et le motif de
@@ -29,7 +29,7 @@ let { data }: PageProps = $props()
       <ul class="max-w-4xl divide-y divide-line border-y border-line">
         {#each data.findings as item (item.id)}
           <li class="space-y-2 py-5">
-            <h2 class="font-display text-xl font-semibold"><a href="/anomalies/{item.id}">{item.typeLabel}</a></h2>
+            <h2 class="text-xl"><a href="/anomalies/{item.id}">{item.typeLabel}</a></h2>
             <p class="mono text-xs text-muted">{item.id}</p>
             <p>{item.claim}</p>
             <p class="text-sm text-muted">

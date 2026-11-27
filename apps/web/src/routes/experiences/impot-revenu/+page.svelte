@@ -149,16 +149,16 @@ function applyPreset(p: (typeof presets)[number]) {
 <section class="bg-bg">
   <div class="container-wide py-12 sm:py-16">
     <p class="text-sm"><a href="/experiences">← Toutes les expériences</a></p>
-    <h1 class="mt-4 max-w-4xl font-display text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-      Impôt sur le revenu 2026 : simulateur et détection des coudes
+    <h1 class="mt-4 max-w-4xl text-4xl tracking-tight text-ink sm:text-5xl">
+      Impôt sur le revenu 2026 : simulateur et effets de seuil
     </h1>
     <p class="mt-5 max-w-[68ch] text-lg leading-relaxed text-muted">
       Ce calculateur tourne entièrement dans votre navigateur à partir du texte en vigueur des articles 193, 194 et 197
-      du Code général des impôts (barème 2026). Il est aligné au centime sur notre programme Catala vérifié dans son
-      bac à sable (12 tests réussis, 30 cas de contrôle vérifiés).
+      du Code général des impôts (barème 2026). Il donne les mêmes montants, au centime près, que notre programme Catala
+      exécuté dans son bac à sable (12 tests réussis, 30 cas de contrôle concordants).
     </p>
     <div class="mt-6 max-w-[68ch] rounded-xl border border-notice-line/50 bg-notice/60 px-5 py-3.5 text-sm text-notice-ink">
-      <strong>Périmètre clair :</strong> ce noyau calcule le barème progressif, le quotient familial, son plafonnement,
+      <strong>Périmètre :</strong> ce noyau calcule le barème progressif, le quotient familial, son plafonnement,
       la réfaction outre-mer et la décote. Il n’inclut pas les réductions ni les crédits d’impôt (dons, emploi à domicile)
       ni le seuil de mise en recouvrement de 61 €. Ce n’est pas un simulateur officiel des impôts.
     </div>
@@ -169,7 +169,7 @@ function applyPreset(p: (typeof presets)[number]) {
   <div class="container-wide py-12 sm:py-16">
     <div class="flex flex-wrap items-end justify-between gap-4">
       <div>
-        <h2 id="sim-titre" class="font-display text-2xl font-semibold text-ink sm:text-3xl">
+        <h2 id="sim-titre" class="text-2xl text-ink sm:text-3xl">
           Tester un foyer en direct
         </h2>
         <p class="mt-1.5 text-sm text-muted">
@@ -181,7 +181,7 @@ function applyPreset(p: (typeof presets)[number]) {
           <button
             type="button"
             onclick={() => applyPreset(p)}
-            class="cursor-pointer rounded-full border border-line bg-bg px-3.5 py-1.5 text-xs font-medium text-ink transition hover:border-brand hover:text-brand-strong"
+            class="cursor-pointer rounded-[var(--radius)] border border-line bg-bg px-3.5 py-1.5 text-xs font-medium text-ink transition hover:border-brand hover:text-brand-strong"
           >
             {p.label}
           </button>
@@ -345,7 +345,7 @@ function applyPreset(p: (typeof presets)[number]) {
 
         <div bind:clientWidth={chartWidth}>
           <div class="mb-2 flex flex-wrap items-baseline justify-between gap-2">
-            <h3 class="text-sm font-semibold text-ink">
+            <h3 class="text-sm text-ink">
               Taux marginal effectif selon le revenu (de 0 € à 120 000 €)
             </h3>
             <span class="text-xs text-muted">Le point marque votre revenu actuel</span>
@@ -417,8 +417,8 @@ function applyPreset(p: (typeof presets)[number]) {
 
 <section class="border-t border-line bg-bg" aria-labelledby="coudes-titre">
   <div class="container-wide py-12 sm:py-16">
-    <h2 id="coudes-titre" class="font-display text-2xl font-semibold text-ink sm:text-3xl">
-      Ce que révèle le détecteur automatique de coudes et falaises (expérience C0.6)
+    <h2 id="coudes-titre" class="text-2xl text-ink sm:text-3xl">
+      Coudes et falaises repérés euro par euro
     </h2>
     <p class="mt-3 max-w-[68ch] text-base leading-relaxed text-muted">
       En testant automatiquement chaque euro de revenu entre 0 € et 200 000 € sur quatre foyers types, notre programme
@@ -429,7 +429,7 @@ function applyPreset(p: (typeof presets)[number]) {
     </p>
     <div class="mt-5 grid gap-5 lg:grid-cols-2">
       <div class="rounded-xl border border-line bg-surface p-5">
-        <h3 class="font-display text-lg font-semibold text-ink">La vraie falaise de 61 € (taux marginal : +6 100 %)</h3>
+        <h3 class="text-lg text-ink">Une falaise à 61 € : taux marginal de 6 100 %</h3>
         <p class="mt-2 text-sm leading-relaxed text-muted">
           L’article 1657 1 bis du CGI prévoit qu’un impôt inférieur à 61 € n’est pas prélevé. Pour un célibataire,
           un revenu de <strong>17 592 €</strong> donne 60 € d’impôt, donc <strong>0 € à payer</strong>. Avec
@@ -438,7 +438,7 @@ function applyPreset(p: (typeof presets)[number]) {
         </p>
       </div>
       <div class="rounded-xl border border-line bg-surface p-5">
-        <h3 class="font-display text-lg font-semibold text-ink">Le pic de décote à 43,58 % (pendant 15 €)</h3>
+        <h3 class="text-lg text-ink">Un pic à 43,58 % sur 15 € de revenu</h3>
         <p class="mt-2 text-sm leading-relaxed text-muted">
           Parce que la décote diminue de 45,25 % par euro d’impôt supplémentaire, le taux réel dans la tranche à 11 %
           est de <strong>15,98 %</strong>. Entre <strong>29 579 € et 29 594 €</strong>, la tranche à 30 % démarre avant
@@ -522,8 +522,8 @@ function applyPreset(p: (typeof presets)[number]) {
 
 <section class="border-t border-line bg-surface" aria-labelledby="sources-ir">
   <div class="container-wide py-12 sm:py-16">
-    <h2 id="sources-ir" class="font-display text-2xl font-semibold text-ink sm:text-3xl">
-      Articles officiels modélisés et code source vérifiable
+    <h2 id="sources-ir" class="text-2xl text-ink sm:text-3xl">
+      Articles traduits et code source
     </h2>
     <ul class="mt-6 divide-y divide-line border-y border-line">
       {#each data.articles as art (art.id)}

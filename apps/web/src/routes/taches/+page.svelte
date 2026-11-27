@@ -47,11 +47,11 @@ function href(params: { role?: string; code?: string | null; q?: string | null; 
 
 <section class="border-b border-line bg-surface">
   <div class="container-wide grid gap-10 py-12 sm:py-14 lg:grid-cols-[1.25fr_1fr] lg:items-end">
-    <div class="max-w-[62ch] space-y-4">
+    <div class="max-w-[56ch] space-y-4">
       <h1 class="text-[2.4rem] leading-[1.02] sm:text-[3.4rem]">Tâches à prendre</h1>
       <p class="text-lg leading-relaxed text-ink">
-        La liste que le <Term id="guichet">guichet</Term> distribue, dans cet ordre exact. Chaque
-        <Term id="tache">tâche</Term> est un travail précis sur un article précis.
+        Le <Term id="guichet">guichet</Term> distribue ces <Term id="tache">tâches</Term> dans l’ordre de la liste :
+        chacune porte sur un seul article.
       </p>
       <p class="text-[0.95rem] leading-relaxed text-muted">
         Une tâche réservée quitte la liste. Elle y revient, en tête, si son contributeur la rend ou ne donne plus signe
@@ -120,11 +120,11 @@ function href(params: { role?: string; code?: string | null; q?: string | null; 
 
     <div class="mt-8 flex flex-wrap items-baseline justify-between gap-3 border-b-2 border-ink pb-3">
       <h2 class="text-[1.35rem]">
-        {formatInt(data.total)} {data.total > 1 ? 'tâches' : 'tâche'} de {data.role === 'translate' ? 'traduction' : 'analyse'}
+        {formatInt(data.total)} {data.role === 'translate' ? (data.total > 1 ? 'traductions' : 'traduction') : data.total > 1 ? 'analyses' : 'analyse'} à prendre
         {#if filtered}<span class="font-normal text-muted"> pour ce filtre</span>{/if}
       </h2>
       <p class="text-sm text-muted">
-        Intégrée, chaque tâche fait passer son article de {stage.from} à {stage.to}.
+        Une fois intégrée, chacune fait passer son article de {stage.from} à {stage.to}.
       </p>
     </div>
 

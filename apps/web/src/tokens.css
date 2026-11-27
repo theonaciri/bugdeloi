@@ -1,7 +1,7 @@
 /*
  * Design system BugDeLoi — « Hémicycle ».
  * Le corpus est une assemblée : chaque article en vigueur est un siège, coloré par son niveau.
- * Papier imprimé froid, encre noire, encre de tampon violette comme seule couleur de marque,
+ * Papier teinté jaune-vert pâle (complémentaire du violet), encre noire, encre de tampon violette,
  * bande « séance de nuit » pour le travail en direct. Trois voix typographiques :
  *   - Archivo (élargi pour les titres) : notre voix ;
  *   - Source Serif 4 : la loi, et seulement la loi (texte officiel cité) ;
@@ -11,7 +11,7 @@
  */
 
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
 
   --font-display:
     "Archivo Variable", "Archivo", "Helvetica Neue", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -22,16 +22,16 @@
   --font-mono:
     "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 
-  /* Papier imprimé froid */
-  --bg: #f2f3f5;
-  --surface: #ffffff;
-  --surface-2: #e9ebef;
-  --surface-3: #dde0e6;
-  --ink: #14161b;
-  --ink-muted: #4a505c;
-  --ink-subtle: #656c79;
-  --line: #dcdfe5;
-  --line-strong: #b4bac5;
+  /* Papier teinté du complémentaire du violet (#4b2fb5 ≈ 252° → ≈ 72°, jaune-vert très pâle) */
+  --bg: #f5f6e9;
+  --surface: #fdfdf8;
+  --surface-2: #ebeedb;
+  --surface-3: #dfe3cb;
+  --ink: #16180f;
+  --ink-muted: #4a4f3e;
+  --ink-subtle: #63694f;
+  --line: #dfe2cd;
+  --line-strong: #b6bc9c;
 
   /* Encre de tampon violette — seule couleur de marque */
   --brand: #4b2fb5;
@@ -90,7 +90,7 @@
 
   --flag-contested: #c2410c;
   --pattern-ink: rgb(20 22 27 / 0.45);
-  --tile-stroke: #f2f3f5;
+  --tile-stroke: #f5f6e9;
 
   /* Géométrie de fiche : angles nets, ombres courtes */
   --radius-sm: 0.25rem;
@@ -100,137 +100,4 @@
   --shadow-xs: 0 1px 2px rgb(20 22 27 / 0.06);
   --shadow: 0 2px 8px -2px rgb(20 22 27 / 0.1), 0 1px 2px rgb(20 22 27 / 0.05);
   --shadow-lg: 0 16px 36px -12px rgb(20 22 27 / 0.22), 0 3px 10px -4px rgb(20 22 27 / 0.08);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0f1015;
-    --surface: #171920;
-    --surface-2: #20232c;
-    --surface-3: #2a2e39;
-    --ink: #eef0f5;
-    --ink-muted: #b0b6c3;
-    --ink-subtle: #8d94a3;
-    --line: #272b35;
-    --line-strong: #434958;
-
-    --brand: #b6a5ff;
-    --brand-strong: #cdc1ff;
-    --brand-ink: #17132b;
-    --brand-soft: #231e3d;
-    --brand-line: #3d3470;
-    --focus: #f4a261;
-
-    --mark: #5c5418;
-    --mark-ink: #fff7c2;
-
-    --banner-bg: #0a0b0f;
-    --banner-ink: #d8dce5;
-    --notice-bg: #2c2412;
-    --notice-line: #d6a13a;
-    --notice-ink: #f5dc9f;
-    --ok: #74d9ae;
-    --ok-soft: #142a22;
-    --ko: #ff97aa;
-    --ko-soft: #321b22;
-    --info: #a9c1ff;
-    --info-soft: #1a2338;
-
-    --obs-bg: #120f22;
-    --obs-surface: #1b1731;
-    --obs-surface-2: #251f40;
-    --obs-line: #2a2449;
-
-    --level-n0: #353a46;
-    --level-n1: #6f84ab;
-    --level-n2: #d9a92f;
-    --level-n3: #4b98cc;
-    --level-n4: #5b86d6;
-    --level-n5: #3fa874;
-    --level-ref: #cf9a2e;
-
-    --level-n0-ink: #eef0f5;
-    --level-n1-ink: #0f1015;
-    --level-n2-ink: #0f1015;
-    --level-n3-ink: #0f1015;
-    --level-n4-ink: #0f1015;
-    --level-n5-ink: #0f1015;
-    --level-ref-ink: #0f1015;
-
-    --flag-contested: #f4a261;
-    --pattern-ink: rgb(255 255 255 / 0.42);
-    --tile-stroke: #0f1015;
-
-    --shadow-xs: 0 1px 2px rgb(0 0 0 / 0.3);
-    --shadow: 0 4px 14px -4px rgb(0 0 0 / 0.45);
-    --shadow-lg: 0 22px 44px -12px rgb(0 0 0 / 0.65);
-  }
-}
-
-:root[data-theme="dark"] {
-  color-scheme: dark;
-  --bg: #0f1015;
-  --surface: #171920;
-  --surface-2: #20232c;
-  --surface-3: #2a2e39;
-  --ink: #eef0f5;
-  --ink-muted: #b0b6c3;
-  --ink-subtle: #8d94a3;
-  --line: #272b35;
-  --line-strong: #434958;
-
-  --brand: #b6a5ff;
-  --brand-strong: #cdc1ff;
-  --brand-ink: #17132b;
-  --brand-soft: #231e3d;
-  --brand-line: #3d3470;
-  --focus: #f4a261;
-
-  --mark: #5c5418;
-  --mark-ink: #fff7c2;
-
-  --banner-bg: #0a0b0f;
-  --banner-ink: #d8dce5;
-  --notice-bg: #2c2412;
-  --notice-line: #d6a13a;
-  --notice-ink: #f5dc9f;
-  --ok: #74d9ae;
-  --ok-soft: #142a22;
-  --ko: #ff97aa;
-  --ko-soft: #321b22;
-  --info: #a9c1ff;
-  --info-soft: #1a2338;
-
-  --obs-bg: #120f22;
-  --obs-surface: #1b1731;
-  --obs-surface-2: #251f40;
-  --obs-line: #2a2449;
-
-  --level-n0: #353a46;
-  --level-n1: #6f84ab;
-  --level-n2: #d9a92f;
-  --level-n3: #4b98cc;
-  --level-n4: #5b86d6;
-  --level-n5: #3fa874;
-  --level-ref: #cf9a2e;
-
-  --level-n0-ink: #eef0f5;
-  --level-n1-ink: #0f1015;
-  --level-n2-ink: #0f1015;
-  --level-n3-ink: #0f1015;
-  --level-n4-ink: #0f1015;
-  --level-n5-ink: #0f1015;
-  --level-ref-ink: #0f1015;
-
-  --flag-contested: #f4a261;
-  --pattern-ink: rgb(255 255 255 / 0.42);
-  --tile-stroke: #0f1015;
-
-  --shadow-xs: 0 1px 2px rgb(0 0 0 / 0.3);
-  --shadow: 0 4px 14px -4px rgb(0 0 0 / 0.45);
-  --shadow-lg: 0 22px 44px -12px rgb(0 0 0 / 0.65);
-}
-
-:root[data-theme="light"] {
-  color-scheme: light;
 }

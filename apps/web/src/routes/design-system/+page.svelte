@@ -15,7 +15,6 @@ import {
   SegmentedControl,
   Switch,
   Tabs,
-  ThemeToggle,
   Tooltip,
 } from '#lib/components/ui/index.ts'
 import {
@@ -193,33 +192,28 @@ const sampleRace: RaceTrack[] = [
 ]
 
 const paletteTokens = [
-  { name: 'Papier ivoire', token: '--bg', cls: 'bg-bg border-line text-ink', hex: '#FAF8F2' },
-  { name: 'Surface blanche', token: '--surface', cls: 'bg-surface border-line text-ink', hex: '#FFFFFF' },
+  { name: 'Papier jaune-vert pâle', token: '--bg', cls: 'bg-bg border-line text-ink', hex: '#F5F6E9' },
+  { name: 'Surface', token: '--surface', cls: 'bg-surface border-line text-ink', hex: '#FDFDF8' },
+  { name: 'Papier appuyé', token: '--surface-2', cls: 'bg-surface-2 border-line text-ink', hex: '#EBEEDB' },
+  { name: 'Encre', token: '--ink', cls: 'bg-ink border-ink text-bg', hex: '#16180F' },
   {
-    name: 'Lin secondaire',
-    token: '--surface-2',
-    cls: 'bg-surface-2 border-line text-ink',
-    hex: '#F3EFE6',
+    name: 'Encre de tampon violette',
+    token: '--brand',
+    cls: 'bg-brand border-brand text-brand-ink',
+    hex: '#4B2FB5',
   },
-  { name: 'Encre chaude', token: '--ink', cls: 'bg-ink border-ink text-bg', hex: '#181715' },
-  { name: 'Forêt éditoriale', token: '--brand', cls: 'bg-brand border-brand text-brand-ink', hex: '#1B6B50' },
+  { name: 'Surligneur', token: '--mark', cls: 'bg-mark border-line text-mark-ink', hex: '#FFF07A' },
   {
     name: 'Ambre vigilance',
     token: '--notice-bg',
     cls: 'bg-notice border-notice-line text-notice-ink',
-    hex: '#FDF3DC',
+    hex: '#FDF3D6',
   },
   {
-    name: 'Charbon chaud',
+    name: 'Séance de nuit',
     token: '--obs-bg',
     cls: 'bg-obs-bg border-obs-line-strong text-obs-ink',
-    hex: '#161513',
-  },
-  {
-    name: 'Sauge douce',
-    token: '--obs-emerald',
-    cls: 'bg-obs-emerald border-obs-emerald text-obs-bg',
-    hex: '#6EC4A4',
+    hex: '#17132B',
   },
 ]
 
@@ -272,15 +266,14 @@ $effect(() => {
   <div class="container-wide py-12 sm:py-16">
     <div class="flex flex-wrap items-end justify-between gap-6">
       <div class="max-w-3xl space-y-3">
-        <h1 class="text-4xl font-semibold sm:text-5xl">
-          Design System et interface agents
+        <h1 class="text-4xl sm:text-5xl">
+          Système de design
         </h1>
         <p class="text-base leading-relaxed text-muted sm:text-lg">
-          Composants accessibles bâtis sur <code class="text-ink">@ui-sdk/svelte</code> et Tailwind 4 : lisibles et aérés pour le grand public, pilotables sans clic pixel par les agents (WebMCP et <code class="text-ink">/api/mcp</code>).
+          Les couleurs, les typographies et les composants du site, en direct. Les composants reposent sur <code class="text-ink">@ui-sdk/svelte</code> et Tailwind 4 ; les agents peuvent les piloter via WebMCP et <code class="text-ink">/api/mcp</code>. Règles complètes : <code class="text-ink">docs/DESIGN.md</code>.
         </p>
       </div>
       <div class="flex flex-wrap items-center gap-2.5">
-        <ThemeToggle />
         <Button variant="ink" size="sm" onclick={() => shell?.openAgent()}>
           <Bot class="size-4" aria-hidden="true" />
           Inspecteur MCP
@@ -293,7 +286,7 @@ $effect(() => {
 <div class="container-wide mt-14 space-y-20">
   <section aria-labelledby="ds-palette" class="space-y-6">
     <div class="flex items-baseline justify-between gap-4">
-      <h2 id="ds-palette" class="text-3xl font-semibold">Couleurs et surfaces</h2>
+      <h2 id="ds-palette" class="text-3xl">Couleurs et surfaces</h2>
       <span class="mono text-xs text-muted">apps/web/src/tokens.css</span>
     </div>
 
@@ -313,7 +306,7 @@ $effect(() => {
       <p class="text-sm font-semibold text-ink">Niveaux de preuve N0–N5 et ★ (chaque couleur est doublée d’un motif SVG)</p>
       <div class="flex flex-wrap items-center gap-2.5">
         {#each LEVELS as lvl (lvl)}
-          <div class="inline-flex items-center gap-2 rounded-full bg-surface-2 px-3 py-1.5">
+          <div class="inline-flex items-center gap-2 rounded-[var(--radius)] bg-surface-2 px-3 py-1.5">
             <LevelSwatch level={lvl} size={18} />
             <span class="text-xs font-semibold text-ink">{levelName(lvl)}</span>
             <span class="mono text-[0.68rem] text-muted">{LEVEL_INFO[lvl].colorToken}</span>
@@ -332,7 +325,7 @@ $effect(() => {
   </section>
 
   <section aria-labelledby="ds-typo" class="space-y-6 border-t border-line pt-14">
-    <h2 id="ds-typo" class="text-3xl font-semibold">Typographie auto-hébergée</h2>
+    <h2 id="ds-typo" class="text-3xl">Typographies</h2>
     <div class="grid gap-8 lg:grid-cols-3">
       <div class="space-y-2">
         <p class="font-law text-3xl font-semibold tracking-tight">Source Serif 4</p>
@@ -360,12 +353,12 @@ $effect(() => {
   </section>
 
   <section aria-labelledby="ds-primitives" class="space-y-8 border-t border-line pt-14">
-    <h2 id="ds-primitives" class="text-3xl font-semibold">Composants interactifs</h2>
+    <h2 id="ds-primitives" class="text-3xl">Composants interactifs</h2>
 
     <div class="grid gap-10 lg:grid-cols-2">
       <div class="space-y-6">
         <div class="space-y-3">
-          <h3 class="text-lg font-semibold">Boutons et actions</h3>
+          <h3 class="text-lg">Boutons et actions</h3>
           <div class="flex flex-wrap items-center gap-2.5">
             <Button variant="ink">Principal</Button>
             <Button variant="primary">Accent</Button>
@@ -378,7 +371,7 @@ $effect(() => {
         </div>
 
         <div class="space-y-3 border-t border-line pt-5">
-          <h3 class="text-lg font-semibold">Étiquettes d’état (usage sobre)</h3>
+          <h3 class="text-lg">Étiquettes d’état</h3>
           <div class="flex flex-wrap items-center gap-2">
             <Badge variant="brand" pulse>En direct</Badge>
             <Badge variant="amber">Avant verdict humain</Badge>
@@ -408,7 +401,7 @@ $effect(() => {
 
       <div class="space-y-6">
         <div class="space-y-3">
-          <h3 class="text-lg font-semibold">Panneaux, info-bulles et glossaire</h3>
+          <h3 class="text-lg">Panneaux, info-bulles et glossaire</h3>
           <div class="flex flex-wrap items-center gap-3">
             <Button variant="secondary" size="sm" onclick={() => (demoDialogOpen = true)}>
               Ouvrir un dialogue
@@ -417,7 +410,7 @@ $effect(() => {
               Ouvrir un panneau latéral
             </Button>
             <Tooltip text="Chaque constante d’un programme Catala doit citer l’alinéa LEGI qui la fixe.">
-              <span class="rounded-full bg-surface-2 px-3 py-1.5 text-xs font-medium cursor-help">
+              <span class="rounded-[var(--radius)] bg-surface-2 px-3 py-1.5 text-xs font-medium cursor-help">
                 Survoler (info-bulle)
               </span>
             </Tooltip>
@@ -484,25 +477,25 @@ $effect(() => {
   </section>
 
   <section aria-labelledby="ds-viz" class="space-y-10 border-t border-line pt-14">
-    <h2 id="ds-viz" class="text-3xl font-semibold">Visualisations de données</h2>
+    <h2 id="ds-viz" class="text-3xl">Visualisations de données</h2>
 
     <div class="grid gap-12 lg:grid-cols-[24rem_1fr]">
       <div class="space-y-4">
         <div class="flex items-center justify-between gap-2">
-          <h3 class="text-xl font-semibold">Entonnoir de contrôle</h3>
+          <h3 class="text-xl">Entonnoir de contrôle</h3>
           <Sparkline points={sampleSpark} label="14 j" />
         </div>
         <SweepFunnel stages={sampleFunnel} />
       </div>
 
       <div class="space-y-4">
-        <h3 class="text-xl font-semibold">Comparateur de montants en euros</h3>
+        <h3 class="text-xl">Comparateur de montants en euros</h3>
         <C03EuroBars cases={sampleCases} />
       </div>
     </div>
 
     <div class="border-t border-line pt-10 space-y-4">
-      <h3 class="text-xl font-semibold">Échelle de preuve interactive</h3>
+      <h3 class="text-xl">Échelle de preuve interactive</h3>
       <ProofScaleInteractive
         counts={{ N0: 13840, N1: 0, N2: 0, N3: 0, N4: 0, N5: 0, REF: 110 }}
       />
@@ -513,7 +506,7 @@ $effect(() => {
 <section class="band-observatory mt-20 py-18" aria-labelledby="ds-obs">
   <div class="container-wide space-y-14">
     <div class="space-y-6">
-      <h2 id="ds-obs" class="font-display text-3xl font-semibold text-obs-ink">
+      <h2 id="ds-obs" class="text-3xl text-obs-ink">
         Course des chantiers
       </h2>
       <ChantierRace tracks={sampleRace} />
@@ -522,7 +515,7 @@ $effect(() => {
     <div class="space-y-6 border-t border-obs-line pt-12">
       <div class="flex flex-wrap items-end justify-between gap-4">
         <div class="space-y-1">
-          <h2 class="font-display text-3xl font-semibold text-obs-ink">
+          <h2 class="text-3xl text-obs-ink">
             Tester MCP et WebMCP en direct
           </h2>
           <p class="text-sm text-obs-muted">

@@ -11,7 +11,7 @@ import { page } from '$app/state'
     <div class="max-w-2xl space-y-5">
       <p class="font-mono text-sm text-muted">Erreur {page.status}</p>
       {#if page.status === 404}
-        <h1 class="font-display text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
+        <h1 class="text-4xl tracking-tight text-ink sm:text-5xl">
           Cette page est introuvable.
         </h1>
         <p class="text-lg leading-relaxed text-muted">
@@ -25,7 +25,7 @@ import { page } from '$app/state'
           </p>
         {/if}
       {:else}
-        <h1 class="font-display text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
+        <h1 class="text-4xl tracking-tight text-ink sm:text-5xl">
           Le service n’a pas pu répondre.
         </h1>
         <p class="text-lg leading-relaxed text-muted">
@@ -36,7 +36,7 @@ import { page } from '$app/state'
       <div class="flex flex-wrap items-center gap-4 pt-4">
         <a
           href="/"
-          class="inline-flex items-center rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
+          class="inline-flex items-center rounded-[var(--radius)] bg-brand px-5 py-2.5 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
         >
           Revenir à l’accueil
         </a>

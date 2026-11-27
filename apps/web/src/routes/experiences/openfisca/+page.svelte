@@ -29,8 +29,8 @@ const GITHUB_BASE = 'https://github.com/theonaciri/bugdeloi/blob/main/replicatio
       <span class="mx-1.5">/</span>
       <span>Comparaison OpenFisca-France (C0.8)</span>
     </p>
-    <h1 class="mt-4 max-w-4xl font-display text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-      Vérifier nos calculs face à OpenFisca-France
+    <h1 class="mt-4 max-w-4xl text-4xl tracking-tight text-ink sm:text-5xl">
+      Comparaison avec OpenFisca-France
     </h1>
     <p class="mt-5 max-w-[68ch] text-lg leading-relaxed text-muted">
       Un programme ne peut jamais se valider lui-même. Pour vérifier nos formalisations de l’impôt sur le revenu
@@ -72,8 +72,8 @@ const GITHUB_BASE = 'https://github.com/theonaciri/bugdeloi/blob/main/replicatio
 
 <section class="border-t border-line bg-surface">
   <div class="container-wide py-12 sm:py-16">
-    <h2 class="font-display text-2xl font-semibold text-ink sm:text-3xl">
-      Ce que la comparaison a mis au jour : un candidat d’arrondi à 17 593 €
+    <h2 class="text-2xl text-ink sm:text-3xl">
+      Un écart d’arrondi candidat, autour de 17 593 €
     </h2>
     <p class="mt-4 max-w-[68ch] text-base leading-relaxed text-muted">
       Sur les {fmtInt(c08.foyersGeneres.ir)} foyers testés pour l’impôt sur le revenu, {fmtInt(c08.ecartsParCategorie.divergence_simulateur)}
@@ -126,7 +126,7 @@ const GITHUB_BASE = 'https://github.com/theonaciri/bugdeloi/blob/main/replicatio
 
 <section class="border-t border-line bg-bg">
   <div class="container-wide py-12 sm:py-16">
-    <h2 class="font-display text-2xl font-semibold text-ink sm:text-3xl">
+    <h2 class="text-2xl text-ink sm:text-3xl">
       Les {fmtInt(c08.ecartsParCategorie.difference_de_perimetre)} différences de périmètre expliquées
     </h2>
     <p class="mt-3 max-w-[68ch] text-base leading-relaxed text-muted">
@@ -150,8 +150,8 @@ const GITHUB_BASE = 'https://github.com/theonaciri/bugdeloi/blob/main/replicatio
 
 <section class="border-t border-line bg-surface">
   <div class="container-wide py-12 sm:py-16">
-    <h2 class="font-display text-2xl font-semibold text-ink sm:text-3xl">
-      Données brutes et reproductibilité
+    <h2 class="text-2xl text-ink sm:text-3xl">
+      Données brutes et rejeu
     </h2>
     <p class="mt-3 max-w-[68ch] text-base leading-relaxed text-muted">
       Tous les scénarios, le pont Python vers OpenFisca-France {c08.versions.openfisca_france}, le rapport complet et
@@ -162,20 +162,20 @@ const GITHUB_BASE = 'https://github.com/theonaciri/bugdeloi/blob/main/replicatio
       <a
         href="{GITHUB_BASE}/REPORT.md"
         rel="external"
-        class="inline-flex items-center rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
+        class="inline-flex items-center rounded-[var(--radius)] bg-brand px-5 py-2.5 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
       >
         Lire le rapport C0.8 sur GitHub →
       </a>
       <a
         href="{GITHUB_BASE}/summary.json"
         rel="external"
-        class="inline-flex items-center rounded-full border border-line bg-bg px-5 py-2.5 text-sm font-semibold text-ink no-underline hover:border-brand"
+        class="inline-flex items-center rounded-[var(--radius)] border border-line bg-bg px-5 py-2.5 text-sm font-semibold text-ink no-underline hover:border-brand"
       >
         Télécharger summary.json →
       </a>
       <a
         href="/experiences/revenu-disponible"
-        class="inline-flex items-center rounded-full border border-line bg-bg px-5 py-2.5 text-sm font-semibold text-ink no-underline hover:border-brand"
+        class="inline-flex items-center rounded-[var(--radius)] border border-line bg-bg px-5 py-2.5 text-sm font-semibold text-ink no-underline hover:border-brand"
       >
         Tester le simulateur revenu disponible →
       </a>

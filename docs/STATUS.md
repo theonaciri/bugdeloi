@@ -30,6 +30,12 @@
 
 ## Journal des décisions
 
+- 2026-11-27 — Mode sombre retiré (un seul thème clair). Fond teinté d’un jaune-vert très pâle, complémentaire
+  de l’encre violette (`--bg: #f5f6e9`). Passe impeccable (clarify + polish) sur tout le site : titres sans
+  formules ni point final, graisses de titres unifiées, fautes corrigées, boutons « pilule » alignés sur les
+  angles nets, mesure des paragraphes, `/travail` réparé (import de `@bugdeloi/core` côté client).
+  `docs/DESIGN.md` exclu du formatage Biome (il aplatissait le frontmatter YAML).
+
 - 2026-11-27 — **Refonte du suivi des tâches et du site.** Le guichet n'expose qu'un état : « à prendre »
   (`/taches`, ordre exact de distribution). Chaque réservation et libération est journalisée
   (`desk.claimed`, `desk.released`, append-only) ; le parcours d'une tâche se lit sur sa fiche

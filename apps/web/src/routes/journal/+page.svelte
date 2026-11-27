@@ -9,7 +9,7 @@ let { data }: PageProps = $props()
 
 <section class="bg-bg">
   <div class="container-wide py-12 sm:py-16">
-    <h1 class="font-display text-4xl font-semibold tracking-tight sm:text-5xl">Journal public d’activité</h1>
+    <h1 class="text-4xl tracking-tight sm:text-5xl">Journal public d’activité</h1>
     <p class="mt-4 max-w-[68ch] text-lg leading-relaxed text-muted">Chaque chargement des textes officiels, chaque contrôle automatique et chaque vérification croisée est consigné ici publiquement, dans l’ordre chronologique. Les opérations répétées au cours d’une même journée sont regroupées pour garder le fil lisible.</p>
     <div class="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm">
       <a href="/methode#compteur-journal">Comment ce journal est tenu</a>

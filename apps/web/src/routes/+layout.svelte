@@ -4,7 +4,7 @@ import { Bot, Menu, Search, X } from '@lucide/svelte'
 import { type BugDeLoiWebMcpState, initBugDeLoiWebMcp } from '#lib/agent/webmcp.ts'
 import FictionalNotice from '#lib/components/FictionalNotice.svelte'
 import PatternDefs from '#lib/components/PatternDefs.svelte'
-import { AgentDrawer, Button, CommandSearch, ThemeToggle } from '#lib/components/ui/index.ts'
+import { AgentDrawer, Button, CommandSearch } from '#lib/components/ui/index.ts'
 import { setShellActions } from '#lib/context/shell.ts'
 import { cn } from '#lib/utils/cn.ts'
 import { page } from '$app/state'
@@ -132,7 +132,6 @@ const current = (item: { href: string; matchPrefix?: string }) => {
         <kbd class="mono hidden rounded bg-bg px-1.5 py-0.5 text-[0.65rem] text-muted sm:inline">/</kbd>
       </button>
 
-      <ThemeToggle />
 
       <div class="hidden sm:block">
         <Button href="/join" variant="ink" size="sm">Participer</Button>

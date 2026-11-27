@@ -14,13 +14,13 @@ let { data }: PageProps = $props()
 
 <section class="bg-bg">
   <div class="container-wide py-12 sm:py-16">
-    <h1 class="max-w-4xl font-display text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-      Annexes : simulateurs et étalonnage
+    <h1 class="max-w-4xl text-4xl tracking-tight text-ink sm:text-5xl">
+      Expériences
     </h1>
     <p class="mt-5 max-w-[68ch] text-lg leading-relaxed text-muted">
-      Le cœur de BugDeLoi est la formalisation incrémentale des articles de loi en Catala avec la communauté pour
-      détecter les incompatibilités entre textes. Cette page rassemble nos annexes d’étalonnage : simulateurs
-      d’effets de seuil, comparaison OpenFisca-France et veille parlementaire.
+      Simulateurs et comparaisons qui servent à étalonner la méthode : effets de seuil, confrontation avec
+      OpenFisca-France, effet d’un amendement en euros. Ce sont des résultats de travail : aucun n’a encore été
+      qualifié par un juriste.
     </p>
   </div>
 </section>
@@ -30,9 +30,9 @@ let { data }: PageProps = $props()
     <ul class="divide-y divide-line border-y border-line">
       <li class="grid gap-4 py-8 lg:grid-cols-12 lg:items-baseline">
         <div class="lg:col-span-8">
-          <h2 class="font-display text-2xl font-semibold text-ink sm:text-3xl">
+          <h2 class="text-2xl text-ink sm:text-3xl">
             <a href="/experiences/revenu-disponible" class="no-underline hover:underline">
-              Revenu disponible réel (Impôt, Allocations, APL, RSA, Prime d’activité)
+              Revenu disponible : impôt, allocations, APL, RSA et prime d’activité
             </a>
           </h2>
           <p class="mt-2.5 max-w-[62ch] text-base leading-relaxed text-muted">
@@ -55,7 +55,7 @@ let { data }: PageProps = $props()
         <div class="lg:col-span-4 lg:text-right">
           <a
             href="/experiences/revenu-disponible"
-            class="inline-flex items-center rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
+            class="inline-flex items-center rounded-[var(--radius)] bg-brand px-5 py-2.5 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
           >
             Ouvrir le simulateur →
           </a>
@@ -64,9 +64,9 @@ let { data }: PageProps = $props()
 
       <li class="grid gap-4 py-8 lg:grid-cols-12 lg:items-baseline">
         <div class="lg:col-span-8">
-          <h2 class="font-display text-2xl font-semibold text-ink sm:text-3xl">
+          <h2 class="text-2xl text-ink sm:text-3xl">
             <a href="/experiences/openfisca" class="no-underline hover:underline">
-              Comparaison croisée avec OpenFisca-France (C0.8)
+              Comparaison avec OpenFisca-France
             </a>
           </h2>
           <p class="mt-2.5 max-w-[62ch] text-base leading-relaxed text-muted">
@@ -90,7 +90,7 @@ let { data }: PageProps = $props()
         <div class="lg:col-span-4 lg:text-right">
           <a
             href="/experiences/openfisca"
-            class="inline-flex items-center rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
+            class="inline-flex items-center rounded-[var(--radius)] bg-brand px-5 py-2.5 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
           >
             Voir la comparaison →
           </a>
@@ -99,9 +99,9 @@ let { data }: PageProps = $props()
 
       <li class="grid gap-4 py-8 lg:grid-cols-12 lg:items-baseline">
         <div class="lg:col-span-8">
-          <h2 class="font-display text-2xl font-semibold text-ink sm:text-3xl">
+          <h2 class="text-2xl text-ink sm:text-3xl">
             <a href="/experiences/parlement" class="no-underline hover:underline">
-              Veille parlementaire : impact en euros d’un amendement
+              L’effet d’un amendement en euros
             </a>
           </h2>
           <p class="mt-2.5 max-w-[62ch] text-base leading-relaxed text-muted">
@@ -123,7 +123,7 @@ let { data }: PageProps = $props()
         <div class="lg:col-span-4 lg:text-right">
           <a
             href="/experiences/parlement"
-            class="inline-flex items-center rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
+            class="inline-flex items-center rounded-[var(--radius)] bg-brand px-5 py-2.5 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
           >
             Voir les exemples →
           </a>
@@ -132,9 +132,9 @@ let { data }: PageProps = $props()
 
       <li class="grid gap-4 py-8 lg:grid-cols-12 lg:items-baseline">
         <div class="lg:col-span-8">
-          <h2 class="font-display text-2xl font-semibold text-ink sm:text-3xl">
+          <h2 class="text-2xl text-ink sm:text-3xl">
             <a href="/experiences/impot-revenu" class="no-underline hover:underline">
-              Impôt sur le revenu 2026 : simulateur et détection des coudes
+              Impôt sur le revenu 2026 : simulateur et effets de seuil
             </a>
           </h2>
           <p class="mt-2.5 max-w-[62ch] text-base leading-relaxed text-muted">
@@ -150,7 +150,7 @@ let { data }: PageProps = $props()
         <div class="lg:col-span-4 lg:text-right">
           <a
             href="/experiences/impot-revenu"
-            class="inline-flex items-center rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
+            class="inline-flex items-center rounded-[var(--radius)] bg-brand px-5 py-2.5 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
           >
             Ouvrir le simulateur →
           </a>
@@ -159,9 +159,9 @@ let { data }: PageProps = $props()
 
       <li class="grid gap-4 py-8 lg:grid-cols-12 lg:items-baseline">
         <div class="lg:col-span-8">
-          <h2 class="font-display text-2xl font-semibold text-ink sm:text-3xl">
+          <h2 class="text-2xl text-ink sm:text-3xl">
             <a href="/experiences/allocations-familiales" class="no-underline hover:underline">
-              Allocations familiales : test à l’aveugle face à Inria
+              Allocations familiales : traduction à l’aveugle
             </a>
           </h2>
           <p class="mt-2.5 max-w-[62ch] text-base leading-relaxed text-muted">
@@ -183,8 +183,8 @@ let { data }: PageProps = $props()
 
       <li class="grid gap-4 py-8 lg:grid-cols-12 lg:items-baseline">
         <div class="lg:col-span-8">
-          <h2 class="font-display text-2xl font-semibold text-ink sm:text-3xl">
-            Rappel des ambiguïtés juridiques connues (C0.4)
+          <h2 class="text-2xl text-ink sm:text-3xl">
+            Retrouver les ambiguïtés déjà connues
           </h2>
           <p class="mt-2.5 max-w-[62ch] text-base leading-relaxed text-muted">
             Les chercheurs d’Inria et de la DGFiP ont noté {data.c04.totalGroundTruth} questions d’interprétation et

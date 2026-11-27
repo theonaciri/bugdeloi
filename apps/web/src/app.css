@@ -93,7 +93,7 @@
     background: var(--mark);
     color: var(--mark-ink);
     padding-inline: 0.12em;
-    border-radius: 2px;
+    border-radius: var(--radius-sm);
   }
 
   p,
@@ -197,7 +197,7 @@
     margin-top: 2.5rem;
   }
   .prose-page h3 {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     margin-top: 1.75rem;
   }
   .prose-page ul {

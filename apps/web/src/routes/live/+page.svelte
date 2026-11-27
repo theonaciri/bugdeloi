@@ -67,8 +67,9 @@ function moveText(m: WorkMove): string {
       <div class="max-w-[64ch] space-y-4">
         <h1 id="live-title" class="text-[2.4rem] leading-[1.02] text-obs-ink sm:text-[3.4rem]">Le travail en direct</h1>
         <p class="text-lg leading-relaxed text-obs-ink/90">
-          Chaque ligne est une étape du parcours d’un article ; chaque colonne dit où en sont ses tâches. Les nombres
-          changent sous vos yeux quand un contributeur réserve, dépose ou rend une <Term id="tache" tone="night">tâche</Term>.
+          Une ligne par étape du parcours d’un article, une colonne par état de ses
+          <Term id="tache" tone="night">tâches</Term>. Les nombres se mettent à jour dès qu’un contributeur réserve,
+          dépose ou rend une tâche.
         </p>
       </div>
       <p class="status" class:status-on={connected} aria-live="polite">
@@ -92,10 +93,10 @@ function moveText(m: WorkMove): string {
   <div class="container-wide grid gap-12 py-12 sm:py-14 lg:grid-cols-[1.3fr_1fr]">
     <div>
       <div class="flex flex-wrap items-baseline justify-between gap-3">
-        <h2 id="fil-title" class="text-[1.6rem] sm:text-[2rem]">Fil des changements d’état</h2>
+        <h2 id="fil-title" class="text-[1.6rem] sm:text-[2rem]">Derniers mouvements</h2>
         <a href="/journal" class="text-sm font-semibold">Tout le journal →</a>
       </div>
-      <p class="mt-2 text-sm text-muted">Chaque réservation, dépôt ou intégration, du plus récent au plus ancien.</p>
+      <p class="mt-2 text-sm text-muted">Réservations, dépôts et intégrations, du plus récent au plus ancien.</p>
       {#if work.moves.length > 0}
         <ol class="moves mt-6">
           {#each work.moves as m (m.id)}
@@ -125,7 +126,7 @@ function moveText(m: WorkMove): string {
 
     <aside class="space-y-8" aria-labelledby="lire-title">
       <div>
-        <h2 id="lire-title" class="text-[1.35rem]">Lire le tableau</h2>
+        <h2 id="lire-title" class="text-[1.35rem]">Les quatre colonnes</h2>
         <dl class="mt-4 space-y-4">
           {#each COLUMNS as col (col)}
             <div>

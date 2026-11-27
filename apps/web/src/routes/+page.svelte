@@ -102,11 +102,11 @@ $effect(() => {
           </p>
         {/snippet}
         {#snippet center()}
-          <h1 id="hero-title" class="hero-title">Le droit qui calcule,<br /> article par article.</h1>
+          <h1 id="hero-title" class="hero-title">Le droit qui calcule,<br /> article par article</h1>
           <p class="mt-4 text-[1.02rem] leading-snug text-ink sm:text-[1.1rem]">
             <strong class="font-display text-[1.6rem] font-extrabold [font-stretch:115%] text-brand"><LiveNumber value={started} /></strong>
-            des <strong>{formatInt(inForce)}</strong> articles en vigueur ont commencé leur parcours
-            <span class="whitespace-nowrap">({startedPct} %).</span>
+            articles en vigueur sur <strong>{formatInt(inForce)}</strong> ont commencé leur parcours
+            <span class="whitespace-nowrap">({startedPct} %)</span>.
           </p>
           <div class="mt-5 flex flex-wrap justify-center gap-3">
             <a href="#parcours" class="cta cta-primary">Suivre le parcours d’un article <ArrowRight class="size-4" aria-hidden="true" /></a>
@@ -132,7 +132,7 @@ $effect(() => {
         </p>
       {/if}
     {:else}
-      <h1 id="hero-title" class="hero-title text-left">Le droit qui calcule, article par article.</h1>
+      <h1 id="hero-title" class="hero-title text-left">Le droit qui calcule, article par article</h1>
       <div class="mt-6">
         <EmptyState title="Les chiffres en direct sont temporairement indisponibles.">
           Consultez <a href="/status">l’état du service</a>.
@@ -146,11 +146,11 @@ $effect(() => {
 <section id="parcours" class="border-t border-line bg-surface" aria-labelledby="parcours-title">
   <div class="container-wide py-16 sm:py-20">
     <div class="grid gap-6 lg:grid-cols-[1fr_1fr] lg:items-end">
-      <h2 id="parcours-title" class="section-title">Six étapes, chacune contrôlée par une machine ou par un humain.</h2>
+      <h2 id="parcours-title" class="section-title">Le parcours d’un article</h2>
       <p class="max-w-[60ch] text-[1.02rem] leading-relaxed text-muted">
-        Un article monte d’un niveau quand il réussit le contrôle de l’étape. Des agents IA proposent le travail ; ils ne
-        le valident jamais. Le juge est le <Term id="compilateur">compilateur</Term>, un
-        <Term id="oracle">oracle</Term> indépendant ou un juriste qui signe.
+        Six étapes, du texte officiel à la relecture signée. Des agents IA proposent le travail, mais ne le valident
+        jamais : à chaque étape, le <Term id="compilateur">compilateur</Term>, un <Term id="oracle">oracle</Term>
+        indépendant ou un juriste décide si l’article monte d’un niveau.
       </p>
     </div>
     <div class="mt-12">
@@ -165,11 +165,11 @@ $effect(() => {
   <section class="border-t border-line bg-bg" aria-labelledby="exemple-title">
     <div class="container-wide py-16 sm:py-20">
       <div class="grid gap-6 lg:grid-cols-[1fr_1fr] lg:items-end">
-        <h2 id="exemple-title" class="section-title">Un vrai article, du texte au test : l’article {sp.num} du CGI.</h2>
+        <h2 id="exemple-title" class="section-title">L’article {sp.num} du CGI, du texte au test</h2>
         <p class="max-w-[60ch] text-[1.02rem] leading-relaxed text-muted">
-          Ce qui suit est lu directement dans le fichier du corpus, sans retouche. L’article est aujourd’hui au niveau
+          Les quatre extraits viennent tels quels du fichier versionné dans le corpus. L’article est au niveau
           {#if sp.level}<strong class="text-ink">{sp.level} {LEVEL_INFO[sp.level].label}</strong>{:else}inconnu{/if} ;
-          l’étape suivante est l’écriture de cas de test indépendants.
+          il attend maintenant des cas de test écrits sans voir son code.
         </p>
       </div>
 
@@ -220,10 +220,10 @@ $effect(() => {
     <div class="container-wide py-16 sm:py-20">
       <div class="flex flex-wrap items-end justify-between gap-6">
         <div class="max-w-[62ch] space-y-3">
-          <h2 id="direct-title" class="section-title text-obs-ink">Le travail en cours, étape par étape.</h2>
+          <h2 id="direct-title" class="section-title text-obs-ink">Le travail en cours</h2>
           <p class="text-[1.02rem] leading-relaxed text-obs-muted">
-            Le <Term id="guichet" tone="night">guichet</Term> distribue les tâches une à une. Chaque ligne est une étape,
-            chaque colonne dit combien de tâches s’y trouvent. Le tableau complet montre chaque tâche et mène à sa fiche.
+            Le <Term id="guichet" tone="night">guichet</Term> distribue les tâches une à une. Une ligne par étape, une
+            colonne par état : à prendre, en cours, en relecture, intégrée. Le tableau complet montre chaque tâche.
           </p>
         </div>
         <div class="flex flex-wrap gap-5 text-sm font-semibold">
@@ -241,18 +241,18 @@ $effect(() => {
 <!-- 5. Ce qui a déjà été établi -->
 <section class="bg-surface" aria-labelledby="resultats-title">
   <div class="container-wide py-16 sm:py-20">
-    <h2 id="resultats-title" class="section-title max-w-[22ch]">Ce que l’on peut déjà rejouer.</h2>
+    <h2 id="resultats-title" class="section-title max-w-[22ch]">Premiers résultats</h2>
 
     <div class="lead-result mt-12">
       <div class="space-y-4">
         <h3 class="text-[1.5rem] leading-tight sm:text-[1.9rem]">
-          Allocations familiales : {data.c03.scores.completed.passed} cas sur {data.c03.scores.completed.total} retrouvés à
-          l’aveugle, deux écarts à trancher.
+          Allocations familiales : {data.c03.scores.completed.passed} cas sur {data.c03.scores.completed.total} retrouvés
+          sans voir le code de l’Inria
         </h3>
         <p class="max-w-[60ch] leading-relaxed text-muted">
-          Un agent a traduit la loi en vigueur sans voir le programme de l’Inria, puis chaque montant a été comparé. Sur
-          deux situations, la lecture du texte et le programme de référence ne donnent pas le même montant. Deux relectures
-          indépendantes confirment l’écart ; un juriste doit maintenant trancher.
+          Un agent a traduit la loi en vigueur sans voir le programme de l’Inria, puis chaque montant a été comparé. Dans
+          deux situations, la lecture du texte et le programme de référence divergent. Deux relectures indépendantes
+          confirment l’écart ; il reste à un juriste de trancher.
         </p>
         <a href="/experiences/allocations-familiales" class="inline-flex items-center gap-1 font-semibold">
           L’étude complète, cas par cas <ArrowRight class="size-4" aria-hidden="true" />
@@ -313,7 +313,7 @@ $effect(() => {
 <!-- 6. Par où commencer -->
 <section class="border-t border-line bg-bg" aria-labelledby="commencer-title">
   <div class="container-wide py-16 sm:py-20">
-    <h2 id="commencer-title" class="section-title max-w-[24ch]">Par où commencer, selon ce que vous cherchez.</h2>
+    <h2 id="commencer-title" class="section-title max-w-[24ch]">Par où commencer</h2>
     <div class="paths mt-12">
       <div class="path">
         <h3 class="path-title">Comprendre ce que la loi calcule</h3>

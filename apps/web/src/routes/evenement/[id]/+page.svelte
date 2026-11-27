@@ -31,7 +31,7 @@ const replayCounts = $derived(Object.entries(Object.groupBy(entry.replayStatuses
   <header class="bg-bg">
     <div class="container-wide space-y-4 py-12 sm:py-16">
       <p class="text-sm"><a href="/journal">← Retour au journal</a></p>
-      <h1 class="font-display text-3xl font-semibold tracking-tight sm:text-5xl">{entry.headline}</h1>
+      <h1 class="text-3xl tracking-tight sm:text-5xl">{entry.headline}</h1>
       <p class="text-sm text-muted"><time datetime={entry.ts}>{formatDateTime(entry.ts)}</time></p>
       {#if entry.detail}<p class="max-w-[68ch] text-lg leading-relaxed text-muted">{entry.detail}</p>{/if}
     </div>
@@ -41,7 +41,7 @@ const replayCounts = $derived(Object.entries(Object.groupBy(entry.replayStatuses
     <div class="container-wide py-12 sm:py-16">
       <div class="max-w-[68ch] space-y-8">
         <section class="space-y-3">
-          <h2 class="font-display text-2xl font-semibold sm:text-3xl">Pourquoi cette étape existe</h2>
+          <h2 class="text-2xl sm:text-3xl">Pourquoi cette opération</h2>
           <p>{explanation.why}</p>
           {#if explanation.diagram}
             {@const diagram = explanation.diagram}
@@ -54,7 +54,7 @@ const replayCounts = $derived(Object.entries(Object.groupBy(entry.replayStatuses
           {/if}
         </section>
         <section class="space-y-3 border-t border-line pt-6">
-          <h2 class="font-display text-2xl font-semibold sm:text-3xl">Ce que montre concrètement cette opération</h2>
+          <h2 class="text-2xl sm:text-3xl">Ce qu’elle établit</h2>
           <p>{explanation.meaning}</p>
           {#if entry.scopes.length}
             <ul class="space-y-2">
@@ -104,7 +104,7 @@ const replayCounts = $derived(Object.entries(Object.groupBy(entry.replayStatuses
                       </td>
                       <td class="px-4 py-3 font-mono text-xs text-muted">{art.id}</td>
                       <td class="px-4 py-3">
-                        <span class="rounded-full bg-brand-soft px-2.5 py-0.5 text-xs font-semibold text-brand-strong">
+                        <span class="rounded-[var(--radius)] bg-brand-soft px-2.5 py-0.5 text-xs font-semibold text-brand-strong">
                           {entry.promotedLevel ?? 'N2'}
                         </span>
                       </td>
@@ -132,7 +132,7 @@ const replayCounts = $derived(Object.entries(Object.groupBy(entry.replayStatuses
           {/if}
         </section>
         <section class="space-y-3 border-t border-line pt-6">
-          <h2 class="font-display text-2xl font-semibold sm:text-3xl">Quelle est la suite ?</h2>
+          <h2 class="text-2xl sm:text-3xl">Et ensuite</h2>
           <p>{explanation.next}</p>
         </section>
         <details class="mt-8 border-t border-line pt-3">

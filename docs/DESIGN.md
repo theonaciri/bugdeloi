@@ -1,112 +1,116 @@
 ---
-
 name: BugDeLoi
 description: Le droit qui calcule, article par article — observatoire citoyen du droit calculable.
 colors:
-paper: "#f2f3f5"
-surface: "#ffffff"
-surface-2: "#e9ebef"
-ink: "#14161b"
-ink-muted: "#4a505c"
-line: "#dcdfe5"
-line-strong: "#b4bac5"
-stamp-violet: "#4b2fb5"
-stamp-violet-deep: "#3b2196"
-stamp-violet-wash: "#eeebfb"
-highlighter: "#fff07a"
-night: "#17132b"
-night-surface: "#201b39"
-night-ink: "#f3f0fc"
-night-muted: "#b9b1d8"
-ok: "#17704d"
-ko: "#b4233c"
-notice: "#fdf3d6"
-level-n0: "#d5d9e0"
-level-n1: "#8fa3c7"
-level-n2: "#e9b93a"
-level-n3: "#4fa3d9"
-level-n4: "#2f5fb3"
-level-n5: "#17704d"
-level-ref: "#b07d1a"
+  paper: "#f5f6e9"
+  surface: "#fdfdf8"
+  surface-2: "#ebeedb"
+  ink: "#16180f"
+  ink-muted: "#4a4f3e"
+  line: "#dfe2cd"
+  line-strong: "#b6bc9c"
+  stamp-violet: "#4b2fb5"
+  stamp-violet-deep: "#3b2196"
+  stamp-violet-wash: "#eeebfb"
+  highlighter: "#fff07a"
+  night: "#17132b"
+  night-surface: "#201b39"
+  night-ink: "#f3f0fc"
+  night-muted: "#b9b1d8"
+  ok: "#17704d"
+  ko: "#b4233c"
+  notice: "#fdf3d6"
+  level-n0: "#d5d9e0"
+  level-n1: "#8fa3c7"
+  level-n2: "#e9b93a"
+  level-n3: "#4fa3d9"
+  level-n4: "#2f5fb3"
+  level-n5: "#17704d"
+  level-ref: "#b07d1a"
 typography:
-display:
-fontFamily: "Archivo Variable, Archivo, Helvetica Neue, system-ui, sans-serif"
-fontSize: "clamp(1.9rem, 3.4vw, 3.4rem)"
-fontWeight: 800
-lineHeight: 1.02
-letterSpacing: "-0.025em"
-fontVariation: "'wdth' 118"
-headline:
-fontFamily: "Archivo Variable, Archivo, system-ui, sans-serif"
-fontSize: "1.6rem"
-fontWeight: 700
-lineHeight: 1.08
-letterSpacing: "-0.015em"
-fontVariation: "'wdth' 112"
-body:
-fontFamily: "Archivo Variable, Archivo, system-ui, sans-serif"
-fontSize: "1rem"
-fontWeight: 400
-lineHeight: 1.6
-law:
-fontFamily: "Source Serif 4 Variable, Source Serif 4, Georgia, serif"
-fontSize: "1.05rem"
-fontWeight: 400
-lineHeight: 1.7
-mono:
-fontFamily: "JetBrains Mono Variable, JetBrains Mono, ui-monospace, monospace"
-fontSize: "0.8rem"
-lineHeight: 1.6
-label:
-fontFamily: "Archivo Variable, Archivo, system-ui, sans-serif"
-fontSize: "0.78rem"
-fontWeight: 700
-letterSpacing: "0.06em"
+  display:
+    fontFamily: "Archivo Variable, Archivo, Helvetica Neue, system-ui, sans-serif"
+    fontSize: "clamp(1.9rem, 3.4vw, 3.4rem)"
+    fontWeight: 800
+    lineHeight: 1.02
+    letterSpacing: "-0.025em"
+    fontVariation: "'wdth' 118"
+  headline:
+    fontFamily: "Archivo Variable, Archivo, system-ui, sans-serif"
+    fontSize: "1.6rem"
+    fontWeight: 700
+    lineHeight: 1.08
+    letterSpacing: "-0.015em"
+    fontVariation: "'wdth' 112"
+  title:
+    fontFamily: "Archivo Variable, Archivo, system-ui, sans-serif"
+    fontSize: "1.2rem"
+    fontWeight: 700
+    lineHeight: 1.2
+  body:
+    fontFamily: "Archivo Variable, Archivo, system-ui, sans-serif"
+    fontSize: "1rem"
+    fontWeight: 400
+    lineHeight: 1.6
+  law:
+    fontFamily: "Source Serif 4 Variable, Source Serif 4, Georgia, serif"
+    fontSize: "1.05rem"
+    fontWeight: 400
+    lineHeight: 1.7
+  mono:
+    fontFamily: "JetBrains Mono Variable, JetBrains Mono, ui-monospace, monospace"
+    fontSize: "0.8rem"
+    lineHeight: 1.6
+  label:
+    fontFamily: "Archivo Variable, Archivo, system-ui, sans-serif"
+    fontSize: "0.78rem"
+    fontWeight: 700
+    letterSpacing: "0.06em"
 rounded:
-sm: "0.25rem"
-md: "0.375rem"
-lg: "0.5rem"
-xl: "0.75rem"
-seat: "999px"
+  sm: "0.25rem"
+  md: "0.375rem"
+  lg: "0.5rem"
+  xl: "0.75rem"
+  seat: "999px"
 spacing:
-gutter-mobile: "1.25rem"
-gutter: "2rem"
-section: "5rem"
+  gutter-mobile: "1.25rem"
+  gutter: "2rem"
+  section: "5rem"
 components:
-button-primary:
-backgroundColor: "{colors.stamp-violet}"
-textColor: "{colors.surface}"
-rounded: "{rounded.md}"
-height: "2.75rem"
-padding: "0 1.15rem"
-button-primary-hover:
-backgroundColor: "{colors.stamp-violet-deep}"
-button-secondary:
-backgroundColor: "{colors.surface}"
-textColor: "{colors.ink}"
-rounded: "{rounded.md}"
-height: "2.75rem"
-task-card:
-backgroundColor: "{colors.surface}"
-textColor: "{colors.ink}"
-rounded: "{rounded.md}"
-padding: "0.5rem 0.65rem"
-task-card-night:
-backgroundColor: "{colors.night-surface}"
-textColor: "{colors.night-ink}"
-rounded: "{rounded.md}"
-board-cell-night:
-backgroundColor: "{colors.night}"
-textColor: "{colors.night-ink}"
-stamp:
-textColor: "{colors.stamp-violet}"
-rounded: "{rounded.sm}"
-padding: "0.4rem 0.9rem"
+  button-primary:
+    backgroundColor: "{colors.stamp-violet}"
+    textColor: "{colors.surface}"
+    rounded: "{rounded.md}"
+    height: "2.75rem"
+    padding: "0 1.15rem"
+  button-primary-hover:
+    backgroundColor: "{colors.stamp-violet-deep}"
+  button-secondary:
+    backgroundColor: "{colors.surface}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.md}"
+    height: "2.75rem"
+  task-card:
+    backgroundColor: "{colors.surface}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.md}"
+    padding: "0.5rem 0.65rem"
+  task-card-night:
+    backgroundColor: "{colors.night-surface}"
+    textColor: "{colors.night-ink}"
+    rounded: "{rounded.md}"
+  board-cell-night:
+    backgroundColor: "{colors.night}"
+    textColor: "{colors.night-ink}"
+  stamp:
+    textColor: "{colors.stamp-violet}"
+    rounded: "{rounded.sm}"
+    padding: "0.4rem 0.9rem"
 ---
 
 # Design System: BugDeLoi
 
-Source of truth for the tokens: `apps/web/src/tokens.css` (light and dark), exposed to Tailwind in
+Source of truth for the tokens: `apps/web/src/tokens.css` (light only: no dark mode), exposed to Tailwind in
 `apps/web/src/app.css`. Living catalogue: `/design-system`.
 
 ## Overview
@@ -127,12 +131,13 @@ Editorial principles carried over from the previous design and still binding:
 - Give every number its exact scope ("un compte, pas une probabilité") and a link to the method.
 - Never mix up a finding reproduced by machine with an anomaly qualified by a human.
 - Keep technical identifiers (`LEGIARTI`, SHA-256 digests, task ids) one click away and copyable.
-- Deliver the same information by keyboard, in light and in dark mode, with no server-side `style=`
-  attribute (strict hash-based CSP).
+- Deliver the same information by keyboard, with no server-side `style=` attribute (strict hash-based
+  CSP). The site has a single light theme: dark mode was removed on 27/11/2026.
 
 ## Colors
 
-- **Cool printed paper** (`paper`, `surface`): the reading ground. Neutral, cold, never cream.
+- **Pale yellow-green paper** (`paper`, `surface`): the reading ground. A faint tint of the violet's complement
+  (≈ 72° against ≈ 252°), so the violet stands out without a second accent. Lines and greys are tinted the same way.
 - **Ink** (`ink`, `ink-muted`): text and the 1.5–2 px structural rules (border-top on sections,
   tallies, journey stations).
 - **Violet stamp ink** (`stamp-violet`): the one brand colour. Primary actions, links, the "current"
@@ -197,6 +202,8 @@ discs and swatches. Stamps are rectangles, tilted −3° to −4°.
 
 ## Do's and Don'ts
 
+- **Do** write titles without a final period, without the formulas "X, chacune Y", "Voici…" or "Notre règle
+  est simple", and without numbering unless the order is information.
 - **Do** put every new definition in `lib/glossary.ts`, then use `<Term id=…>`.
 - **Do** write the public vocabulary of tasks as "à prendre", "en cours", "en relecture",
   "intégrée". **Don't** write "soumise", "terminée" or "délivrée".

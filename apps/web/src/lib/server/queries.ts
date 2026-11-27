@@ -227,8 +227,8 @@ function formatEventCopy(r: typeof event.$inferSelect): { headline: string; deta
     return {
       headline: `${count} ${count > 1 ? 'articles promus' : 'article promu'} au niveau ${level} Compilé`,
       detail: list.length
-        ? `Ancrage LEGI verbatim (N1) et clerk test Catala 1.3.2 vert (N2) : ${list.join(', ')}.`
-        : 'Ancrage LEGI verbatim (N1) et compilation Catala 1.3.2 (N2) vérifiés mécaniquement.',
+        ? `Texte cité à l’identique de Légifrance, code compilé et tests réussis avec Catala 1.3.2 : ${list.join(', ')}.`
+        : 'Texte cité à l’identique de Légifrance, code compilé et tests réussis avec Catala 1.3.2.',
     }
   }
 

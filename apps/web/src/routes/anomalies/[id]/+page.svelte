@@ -39,7 +39,7 @@ function articleLabel(ref: typeof item.source, fallback: string) {
           {rejected ? '← Retour aux signalements écartés' : '← Retour aux anomalies'}
         </a>
       </p>
-      <h1 class="font-display text-4xl font-semibold tracking-tight sm:text-5xl">{title}</h1>
+      <h1 class="text-4xl tracking-tight sm:text-5xl">{title}</h1>
       <p class="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-muted">
         <code class="text-sm">{item.id}</code>
         {#if rejected}
@@ -72,7 +72,7 @@ function articleLabel(ref: typeof item.source, fallback: string) {
   <div class="border-t border-line bg-surface">
     <div class="container-wide space-y-12 py-12 sm:py-16">
       <section class="max-w-3xl space-y-4" aria-labelledby="constat">
-        <h2 id="constat" class="font-display text-2xl font-semibold sm:text-3xl">Ce que le programme a repéré</h2>
+        <h2 id="constat" class="text-2xl sm:text-3xl">Ce que le programme a repéré</h2>
         {#if item.type === 'REF_MORTE'}
           <p class="leading-relaxed">Un article en vigueur renvoie à un article que le programme a identifié comme abrogé à la date du contrôle.</p>
           <FlowDiagram
@@ -97,7 +97,7 @@ function articleLabel(ref: typeof item.source, fallback: string) {
       </section>
 
       <section class="space-y-4 border-t border-line pt-8" aria-labelledby="verification">
-        <h2 id="verification" class="font-display text-2xl font-semibold sm:text-3xl">Où en est la vérification ?</h2>
+        <h2 id="verification" class="text-2xl sm:text-3xl">Où en sont les contrôles ?</h2>
         <ol class="grid border-y border-line sm:grid-cols-2 lg:grid-cols-4" aria-label="Étapes de vérification du signalement">
           {#each findingSteps as step, index (step.status)}
             {@const reached = rejected ? index < 2 : index < currentStep}
@@ -122,7 +122,7 @@ function articleLabel(ref: typeof item.source, fallback: string) {
       </section>
 
       <section class="max-w-3xl space-y-4" aria-labelledby="passage">
-        <h2 id="passage" class="font-display text-2xl font-semibold sm:text-3xl">Passage exact du texte de loi</h2>
+        <h2 id="passage" class="text-2xl sm:text-3xl">Passage exact du texte de loi</h2>
         {#if item.excerpts.length > 0}
           <p class="text-sm leading-relaxed text-muted">Le surlignage montre le passage relevé par le programme dans les extraits du certificat.</p>
           {#each item.excerpts as excerpt}
@@ -132,7 +132,7 @@ function articleLabel(ref: typeof item.source, fallback: string) {
           <p class="text-muted">Le dossier ne contient pas d’extrait. Les liens vers Légifrance ci-dessous donnent accès aux textes concernés.</p>
         {/if}
         {#if item.hints.length}
-          <h3 class="font-display text-xl font-semibold">Mots et expressions à examiner</h3>
+          <h3 class="text-xl">Mots et expressions à examiner</h3>
           <p class="text-sm leading-relaxed text-muted">Ces expressions proches du passage peuvent aider à comprendre le contexte du signalement.</p>
           <ul class="list-disc space-y-1 ps-5">
             {#each item.hints as hint}<li>« {hint} »</li>{/each}
@@ -141,7 +141,7 @@ function articleLabel(ref: typeof item.source, fallback: string) {
       </section>
 
       <section class="max-w-4xl space-y-4 border-t border-line pt-8" aria-labelledby="articles">
-        <h2 id="articles" class="font-display text-2xl font-semibold sm:text-3xl">Articles concernés</h2>
+        <h2 id="articles" class="text-2xl sm:text-3xl">Articles concernés</h2>
         {#if item.projectionDate}
           <p class="text-sm text-muted">Textes en vigueur examinés à la date du {formatLegiDate(item.projectionDate)}.</p>
         {/if}
@@ -166,7 +166,7 @@ function articleLabel(ref: typeof item.source, fallback: string) {
 
       <div class="grid gap-8 border-t border-line pt-8 lg:grid-cols-2">
         <section class="min-w-0 space-y-3" aria-labelledby="controle-independant">
-          <h2 id="controle-independant" class="font-display text-2xl font-semibold sm:text-3xl">Contrôle indépendant</h2>
+          <h2 id="controle-independant" class="text-2xl sm:text-3xl">Contrôle indépendant</h2>
           <p class="leading-relaxed text-muted">
             Un second programme examine les archives séparément pour voir s’il retrouve le même signalement.
           </p>
@@ -190,7 +190,7 @@ function articleLabel(ref: typeof item.source, fallback: string) {
         </section>
 
         <section class="min-w-0 space-y-3 border-t border-line pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0" aria-labelledby="verdict">
-          <h2 id="verdict" class="font-display text-2xl font-semibold sm:text-3xl">Verdict humain</h2>
+          <h2 id="verdict" class="text-2xl sm:text-3xl">Verdict humain</h2>
           {#if item.qualification}
             <p class="text-sm">
               <strong>{VERDICT_LABEL[item.qualification.verdict]}</strong> · @{item.qualification.reviewer} ·
@@ -210,7 +210,7 @@ function articleLabel(ref: typeof item.source, fallback: string) {
 
   <section class="border-t border-line bg-bg" aria-labelledby="donnees-techniques">
     <div class="container-wide space-y-4 py-12 sm:py-16">
-      <h2 id="donnees-techniques" class="font-display text-2xl font-semibold sm:text-3xl">Données techniques et reproductibilité</h2>
+      <h2 id="donnees-techniques" class="text-2xl sm:text-3xl">Données techniques et reproductibilité</h2>
       <p class="max-w-3xl leading-relaxed text-muted">
         Le certificat regroupe les données et les versions utilisées pour le contrôle. La commande permet de relancer ce contrôle.
       </p>
@@ -235,7 +235,7 @@ function articleLabel(ref: typeof item.source, fallback: string) {
 {#snippet version(label: string, ref: typeof item.source, separated = false)}
   {#if ref}
     <div class="min-w-0 space-y-2 pr-5 {separated ? 'sm:pl-5' : ''}">
-      <h3 class="font-display text-xl font-semibold">{label}</h3>
+      <h3 class="text-xl">{label}</h3>
       <p>
         {#if ref.code || ref.num}
           <strong>{[ref.code, ref.num ? `Article ${ref.num}` : null].filter(Boolean).join(' · ')}</strong>

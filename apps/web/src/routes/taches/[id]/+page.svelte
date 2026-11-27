@@ -76,7 +76,7 @@ const curl = $derived(
 <section class="border-b border-line bg-surface">
   <div class="container-wide py-10 sm:py-12">
     <a href={`/taches${j.role === 'translate' ? '?role=translate' : ''}`} class="inline-flex items-center gap-1.5 text-sm font-semibold no-underline">
-      <ArrowLeft class="size-4" aria-hidden="true" /> Tâches à prendre
+      <ArrowLeft class="size-4" aria-hidden="true" /> Toutes les tâches à prendre
     </a>
     <div class="mt-6 grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
       <div class="flex min-w-0 items-start gap-5">
@@ -86,7 +86,7 @@ const curl = $derived(
           <p class="text-[0.95rem] text-muted">
             {j.codeTitle}
             {#if j.dateDebut}· version en vigueur depuis le {formatLegiDate(j.dateDebut)}{/if}
-            · tâche de <strong class="text-ink">{ROLE_LABEL[j.role] ?? j.role}</strong>, de {stage.from} à {stage.to}
+            · fait passer l’article de <strong class="text-ink">{stage.from}</strong> à <strong class="text-ink">{stage.to}</strong>
           </p>
           <p class="flex flex-wrap items-center gap-2 text-xs">
             <code class="rounded bg-surface-2 px-2 py-1 text-ink">{j.taskId}</code>
@@ -130,11 +130,11 @@ const curl = $derived(
       <strong>Maintenant :</strong> {nowLine}
     </p>
 
-    <h2 id="parcours-titre" class="mt-14 text-[1.6rem] sm:text-[2rem]">Et ensuite, pour l’article</h2>
+    <h2 id="parcours-titre" class="mt-14 text-[1.6rem] sm:text-[2rem]">La suite du parcours</h2>
     <p class="mt-2 max-w-[70ch] text-muted">
       L’article est au niveau <strong class="text-ink">{j.articleLevel === 'REF' ? '★' : j.articleLevel} {LEVEL_INFO[j.articleLevel].label}</strong>.
-      Cette tâche est une étape de son parcours ; les suivantes s’ouvriront au guichet une à une.
-      <a href="/#parcours">Le détail de chaque étape</a>.
+      Les étapes suivantes s’ouvriront au guichet une à une.
+      <a href="/#parcours">Ce que contrôle chaque étape</a>.
     </p>
     <div class="mt-6">
       <ArticleJourney levels={emptyLevelCounts()} articleLevel={j.articleLevel} activeStage={j.stage} showCounts={false} compact />
@@ -206,7 +206,7 @@ const curl = $derived(
       </div>
       {#if j.column === 'todo' && !j.blockedReason}
         <div class="take">
-          <h3 class="text-lg">Prendre une tâche de ce rôle</h3>
+          <h3 class="text-lg">Prendre une tâche</h3>
           <p class="mt-2 text-sm leading-relaxed text-muted">
             Le guichet distribue les tâches dans l’ordre de la liste : on ne choisit pas une tâche précise. Votre agent
             recevra la première tâche disponible pour le rôle « {ROLE_LABEL[j.role]} ».

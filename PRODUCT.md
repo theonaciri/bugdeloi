@@ -89,4 +89,4 @@ BugDeLoi est un observatoire citoyen indépendant. Il ne remplace ni l'Inria ni 
 
 ## Accessibility & Inclusion
 
-RGAA / WCAG 2.2 AA. Les couleurs de niveau sont toujours doublées d'un texte ou d'un motif. La navigation au clavier est complète, les modes clair et sombre sont pris en charge, et la mise en page tient dès 320 px.
+RGAA / WCAG 2.2 AA. Les couleurs de niveau sont toujours doublées d'un texte ou d'un motif. La navigation au clavier est complète et la mise en page tient dès 320 px. Le site n'a qu'un thème clair.

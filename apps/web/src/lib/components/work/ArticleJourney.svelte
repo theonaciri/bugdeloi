@@ -105,7 +105,7 @@ function stateOf(st: Station): 'passed' | 'current' | 'next' | 'future' | null {
         <span class="step-index" aria-hidden="true">{i + 1}</span>
       </div>
       <div class="station-body">
-        <h3 class="font-display text-[1.2rem] font-bold leading-tight [font-stretch:115%]">
+        <h3 class="text-[1.2rem] font-bold leading-tight [font-stretch:115%]">
           {#if st.termId}<Term id={st.termId}>{st.verb}</Term>{:else}{st.verb}{/if}
         </h3>
         <p class="lvl-chip mt-1.5 inline-flex items-center gap-1.5 rounded-[var(--radius-sm)] px-1.5 py-0.5 text-[0.75rem] font-bold lvl-bg-{levelSlug(st.level)}">

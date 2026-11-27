@@ -41,7 +41,7 @@ function readableClaim(claim: string) {
 
 <header class="bg-bg">
   <div class="container-wide space-y-5 py-12 sm:py-16">
-    <h1 class="font-display text-4xl font-semibold tracking-tight sm:text-5xl">Anomalies et signalements</h1>
+    <h1 class="text-4xl tracking-tight sm:text-5xl">Anomalies et signalements</h1>
     <p class="max-w-3xl font-display text-xl leading-relaxed text-ink/90">
       Les programmes de BugDeLoi repèrent des problèmes possibles dans la loi française : des renvois vers des
       articles abrogés, des fautes de ponctuation ou des effets de seuil, par exemple quand gagner un euro fait
@@ -60,16 +60,16 @@ function readableClaim(claim: string) {
 
 <section class="border-t border-line bg-surface" aria-labelledby="anomalies-validees">
   <div class="container-wide space-y-5 py-12 sm:py-16">
-    <h2 id="anomalies-validees" class="font-display text-2xl font-semibold sm:text-3xl">
-      Anomalies validées par un juriste ({formatInt(data.findings.length)})
+    <h2 id="anomalies-validees" class="text-2xl sm:text-3xl">
+      Anomalies qualifiées par un juriste ({formatInt(data.findings.length)})
     </h2>
     {#if data.findings.length > 0}
       <ul class="divide-y divide-line border-y border-line">
         {#each data.findings as item (item.id)}
           <li class="grid gap-4 py-5 sm:grid-cols-[minmax(0,1fr)_auto]">
             <div class="space-y-2">
-              <h3 class="font-display text-xl font-semibold"><a href="/anomalies/{item.id}">{item.typeLabel}</a></h3>
-              <p>{item.claim}</p>
+              <h3 class="text-xl"><a href="/anomalies/{item.id}">{item.typeLabel}</a></h3>
+              <p class="max-w-[70ch]">{item.claim}</p>
               {#if item.articles.length}
                 <ul aria-label="Versions d’articles" class="flex flex-wrap gap-x-4 gap-y-1 text-sm">
                   {#each item.articles as article (article.id)}
@@ -113,7 +113,7 @@ function readableClaim(claim: string) {
 <section class="border-t border-line bg-bg" aria-labelledby="signalements">
   <div class="container-wide space-y-6 py-12 sm:py-16">
     <div class="space-y-2">
-      <h2 id="signalements" class="font-display text-2xl font-semibold sm:text-3xl">
+      <h2 id="signalements" class="text-2xl sm:text-3xl">
         Signalements en attente de relecture humaine ({formatInt(totalAll)})
       </h2>
       <p class="text-muted">
@@ -136,7 +136,7 @@ function readableClaim(claim: string) {
             <a
               href={listHref(filter.type)}
               aria-current={pending.activeType === filter.type ? 'true' : undefined}
-              class="block rounded-full border border-line px-4 py-2 text-sm font-semibold text-ink no-underline hover:bg-surface-2 aria-[current=true]:border-brand aria-[current=true]:bg-brand-soft aria-[current=true]:text-brand-strong"
+              class="block rounded-[var(--radius)] border border-line px-4 py-2 text-sm font-semibold text-ink no-underline hover:bg-surface-2 aria-[current=true]:border-brand aria-[current=true]:bg-brand-soft aria-[current=true]:text-brand-strong"
             >
               {filter.label} ({formatInt(filter.count)})
             </a>
@@ -150,10 +150,10 @@ function readableClaim(claim: string) {
         {#each pending.items as item (item.id)}
           <li class="grid gap-3 py-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
             <div class="min-w-0 space-y-1.5">
-              <h3 class="font-display text-xl font-semibold">
+              <h3 class="text-xl">
                 {item.type === 'SYNTAXE' ? 'Faute de ponctuation' : item.typeLabel}
               </h3>
-              <p class="leading-relaxed">{readableClaim(item.claim)}</p>
+              <p class="max-w-[70ch] leading-relaxed">{readableClaim(item.claim)}</p>
               <p class="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-sm text-muted">
                 {#if item.articleCode || item.articleNum}
                   <span>{item.articleCode}{item.articleCode && item.articleNum ? ' · ' : ''}{item.articleNum ? `Article ${item.articleNum}` : ''}</span>

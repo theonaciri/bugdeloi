@@ -1,8 +1,6 @@
 <script lang="ts">
-import { CODES } from '@bugdeloi/core'
 import LevelBadge from '#lib/components/LevelBadge.svelte'
 
-const CODE_KEYS = Object.keys(CODES) as Array<keyof typeof CODES>
 const CATEGORY_LIST = [
   { key: 'calculable', label: 'Calculable' },
   { key: 'mixte', label: 'Mixte (calculable + appréciation / hors périmètre)' },
@@ -22,6 +20,8 @@ import { LEVELS, levelName } from '#lib/levels.ts'
 import type { PageProps } from './$types'
 
 let { data }: PageProps = $props()
+const CODES = $derived(data.codes)
+const CODE_KEYS = $derived(Object.keys(data.codes) as Array<keyof typeof data.codes>)
 
 function hrefFor(params: { niveau?: string; categorie?: string; code?: string; page?: number }) {
   const n = params.niveau ?? data.niveau
@@ -47,10 +47,10 @@ function hrefFor(params: { niveau?: string; categorie?: string; code?: string; p
 
 <section class="bg-bg">
   <div class="container-wide py-12 sm:py-16">
-    <h1 class="max-w-4xl font-display text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
+    <h1 class="max-w-4xl text-4xl tracking-tight text-ink sm:text-5xl">
       Parcourir le travail par niveau de preuve
     </h1>
-    <p class="mt-4 max-w-[68ch] text-lg leading-relaxed text-muted">
+    <p class="mt-4 max-w-[60ch] text-lg leading-relaxed text-muted">
       Filtrez les articles en vigueur par niveau de preuve (de N0 texte brut jusqu’à N5 certifié, ainsi que les
       articles ★ Référence) et par code pour consulter directement chaque fiche et son code Catala.
     </p>
@@ -61,7 +61,7 @@ function hrefFor(params: { niveau?: string; categorie?: string; code?: string; p
         <a
           href={hrefFor({ niveau: 'formalises', page: 1 })}
           aria-current={data.niveau === 'formalises' ? 'page' : undefined}
-          class="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 text-sm font-medium no-underline transition hover:border-brand aria-[current=page]:border-brand aria-[current=page]:bg-brand-soft aria-[current=page]:font-semibold aria-[current=page]:text-brand-strong"
+          class="inline-flex items-center gap-2 rounded-[var(--radius)] border border-line px-4 py-2 text-sm font-medium no-underline transition hover:border-brand aria-[current=page]:border-brand aria-[current=page]:bg-brand-soft aria-[current=page]:font-semibold aria-[current=page]:text-brand-strong"
         >
           <span>Formalisés (N1–N5 + ★)</span>
           <span class="text-xs tabular text-muted">{formatInt(data.formalisesTotal)}</span>
@@ -69,7 +69,7 @@ function hrefFor(params: { niveau?: string; categorie?: string; code?: string; p
         <a
           href={hrefFor({ niveau: 'analyses', categorie: 'all', page: 1 })}
           aria-current={data.niveau === 'analyses' ? 'page' : undefined}
-          class="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 text-sm font-medium no-underline transition hover:border-brand aria-[current=page]:border-brand aria-[current=page]:bg-brand-soft aria-[current=page]:font-semibold aria-[current=page]:text-brand-strong"
+          class="inline-flex items-center gap-2 rounded-[var(--radius)] border border-line px-4 py-2 text-sm font-medium no-underline transition hover:border-brand aria-[current=page]:border-brand aria-[current=page]:bg-brand-soft aria-[current=page]:font-semibold aria-[current=page]:text-brand-strong"
         >
           <span>Analyses (détail N1)</span>
           <span class="text-xs tabular text-muted">{formatInt(data.analysesTotal)}</span>
@@ -78,7 +78,7 @@ function hrefFor(params: { niveau?: string; categorie?: string; code?: string; p
           <a
             href={hrefFor({ niveau: lvl, page: 1 })}
             aria-current={data.niveau === lvl ? 'page' : undefined}
-            class="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 text-sm font-medium no-underline transition hover:border-brand aria-[current=page]:border-brand aria-[current=page]:bg-brand-soft aria-[current=page]:font-semibold aria-[current=page]:text-brand-strong"
+            class="inline-flex items-center gap-2 rounded-[var(--radius)] border border-line px-4 py-2 text-sm font-medium no-underline transition hover:border-brand aria-[current=page]:border-brand aria-[current=page]:bg-brand-soft aria-[current=page]:font-semibold aria-[current=page]:text-brand-strong"
           >
             <span>{levelName(lvl)}</span>
             <span class="text-xs tabular text-muted">{formatInt(data.counts[lvl])}</span>
@@ -87,7 +87,7 @@ function hrefFor(params: { niveau?: string; categorie?: string; code?: string; p
         <a
           href={hrefFor({ niveau: 'all', page: 1 })}
           aria-current={data.niveau === 'all' ? 'page' : undefined}
-          class="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 text-sm font-medium no-underline transition hover:border-brand aria-[current=page]:border-brand aria-[current=page]:bg-brand-soft aria-[current=page]:font-semibold aria-[current=page]:text-brand-strong"
+          class="inline-flex items-center gap-2 rounded-[var(--radius)] border border-line px-4 py-2 text-sm font-medium no-underline transition hover:border-brand aria-[current=page]:border-brand aria-[current=page]:bg-brand-soft aria-[current=page]:font-semibold aria-[current=page]:text-brand-strong"
         >
           <span>Tous</span>
           <span class="text-xs tabular text-muted">{formatInt(data.allTotal)}</span>
@@ -100,7 +100,7 @@ function hrefFor(params: { niveau?: string; categorie?: string; code?: string; p
           <a
             href={hrefFor({ niveau: 'analyses', categorie: 'all', page: 1 })}
             aria-current={data.categorie === 'all' ? 'page' : undefined}
-            class="inline-flex items-center gap-1.5 rounded-full border border-line px-3.5 py-1.5 text-xs font-medium no-underline hover:border-brand aria-[current=page]:border-brand aria-[current=page]:bg-brand-soft aria-[current=page]:font-semibold aria-[current=page]:text-brand-strong"
+            class="inline-flex items-center gap-1.5 rounded-[var(--radius)] border border-line px-3.5 py-1.5 text-xs font-medium no-underline hover:border-brand aria-[current=page]:border-brand aria-[current=page]:bg-brand-soft aria-[current=page]:font-semibold aria-[current=page]:text-brand-strong"
           >
             <span>Toutes les analyses</span>
             <span class="tabular text-muted">{formatInt(data.analysesTotal)}</span>
@@ -109,7 +109,7 @@ function hrefFor(params: { niveau?: string; categorie?: string; code?: string; p
             <a
               href={hrefFor({ niveau: 'analyses', categorie: cat.key, page: 1 })}
               aria-current={data.categorie === cat.key ? 'page' : undefined}
-              class="inline-flex items-center gap-1.5 rounded-full border border-line px-3.5 py-1.5 text-xs font-medium no-underline hover:border-brand aria-[current=page]:border-brand aria-[current=page]:bg-brand-soft aria-[current=page]:font-semibold aria-[current=page]:text-brand-strong"
+              class="inline-flex items-center gap-1.5 rounded-[var(--radius)] border border-line px-3.5 py-1.5 text-xs font-medium no-underline hover:border-brand aria-[current=page]:border-brand aria-[current=page]:bg-brand-soft aria-[current=page]:font-semibold aria-[current=page]:text-brand-strong"
             >
               <span>{cat.label}</span>
               <span class="tabular text-muted">{formatInt(data.analysesByCategory[cat.key])}</span>
@@ -123,7 +123,7 @@ function hrefFor(params: { niveau?: string; categorie?: string; code?: string; p
         <a
           href={hrefFor({ code: 'all', page: 1 })}
           aria-current={data.code === 'all' ? 'page' : undefined}
-          class="rounded-full border border-line px-3.5 py-1.5 text-xs font-medium no-underline hover:border-brand aria-[current=page]:border-brand aria-[current=page]:bg-surface aria-[current=page]:font-semibold aria-[current=page]:text-ink"
+          class="rounded-[var(--radius)] border border-line px-3.5 py-1.5 text-xs font-medium no-underline hover:border-brand aria-[current=page]:border-brand aria-[current=page]:bg-surface aria-[current=page]:font-semibold aria-[current=page]:text-ink"
         >
           Tous les codes
         </a>
@@ -131,7 +131,7 @@ function hrefFor(params: { niveau?: string; categorie?: string; code?: string; p
           <a
             href={hrefFor({ code: key, page: 1 })}
             aria-current={data.code === key ? 'page' : undefined}
-            class="rounded-full border border-line px-3.5 py-1.5 text-xs font-medium no-underline hover:border-brand aria-[current=page]:border-brand aria-[current=page]:bg-surface aria-[current=page]:font-semibold aria-[current=page]:text-ink"
+            class="rounded-[var(--radius)] border border-line px-3.5 py-1.5 text-xs font-medium no-underline hover:border-brand aria-[current=page]:border-brand aria-[current=page]:bg-surface aria-[current=page]:font-semibold aria-[current=page]:text-ink"
           >
             {CODES[key].title}
           </a>
@@ -172,7 +172,7 @@ function hrefFor(params: { niveau?: string; categorie?: string; code?: string; p
             {#each data.analysesItems as entry (entry.id)}
               <tr>
                 <td class="px-4 py-3">
-                  <span class="inline-block rounded-full bg-surface-2 px-2.5 py-0.5 text-xs font-semibold text-ink">
+                  <span class="inline-block rounded-[var(--radius)] bg-surface-2 px-2.5 py-0.5 text-xs font-semibold text-ink">
                     {CATEGORY_LABEL[entry.category] ?? entry.category}
                   </span>
                 </td>
@@ -251,7 +251,7 @@ function hrefFor(params: { niveau?: string; categorie?: string; code?: string; p
             {#if data.page > 1}
               <a
                 href={hrefFor({ page: data.page - 1 })}
-                class="rounded-full border border-line bg-bg px-4 py-2 font-semibold no-underline hover:border-brand"
+                class="rounded-[var(--radius)] border border-line bg-bg px-4 py-2 font-semibold no-underline hover:border-brand"
               >
                 ← Page précédente
               </a>
@@ -262,7 +262,7 @@ function hrefFor(params: { niveau?: string; categorie?: string; code?: string; p
             {#if data.page < data.totalPages}
               <a
                 href={hrefFor({ page: data.page + 1 })}
-                class="rounded-full border border-line bg-bg px-4 py-2 font-semibold no-underline hover:border-brand"
+                class="rounded-[var(--radius)] border border-line bg-bg px-4 py-2 font-semibold no-underline hover:border-brand"
               >
                 Page suivante →
               </a>
@@ -278,7 +278,7 @@ function hrefFor(params: { niveau?: string; categorie?: string; code?: string; p
         </p>
         <a
           href="/join"
-          class="mt-4 inline-flex items-center rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
+          class="mt-4 inline-flex items-center rounded-[var(--radius)] bg-brand px-5 py-2.5 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
         >
           Contribuer en Catala →
         </a>

@@ -70,6 +70,7 @@ export const load: PageServerLoad = async ({ url, setHeaders }) => {
     const totalMatching = filtered.length
     const paged = filtered.slice(offset, offset + PAGE_SIZE)
     return {
+      codes: CODES,
       niveau,
       categorie,
       code,
@@ -124,6 +125,7 @@ export const load: PageServerLoad = async ({ url, setHeaders }) => {
       ev?.corpus && typeof ev.corpus === 'object' ? (ev.corpus as Record<string, unknown>) : null
     const catalaFile = typeof corpusEv?.file === 'string' ? corpusEv.file : null
     return {
+      codes: CODES,
       id: r.id,
       num: r.num,
       codeTitle: r.codeTitle,
@@ -134,6 +136,7 @@ export const load: PageServerLoad = async ({ url, setHeaders }) => {
   })
 
   return {
+    codes: CODES,
     niveau,
     categorie,
     code,

@@ -58,17 +58,17 @@ const verdicts = [
 </script>
 
 <svelte:head>
-  <title>Notre méthode et nos limites · BugDeLoi</title>
+  <title>La méthode et ses limites · BugDeLoi</title>
   <meta name="description" content="Découvrez comment BugDeLoi contrôle ses traductions de la loi, examine les signalements et calcule les chiffres du site." />
 </svelte:head>
 
 <header class="bg-bg">
   <div class="container-wide space-y-6 py-12 sm:py-16">
-    <h1 class="font-display text-4xl font-semibold tracking-tight text-ink sm:text-5xl">Notre méthode et nos limites</h1>
+    <h1 class="text-4xl tracking-tight text-ink sm:text-5xl">La méthode et ses limites</h1>
     <p class="max-w-[64ch] text-lg leading-relaxed text-muted">
-      Notre règle est simple : on ne croit jamais une intelligence artificielle sur parole. Les IA aident à lire et
-      traduire les articles de loi en formules de calcul. Seuls des tests automatiques, des sources indépendantes et
-      des juristes peuvent valider un résultat.
+      On ne croit jamais une intelligence artificielle sur parole. Les IA aident à lire les articles de loi et à les
+      traduire en calculs ; seuls des tests automatiques, des sources indépendantes et des juristes valident un
+      résultat.
     </p>
     <nav aria-label="Sur cette page">
       <ul class="flex flex-wrap gap-x-6 gap-y-3 text-sm font-semibold">
@@ -78,7 +78,7 @@ const verdicts = [
         <li><a href="#glossaire">Glossaire</a></li>
         <li><a href="#anomalies">Anomalies</a></li>
         <li><a href="#compteurs">Calcul des compteurs</a></li>
-        <li><a href="#limites">Ce que nous ne prétendons pas</a></li>
+        <li><a href="#limites">Limites</a></li>
         <li><a href="#faq">Questions fréquentes</a></li>
       </ul>
     </nav>
@@ -87,7 +87,7 @@ const verdicts = [
 
 <section class="border-t border-line bg-surface" aria-labelledby="niveaux">
   <div class="container-wide space-y-6 py-12 sm:py-16">
-    <h2 id="niveaux" class="scroll-mt-24 font-display text-3xl font-semibold text-ink sm:text-4xl">L’échelle des niveaux de preuve</h2>
+    <h2 id="niveaux" class="scroll-mt-24 text-3xl text-ink sm:text-4xl">Les niveaux de preuve</h2>
     <p class="max-w-[64ch] leading-relaxed text-muted">
       Chaque niveau indique un contrôle accompli et s’ajoute aux précédents. Pour atteindre N3, il faut avoir passé
       N2, qui exige lui-même N1. Chaque passage repose sur un contrôle effectué par un programme ou, pour N5, sur
@@ -99,7 +99,7 @@ const verdicts = [
           <div class="shrink-0"><LevelSwatch {level} size={36} /></div>
           <div class="space-y-1">
             <div class="flex flex-wrap items-center justify-between gap-2">
-              <h3 class="text-lg font-semibold text-ink">{levelName(level)}</h3>
+              <h3 class="text-lg text-ink">{levelName(level)}</h3>
               <a
                 href="/travail?niveau={level}"
                 class="text-xs font-semibold text-brand-strong no-underline hover:underline tabular"
@@ -114,7 +114,7 @@ const verdicts = [
     </ol>
     <div class="max-w-[64ch] rounded-xl border border-line bg-surface p-5 space-y-3">
       <div class="flex flex-wrap items-center justify-between gap-2">
-        <h3 class="text-base font-semibold text-ink">
+        <h3 class="text-base text-ink">
           Répartition des analyses (niveau N1) · <span class="tabular">{formatInt(data.analyses.total)}</span> fiches
         </h3>
         <a href="/travail?niveau=analyses" class="text-xs font-semibold text-brand-strong no-underline hover:underline">
@@ -131,26 +131,26 @@ const verdicts = [
       <div class="flex flex-wrap gap-2 text-xs">
         <a
           href="/travail?niveau=analyses&categorie=calculable"
-          class="rounded-full border border-line bg-bg px-3 py-1 font-medium text-ink no-underline hover:border-brand tabular"
+          class="rounded-[var(--radius)] border border-line bg-bg px-3 py-1 font-medium text-ink no-underline hover:border-brand tabular"
         >
           Calculable · {formatInt(data.analyses.byCategory.calculable)}
         </a>
         <a
           href="/travail?niveau=analyses&categorie=mixte"
-          class="rounded-full border border-line bg-bg px-3 py-1 font-medium text-ink no-underline hover:border-brand tabular"
+          class="rounded-[var(--radius)] border border-line bg-bg px-3 py-1 font-medium text-ink no-underline hover:border-brand tabular"
         >
           Mixte · {formatInt(data.analyses.byCategory.mixte)}
         </a>
         <a
           href="/travail?niveau=analyses&categorie=hors_perimetre"
-          class="rounded-full border border-line bg-bg px-3 py-1 font-medium text-ink no-underline hover:border-brand tabular"
+          class="rounded-[var(--radius)] border border-line bg-bg px-3 py-1 font-medium text-ink no-underline hover:border-brand tabular"
         >
           Hors périmètre · {formatInt(data.analyses.byCategory.hors_perimetre)}
         </a>
         {#if data.analyses.byCategory.autre > 0}
           <a
             href="/travail?niveau=analyses&categorie=autre"
-            class="rounded-full border border-line bg-bg px-3 py-1 font-medium text-muted no-underline hover:border-brand tabular"
+            class="rounded-[var(--radius)] border border-line bg-bg px-3 py-1 font-medium text-muted no-underline hover:border-brand tabular"
           >
             À préciser · {formatInt(data.analyses.byCategory.autre)}
           </a>
@@ -185,7 +185,7 @@ const verdicts = [
       </div>
     </dl>
     <div class="max-w-[64ch] space-y-2">
-      <h3 class="font-display text-2xl font-semibold text-ink">Ce qui ne compte jamais comme preuve</h3>
+      <h3 class="text-2xl text-ink">Ce qui ne compte jamais comme preuve</h3>
       <ul class="list-disc space-y-1 pl-5 leading-relaxed text-muted">
         <li>L’avis d’une IA sur son propre travail ou un vote à lui seul.</li>
         <li>Un programme qui compile sans tests, ou un test écrit par l’auteur du programme.</li>
@@ -289,10 +289,10 @@ const verdicts = [
 <section class="border-t border-line bg-surface" aria-labelledby="anomalies">
   <div class="container-wide space-y-8 py-12 sm:py-16">
     <div class="max-w-[64ch] space-y-3">
-      <h2 id="anomalies" class="scroll-mt-24 font-display text-3xl font-semibold text-ink sm:text-4xl">Comment naît et se vérifie une anomalie</h2>
+      <h2 id="anomalies" class="scroll-mt-24 text-3xl text-ink sm:text-4xl">Du signalement à l’anomalie qualifiée</h2>
       <p class="leading-relaxed text-muted">
-        Un signalement ouvre une enquête. Par exemple, un renvoi vers un article abrogé peut être voulu si une
-        règle continue de s’appliquer aux situations anciennes. Voici les types de signalements que nous examinons.
+        Un signalement n’est qu’un point de départ : un renvoi vers un article abrogé peut être voulu, par exemple
+        quand une règle continue de s’appliquer aux situations anciennes. Les types de signalements examinés :
       </p>
     </div>
     <ul class="grid gap-x-8 sm:grid-cols-2">
@@ -309,7 +309,7 @@ const verdicts = [
     </p>
 
     <div class="space-y-4">
-      <h3 id="cycle" class="scroll-mt-24 font-display text-2xl font-semibold text-ink sm:text-3xl">Du signalement à la publication</h3>
+      <h3 id="cycle" class="scroll-mt-24 text-2xl text-ink sm:text-3xl">Les quatre statuts d’un signalement</h3>
       <ol class="grid divide-y divide-line border-y border-line md:grid-cols-4 md:divide-x md:divide-y-0">
         {#each lifecycle as step (step.label)}
           <li class="space-y-2 py-4 md:px-5 md:first:pl-0 md:last:pr-0">
@@ -321,7 +321,7 @@ const verdicts = [
     </div>
 
     <div class="max-w-[64ch] space-y-4">
-      <h3 class="font-display text-2xl font-semibold text-ink sm:text-3xl">Les verdicts de la relecture humaine</h3>
+      <h3 class="text-2xl text-ink sm:text-3xl">Les verdicts de la relecture humaine</h3>
       <dl class="divide-y divide-line border-y border-line">
         {#each verdicts as verdict (verdict.label)}
           <div class="grid gap-1 py-3 sm:grid-cols-[12rem_1fr] sm:gap-5">
@@ -343,7 +343,7 @@ const verdicts = [
 <section class="border-t border-line bg-surface" aria-labelledby="compteurs">
   <div class="container-wide space-y-8 py-12 sm:py-16">
     <div class="max-w-[64ch] space-y-3">
-      <h2 id="compteurs" class="scroll-mt-24 font-display text-3xl font-semibold text-ink sm:text-4xl">Comment sont calculés tous nos chiffres</h2>
+      <h2 id="compteurs" class="scroll-mt-24 text-3xl text-ink sm:text-4xl">Comment chaque chiffre est calculé</h2>
       <p class="leading-relaxed text-muted">
         <strong class="text-ink">Un compte, pas une probabilité.</strong> Chaque compteur indique combien d’éléments
         remplissent une condition précise. Par exemple, le nombre d’articles passés au niveau N3 indique l’avancement
@@ -442,7 +442,7 @@ const verdicts = [
     </p>
 
     <div class="max-w-[64ch] space-y-3 border-t border-line pt-6">
-      <h2 id="empreinte" class="scroll-mt-24 font-display text-3xl font-semibold text-ink sm:text-4xl">Authenticité du texte officiel</h2>
+      <h2 id="empreinte" class="scroll-mt-24 text-3xl text-ink sm:text-4xl">Authenticité du texte officiel</h2>
       <p class="leading-relaxed text-muted">
         Nous conservons pour chaque version issue de la base LEGI son identifiant, ses dates et son empreinte SHA-256.
         Cette empreinte est un scellé numérique calculé à partir du texte. Après avoir uniformisé la présentation,
@@ -457,7 +457,7 @@ const verdicts = [
 <section class="border-t border-line bg-bg" aria-labelledby="limites">
   <div class="container-wide space-y-10 py-12 sm:py-16">
     <div class="max-w-[64ch] space-y-4">
-      <h2 id="limites" class="scroll-mt-24 font-display text-3xl font-semibold text-ink sm:text-4xl">Ce que nous ne prétendons pas</h2>
+      <h2 id="limites" class="scroll-mt-24 text-3xl text-ink sm:text-4xl">Limites</h2>
       <ul class="divide-y divide-line border-y border-line leading-relaxed text-muted">
         <li class="py-4"><strong class="text-ink">Un programme qui fonctionne ne prouve pas à lui seul qu’il est fidèle à la loi.</strong> Des sources indépendantes et des relectures humaines aident à évaluer la traduction du texte.</li>
         <li class="py-4"><strong class="text-ink">Une simulation économique future n’est jamais une preuve.</strong> Elle dépend des hypothèses retenues, qui doivent être affichées avec ses résultats.</li>
@@ -468,7 +468,7 @@ const verdicts = [
     </div>
 
     <div class="max-w-[64ch] space-y-4">
-      <h2 id="faq" class="scroll-mt-24 font-display text-3xl font-semibold text-ink sm:text-4xl">Questions fréquentes</h2>
+      <h2 id="faq" class="scroll-mt-24 text-3xl text-ink sm:text-4xl">Questions fréquentes</h2>
       <dl class="divide-y divide-line border-y border-line">
         <div class="space-y-2 py-4">
           <dt class="font-semibold text-ink">Comment savoir que l’IA n’invente pas la loi ?</dt>

@@ -202,8 +202,8 @@ const coche = 'flex items-start gap-2.5 text-sm text-ink'
 <section class="bg-bg">
   <div class="container-wide py-12 sm:py-16">
     <p class="text-sm"><a href="/experiences">← Toutes les expériences</a></p>
-    <h1 class="mt-4 max-w-4xl font-display text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-      Revenu disponible réel et impact d’un amendement
+    <h1 class="mt-4 max-w-4xl text-4xl tracking-tight text-ink sm:text-5xl">
+      Revenu disponible et effet d’un amendement
     </h1>
     <p class="mt-5 max-w-[68ch] text-lg leading-relaxed text-muted">
       Un foyer ne subit jamais une seule loi à la fois. Ici, cinq règles s’additionnent : l’impôt sur le revenu, les
@@ -219,8 +219,8 @@ const coche = 'flex items-start gap-2.5 text-sm text-ink'
 
 <section class="border-t border-line bg-surface" aria-labelledby="combo-titre">
   <div class="container-wide py-12 sm:py-16">
-    <h2 id="combo-titre" class="font-display text-2xl font-semibold text-ink sm:text-3xl">
-      1. Impôt + allocations familiales + APL + prime d’activité et RSA
+    <h2 id="combo-titre" class="text-2xl text-ink sm:text-3xl">
+      Cinq règles appliquées au même foyer
     </h2>
 
     <div class="mt-8 grid gap-10 lg:grid-cols-12">
@@ -442,7 +442,7 @@ const coche = 'flex items-start gap-2.5 text-sm text-ink'
     </div>
 
     <div class="mt-12 border-t border-line pt-8">
-      <h3 class="font-display text-xl font-semibold text-ink">Effets de seuil à essayer</h3>
+      <h3 class="text-xl text-ink">Effets de seuil à essayer</h3>
       <p class="mt-2 max-w-[72ch] text-sm leading-relaxed text-muted">
         Pour un couple avec deux enfants, un seul revenu et un loyer de {euros.format(balayage.foyer.loyerMensuelEuros)}
         par mois en zone 2, un programme a testé chaque euro de {euros.format(balayage.balayage.deEuros)} à
@@ -461,7 +461,7 @@ const coche = 'flex items-start gap-2.5 text-sm text-ink'
             <button
               type="button"
               onclick={() => essayerFoyerEtudie(effet.revenuApresEuros)}
-              class="mt-3 cursor-pointer self-start rounded-full border border-line bg-surface px-3.5 py-1.5 text-xs font-medium text-ink hover:border-brand"
+              class="mt-3 cursor-pointer self-start rounded-[var(--radius)] border border-line bg-surface px-3.5 py-1.5 text-xs font-medium text-ink hover:border-brand"
             >
               Voir à {euros.format(effet.revenuApresEuros)}
             </button>
@@ -513,8 +513,8 @@ const coche = 'flex items-start gap-2.5 text-sm text-ink'
 
 <section class="border-t border-line bg-bg" aria-labelledby="amendement-titre">
   <div class="container-wide py-12 sm:py-16">
-    <h2 id="amendement-titre" class="font-display text-2xl font-semibold text-ink sm:text-3xl">
-      2. Mesurer l’impact en euros d’un amendement parlementaire
+    <h2 id="amendement-titre" class="text-2xl text-ink sm:text-3xl">
+      L’effet d’un amendement en euros
     </h2>
     <p class="mt-3 max-w-[68ch] text-base leading-relaxed text-muted">
       Choisissez une hypothèse de modification de la loi (type projet de loi de finances) pour comparer instantanément
@@ -527,7 +527,7 @@ const coche = 'flex items-start gap-2.5 text-sm text-ink'
           type="button"
           onclick={() => (selectedAmendmentId = am.id)}
           aria-pressed={selectedAmendmentId === am.id}
-          class="cursor-pointer rounded-full border px-4 py-2 text-sm font-medium transition {selectedAmendmentId === am.id
+          class="cursor-pointer rounded-[var(--radius)] border px-4 py-2 text-sm font-medium transition {selectedAmendmentId === am.id
             ? 'border-brand bg-brand-soft text-brand-strong'
             : 'border-line bg-surface text-ink hover:bg-surface-2'}"
         >
@@ -570,28 +570,28 @@ const coche = 'flex items-start gap-2.5 text-sm text-ink'
 
 <section class="border-t border-line bg-surface">
   <div class="container-wide py-12">
-    <h2 class="font-display text-2xl font-semibold text-ink">Vérifier nos données et aller plus loin</h2>
+    <h2 class="text-2xl text-ink">Données et vérifications</h2>
     <p class="mt-3 max-w-[68ch] text-sm leading-relaxed text-muted">
-      Ce simulateur croise plusieurs textes de loi en vigueur en 2026. Pour garantir l’exactitude des calculs et
-      suivre les débats budgétaires, nous publions aussi nos vérifications croisées et nos données brutes :
+      Ce simulateur croise plusieurs textes de loi en vigueur en 2026. Les comparaisons croisées et les données
+      brutes sont publiques :
     </p>
     <div class="mt-5 flex flex-wrap gap-3">
       <a
         href="/experiences/openfisca"
-        class="inline-flex items-center rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
+        class="inline-flex items-center rounded-[var(--radius)] bg-brand px-5 py-2.5 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
       >
         Comparaison OpenFisca-France (C0.8) →
       </a>
       <a
         href="/experiences/parlement"
-        class="inline-flex items-center rounded-full border border-line bg-bg px-5 py-2.5 text-sm font-semibold text-ink no-underline hover:border-brand"
+        class="inline-flex items-center rounded-[var(--radius)] border border-line bg-bg px-5 py-2.5 text-sm font-semibold text-ink no-underline hover:border-brand"
       >
         Veille parlementaire (Tricoteuses) →
       </a>
       <a
         href="https://github.com/theonaciri/bugdeloi/blob/main/replications/c0.7/summary.json"
         rel="external"
-        class="inline-flex items-center rounded-full border border-line bg-bg px-5 py-2.5 text-sm font-semibold text-ink no-underline hover:border-brand"
+        class="inline-flex items-center rounded-[var(--radius)] border border-line bg-bg px-5 py-2.5 text-sm font-semibold text-ink no-underline hover:border-brand"
       >
         Données brutes du balayage C0.7 (JSON) →
       </a>

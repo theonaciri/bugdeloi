@@ -11,16 +11,14 @@ let { id, children, tone = 'paper' }: { id: string; children?: Snippet; tone?: '
 const entry = $derived(glossary(id))
 </script>
 
-<UiHoverCard delay={160} closeDelay={140}>
-  <HoverCardTrigger
+<UiHoverCard delay={160} closeDelay={140}
+  ><HoverCardTrigger
     href={`/methode#g-${id}`}
     class={tone === 'night'
       ? 'term term-night cursor-help text-inherit no-underline'
       : 'term cursor-help text-inherit no-underline'}
-  >
-    {#if children}{@render children()}{:else}{entry.term}{/if}
-  </HoverCardTrigger>
-  <HoverCardContent
+    >{#if children}{@render children()}{:else}{entry.term}{/if}</HoverCardTrigger
+  ><HoverCardContent
     side="top"
     sideOffset={8}
     class="z-50 w-[min(20rem,calc(100vw-2rem))] rounded-[var(--radius-lg)] border border-line bg-surface p-4 text-left text-sm font-normal normal-case tracking-normal text-ink shadow-[var(--shadow-lg)]"
@@ -31,8 +29,8 @@ const entry = $derived(glossary(id))
     {#if entry.technical}
       <p class="mt-2 text-xs text-subtle">Dans le code : <code class="text-ink">{entry.technical}</code></p>
     {/if}
-  </HoverCardContent>
-</UiHoverCard>
+  </HoverCardContent
+></UiHoverCard>
 
 <style>
   :global(.term) {
