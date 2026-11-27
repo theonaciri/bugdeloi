@@ -99,7 +99,7 @@ describe('tools/bdl.sh', () => {
   test('lists contributor commands without calling the desk', async () => {
     const result = run(['--help'])
     expect(result.code).toBe(0)
-    for (const command of ['setup', 'next', 'beat', 'check', 'submit', 'release']) {
+    for (const command of ['setup', 'next', 'beat', 'check', 'submit', 'submit-batch', 'release', 'doc']) {
       expect(result.stdout).toContain(command)
     }
     expect((await readdir(repo)).sort()).toEqual(['.git', 'bin'])
@@ -109,7 +109,11 @@ describe('tools/bdl.sh', () => {
     const invalid = [
       ['unknown'],
       ['next', 'extra'],
+      ['next', '0'],
+      ['next', '2', 'extra'],
       ['beat'],
+      ['beat', '../escape'],
+      ['submit-batch', task],
       ['check', '../escape'],
       ['submit', '--all'],
       ['release', task],
@@ -126,7 +130,7 @@ describe('tools/bdl.sh', () => {
     expect(result).toEqual({
       code: 0,
       stderr: '',
-      stdout: `J’ai rejoint BugDeLoi. Suivre mon avancement : ${origin}/a/default-handle\n`,
+      stdout: `Tâche réservée : ${task} → ${allowedPath}\nJ’ai rejoint BugDeLoi. Suivre mon avancement : ${origin}/a/default-handle\n`,
     })
     expect(await readFile(skeleton(), 'utf8')).toBe(`#### Article 42|LEGIARTI000000000001\n\n${legalText}`)
     expect(JSON.parse(await readFile(savedLease(), 'utf8'))).toEqual({
@@ -207,5 +211,114 @@ describe('tools/bdl.sh', () => {
     expect(commands).toEndWith(
       `/work\nghcr.io/theonaciri/bugdeloi-catala:1.3.2\nclerk\ntest\n--color=never\n${allowedPath}\n`,
     )
+  })
+
+  test('prints the pinned Catala documentation without calling the desk', async () => {
+    const result = run(['doc'])
+    expect(result.code).toBe(0)
+    expect(result.stdout).toContain(
+      'https://github.com/CatalaLang/catala/blob/1.3.2/doc/syntax/syntax_fr.catala_fr',
+    )
+    expect(result.stdout).toContain('corpus/CATALA.md')
+    expect((await readdir(repo)).sort()).toEqual(['.git', 'bin'])
+  })
+
+  test('reserves several tasks with next N and announces the owner link once', async () => {
+    const result = run(['next', '2'])
+    expect(result.code).toBe(0)
+    expect(result.stdout.match(/Tâche réservée/g)?.length).toBe(2)
+    expect(result.stdout.match(/J’ai rejoint/g)?.length).toBe(1)
+    expect(await requests()).toBe('translate\ntranslate\n')
+  })
+
+  test('stops next N at the first empty queue', async () => {
+    const result = run(['next', '3'], { BDL_ROLE: 'translate', BDL_TEST_FALLBACK: 'yes' })
+    expect(result).toEqual({ code: 0, stderr: '', stdout: 'Aucune tâche disponible.\n' })
+    expect(await requests()).toBe('translate\n')
+  })
+
+  test('renews every local lease with beat --all', async () => {
+    const leases = join(repo, '.bdl', 'leases')
+    await mkdir(leases, { recursive: true })
+    for (const [id, l] of [
+      ['translate-LEGIARTI000000000001', lease],
+      ['translate-LEGIARTI000000000002', '00000000-0000-4000-8000-000000000002'],
+    ] as const) {
+      await writeFile(
+        join(leases, `${id}.json`),
+        JSON.stringify({ ...claim, lease: l, task: { ...claim.task, id }, origin }),
+      )
+    }
+    const result = run(['beat', '--all'], { BDL_TEST_POST_STATUS: '200' })
+    expect(result.code).toBe(0)
+    expect(result.stdout.match(/Bail renouvelé/g)?.length).toBe(2)
+    expect((await requests()).match(/desk\/beat/g)?.length).toBe(2)
+  })
+
+  test('submits a batch in one commit with one trailer per task, then releases each lease', async () => {
+    const remote = await mkdtemp(join(tmpdir(), 'bdl-remote-'))
+    const git = (...args: string[]) => {
+      const r = Bun.spawnSync(['git', ...args], { cwd: repo })
+      if (r.exitCode !== 0) throw new Error(r.stderr.toString())
+      return r.stdout.toString()
+    }
+    try {
+      Bun.spawnSync(['git', 'init', '--quiet', '--bare', remote])
+      git('config', 'user.email', 'test@example.invalid')
+      git('config', 'user.name', 'Test')
+      await writeFile(join(repo, 'README'), 'base\n')
+      git('add', 'README')
+      git('commit', '--quiet', '-m', 'base')
+      git('branch', '-M', 'main')
+      git('remote', 'add', 'origin', remote)
+      git('push', '--quiet', '-u', 'origin', 'main')
+      git('remote', 'set-head', 'origin', 'main')
+      await writeFile(
+        join(repo, 'bin', 'gh'),
+        '#!/bin/sh\nprintf "gh %s\\n" "$*" >> "$BDL_TEST_REQUESTS"\n',
+        { mode: 0o755 },
+      )
+      for (const name of ['bun', 'podman']) {
+        await writeFile(join(repo, 'bin', name), '#!/bin/sh\nexit 0\n', { mode: 0o755 })
+      }
+      const leases = join(repo, '.bdl', 'leases')
+      await mkdir(leases, { recursive: true })
+      const ids = ['translate-LEGIARTI000000000001', 'translate-LEGIARTI000000000002']
+      for (const [i, id] of ids.entries()) {
+        const path = `cgi/article_${i + 1}.catala_fr`
+        await mkdir(join(repo, 'corpus', 'cgi'), { recursive: true })
+        await writeFile(join(repo, 'corpus', path), `#### Article ${i + 1}|LEGIARTI00000000000${i + 1}\n`)
+        await writeFile(
+          join(leases, `${id}.json`),
+          JSON.stringify({
+            ...claim,
+            lease: `00000000-0000-4000-8000-00000000000${i + 1}`,
+            task: { ...claim.task, id, allowed_paths: [path] },
+            origin,
+            family: 'anthropic',
+            model: 'test-model',
+          }),
+        )
+      }
+      const result = run(['submit-batch', ...ids])
+      expect(result.stderr).not.toContain('invalide')
+      expect(result.code).toBe(0)
+      expect(result.stdout).toContain(`Tâche déposée : ${ids[1]}`)
+      const message = git('log', '-1', '--format=%B')
+      expect(message).toContain(`BugDeLoi-Task: ${ids[0]}\nBugDeLoi-Task: ${ids[1]}\n`)
+      expect(message).toContain(
+        'BugDeLoi-Role: translate\nBugDeLoi-Family: anthropic\nBugDeLoi-Model: test-model',
+      )
+      expect(git('show', '--name-only', '--format=', 'HEAD').trim().split('\n').sort()).toEqual([
+        'corpus/cgi/article_1.catala_fr',
+        'corpus/cgi/article_2.catala_fr',
+      ])
+      const log = await requests()
+      expect(log).toContain('gh pr create')
+      expect(log.match(/reason=submitted/g)?.length).toBe(2)
+      expect(await readdir(leases)).toEqual([])
+    } finally {
+      await rm(remote, { recursive: true, force: true })
+    }
   })
 })

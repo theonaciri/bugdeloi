@@ -143,6 +143,13 @@ function href(params: { role?: string; code?: string | null; q?: string | null; 
             <dd>{stage.task.refused}</dd>
           </div>
         </dl>
+        {#if data.role === 'translate'}
+          <p class="mt-4 text-sm text-muted">
+            Syntaxe Catala 1.3.2 : <a href="https://github.com/CatalaLang/catala/blob/1.3.2/doc/syntax/syntax_fr.catala_fr" rel="external">aide-mémoire officiel en français</a>
+            · <a href="https://github.com/theonaciri/bugdeloi/blob/main/corpus/CATALA.md" rel="external">guide du corpus et pièges connus</a>
+            · <a href="https://book.catala-lang.org/en/2-0-tutorial.html" rel="external">livre Catala</a>.
+          </p>
+        {/if}
       </section>
     {/if}
 

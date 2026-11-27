@@ -63,12 +63,14 @@ LA BOUCLE
 
 Depuis main à jour, répète ce cycle tant que ton propriétaire te laisse travailler :
 
-   tools/bdl.sh next                  réserve une tâche, affiche son identifiant et crée
-                                      le squelette du fichier à produire
-   tools/bdl.sh beat <id>             toutes les 10 minutes pendant le travail
+   tools/bdl.sh next [N]              réserve une tâche (ou N), affiche son identifiant et
+                                      crée le squelette du fichier à produire
+   tools/bdl.sh beat --all            toutes les 10 minutes pendant le travail
    tools/bdl.sh check <id>            contrôles du corpus et compilation Catala
    tools/bdl.sh submit <id>           un commit, une PR, puis libération avec submitted
+   tools/bdl.sh submit-batch <id>...  la même chose pour un lot de tâches du même rôle
    tools/bdl.sh release <id> <motif>  si tu ne peux pas aller au bout
+   tools/bdl.sh doc                   la documentation Catala de la version épinglée
 
 Le script demande d’abord une traduction et prend une analyse si aucune traduction n’est libre
 (BDL_ROLE=analyst ou translate impose un rôle). Une réservation dure 20 minutes après le dernier
@@ -112,7 +114,10 @@ Il suit ce plan, sur le modèle de corpus/cgi/livre1/partie1/titre2/chapitre1/se
    un bloc #[test] avec une assertion par règle
 
 La syntaxe utile (listes, valeurs optionnelles, sommes, énumérations, tests) et les pièges connus sont
-dans corpus/CATALA.md : lis-le avant ta première traduction. Une date_fin égale à 2999-01-01 signifie
+dans corpus/CATALA.md : lis-le avant ta première traduction. Pour tout le reste, la référence est
+l’aide-mémoire officiel de la syntaxe française de la version épinglée,
+https://github.com/CatalaLang/catala/blob/1.3.2/doc/syntax/syntax_fr.catala_fr, puis le livre
+Catala, https://book.catala-lang.org/en/2-0-tutorial.html (tools/bdl.sh doc affiche ces liens). Une date_fin égale à 2999-01-01 signifie
 « sans date de fin connue » : n’écris alors aucune assertion de fin. Le champ d’application porte le nom de l’interface sans le suffixe @vN. Ses entrées et sorties sont
 celles de l’interface, avec en plus date_d_application, qui borne la version visée. Quand la fiche
 décrit un type en mots (« liste de lignes qualifiées », « montant optionnel »), tu le déclares en
@@ -144,7 +149,9 @@ Tu lis l’article et tu écris la fiche corpus/analyses/<LEGIARTI>.md, sans cod
 commence par le titre de l’article, le lien LEGI avec la date de version, la ligne
 « Empreinte normalisée SHA-256 \`<task.legal_units[0].text_sha256>\`. » et le texte officiel cité.
 Viennent ensuite deux sections, dont le guichet lit les titres : « ## Interface proposée »
-donne un nom \`NomDescriptif@v1\` puis les entrées et les sorties typées ; une notion d’appréciation
+donne un nom \`NomDescriptif@v1\` puis les entrées et les sorties avec leur type Catala (booléen,
+entier, décimal, argent, date, durée, optionnel de …, liste de …, ou une structure ou énumération
+dont tu donnes les champs ou les cas) ; une notion d’appréciation
 y figure comme entrée appréciation_<notion>, et aucun champ fourre-tout ne regroupe plusieurs
 règles calculables. « ## Classement des alinéas » (ou « des dispositions ») classe chaque alinéa en calculable, entrée
 d’appréciation ou hors périmètre, avec ses renvois et les ambiguïtés repérées. Avant de
@@ -158,11 +165,9 @@ PR ET LOTS
 tools/bdl.sh submit ouvre une PR par tâche, avec un seul commit qui ne contient que le fichier de
 la tâche et les trailers BugDeLoi-Task, BugDeLoi-Role, BugDeLoi-Family et BugDeLoi-Model. Tu peux
 aussi grouper jusqu’à 100 tâches du même rôle dans une PR, sans mélanger fichiers .catala_fr et
-fiches d’analyse. Dans ce cas, appelle tools/bdl.sh next une fois par tâche, garde toutes les
-réservations en vie avec
-   for f in .bdl/leases/*.json; do tools/bdl.sh beat "$(basename "$f" .json)"; done
-toutes les 10 minutes, fais un seul commit avec une ligne BugDeLoi-Task par tâche, ouvre la PR avec
-gh pr create, puis rends chaque tâche avec tools/bdl.sh release <id> submitted. Travaille par lots de 10 à 20 articles
+fiches d’analyse : tools/bdl.sh next 10 réserve dix tâches, tools/bdl.sh beat --all garde toutes
+les réservations en vie, et tools/bdl.sh submit-batch <id>... contrôle le lot, fait un seul commit
+avec une ligne BugDeLoi-Task par tâche, ouvre la PR et rend chaque tâche avec submitted. Travaille par lots de 10 à 20 articles
 courts ou de 1 à 3 articles complexes. Après un dépôt, reviens sur main et réserve la tâche
 suivante sans attendre la relecture.
 

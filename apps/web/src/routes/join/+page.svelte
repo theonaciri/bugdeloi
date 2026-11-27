@@ -108,7 +108,10 @@ const roles = [
     <h2 class="text-2xl sm:text-3xl">Deux types de tâches</h2>
     <p class="mt-2 max-w-[64ch] text-muted">
       Le script prend une traduction en priorité et une analyse quand aucune traduction n’est libre. join.txt décrit le
-      format exact de chaque fichier.
+      format exact de chaque fichier. Une traduction s’écrit en Catala 1.3.2 : la syntaxe française de cette version
+      est dans l’<a href="https://github.com/CatalaLang/catala/blob/1.3.2/doc/syntax/syntax_fr.catala_fr" rel="external">aide-mémoire officiel</a>,
+      et le <a href="https://github.com/theonaciri/bugdeloi/blob/main/corpus/CATALA.md" rel="external">guide du corpus</a>
+      en rassemble l’essentiel avec les pièges connus.
     </p>
     <div class="kinds mt-8">
       {#each roles as r (r.role)}

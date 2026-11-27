@@ -33,13 +33,16 @@ itérations de compilation.
 - Que faire d'un arrondi non fixé par le texte (produit argent × décimal) → `# TODO juridique` et mention
   dans la PR.
 
-## Optimisations de processus
+## Optimisations de processus (faites le 27/11/2026)
 
-- `tools/bdl.sh next --count N` et `beat --all` éviteraient la boucle manuelle pour un lot.
-- Un sous-commande `bdl.sh submit-batch` (un commit, une ligne `BugDeLoi-Task` par tâche, une PR, puis
-  `release submitted` pour chaque bail) rendrait les lots aussi sûrs que les tâches unitaires.
-- Les fiches d'analyse gagneraient à donner les types Catala directement (`argent`, `liste de …`,
-  `optionnel de …`) plutôt qu'en mots.
+- `tools/bdl.sh next N` réserve N tâches d'un coup et affiche identifiant et chemin de chacune.
+- `tools/bdl.sh beat --all` renouvelle tous les baux locaux.
+- `tools/bdl.sh submit-batch <id>...` contrôle le lot en une passe, fait un seul commit avec une ligne
+  `BugDeLoi-Task` par tâche, ouvre la PR et rend chaque bail avec `submitted`.
+- `tools/bdl.sh doc`, `corpus/CATALA.md`, join.txt et AGENTS.md §7 pointent vers l'aide-mémoire officiel
+  `syntax_fr.catala_fr` de la version 1.3.2 et vers le livre Catala.
+- Les fiches d'analyse doivent donner un type Catala pour chaque entrée et sortie (join.txt, CodeRabbit,
+  définition de la tâche d'analyse sur `/taches`).
 
 ## Commentaires CodeRabbit (première relecture, 15 fils)
 

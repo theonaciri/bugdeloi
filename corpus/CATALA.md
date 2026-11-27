@@ -2,7 +2,27 @@
 
 Ce guide rassemble la syntaxe française dont une traduction a besoin et les pièges rencontrés sur les
 premiers lots. Chaque exemple vient d’un fichier du corpus ; aucun code de l’Inria ou de la DGFiP n’est
-recopié. La référence complète du langage est sur <https://catala-lang.org>.
+recopié.
+
+## Documentation officielle
+
+Le corpus compile avec **Catala 1.3.2** : préfère toujours la documentation de cette version.
+
+| Besoin                                                                                                                       | Lien                                                                             |
+| ---------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| Toute la syntaxe française, version 1.3.2 (types, opérateurs, structures, énumérations, champs d’application, listes, tests) | <https://github.com/CatalaLang/catala/blob/1.3.2/doc/syntax/syntax_fr.catala_fr> |
+| Même aide-mémoire en PDF, français et anglais (branche principale, peut devancer 1.3.2)                                      | <https://assets.catala-lang.org/syntax.pdf>                                      |
+| Tutoriel : premiers champs d’application                                                                                     | <https://book.catala-lang.org/en/2-0-tutorial.html>                              |
+| Conditions et exceptions (logique par défaut)                                                                                | <https://book.catala-lang.org/en/2-2-conditionals-exceptions.html>               |
+| Listes et champs d’application imbriqués                                                                                     | <https://book.catala-lang.org/en/2-3-list-scopes.html>                           |
+| Guide de référence du langage                                                                                                | <https://book.catala-lang.org/en/5-catala.html>                                  |
+| Programmes de l’Inria (lecture de la syntaxe en situation ; jamais recopiés)                                                 | <https://github.com/CatalaLang/catala-examples>                                  |
+
+Le livre est en anglais et écrit ses exemples en Catala anglais : les mots-clés français
+correspondants sont dans l’aide-mémoire `syntax_fr.catala_fr`. `tools/bdl.sh doc` affiche ces liens.
+
+L’aide-mémoire montre aussi l’arrondi explicite (`arrondi de 9,99€`), l’accès aux composantes d’une
+date (`Date.accès_année de …`) et les opérateurs typés (`+€`, `+^`), absents de ce guide.
 
 ## Plan d’un fichier
 

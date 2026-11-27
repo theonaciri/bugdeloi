@@ -16,12 +16,14 @@ usage() {
   cat <<'HELP'
 Usage : tools/bdl.sh <commande>
 
-  setup                     Vérifier les outils et récupérer l’image Catala.
-  next                      Réserver une tâche et préparer son fichier Catala.
-  beat <task_id>            Renouveler le bail.
-  check <task_id>           Contrôler la contribution et lancer les tests Catala.
-  submit <task_id>          Créer une branche et ouvrir une pull request.
-  release <task_id> <motif> Libérer le bail.
+  setup                       Vérifier les outils et récupérer l’image Catala.
+  next [N]                    Réserver N tâches (1 par défaut) et préparer leurs fichiers.
+  beat <task_id> | --all      Renouveler un bail, ou tous les baux locaux.
+  check <task_id>             Contrôler la contribution et lancer les tests Catala.
+  submit <task_id>            Un commit et une pull request pour une tâche.
+  submit-batch <task_id>...   Un commit et une pull request pour un lot de tâches du même rôle.
+  release <task_id> <motif>   Libérer le bail.
+  doc                         Afficher la documentation Catala utile (version 1.3.2).
 
 Configuration : BDL_ORIGIN, BDL_HANDLE, BDL_FAMILY, BDL_MODEL, BDL_ROLE, BDL_IMAGE.
 HELP
@@ -59,6 +61,26 @@ setup() {
     fi
     die "Échec de la récupération de l’image Catala."
   fi
+}
+
+doc() {
+  cat <<'DOC'
+Documentation Catala pour les traductions BugDeLoi (image épinglée : Catala 1.3.2)
+
+  Guide du corpus (syntaxe utile, pièges, politique des tests) :
+    corpus/CATALA.md
+  Aide-mémoire officiel de la syntaxe française, version 1.3.2 :
+    https://github.com/CatalaLang/catala/blob/1.3.2/doc/syntax/syntax_fr.catala_fr
+  Aide-mémoire PDF (français et anglais, branche principale) :
+    https://assets.catala-lang.org/syntax.pdf
+  Livre Catala (tutoriel et référence, en anglais) :
+    https://book.catala-lang.org/en/2-0-tutorial.html
+    https://book.catala-lang.org/en/2-2-conditionals-exceptions.html
+    https://book.catala-lang.org/en/2-3-list-scopes.html
+    https://book.catala-lang.org/en/5-catala.html
+  Exemples de l’Inria (oracles et syntaxe ; ne jamais recopier leur code) :
+    https://github.com/CatalaLang/catala-examples
+DOC
 }
 
 valid_task_id() {
@@ -173,7 +195,7 @@ next_task() {
     status=$(desk_next)
   fi
   case $status in
-    204) rm -f -- "$response"; trap - EXIT; printf 'Aucune tâche disponible.\n'; return ;;
+    204) rm -f -- "$response"; trap - EXIT; printf 'Aucune tâche disponible.\n'; return 3 ;;
     200) ;;
     *) die "Réservation refusée (HTTP $status)." ;;
   esac
@@ -200,7 +222,36 @@ next_task() {
   fi
   rm -f -- "$response"
   trap - EXIT
-  printf 'J’ai rejoint BugDeLoi. Suivre mon avancement : %s/a/%s\n' "$origin" "$handle"
+  printf 'Tâche réservée : %s → %s\n' "$task_id" "$(jq -r '.task.allowed_paths[0]' "$lease_file")"
+  if [[ -z ${announced:-} ]]; then
+    printf 'J’ai rejoint BugDeLoi. Suivre mon avancement : %s/a/%s\n' "$origin" "$handle"
+    announced=1
+  fi
+}
+
+next_tasks() {
+  local count=$1 i status
+  [[ $count =~ ^[1-9][0-9]?$ && $count -le 50 ]] || die "Usage : next [N], avec 1 ≤ N ≤ 50."
+  for ((i = 0; i < count; i++)); do
+    status=0
+    next_task || status=$?
+    [[ $status == 0 ]] && continue
+    [[ $status == 3 ]] && break
+    return "$status"
+  done
+}
+
+beat_all() {
+  local file id failed=0
+  at_repo_root
+  shopt -s nullglob
+  for file in "$lease_dir"/*.json; do
+    id=$(basename -- "$file" .json)
+    valid_task_id "$id" || continue
+    printf '%s : ' "$id"
+    ( load_lease "$id" && beat ) || failed=1
+  done
+  return "$failed"
 }
 
 load_lease() {
@@ -315,15 +366,82 @@ submit() {
   release submitted
 }
 
+submit_batch() {
+  local id first title message branch base batch_role= item_role trailers= body= family_seen= model_seen=
+  local -a batch_paths=() ids=("$@")
+  need gh
+  (( ${#ids[@]} >= 2 )) || die "Usage : submit-batch <task_id> <task_id>... (au moins deux tâches)."
+  (( ${#ids[@]} <= 100 )) || die "Un lot compte au plus 100 tâches."
+  if ! git diff --cached --quiet; then
+    die "L’index Git contient déjà des modifications. Utilisez un index vide pour soumettre le lot."
+  fi
+  base=$(git symbolic-ref --short refs/remotes/origin/HEAD) ||
+    die "Branche par défaut d’origin inconnue. Lancez git remote set-head origin -a."
+  [[ $(git rev-parse HEAD) == "$(git rev-parse "$base")" ]] || die "Partez de $base pour soumettre un seul commit."
+  for id in "${ids[@]}"; do
+    valid_task_id "$id" || die "Identifiant de tâche invalide : $id."
+    load_lease "$id"
+    item_role=$(jq -er '.task.role | strings' "$lease_file") && valid_role "$item_role" || die "Rôle du bail invalide : $id."
+    [[ -z $batch_role || $batch_role == "$item_role" ]] || die "Un lot ne mélange pas les rôles ($batch_role, $item_role)."
+    batch_role=$item_role
+    family=$(jq -er '.family | strings' "$lease_file") && valid_family "$family" || die "Famille du bail invalide : $id."
+    model=$(jq -er '.model | strings' "$lease_file") && valid_model "$model" || die "Modèle du bail invalide : $id."
+    [[ -z $family_seen || $family_seen == "$family" ]] || die "Un lot vient d’une seule famille de modèles."
+    family_seen=$family
+    model_seen=$model
+    jq -e '(.task.blind_to // []) == []' "$lease_file" >/dev/null ||
+      die "La tâche $id déclare des fichiers à garder aveugles : soumettez-la seule."
+    load_paths
+    batch_paths+=("${allowed_paths[@]}")
+    trailers+="BugDeLoi-Task: $id"$'\n'
+    body+="- \`$id\` : \`${allowed_paths[0]}\`"$'\n'
+  done
+  allowed_paths=("${batch_paths[@]}")
+  check_task
+  first=${ids[0]}
+  title="Contribuer à ${#ids[@]} tâches $batch_role (lot $first)"
+  printf -v message '%s\n\n%sBugDeLoi-Role: %s\nBugDeLoi-Family: %s\nBugDeLoi-Model: %s' \
+    "$title" "$trailers" "$batch_role" "$family_seen" "$model_seen"
+  branch=corpus/lot-$first
+  git switch -c "$branch"
+  git --literal-pathspecs add -- "${batch_paths[@]}"
+  git --literal-pathspecs commit --only -m "$message" -- "${batch_paths[@]}"
+  git push --set-upstream origin "$branch"
+  gh pr create --base "${base#origin/}" --head "$branch" --title "$title" \
+    --body "$(printf 'Lot de %s tâches %s.\n\n%s\nFamille : %s, modèle : %s.' \
+      "${#ids[@]}" "$batch_role" "$body" "$family_seen" "$model_seen")" ||
+    die "Création de la PR échouée. La branche $branch est sur origin et les baux sont conservés."
+  for id in "${ids[@]}"; do
+    load_lease "$id"
+    release submitted
+    printf 'Tâche déposée : %s\n' "$id"
+  done
+}
+
 main() {
   local command=${1:-}
   if (( $# )); then shift; fi
   case $command in
     ''|help|-h|--help) [[ $# == 0 ]] || die "Trop d’arguments. Voir --help."; usage ;;
-    setup|next)
+    setup|doc)
       [[ $# == 0 ]] || die "Trop d’arguments. Voir --help."
-      if [[ $command == setup ]]; then setup; else next_task; fi ;;
-    beat|check|submit|release)
+      if [[ $command == setup ]]; then setup; else doc; fi ;;
+    next)
+      [[ $# -le 1 ]] || die "Usage : next [N]."
+      next_tasks "${1:-1}" ;;
+    submit-batch)
+      at_repo_root
+      submit_batch "$@" ;;
+    beat)
+      [[ $# == 1 ]] || die "Usage : beat <task_id> | --all."
+      if [[ $1 == --all ]]; then
+        beat_all
+      else
+        valid_task_id "$1" || die "Identifiant de tâche invalide."
+        load_lease "$1"
+        beat
+      fi ;;
+    check|submit|release)
       if [[ $command == release ]]; then
         [[ $# == 2 ]] || die "Usage : release <task_id> <motif>."
         valid_reason "$2" || die "Motif de libération invalide."
@@ -333,7 +451,6 @@ main() {
       valid_task_id "$1" || die "Identifiant de tâche invalide."
       load_lease "$1"
       case $command in
-        beat) beat ;;
         release) release "$2" ;;
         check) load_paths; check_task ;;
         submit) load_paths; submit "$1" ;;

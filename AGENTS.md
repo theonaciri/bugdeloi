@@ -312,7 +312,9 @@ Podman ou Docker.
   (`assertion date_d_application >= |date_debut|` ; une `date_fin` à `2999-01-01` signifie « sans fin
   connue » et n'appelle aucune assertion de fin).
 - **Syntaxe et pièges connus** : [`corpus/CATALA.md`](corpus/CATALA.md) (listes, valeurs optionnelles,
-  sommes, précédence, absence de type texte, arrondi au centime).
+  sommes, précédence, absence de type texte, arrondi au centime). Référence officielle de la version
+  épinglée : [aide-mémoire `syntax_fr.catala_fr` 1.3.2](https://github.com/CatalaLang/catala/blob/1.3.2/doc/syntax/syntax_fr.catala_fr)
+  et [livre Catala](https://book.catala-lang.org/en/2-0-tutorial.html) (`tools/bdl.sh doc`).
 - **Arrondis** : toujours explicites, avec la citation qui les impose. Si le texte est muet, ne choisis
   pas en silence : expose le choix comme paramètre et ouvre un finding `ARRONDI` candidat.
 - **Standards non calculables** : entrées `appréciation_<notion>` documentées (règle 7).

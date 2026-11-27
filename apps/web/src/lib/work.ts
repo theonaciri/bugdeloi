@@ -62,7 +62,7 @@ export const STAGE_INFO: Record<Stage, StageInfo> = {
       receives:
         'Le texte officiel de la version en vigueur, son identifiant LEGIARTI, son empreinte et le code dont il relève.',
       produces:
-        'Une fiche d’analyse : l’interface proposée (nom, entrées, sorties et leurs types) et le classement de chaque alinéa en calculable, entrée d’appréciation ou hors périmètre, avec les renvois et les ambiguïtés repérés.',
+        'Une fiche d’analyse : l’interface proposée (nom, entrées et sorties avec leur type Catala) et le classement de chaque alinéa en calculable, entrée d’appréciation ou hors périmètre, avec les renvois et les ambiguïtés repérés.',
       file: 'corpus/analyses/<LEGIARTI>.md',
       refused:
         'Pas de code Catala, pas de montant ni de seuil tiré de la mémoire, pas d’interprétation tranchée en silence : une lecture incertaine se signale.',

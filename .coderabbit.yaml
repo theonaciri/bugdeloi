@@ -51,7 +51,12 @@ reviews:
         ou les points 4 à 6.
     - path: "corpus/analyses/*.md"
       instructions: |
-        Applique la méthode d'analyse de `corpus/README.md` :
+        Une fiche d'analyse fusionnée fige l'interface que traduira l'agent suivant. Vérifie que « ## Interface
+        proposée » donne pour chaque entrée et sortie un type Catala (`booléen`, `entier`, `décimal`, `argent`, `date`,
+        `durée`, `optionnel de …`, `liste de …`, ou une structure ou énumération dont les champs ou les cas sont listés).
+        Un type décrit seulement en mots (« liste datée de montants », « identifiant ») oblige le traducteur à deviner :
+        demande de le préciser. Catala n'a pas de type texte.
+        Applique ensuite la méthode d'analyse de `corpus/README.md` :
         1. Fais le **test des deux cas aux mêmes entrées** : signale si deux situations juridiquement différentes donnent les mêmes entrées (ex. établissement principal vs secondaire, double consommation d'un même montant, identifiant de regroupement manquant).
         2. Vérifie l'unité de calcul (par engagement, par opération, par exercice), l'ordre des décisions (admission, exécution, manquement) et l'état antérieur nécessaire pour les règles étalées dans le temps (ex. tranches déjà imposées).
         3. **Distinction stricte Loi vs Doctrine (BOFiP) et Jurisprudence (AGENTS.md §3.3)** : ne demande JAMAIS d'intégrer une règle issue du BOFiP ou de la jurisprudence (Conseil d'État, Cour de cassation) dans la couche Loi ; recommande au plus une mention dans « Limite de la fiche ».
