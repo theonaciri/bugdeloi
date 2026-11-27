@@ -73,8 +73,8 @@ let { data }: PageProps = $props()
             Comparaison automatique de nos moteurs sur <strong>{data.c08.foyersCompares} foyers</strong> face à
             OpenFisca-France {data.c08.openfiscaVersion} : 100 % d’accord exact sur les allocations familiales dans le
             périmètre, {data.c08.differencesPerimetre} différences de périmètre documentées et
-            <strong>{data.c08.divergencesSimulateur} écarts d’arrondi</strong> qui mettent en évidence un candidat
-            <code>ARRONDI</code> à 17 593 € (61 € contre 0 €).
+            {data.c08.divergencesSimulateur} écarts dus à l’ordre des arrondis : 1 € de différence, qui suffit
+            près du seuil de recouvrement de 61 €.
           </p>
           <p class="mt-3 text-sm font-medium text-brand-strong">
             Oracle indépendant · 23 tests ·

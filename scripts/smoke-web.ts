@@ -18,6 +18,7 @@ const ROUTES = [
   '/live',
   '/methode',
   '/anomalies',
+  '/anomalies/arrondis',
   '/journal',
   '/references',
   '/status',
