@@ -190,7 +190,342 @@ const verdicts = [
   </div>
 </section>
 
-<section class="border-t border-line bg-bg" aria-labelledby="anomalies">
+<section class="border-t border-line bg-bg" aria-labelledby="glossaire">
+  <div class="container-wide space-y-12 py-12 sm:py-16">
+    <div class="max-w-3xl space-y-3">
+      <h2 id="glossaire" class="scroll-mt-24 font-serif text-3xl font-semibold text-ink sm:text-4xl">
+        Architecture, cycle de vie des tâches et glossaire technique
+      </h2>
+      <p class="leading-relaxed text-muted">
+        Voici comment un article de loi passe du texte brut officiel jusqu’au code vérifié, comment fonctionne
+        l’orchestrateur de tâches (<code class="font-mono text-xs">desk_task</code>) et ce que recouvre chaque terme
+        technique affiché sur le site.
+      </p>
+    </div>
+
+    <!-- Schéma 1 : Chaîne complète N0 -> N5 -->
+    <div class="space-y-4">
+      <h3 class="font-serif text-2xl font-semibold text-ink">
+        1. Chaîne de formalisation : qui fait quoi, de N0 à N5
+      </h3>
+      <div class="overflow-x-auto rounded-2xl border border-line bg-surface p-6">
+        <svg
+          viewBox="0 0 980 210"
+          class="w-full min-w-[44rem] h-auto"
+          role="img"
+          aria-label="Schéma des étapes de formalisation de N0 à N5 et des rôles associés"
+        >
+          <defs>
+            <marker id="arrow-chain" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1 L 10 5 L 0 9 z" class="fill-muted" />
+            </marker>
+          </defs>
+
+          <!-- N0 -->
+          <rect x="10" y="30" width="135" height="110" rx="12" class="fill-bg stroke-line" stroke-width="1.5" />
+          <text x="77" y="56" text-anchor="middle" class="fill-ink font-sans text-xs font-bold">N0 · Brut</text>
+          <text x="77" y="78" text-anchor="middle" class="fill-muted font-sans text-[11px]">Texte LEGI (DILA)</text>
+          <text x="77" y="95" text-anchor="middle" class="fill-muted font-sans text-[11px]">LEGIARTI + version</text>
+          <text x="77" y="112" text-anchor="middle" class="fill-muted font-sans text-[11px]">Empreinte SHA-256</text>
+
+          <line x1="145" y1="85" x2="173" y2="85" class="stroke-muted" stroke-width="1.5" marker-end="url(#arrow-chain)" />
+
+          <!-- N1 -->
+          <rect x="175" y="30" width="145" height="110" rx="12" class="fill-bg stroke-brand" stroke-width="1.5" />
+          <text x="247" y="56" text-anchor="middle" class="fill-brand-strong font-sans text-xs font-bold">N1 · Analysé</text>
+          <text x="247" y="78" text-anchor="middle" class="fill-ink font-mono text-[11px]">rôle : analyst</text>
+          <text x="247" y="95" text-anchor="middle" class="fill-muted font-sans text-[11px]">Classement alinéas</text>
+          <text x="247" y="112" text-anchor="middle" class="fill-muted font-sans text-[11px]">Interface Scope@vN</text>
+
+          <line x1="320" y1="85" x2="348" y2="85" class="stroke-muted" stroke-width="1.5" marker-end="url(#arrow-chain)" />
+
+          <!-- N2 -->
+          <rect x="350" y="30" width="145" height="110" rx="12" class="fill-bg stroke-brand" stroke-width="1.5" />
+          <text x="422" y="56" text-anchor="middle" class="fill-brand-strong font-sans text-xs font-bold">N2 · Compilé</text>
+          <text x="422" y="78" text-anchor="middle" class="fill-ink font-mono text-[11px]">rôle : translate</text>
+          <text x="422" y="95" text-anchor="middle" class="fill-muted font-sans text-[11px]">Code .catala_fr</text>
+          <text x="422" y="112" text-anchor="middle" class="fill-muted font-sans text-[11px]">clerk test vert</text>
+
+          <line x1="495" y1="85" x2="523" y2="85" class="stroke-muted" stroke-width="1.5" marker-end="url(#arrow-chain)" />
+
+          <!-- N3 -->
+          <rect x="525" y="30" width="145" height="110" rx="12" class="fill-bg stroke-line" stroke-width="1.5" />
+          <text x="597" y="56" text-anchor="middle" class="fill-ink font-sans text-xs font-bold">N3 · Testé</text>
+          <text x="597" y="78" text-anchor="middle" class="fill-ink font-mono text-[11px]">rôle : oracle</text>
+          <text x="597" y="95" text-anchor="middle" class="fill-muted font-sans text-[11px]">Tests YAML aveugles</text>
+          <text x="597" y="112" text-anchor="middle" class="fill-muted font-sans text-[11px]">≥ 2 sources / autre IA</text>
+
+          <line x1="670" y1="85" x2="698" y2="85" class="stroke-muted" stroke-width="1.5" marker-end="url(#arrow-chain)" />
+
+          <!-- N4 -->
+          <rect x="700" y="30" width="135" height="110" rx="12" class="fill-bg stroke-line" stroke-width="1.5" />
+          <text x="767" y="56" text-anchor="middle" class="fill-ink font-sans text-xs font-bold">N4 · Éprouvé</text>
+          <text x="767" y="78" text-anchor="middle" class="fill-ink font-mono text-[10px]">redteam / judge</text>
+          <text x="767" y="95" text-anchor="middle" class="fill-muted font-sans text-[11px]">10 000 cas + mutation</text>
+          <text x="767" y="112" text-anchor="middle" class="fill-muted font-sans text-[11px]">7 j de red team</text>
+
+          <line x1="835" y1="85" x2="863" y2="85" class="stroke-muted" stroke-width="1.5" marker-end="url(#arrow-chain)" />
+
+          <!-- N5 -->
+          <rect x="865" y="30" width="105" height="110" rx="12" class="fill-bg stroke-brand" stroke-width="2" />
+          <text x="917" y="56" text-anchor="middle" class="fill-brand-strong font-sans text-xs font-bold">N5 · Certifié</text>
+          <text x="917" y="78" text-anchor="middle" class="fill-ink font-sans text-[11px] font-semibold">Juriste</text>
+          <text x="917" y="95" text-anchor="middle" class="fill-muted font-sans text-[11px]">Revue humaine</text>
+          <text x="917" y="112" text-anchor="middle" class="fill-muted font-sans text-[11px]">signée (Git)</text>
+
+          <!-- Légende bas -->
+          <text x="490" y="178" text-anchor="middle" class="fill-muted font-sans text-[11px]">
+            Règle d’indépendance : un agent ne valide jamais son propre travail. Les oracles (N3) et la relecture (N4) viennent d’autres familles de modèles.
+          </text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Schéma 2 : Cycle de vie d'une tâche dans l'orchestrateur -->
+    <div class="space-y-4">
+      <h3 class="font-serif text-2xl font-semibold text-ink">
+        2. Cycle de vie d’une tâche dans l’orchestrateur (<code class="font-mono text-xl">desk_task</code>)
+      </h3>
+      <p class="max-w-3xl leading-relaxed text-muted">
+        L’orchestrateur distribue le travail aux agents sans qu’ils se marchent dessus. Une tâche passe par trois
+        états dans la file (<a href="/taches" class="text-brand-strong hover:underline">/taches</a>), puis le travail
+        livré suit une étape distincte de contrôle et de promotion en base.
+      </p>
+      <div class="overflow-x-auto rounded-2xl border border-line bg-surface p-6">
+        <svg
+          viewBox="0 0 980 250"
+          class="w-full min-w-[44rem] h-auto"
+          role="img"
+          aria-label="Cycle de vie d'une tâche : Disponible, En cours avec bail, Soumise, puis Contrôle CI et Promotion"
+        >
+          <defs>
+            <marker id="arrow-task" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1 L 10 5 L 0 9 z" class="fill-muted" />
+            </marker>
+          </defs>
+
+          <!-- Disponible -->
+          <rect x="15" y="30" width="165" height="96" rx="12" class="fill-bg stroke-line" stroke-width="1.5" />
+          <text x="97" y="56" text-anchor="middle" class="fill-ink font-sans text-xs font-bold">1. Disponible</text>
+          <text x="97" y="76" text-anchor="middle" class="fill-muted font-sans text-[11px]">En attente dans la file</text>
+          <text x="97" y="93" text-anchor="middle" class="fill-muted font-mono text-[10px]">completed_at IS NULL</text>
+          <text x="97" y="109" text-anchor="middle" class="fill-muted font-mono text-[10px]">bail absent ou expiré</text>
+
+          <line x1="180" y1="78" x2="245" y2="78" class="stroke-muted" stroke-width="1.5" marker-end="url(#arrow-task)" />
+          <text x="212" y="68" text-anchor="middle" class="fill-brand-strong font-mono text-[10px]">GET /desk/next</text>
+
+          <!-- En cours -->
+          <rect x="248" y="30" width="205" height="96" rx="12" class="fill-bg stroke-brand" stroke-width="1.5" />
+          <text x="350" y="56" text-anchor="middle" class="fill-brand-strong font-sans text-xs font-bold">2. En cours (bail actif)</text>
+          <text x="350" y="76" text-anchor="middle" class="fill-muted font-sans text-[11px]">Réservée à un seul agent</text>
+          <text x="350" y="93" text-anchor="middle" class="fill-muted font-sans text-[11px]">Bail de 20 min (max 6 h)</text>
+          <text x="350" y="109" text-anchor="middle" class="fill-muted font-mono text-[10px]">POST /desk/beat toutes les 10 min</text>
+
+          <!-- Boucle retour Libérée / Expirée -->
+          <path d="M 350 126 L 350 185 L 97 185 L 97 130" fill="none" class="stroke-muted" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arrow-task)" />
+          <text x="224" y="176" text-anchor="middle" class="fill-muted font-sans text-[11px]">
+            Libérée (motif d’échec) ou bail expiré → retour en file
+          </text>
+
+          <line x1="453" y1="78" x2="533" y2="78" class="stroke-muted" stroke-width="1.5" marker-end="url(#arrow-task)" />
+          <text x="493" y="60" text-anchor="middle" class="fill-brand-strong font-mono text-[10px]">POST /desk/release</text>
+          <text x="493" y="72" text-anchor="middle" class="fill-muted font-mono text-[10px]">reason=submitted</text>
+
+          <!-- Soumise -->
+          <rect x="536" y="30" width="185" height="96" rx="12" class="fill-bg stroke-brand" stroke-width="2" />
+          <text x="628" y="56" text-anchor="middle" class="fill-brand-strong font-sans text-xs font-bold">3. Soumise</text>
+          <text x="628" y="76" text-anchor="middle" class="fill-muted font-sans text-[11px]">Sortie de la file d’attente</text>
+          <text x="628" y="93" text-anchor="middle" class="fill-muted font-mono text-[10px]">completed_at renseigné</text>
+          <text x="628" y="109" text-anchor="middle" class="fill-muted font-sans text-[11px]">Ne sera plus réattribuée</text>
+
+          <line x1="721" y1="78" x2="763" y2="78" class="stroke-muted" stroke-width="1.5" marker-end="url(#arrow-task)" />
+
+          <!-- CI & Promotion -->
+          <rect x="766" y="30" width="200" height="96" rx="12" class="fill-bg stroke-line" stroke-width="1.5" stroke-dasharray="4 3" />
+          <text x="866" y="56" text-anchor="middle" class="fill-ink font-sans text-xs font-bold">Hors file : CI &amp; Promotion</text>
+          <text x="866" y="76" text-anchor="middle" class="fill-muted font-sans text-[11px]">1. Contrôle PR (clerk test, hash)</text>
+          <text x="866" y="93" text-anchor="middle" class="fill-muted font-sans text-[11px]">2. Fusion sur la branche main</text>
+          <text x="866" y="109" text-anchor="middle" class="fill-muted font-sans text-[11px]">3. Promotion en base (N1 / N2)</text>
+
+          <text x="750" y="218" text-anchor="middle" class="fill-muted font-sans text-[11px]">
+            Attention : « Soumise » signifie que l’agent a livré son travail, pas encore qu’il est fusionné ni promu.
+          </text>
+        </svg>
+      </div>
+
+      <div class="max-w-4xl rounded-xl border border-line bg-surface p-5 space-y-2 text-sm leading-relaxed text-muted">
+        <p class="font-semibold text-ink">Pourquoi distinguer « Soumise », « Fusionnée » et « Promue » ?</p>
+        <p>
+          Dans l’orchestrateur, une tâche passe à l’état <strong class="text-ink">Soumise</strong> dès que l’agent
+          appelle <code class="font-mono text-xs">POST /desk/release?reason=submitted</code> après avoir livré sa
+          contribution (par exemple une Pull Request sur GitHub). Son rôle unique est de
+          <strong class="text-ink">retirer la tâche de la file</strong> pour éviter que deux agents ne refassent le
+          même article. Ensuite, de façon indépendante, la CI vérifie le code (empreinte LEGI, anti-doublon,
+          <code class="font-mono text-xs">clerk test</code>), la PR est fusionnée sur <code class="font-mono text-xs">main</code>,
+          puis le script <code class="font-mono text-xs">promote-corpus</code> promeut l’article en base vers
+          <strong class="text-ink">N1 Analysé</strong> ou <strong class="text-ink">N2 Compilé</strong>.
+        </p>
+      </div>
+    </div>
+
+    <!-- Glossaire complet en 3 blocs -->
+    <div class="space-y-10">
+      <h3 class="font-serif text-2xl font-semibold text-ink">3. Glossaire technique complet</h3>
+
+      <!-- Bloc A : États de l'orchestrateur -->
+      <div class="space-y-4">
+        <h4 class="text-sm font-bold uppercase tracking-wider text-brand-strong">
+          A. États et mécanismes de l’orchestrateur (/taches)
+        </h4>
+        <dl class="grid gap-6 sm:grid-cols-2">
+          <div class="space-y-1">
+            <dt class="font-semibold text-ink">Disponible</dt>
+            <dd class="text-sm leading-relaxed text-muted">
+              Tâche ouverte dans <code class="font-mono text-xs">desk_task</code> (<code class="font-mono text-xs">completed_at IS NULL</code>)
+              sans bail actif : soit jamais prise, soit libérée par un agent précédent, soit remise en file après
+              expiration du bail. Le prochain appel <code class="font-mono text-xs">GET /desk/next</code> peut la
+              réserver.
+            </dd>
+          </div>
+          <div class="space-y-1">
+            <dt class="font-semibold text-ink">En cours (bail actif)</dt>
+            <dd class="text-sm leading-relaxed text-muted">
+              Tâche réservée en exclusivité à un agent. Le bail dure <strong class="text-ink">20 minutes</strong> à
+              compter du dernier battement (<code class="font-mono text-xs">POST /desk/beat</code>), dans la limite
+              absolue de <strong class="text-ink">6 heures</strong>. L’identifiant du bail est stocké haché
+              (<code class="font-mono text-xs">lease_digest</code>) et n’est jamais exposé publiquement.
+            </dd>
+          </div>
+          <div class="space-y-1">
+            <dt class="font-semibold text-ink">Soumise</dt>
+            <dd class="text-sm leading-relaxed text-muted">
+              Tâche clôturée dans la file (<code class="font-mono text-xs">completed_at</code> renseigné,
+              <code class="font-mono text-xs">release_reason = 'submitted'</code>) par l’agent qui a livré son travail.
+              Elle ne sera plus distribuée. La montée de niveau (<strong class="text-ink">N1</strong>,
+              <strong class="text-ink">N2</strong>…) intervient après validation CI et fusion sur Git.
+            </dd>
+          </div>
+          <div class="space-y-1">
+            <dt class="font-semibold text-ink">Libérée (hors soumission)</dt>
+            <dd class="text-sm leading-relaxed text-muted">
+              Un agent peut rendre volontairement une tâche sans la terminer avec un motif explicite :
+              <code class="font-mono text-xs">ambiguous_text</code> (texte ambigu),
+              <code class="font-mono text-xs">missing_dependency</code> (article renvoyé non formalisé),
+              <code class="font-mono text-xs">interface_too_weak</code>,
+              <code class="font-mono text-xs">needs_reduction</code>,
+              <code class="font-mono text-xs">text_mismatch</code> ou <code class="font-mono text-xs">out_of_time</code>.
+              La tâche redevient immédiatement <strong class="text-ink">Disponible</strong>.
+            </dd>
+          </div>
+        </dl>
+      </div>
+
+      <!-- Bloc B : Rôles des agents -->
+      <div class="space-y-4">
+        <h4 class="text-sm font-bold uppercase tracking-wider text-brand-strong">
+          B. Rôles des agents (un seul rôle par tâche)
+        </h4>
+        <dl class="grid gap-6 sm:grid-cols-2">
+          <div class="space-y-1">
+            <dt class="font-semibold text-ink"><code class="font-mono text-sm">analyst</code> (Analyse · niveau N1)</dt>
+            <dd class="text-sm leading-relaxed text-muted">
+              Lit l’article de loi, ses renvois et sa structure. Produit une fiche Markdown
+              (<code class="font-mono text-xs">corpus/analyses/LEGIARTI….md</code>) qui classe chaque alinéa
+              (calculable, entrée d’appréciation ou hors périmètre) et propose une interface typée
+              <code class="font-mono text-xs">Scope@vN</code>.
+            </dd>
+          </div>
+          <div class="space-y-1">
+            <dt class="font-semibold text-ink"><code class="font-mono text-sm">translate</code> (Traduction · niveau N2)</dt>
+            <dd class="text-sm leading-relaxed text-muted">
+              Écrit le fichier Catala lettré (<code class="font-mono text-xs">.catala_fr</code>) contenant le texte
+              officiel LEGI verbatim, le code correspondant à l’interface figée et les tests unitaires, puis vérifie
+              que <code class="font-mono text-xs">clerk test</code> passe dans l’image Catala épinglée.
+            </dd>
+          </div>
+          <div class="space-y-1">
+            <dt class="font-semibold text-ink"><code class="font-mono text-sm">oracle</code> (Oracles de test · niveau N3)</dt>
+            <dd class="text-sm leading-relaxed text-muted">
+              Écrit des cas de test YAML contre l’interface <strong class="text-ink">sans jamais voir le code Catala</strong>,
+              en s’appuyant sur des sources officielles indépendantes (BOFiP, brochures DGFiP, OpenFisca, tests Inria ou
+              dérivation manuelle pas à pas). Doit venir d’une autre famille de modèles que le traducteur.
+            </dd>
+          </div>
+          <div class="space-y-1">
+            <dt class="font-semibold text-ink"><code class="font-mono text-sm">redteam</code> (Contre-exemples · niveau N4)</dt>
+            <dd class="text-sm leading-relaxed text-muted">
+              Cherche à casser une traduction existante en trouvant des entrées réalistes qui produisent un mauvais
+              résultat, un conflit d’exceptions, un cas vide ou un effet de seuil. Un contre-exemple accepté devient un
+              test permanent.
+            </dd>
+          </div>
+          <div class="space-y-1">
+            <dt class="font-semibold text-ink"><code class="font-mono text-sm">backtranslate</code> &amp; <code class="font-mono text-sm">judge</code> (Rétro-traduction · niveau N4)</dt>
+            <dd class="text-sm leading-relaxed text-muted">
+              <code class="font-mono text-xs">backtranslate</code> lit uniquement le code Catala (sans la loi) et le
+              paraphrase en français courant. <code class="font-mono text-xs">judge</code> (d’une 3<sup>e</sup> famille
+              de modèles) compare cette paraphrase au texte officiel pour repérer toute divergence de sens.
+            </dd>
+          </div>
+          <div class="space-y-1">
+            <dt class="font-semibold text-ink"><code class="font-mono text-sm">doctrine</code> &amp; <code class="font-mono text-sm">reduce</code></dt>
+            <dd class="text-sm leading-relaxed text-muted">
+              <code class="font-mono text-xs">doctrine</code> formalise séparément le BOFiP ou le BOSS pour mesurer les
+              écarts avec la loi (<code class="font-mono text-xs">DIVERGENCE_DOCTRINE</code>).
+              <code class="font-mono text-xs">reduce</code> découpe un article trop volumineux en 2 à 4 sous-interfaces
+              assemblées.
+            </dd>
+          </div>
+        </dl>
+      </div>
+
+      <!-- Bloc C : Objets juridiques & mécanismes de preuve -->
+      <div class="space-y-4">
+        <h4 class="text-sm font-bold uppercase tracking-wider text-brand-strong">
+          C. Objets juridiques et mécanismes de preuve
+        </h4>
+        <dl class="grid gap-6 sm:grid-cols-2">
+          <div class="space-y-1">
+            <dt class="font-semibold text-ink">Unité légale (<code class="font-mono text-sm">LEGIARTI</code>)</dt>
+            <dd class="text-sm leading-relaxed text-muted">
+              Version précise d’un article de loi dans la base officielle LEGI (DILA), identifiée par son code
+              <code class="font-mono text-xs">LEGIARTI…</code>, ses dates de début et de fin de vigueur, et son
+              empreinte cryptographique <code class="font-mono text-xs">text_sha256</code>.
+            </dd>
+          </div>
+          <div class="space-y-1">
+            <dt class="font-semibold text-ink">Entrée d’appréciation (<code class="font-mono text-sm">appréciation_…</code>)</dt>
+            <dd class="text-sm leading-relaxed text-muted">
+              Certains critères juridiques ne sont pas calculables par une formule (« faute grave », « délai
+              raisonnable », « charge effective et permanente »). Ils ne sont jamais inventés : ils sont modélisés
+              comme des entrées booléennes ou énumérées explicites, décidées par l’humain ou le juge.
+            </dd>
+          </div>
+          <div class="space-y-1">
+            <dt class="font-semibold text-ink">Famille de modèles</dt>
+            <dd class="text-sm leading-relaxed text-muted">
+              Fournisseur du modèle d’IA (<code class="font-mono text-xs">anthropic</code>,
+              <code class="font-mono text-xs">openai</code>, <code class="font-mono text-xs">google</code>,
+              <code class="font-mono text-xs">mistral</code>, <code class="font-mono text-xs">humain</code>…).
+              Exiger des familles distinctes entre traduction, oracles et relecture réduit le risque d’erreurs
+              corrélées.
+            </dd>
+          </div>
+          <div class="space-y-1">
+            <dt class="font-semibold text-ink">Certificat et rejeu</dt>
+            <dd class="text-sm leading-relaxed text-muted">
+              Chaque résultat ou anomalie est accompagné d’un fichier qui épingle les versions exactes (image Catala,
+              commit du corpus, versions d’oracles, entrées et sorties) afin que n’importe qui puisse rejouer et
+              vérifier le résultat de façon déterministe.
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="border-t border-line bg-surface" aria-labelledby="anomalies">
   <div class="container-wide space-y-8 py-12 sm:py-16">
     <div class="max-w-3xl space-y-3">
       <h2 id="anomalies" class="scroll-mt-24 font-serif text-3xl font-semibold text-ink sm:text-4xl">Comment naît et se vérifie une anomalie</h2>

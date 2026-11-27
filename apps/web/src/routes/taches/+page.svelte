@@ -43,7 +43,7 @@ const STATE_DESCRIPTION: Record<string, string> = {
     'Tâches actuellement réservées par un agent ou un contributeur avec un bail actif (renouvelé toutes les 10 min).',
   open: 'Tâches prêtes à être prises par le prochain agent via le guichet (/desk/next), soit jamais attribuées, soit libérées ou expirées.',
   completed:
-    'Tâches clôturées avec le motif « submitted » après soumission du travail (analyse, traduction ou oracle).',
+    'L’agent a signalé la fin de son travail (release?reason=submitted) et la tâche est retirée de la file d’attente pour ne plus être réattribuée. Le travail livré (ex. Pull Request) passe ensuite par les contrôles CI et la fusion avant de faire monter le niveau de preuve (N1, N2…).',
 }
 
 const ROLE_DESCRIPTION: Record<string, string> = {
@@ -158,29 +158,34 @@ function hrefFor(params: { etat?: string; role?: string; page?: number }) {
           vérité indépendante (BOFiP, brochure DGFiP, OpenFisca, tests Inria) qui donne le résultat attendu pour une
           entrée donnée, car le compilateur vérifie la cohérence du code mais pas l’exactitude du calcul (N3).
         </p>
-        <details class="pt-1 text-xs">
-          <summary class="cursor-pointer font-semibold text-brand-strong hover:underline">
-            Pourquoi séparer l’analyse (analyst) de la traduction (translate) ?
-          </summary>
-          <ol class="mt-2 list-decimal space-y-1 pl-5 text-muted leading-relaxed">
-            <li>
-              <strong class="text-ink">Trier avant de coder :</strong> sur plus de 13 000 articles, beaucoup sont
-              procéduraux ou hors périmètre. L’analyse filtre rapidement ce qui est réellement calculable.
-            </li>
-            <li>
-              <strong class="text-ink">Figer l’interface avant le code :</strong> l’analyste définit les entrées, les
-              sorties et les entrées d’appréciation pour éviter que le traducteur n’adapte l’énoncé à son propre code.
-            </li>
-            <li>
-              <strong class="text-ink">Permettre des oracles aveugles (N3) :</strong> une fois l’interface figée, un
-              autre modèle écrit les tests contre cette interface sans jamais voir le code Catala.
-            </li>
-            <li>
-              <strong class="text-ink">Détecter les ambiguïtés :</strong> plusieurs traducteurs indépendants peuvent
-              implémenter la même interface ; une divergence sur une même entrée révèle une ambiguïté du texte.
-            </li>
-          </ol>
-        </details>
+        <div class="flex flex-wrap items-center justify-between gap-2 pt-1 text-xs">
+          <details>
+            <summary class="cursor-pointer font-semibold text-brand-strong hover:underline">
+              Pourquoi séparer l’analyse (analyst) de la traduction (translate) ?
+            </summary>
+            <ol class="mt-2 list-decimal space-y-1 pl-5 text-muted leading-relaxed">
+              <li>
+                <strong class="text-ink">Trier avant de coder :</strong> sur plus de 13 000 articles, beaucoup sont
+                procéduraux ou hors périmètre. L’analyse filtre rapidement ce qui est réellement calculable.
+              </li>
+              <li>
+                <strong class="text-ink">Figer l’interface avant le code :</strong> l’analyste définit les entrées, les
+                sorties et les entrées d’appréciation pour éviter que le traducteur n’adapte l’énoncé à son propre code.
+              </li>
+              <li>
+                <strong class="text-ink">Permettre des oracles aveugles (N3) :</strong> une fois l’interface figée, un
+                autre modèle écrit les tests contre cette interface sans jamais voir le code Catala.
+              </li>
+              <li>
+                <strong class="text-ink">Détecter les ambiguïtés :</strong> plusieurs traducteurs indépendants peuvent
+                implémenter la même interface ; une divergence sur une même entrée révèle une ambiguïté du texte.
+              </li>
+            </ol>
+          </details>
+          <a href="/methode#glossaire" class="font-semibold text-brand-strong no-underline hover:underline">
+            Schémas et glossaire complet (/methode#glossaire) →
+          </a>
+        </div>
       </div>
     </div>
   </div>
