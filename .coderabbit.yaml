@@ -1,7 +1,7 @@
 # Configuration CodeRabbit pour BugDeLoi (dépôt public)
 language: "fr-FR"
 reviews:
-  profile: "assertive"
+  profile: "chill"
   request_changes_workflow: true
   high_level_summary: true
   poem: false
@@ -23,7 +23,8 @@ reviews:
         Applique la méthode d'analyse de `corpus/README.md` :
         1. Fais le **test des deux cas aux mêmes entrées** : signale si deux situations juridiquement différentes donnent les mêmes entrées (ex. établissement principal vs secondaire, double consommation d'un même montant, identifiant de regroupement manquant).
         2. Vérifie l'unité de calcul (par engagement, par opération, par exercice), l'ordre des décisions (admission, exécution, manquement) et l'état antérieur nécessaire pour les règles étalées dans le temps (ex. tranches déjà imposées).
-        3. **Distinction stricte Loi vs Doctrine (BOFiP)** : tu peux signaler un cas limite issu du BOFiP, mais ne propose jamais d'intégrer une règle BOFiP directement dans la couche Loi ; recommande de le noter comme limite ou analyse de doctrine distincte.
+        3. **Distinction stricte Loi vs Doctrine (BOFiP) et Jurisprudence (AGENTS.md §3.3)** : ne demande JAMAIS d'intégrer une règle issue du BOFiP ou de la jurisprudence (Conseil d'État, Cour de cassation) dans la couche Loi ; recommande au plus une mention dans « Limite de la fiche ».
+        4. **Ne bloque pas (`REQUEST_CHANGES`) sur des cas spéculatifs ou jurisprudentiels** : réserve les commentaires bloquants aux erreurs factuelles ou omissions manifestes du texte LEGI littéral.
     - path: "corpus/**"
       instructions: |
         Signale immédiatement tout fichier exécutable (.ts, .js, .sh, .py) ou modification de `clerk.toml` dans `corpus/` pour revue humaine obligatoire.
