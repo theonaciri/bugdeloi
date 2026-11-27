@@ -88,7 +88,15 @@ const verdicts = [
         <li class="flex items-start gap-4 py-4">
           <div class="shrink-0"><LevelSwatch {level} size={36} /></div>
           <div class="space-y-1">
-            <h3 class="text-lg font-semibold text-ink">{levelName(level)}</h3>
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <h3 class="text-lg font-semibold text-ink">{levelName(level)}</h3>
+              <a
+                href="/travail?niveau={level}"
+                class="text-xs font-semibold text-brand-strong no-underline hover:underline"
+              >
+                Voir les articles ({level === 'REF' ? '★ Référence' : level}) →
+              </a>
+            </div>
             <p class="leading-relaxed text-muted">{levelDescriptions[level]}</p>
           </div>
         </li>

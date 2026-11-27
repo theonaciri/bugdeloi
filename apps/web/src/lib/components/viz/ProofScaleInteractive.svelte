@@ -83,6 +83,19 @@ const neverProof = [
         <ShieldCheck class="mt-0.5 size-4.5 shrink-0" aria-hidden="true" />
         <p>{checkerByLevel[currentLevel]}</p>
       </div>
+
+      <div class="pt-2">
+        <a
+          href="/travail?niveau={currentLevel}"
+          class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-strong no-underline hover:underline"
+        >
+          {#if counts}
+            Voir les {formatInt(counts[currentLevel])} articles ({levelName(currentLevel)}) →
+          {:else}
+            Voir les articles au niveau {levelName(currentLevel)} →
+          {/if}
+        </a>
+      </div>
     </div>
 
     <div class="rounded-[var(--radius-xl)] bg-surface-2/70 p-6 space-y-3">

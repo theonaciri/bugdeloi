@@ -511,9 +511,14 @@ $effect(() => {
           confronté à des oracles indépendants et relu par un juriste. Voici l’état exact et transparent du corpus.
         </p>
       </div>
-      <a href="/methode" class="text-sm font-semibold text-brand-strong no-underline hover:underline">
-        Échelle de preuve N0 → N5 →
-      </a>
+      <div class="flex flex-wrap items-center gap-4">
+        <a href="/travail?niveau=formalises" class="text-sm font-semibold text-brand-strong no-underline hover:underline">
+          Parcourir tout le travail ({formatInt(totals.N1 + totals.N2 + totals.N3 + totals.N4 + totals.N5 + totals.REF)}) →
+        </a>
+        <a href="/methode" class="text-sm font-semibold text-muted no-underline hover:text-ink hover:underline">
+          Échelle de preuve N0 → N5 →
+        </a>
+      </div>
     </div>
 
     <div class="grid gap-6 lg:grid-cols-3">
