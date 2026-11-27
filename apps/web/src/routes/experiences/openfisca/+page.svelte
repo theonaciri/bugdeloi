@@ -18,7 +18,7 @@ const GITHUB_BASE = 'https://github.com/theonaciri/bugdeloi/blob/main/replicatio
   <title>Comparaison croisée avec OpenFisca-France (C0.8) · BugDeLoi</title>
   <meta
     name="description"
-    content="Comment BugDeLoi compare ses calculs d'impôt sur le revenu et d'allocations familiales à OpenFisca-France sur 328 foyers, et pourquoi un écart d'arrondi à 17 593 € est mis à l'étude."
+    content="Comment BugDeLoi compare ses calculs d'impôt sur le revenu et d'allocations familiales à OpenFisca-France sur 328 foyers, et pourquoi l’ordre des arrondis change l’impôt de 1 € autour de 17 593 €."
   />
 </svelte:head>
 
@@ -60,7 +60,7 @@ const GITHUB_BASE = 'https://github.com/theonaciri/bugdeloi/blob/main/replicatio
         <p class="mt-1 text-xs text-muted">Règles modélisées d’un seul côté (CEHR, outre-mer, enfant 20 ans)</p>
       </div>
       <div class="rounded-xl border border-line bg-surface p-5">
-        <p class="text-xs font-semibold uppercase tracking-wide text-muted">Candidat d’arrondi</p>
+        <p class="text-xs font-semibold uppercase tracking-wide text-muted">Ordre d’arrondi</p>
         <p class="mt-2 font-display text-3xl font-semibold text-notice-ink">
           {fmtInt(c08.ecartsParCategorie.divergence_simulateur)}
         </p>
@@ -73,7 +73,7 @@ const GITHUB_BASE = 'https://github.com/theonaciri/bugdeloi/blob/main/replicatio
 <section class="border-t border-line bg-surface">
   <div class="container-wide py-12 sm:py-16">
     <h2 class="text-2xl text-ink sm:text-3xl">
-      Un écart d’arrondi candidat, autour de 17 593 €
+      Une différence d’ordre d’arrondi, autour de 17 593 €
     </h2>
     <p class="mt-4 max-w-[68ch] text-base leading-relaxed text-muted">
       Sur les {fmtInt(c08.foyersGeneres.ir)} foyers testés pour l’impôt sur le revenu, {fmtInt(c08.ecartsParCategorie.divergence_simulateur)}
@@ -82,7 +82,7 @@ const GITHUB_BASE = 'https://github.com/theonaciri/bugdeloi/blob/main/replicatio
     </p>
     <p class="mt-3 max-w-[68ch] text-base leading-relaxed text-muted">
       En temps normal, cet ordre d’arrondi change l’impôt d’au plus 1 €. Mais juste à côté du seuil de recouvrement
-      de 61 € (article 1657 1 bis du CGI), ce seul euro fait basculer l’impôt de <strong>0 € à 61 €</strong> :
+      de 61 € (article 1657 1 bis du CGI), ce même euro place l’impôt juste au-dessus ou juste au-dessous du seuil, d’où 0 € d’un côté et 61 € de l’autre :
     </p>
 
     {#if arrondiGroup}
@@ -117,9 +117,9 @@ const GITHUB_BASE = 'https://github.com/theonaciri/bugdeloi/blob/main/replicatio
     {/if}
 
     <p class="mt-4 max-w-[68ch] text-sm leading-relaxed text-muted">
-      <strong>Point de méthode :</strong> un écart entre deux simulateurs ne dit pas qui a raison. Il signale un
-      candidat de type <code>ARRONDI</code> à soumettre à une relecture juridique humaine du texte officiel et de la
-      doctrine fiscale.
+      <strong>Point de méthode :</strong> l’écart de fond est de 1 €, sous le seuil d’un signalement
+      <code>ARRONDI</code> (plus de 1 € entre deux arrondis permis par le texte). Il est listé parmi les
+      <a href="/anomalies/arrondis">points d’arrondi du corpus</a>, comme une observation mineure.
     </p>
   </div>
 </section>

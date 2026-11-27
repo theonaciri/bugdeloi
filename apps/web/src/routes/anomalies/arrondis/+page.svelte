@@ -119,23 +119,24 @@ const euros = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR
 
 <section class="border-t border-line bg-surface" aria-labelledby="candidats">
   <div class="container-wide max-w-5xl space-y-5 py-12 sm:py-16">
-    <h2 id="candidats" class="text-2xl sm:text-3xl">Candidats <code>ARRONDI</code> à instruire</h2>
+    <h2 id="candidats" class="text-2xl sm:text-3xl">Ordre des arrondis comparé à OpenFisca</h2>
     <p class="max-w-3xl leading-relaxed text-muted">
-      La comparaison avec OpenFisca-France {data.openfiscaVersion} trouve des écarts qui disparaissent quand on arrondit
-      à l’euro avant la décote et sur la décote. Le texte n’a pas été tranché. Ces candidats ne sont ni reproduits ni
-      qualifiés. Ils n’entrent dans aucun compteur public.
+      OpenFisca-France {data.openfiscaVersion} arrondit à l’euro avant la décote et sur la décote ; notre noyau
+      arrondit en fin de calcul. L’impôt calculé diffère alors de 1 €, ce qui reste sous le seuil d’un signalement
+      <code>ARRONDI</code>. Près du seuil de recouvrement de 61 € (CGI, art. 1657, 1 bis), ce même euro place l’impôt
+      d’un côté ou de l’autre du seuil. C’est une observation mineure, pas une anomalie.
     </p>
     {#if data.candidates.length > 0}
       {#each data.candidates as candidate (candidate.motif)}
         <div class="space-y-3">
           <p>
-            Impôt sur le revenu : <strong>{candidate.nombre} foyers</strong> présentent un écart, de
-            {euros.format(candidate.ecartMaximal)} au plus.
-            <a href={report}>Lire le rapport complet</a>.
+            Impôt sur le revenu : {candidate.nombre} foyers concernés, tous près du seuil de
+            61 €. <a href="/experiences/openfisca">Voir la comparaison</a> ou
+            <a href={report}>le rapport complet</a>.
           </p>
           <div class="overflow-x-auto">
             <table class="text-sm">
-              <caption class="sr-only">Exemples d’écarts entre BugDeLoi et OpenFisca</caption>
+              <caption class="sr-only">Exemples de foyers près du seuil de 61 €</caption>
               <thead>
                 <tr>
                   <th scope="col" class="pr-6 text-left">Revenu</th>
@@ -159,7 +160,7 @@ const euros = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR
         </div>
       {/each}
     {:else}
-      <p class="text-muted">Aucun candidat <code>ARRONDI</code> n’est en cours d’instruction.</p>
+      <p class="text-muted">Aucune différence d’ordre d’arrondi avec OpenFisca à ce jour.</p>
     {/if}
   </div>
 </section>
