@@ -153,6 +153,23 @@ const verdicts = [
     </div>
     <dl class="max-w-4xl grid gap-4 sm:grid-cols-2 sm:gap-8">
       <div class="space-y-1">
+        <dt class="font-semibold text-ink">Oracle (de test)</dt>
+        <dd class="leading-relaxed text-muted">
+          Terme classique de la recherche en informatique (<em>test oracle</em>) : la source de vérité indépendante qui
+          indique, pour une entrée donnée, le résultat attendu. Le compilateur Catala vérifie que le code est cohérent,
+          mais seuls les oracles (exemples du BOFiP, brochures DGFiP, OpenFisca, tests Inria, dérivations manuelles)
+          confirment que le calcul correspond bien à la loi.
+        </dd>
+      </div>
+      <div class="space-y-1">
+        <dt class="font-semibold text-ink">Interface</dt>
+        <dd class="leading-relaxed text-muted">
+          L’énoncé formel d’un article : ses entrées, ses sorties, leurs types et les notions non calculables laissées
+          en entrée d’appréciation. Elle est figée avant la traduction pour que les oracles et plusieurs traductions
+          indépendantes puissent travailler sur la même base.
+        </dd>
+      </div>
+      <div class="space-y-1">
         <dt class="font-semibold text-notice-ink">Contesté</dt>
         <dd class="leading-relaxed text-muted">Une objection ou un contre-exemple est en cours d’examen. Le niveau affiché reste gelé jusqu’à sa résolution.</dd>
       </div>

@@ -149,13 +149,14 @@ function hrefFor(params: { etat?: string; role?: string; page?: number }) {
           <strong class="font-semibold text-ink">{ROLE_HEADING[data.role] ?? data.role} :</strong>
           {ROLE_DESCRIPTION[data.role] ?? ROLE_DESCRIPTION.all}
         </p>
-        <p class="pt-1 text-xs border-t border-line/70">
+        <p class="pt-1 text-xs border-t border-line/70 leading-relaxed">
           <strong class="font-semibold text-ink">Analyse</strong> = classement d’un article alinéa par alinéa et
-          proposition d’interface (N1) ·
+          proposition d’interface avant de coder (N1) ·
           <strong class="font-semibold text-ink">Traduction</strong> = écriture du code Catala compilé à partir du
           texte officiel LEGI (N2) ·
-          <strong class="font-semibold text-ink">Oracle</strong> = cas de test indépendant issu d’une source officielle
-          (BOFiP, brochure, OpenFisca) pour vérifier le calcul sans voir le code (N3).
+          <strong class="font-semibold text-ink">Oracle</strong> = terme issu du génie logiciel désignant la source de
+          vérité indépendante (BOFiP, brochure DGFiP, OpenFisca, tests Inria) qui donne le résultat attendu pour une
+          entrée donnée, car le compilateur vérifie la cohérence du code mais pas l’exactitude du calcul (N3).
         </p>
         <details class="pt-1 text-xs">
           <summary class="cursor-pointer font-semibold text-brand-strong hover:underline">
