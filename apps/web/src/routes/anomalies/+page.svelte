@@ -53,6 +53,7 @@ function readableClaim(claim: string) {
     <nav aria-label="En savoir plus sur les signalements" class="flex flex-wrap gap-x-5 gap-y-2 text-sm">
       <a href="/methode#cycle">Consulter le processus de qualification</a>
       <a href="/anomalies/cimetiere">Consulter les signalements écartés (cimetière)</a>
+      <a href="/anomalies/arrondis">Consulter les points d’arrondi du corpus</a>
     </nav>
   </div>
 </header>

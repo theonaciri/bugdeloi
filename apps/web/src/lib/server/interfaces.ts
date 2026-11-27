@@ -224,14 +224,14 @@ export interface CompiledCorpusArticle {
   signature: string
 }
 
-function resolveCorpusRoot(): string | null {
+export function resolveCorpusRoot(): string | null {
   for (const dir of [resolve(process.cwd(), 'corpus'), resolve(process.cwd(), '../../corpus')]) {
     if (existsSync(dir)) return dir
   }
   return null
 }
 
-function walkCatalaFiles(root: string, dir = root, out: string[] = []): string[] {
+export function walkCatalaFiles(root: string, dir = root, out: string[] = []): string[] {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
     const full = join(dir, entry.name)
     if (entry.isDirectory()) {

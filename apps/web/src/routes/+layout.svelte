@@ -210,6 +210,7 @@ const current = (item: { href: string; matchPrefix?: string }) => {
         <li><a href="/references">Programmes de référence ★ (Inria)</a></li>
         <li><a href="/anomalies">Anomalies qualifiées</a></li>
         <li><a href="/anomalies/cimetiere">Cimetière des constats écartés</a></li>
+        <li><a href="/anomalies/arrondis">Points d’arrondi du corpus</a></li>
       </ul>
     </nav>
 
