@@ -16,13 +16,23 @@ Le corpus compile avec **Catala 1.3.2** : préfère toujours la documentation de
 | Conditions et exceptions (logique par défaut)                                                                                | <https://book.catala-lang.org/en/2-2-conditionals-exceptions.html>               |
 | Listes et champs d’application imbriqués                                                                                     | <https://book.catala-lang.org/en/2-3-list-scopes.html>                           |
 | Guide de référence du langage                                                                                                | <https://book.catala-lang.org/en/5-catala.html>                                  |
+| Bibliothèque standard 1.3.2 : fonctions de dates (`Date.…`), de périodes (`Période.…`), de listes et de montants             | <https://github.com/CatalaLang/catala/tree/1.3.2/stdlib>                         |
 | Programmes de l’Inria (lecture de la syntaxe en situation ; jamais recopiés)                                                 | <https://github.com/CatalaLang/catala-examples>                                  |
 
 Le livre est en anglais et écrit ses exemples en Catala anglais : les mots-clés français
 correspondants sont dans l’aide-mémoire `syntax_fr.catala_fr`. `tools/bdl.sh doc` affiche ces liens.
 
-L’aide-mémoire montre aussi l’arrondi explicite (`arrondi de 9,99€`), l’accès aux composantes d’une
-date (`Date.accès_année de …`) et les opérateurs typés (`+€`, `+^`), absents de ce guide.
+L’aide-mémoire montre aussi l’arrondi explicite (`arrondi de 9,99€`) et les opérateurs typés (`+€`,
+`+^`), absents de ce guide. Il ne liste pas les fonctions de la bibliothèque standard : elles sont
+documentées dans les fichiers `stdlib/*_fr.catala_fr` du dépôt Catala, et l’image épinglée les contient
+dans `/opt/opam/4.14.2/lib/catala/runtime/`. Elles sont disponibles sans `> Usage de`.
+
+| Module    | Fichier                                                                                             | Fonctions utiles                                                                                                       |
+| --------- | --------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `Date`    | [`date_fr.catala_fr`](https://github.com/CatalaLang/catala/blob/1.3.2/stdlib/date_fr.catala_fr)     | `accès_année`, `accès_mois`, `depuis_année_mois_jour de 2025, 1, 1`, `premier_jour_de_l_année`, `dernier_jour_du_mois` |
+| `Période` | [`period_fr.catala_fr`](https://github.com/CatalaLang/catala/blob/1.3.2/stdlib/period_fr.catala_fr) | structure `Période.Période` (`début`, `fin` incluse), `depuis_année de 2025`, `durée`, `est_contenue`, `chevauche`     |
+| `Liste`   | [`list_fr.catala_fr`](https://github.com/CatalaLang/catala/blob/1.3.2/stdlib/list_fr.catala_fr)     | accès par position, tri, concaténation                                                                                 |
+| `Argent`  | [`money_fr.catala_fr`](https://github.com/CatalaLang/catala/blob/1.3.2/stdlib/money_fr.catala_fr)   | `somme`, arrondis au centime ou à l’euro, plafonds et planchers                                                        |
 
 ## Plan d’un fichier
 
@@ -63,6 +73,11 @@ aucune assertion de fin. Une vraie date de fin donne `assertion date_d_applicati
 | Enregistrement          | `déclaration structure Nom:` puis `donnée x contenu argent` | CGI 4 A, 12            |
 | Choix fermé             | `déclaration énumération Nom:` puis `-- Cas`                | CGI 14                 |
 
+Une période (exercice, année civile) se déclare avec la structure de la bibliothèque,
+`donnée période contenu Période.Période`, et se compare en entier :
+`dernier_bilan.période = Période.depuis_année de année_d_imposition` (CGI 36). L’égalité `=` vaut aussi
+pour une structure du corpus, optionnelle ou non (CGI 33 quater).
+
 Catala n’a pas de type texte : un lieu, un identifiant ou un code est un `entier` (CGI 11) ou une
 énumération quand la liste des valeurs est fermée. Préfixe chaque structure et chaque énumération par le
 nom de l’interface (`AssietteTerritorialeIrRevenu`) : les noms sont uniques dans tout le corpus.
@@ -97,6 +112,15 @@ selon catégorie sous forme
 **Précédence** : `Argent.somme de` et `transforme … en` s’étendent jusqu’à la fin de l’expression. Mets des
 parenthèses avant une comparaison, sinon Catala compare à l’intérieur :
 `(Argent.somme de (transforme chaque r parmi l en r.montant)) = 1 000 €`.
+
+**Mots réservés** : un nom de champ, d’entrée ou de cas ne peut pas être un mot-clé. Les plus
+tentants sont `résultat`, `entrée`, `interne`, `contexte`, `donnée`, `condition`, `conséquence`, `état`,
+`étiquette`, `exception`, `type`, `règle`, `structure`, `somme`, `contenu`, `date`, `durée`, `argent`,
+`entier`, `an`, `mois`, `jour`, `minimum`, `maximum`. L’erreur est obscure (« Syntax error at "résultat":
+expected the name of this struct data. Those are valid at this point: "somme" ») : préfère
+`résultat_du_bilan`, `date_de_clôture`, `montant_de_la_somme`. `tools/bdl.sh check` refuse ces noms
+avant la compilation, avec un message clair. Liste complète : les `MS_` du
+[lexer français 1.3.2](https://github.com/CatalaLang/catala/blob/1.3.2/compiler/surface/lexer_fr.cppo.ml).
 
 **Arrondi** : le produit d’un `argent` par un `décimal` est arrondi au centime par Catala. Si le texte ne
 fixe pas d’arrondi, écris au-dessus de la définition

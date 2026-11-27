@@ -55,6 +55,41 @@ if (files.length === 0) {
 const seenLegiarti = new Map<string, string>()
 const seenSymbols = new Map<string, string>()
 const declRe = /^\s*déclaration\s+(structure|énumération|champ d'application)\s+([^\s:]+)\s*:/gm
+// Mots-clés d'un seul mot du lexer français de Catala 1.3.2 (compiler/surface/lexer_fr.cppo.ml) qu'un
+// agent est tenté d'employer comme nom : le compilateur n'en donne qu'une erreur de syntaxe obscure.
+const RESERVED = new Set([
+  'résultat',
+  'entrée',
+  'interne',
+  'contexte',
+  'donnée',
+  'condition',
+  'conséquence',
+  'état',
+  'étiquette',
+  'exception',
+  'type',
+  'règle',
+  'structure',
+  'somme',
+  'contenu',
+  'date',
+  'durée',
+  'argent',
+  'entier',
+  'décimal',
+  'booléen',
+  'an',
+  'mois',
+  'jour',
+  'minimum',
+  'maximum',
+  'définition',
+  'assertion',
+])
+// Champ de structure, entrée, sortie ou variable interne : `donnée <nom> contenu`, `entrée <nom> contenu`…
+const fieldRe =
+  /^\s*(donnée|entrée|résultat|interne|contexte)\s+(?:(?:entrée|résultat)\s+)?([^\s]+)\s+contenu\b/gm
 
 for (const file of files) {
   const raw = readFileSync(join(workdir, file), 'utf8')
@@ -75,6 +110,15 @@ for (const file of files) {
   }
 
   for (const block of codeBlocks) {
+    for (const match of block.matchAll(fieldRe)) {
+      const name = match[2]
+      if (name && RESERVED.has(name)) {
+        console.error(
+          `[N2 ECHEC] ${file} : « ${name} » est un mot réservé de Catala et ne peut pas servir de nom (ligne « ${match[1]} ${name} contenu … » ; préfère « ${name}_du_… »). Voir corpus/CATALA.md, « Mots réservés ».`,
+        )
+        process.exit(1)
+      }
+    }
     for (const match of block.matchAll(declRe)) {
       const kind = match[1]
       const name = match[2]

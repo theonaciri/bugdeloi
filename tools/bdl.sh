@@ -73,6 +73,8 @@ Documentation Catala pour les traductions BugDeLoi (image épinglée : Catala 1.
     https://github.com/CatalaLang/catala/blob/1.3.2/doc/syntax/syntax_fr.catala_fr
   Aide-mémoire PDF (français et anglais, branche principale) :
     https://assets.catala-lang.org/syntax.pdf
+  Bibliothèque standard 1.3.2 (Date, Période, Liste, Argent ; absente de l’aide-mémoire) :
+    https://github.com/CatalaLang/catala/tree/1.3.2/stdlib
   Livre Catala (tutoriel et référence, en anglais) :
     https://book.catala-lang.org/en/2-0-tutorial.html
     https://book.catala-lang.org/en/2-2-conditionals-exceptions.html

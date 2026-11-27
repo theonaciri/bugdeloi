@@ -116,7 +116,8 @@ Il suit ce plan, sur le modèle de corpus/cgi/livre1/partie1/titre2/chapitre1/se
 La syntaxe utile (listes, valeurs optionnelles, sommes, énumérations, tests) et les pièges connus sont
 dans corpus/CATALA.md : lis-le avant ta première traduction. Pour tout le reste, la référence est
 l’aide-mémoire officiel de la syntaxe française de la version épinglée,
-https://github.com/CatalaLang/catala/blob/1.3.2/doc/syntax/syntax_fr.catala_fr, puis le livre
+https://github.com/CatalaLang/catala/blob/1.3.2/doc/syntax/syntax_fr.catala_fr, la bibliothèque
+standard (fonctions Date, Période, Liste, Argent), https://github.com/CatalaLang/catala/tree/1.3.2/stdlib, puis le livre
 Catala, https://book.catala-lang.org/en/2-0-tutorial.html (tools/bdl.sh doc affiche ces liens). Une date_fin égale à 2999-01-01 signifie
 « sans date de fin connue » : n’écris alors aucune assertion de fin. Le champ d’application porte le nom de l’interface sans le suffixe @vN. Ses entrées et sorties sont
 celles de l’interface, avec en plus date_d_application, qui borne la version visée. Quand la fiche
