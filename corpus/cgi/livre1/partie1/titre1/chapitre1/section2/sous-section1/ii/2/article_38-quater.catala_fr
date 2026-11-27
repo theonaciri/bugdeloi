@@ -44,21 +44,31 @@ champ d'application EtalementIndemnisationDeces:
     -- Présent contenu cession :
       cession.parts_du_profit_déjà_imposées >= 0 € et cession.parts_du_profit_déjà_imposées <= profit
     -- Absent : vrai)
+  # Cohérence des entrées : quand l'étalement s'applique, le cumul fourni est celui des parts de
+  # l'échéancier antérieures à l'exercice de la cession ; le profit n'est ainsi compté qu'une fois.
+  assertion (selon données_de_cession_ou_cessation sous forme
+    -- Présent contenu cession :
+      non étalement_applicable
+      ou cession.parts_du_profit_déjà_imposées
+        = (Argent.somme de (transforme chaque t parmi échéancier_ordinaire en t.profit_imposable))
+    -- Absent : vrai)
 
   # CGI, article 38 quater, premier alinéa, première phrase : contrat sur la tête d'un dirigeant ou d'une
   # personne au rôle déterminant, profit de l'indemnisation, répartition au choix de l'entreprise (« peut »).
   définition étalement_applicable égal à
     contrat_et_indemnité_visés et appréciation_rôle_déterminant et option_d_étalement
 
-  # CGI, article 38 quater, premier alinéa : parts égales sur l'année de réalisation et les quatre années
-  # suivantes, pour le profit (première phrase) comme pour les primes non déduites (seconde phrase).
   # TODO juridique : le texte ne fixe pas d'arrondi ; Catala arrondit chaque part au centime, et la somme
   # des cinq parts peut s'écarter du montant de quelques centimes.
   définition tranches égal à
+    # CGI, article 38 quater, premier alinéa, première phrase : l'année de réalisation et les quatre
+    # années suivantes.
     transforme chaque rang parmi [0; 1; 2; 3; 4] en
       EtalementIndemnisationDecesTranche {
         -- année: année_de_réalisation + rang
+        # CGI, article 38 quater, premier alinéa, première phrase : profit réparti par parts égales.
         -- profit_imposable: profit / 5,0
+        # CGI, article 38 quater, premier alinéa, seconde phrase : primes déduites par parts égales.
         -- primes_déductibles: primes_non_déduites / 5,0
       }
 

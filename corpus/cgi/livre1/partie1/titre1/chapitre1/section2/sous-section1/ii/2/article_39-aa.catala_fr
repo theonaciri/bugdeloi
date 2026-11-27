@@ -21,26 +21,31 @@ déclaration champ d'application MajorationDegressifMaterielsEnergie:
 champ d'application MajorationDegressifMaterielsEnergie:
   # LEGIARTI000006302279, début de validité de la version.
   assertion date_d_application >= |2002-03-31|
-  # CGI, article 39 AA, 2° a : matériels acquis ou fabriqués à compter du 1er janvier 1977 et listés par arrêté.
-  # CGI, article 39 AA, avant-dernière phrase : le 2° ne s'applique pas à compter du 1er janvier 1991.
-  # CGI, article 39 AA, dernière phrase : il s'applique au a du 2° entre le 1er janvier 2001 et le 1er janvier 2003.
   # TODO juridique : « entre le 1er janvier 2001 et le 1er janvier 2003 » est lu bornes comprises.
-  # CGI, article 39 AA, phrase sur l'aide fiscale : exclusion des biens dont la commande en a bénéficié.
   définition dans_le_champ égal à
+    # CGI, article 39 AA, 2° a : matériel listé par arrêté ; phrase sur l'aide fiscale : exclusion des
+    # biens dont la commande a bénéficié de l'aide des lois n° 75-408 et n° 75-853.
     matériel_du_2_a_et_listé
     et non aide_fiscale_sur_commande
+    # CGI, article 39 AA, 2° a : matériels acquis ou fabriqués à compter du 1er janvier 1977.
     et acquisition_ou_fabrication >= |1977-01-01|
     et (
+      # CGI, article 39 AA, avant-dernière phrase : le 2° ne s'applique pas à compter du 1er janvier 1991.
       acquisition_ou_fabrication < |1991-01-01|
+      # CGI, article 39 AA, dernière phrase : il s'applique entre le 1er janvier 2001 et le 1er janvier 2003.
       ou (acquisition_ou_fabrication >= |2001-01-01| et acquisition_ou_fabrication <= |2003-01-01|))
-  # TODO juridique : une durée entre quatre et cinq ans, ou entre six et sept ans non révolus, est rangée
-  # avec la tranche qui commence avant elle ; le texte ne nomme que des années entières.
-  # CGI, article 39 AA, premier alinéa : 2 pour trois ou quatre ans, 2,5 pour cinq ou six ans, 3 au-delà de six ans.
+  # TODO juridique : une durée entre quatre et cinq ans est rangée avec la tranche de trois ou quatre
+  # ans ; le texte ne nomme que des années entières. Une durée de plus de six ans, même non entière, est
+  # « supérieure à six ans ».
   définition coefficient_spécial égal à
     si non dans_le_champ alors Absent
+    # CGI, article 39 AA, premier alinéa : la plus courte durée visée est de trois ans.
     sinon si durée_normale < 3 an alors Absent
+    # CGI, article 39 AA, premier alinéa : 2 pour une durée de trois ou quatre ans.
     sinon si durée_normale < 5 an alors Présent contenu 2,0
+    # CGI, article 39 AA, premier alinéa : 2,5 pour une durée de cinq ou six ans.
     sinon si durée_normale <= 6 an alors Présent contenu 2,5
+    # CGI, article 39 AA, premier alinéa : 3 pour une durée supérieure à six ans.
     sinon Présent contenu 3,0
 
 #[test]
@@ -50,6 +55,7 @@ déclaration champ d'application TestMajorationDegressifMaterielsEnergie:
   huit_ans champ d'application MajorationDegressifMaterielsEnergie
   deux_ans champ d'application MajorationDegressifMaterielsEnergie
   dérogation_2002 champ d'application MajorationDegressifMaterielsEnergie
+  après_la_dérogation champ d'application MajorationDegressifMaterielsEnergie
   acquis_en_1995 champ d'application MajorationDegressifMaterielsEnergie
   acquis_en_1976 champ d'application MajorationDegressifMaterielsEnergie
   non_listé champ d'application MajorationDegressifMaterielsEnergie
@@ -96,6 +102,14 @@ champ d'application TestMajorationDegressifMaterielsEnergie:
   définition dérogation_2002.matériel_du_2_a_et_listé égal à vrai
   définition dérogation_2002.aide_fiscale_sur_commande égal à faux
   assertion dérogation_2002.coefficient_spécial = Présent contenu 2,5
+  # LEGIARTI000006302279, date de début de la version : le cas s'applique dès le premier jour.
+  définition après_la_dérogation.date_d_application égal à |2002-03-31|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; acquis le 2 janvier 2003, après la fenêtre de la dernière phrase.
+  définition après_la_dérogation.acquisition_ou_fabrication égal à |2003-01-02|
+  définition après_la_dérogation.durée_normale égal à 5 an
+  définition après_la_dérogation.matériel_du_2_a_et_listé égal à vrai
+  définition après_la_dérogation.aide_fiscale_sur_commande égal à faux
+  assertion après_la_dérogation.coefficient_spécial = Absent
   # LEGIARTI000006302279, date de début de la version : le cas s'applique dès le premier jour.
   définition acquis_en_1995.date_d_application égal à |2002-03-31|
   # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; acquis en 1995, après le 1er janvier 1991 et hors dérogation.

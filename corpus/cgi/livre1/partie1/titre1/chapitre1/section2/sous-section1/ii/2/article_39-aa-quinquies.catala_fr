@@ -19,14 +19,18 @@ champ d'application MajorationDegressifRecherche:
   # LEGIARTI000006302283, début de validité de la version.
   assertion date_d_application >= |2003-12-31|
   # TODO juridique : « 1, 5, 2 et 2, 5 » est lu 1,5 ; 2 ; 2,5 (voir la lecture des coefficients
-  # ci-dessus). Une durée entre quatre et cinq ans, ou entre six et sept ans non révolus, est rangée avec
-  # la tranche qui commence avant elle ; le texte ne nomme que des années entières.
-  # CGI, article 39 AA quinquies : 1,5 pour trois ou quatre ans, 2 pour cinq ou six ans, 2,5 au-delà de six ans.
+  # ci-dessus). Une durée entre quatre et cinq ans est rangée avec la tranche de trois ou quatre ans ; le
+  # texte ne nomme que des années entières. Une durée de plus de six ans, même non entière, est
+  # « supérieure à six ans ».
   définition coefficient_spécial égal à
     si non usage_recherche_244_quater_b alors Absent
+    # CGI, article 39 AA quinquies : la plus courte durée visée est de trois ans.
     sinon si appréciation_durée_normale_d_utilisation < 3 an alors Absent
+    # CGI, article 39 AA quinquies : 1,5 pour une durée de trois ou quatre ans.
     sinon si appréciation_durée_normale_d_utilisation < 5 an alors Présent contenu 1,5
+    # CGI, article 39 AA quinquies : 2 pour une durée de cinq ou six ans.
     sinon si appréciation_durée_normale_d_utilisation <= 6 an alors Présent contenu 2,0
+    # CGI, article 39 AA quinquies : 2,5 pour une durée supérieure à six ans.
     sinon Présent contenu 2,5
 
 #[test]
