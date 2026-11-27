@@ -278,8 +278,8 @@ export async function journalEntries(limit: number, before?: number): Promise<Jo
       id: sql<number>`max(${event.id})`.mapWith(Number),
       type: event.type,
       events: sql<
-        { id: number; ts: string; subject: string | null; payload: Record<string, unknown> }[]
-      >`jsonb_agg(jsonb_build_object('id', ${event.id}, 'ts', ${event.ts}, 'subject', ${event.subject}, 'payload', ${event.payload}) order by ${event.ts} desc, ${event.id} desc)`,
+        { id: number; ts: string; actor: string; subject: string | null; payload: Record<string, unknown> }[]
+      >`jsonb_agg(jsonb_build_object('id', ${event.id}, 'ts', ${event.ts}, 'actor', ${event.actor}, 'subject', ${event.subject}, 'payload', ${event.payload}) order by ${event.ts} desc, ${event.id} desc)`,
     })
     .from(event)
     .where(publicEventFilter)
@@ -298,6 +298,7 @@ export async function journalEntries(limit: number, before?: number): Promise<Jo
     events: row.events.map((ev) => {
       const { headline, detail } = formatEventCopy({
         type: row.type,
+        actor: ev.actor ?? '',
         subject: ev.subject,
         payload: ev.payload ?? {},
       } as typeof event.$inferSelect)
