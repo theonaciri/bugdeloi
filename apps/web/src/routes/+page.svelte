@@ -1,8 +1,10 @@
 <script lang="ts">
 import { ArrowRight, ExternalLink, Terminal } from '@lucide/svelte'
+import { C03_BREAKDOWNS } from '#lib/c03-breakdowns.ts'
 import EmptyState from '#lib/components/EmptyState.svelte'
 import Term from '#lib/components/Term.svelte'
 import { CopyButton } from '#lib/components/ui/index.ts'
+import AllowanceGap from '#lib/components/viz/AllowanceGap.svelte'
 import ArticleJourney from '#lib/components/work/ArticleJourney.svelte'
 import Hemicycle from '#lib/components/work/Hemicycle.svelte'
 import LevelTally from '#lib/components/work/LevelTally.svelte'
@@ -34,10 +36,6 @@ const startedPct = $derived(
 const inriaTests = $derived((snap?.suites ?? []).reduce((n, s) => n + s.passed, 0))
 const inriaTotal = $derived((snap?.suites ?? []).reduce((n, s) => n + s.tests, 0))
 const lanes = $derived(snap?.work.lanes ?? [])
-
-const euros = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' })
-const fmtEur = (cents: number) => euros.format(cents / 100)
-const fmtDelta = (cents: number) => `${cents > 0 ? '+' : ''}${euros.format(cents / 100)}`
 
 const mcpCommand = $derived(`claude mcp add --transport http bugdeloi ${data.origin}/api/mcp`)
 
@@ -245,45 +243,38 @@ $effect(() => {
     <h2 id="resultats-title" class="section-title max-w-[22ch]">Premiers résultats</h2>
 
     <div class="lead-result mt-12">
-      <div class="space-y-4">
+      <div class="max-w-[68ch] space-y-4">
         <h3 class="text-[1.5rem] leading-tight sm:text-[1.9rem]">
           Allocations familiales : {data.c03.scores.completed.passed} cas sur {data.c03.scores.completed.total} reproduits
           sans accès au code de l’Inria
         </h3>
-        <p class="max-w-[60ch] leading-relaxed text-muted">
+        <p class="leading-relaxed text-muted">
           Un agent IA a traduit la loi en vigueur sans consulter le programme de l’Inria, puis chaque montant mensuel a
-          été comparé. Dans deux situations, la lecture du texte officiel diverge du programme de référence. Deux
-          relectures indépendantes confirment ces écarts, qui attendent désormais l’arbitrage d’un juriste.
+          été comparé. Pour deux familles, les montants diffèrent. <strong class="text-ink">Ce ne sont pas des
+          arrondis</strong> : les deux programmes n’appliquent pas les mêmes règles, et l’écart vaut chaque mois pour
+          toutes les familles dans la même situation, quel que soit leur revenu.
         </p>
-        <a href="/experiences/allocations-familiales" class="inline-flex items-center gap-1 font-semibold">
-          Consulter l’étude complète <ArrowRight class="size-4" aria-hidden="true" />
-        </a>
+        <p class="leading-relaxed text-muted">
+          Deux relectures indépendantes, par des modèles d’autres familles, retiennent la lecture de la loi en vigueur.
+          Un juriste doit encore trancher.
+          <a href="/experiences/allocations-familiales" class="inline-flex items-center gap-1 font-semibold">
+            Consulter l’étude complète <ArrowRight class="size-4" aria-hidden="true" />
+          </a>
+        </p>
       </div>
-      <table class="gap-table">
-        <caption class="sr-only">Écarts mensuels entre le programme Inria et la lecture de la loi en vigueur</caption>
-        <thead>
-          <tr>
-            <th scope="col">Situation</th>
-            <th scope="col" class="num">Programme Inria</th>
-            <th scope="col" class="num">Loi en vigueur</th>
-            <th scope="col" class="num">Écart / mois</th>
-          </tr>
-        </thead>
-        <tbody>
-          {#each data.c03.spotlights as spot (spot.name)}
-            {@const delta = spot.actualCents - spot.expectedCents}
-            <tr>
-              <th scope="row">
-                <span class="block font-semibold">{spot.territory}</span>
-                <a href={spot.articleUrl} rel="external" class="text-xs">{spot.articleLabel}</a>
-              </th>
-              <td class="num" data-label="Programme Inria">{fmtEur(spot.expectedCents)}</td>
-              <td class="num" data-label="Loi en vigueur">{fmtEur(spot.actualCents)}</td>
-              <td class="num delta" data-label="Écart / mois">{fmtDelta(delta)}</td>
-            </tr>
-          {/each}
-        </tbody>
-      </table>
+      <div class="gap-cases">
+        {#each C03_BREAKDOWNS as item (item.name)}
+          {@const spot = data.c03.spotlights.find((s) => s.name === item.name)}
+          <div class="min-w-0 space-y-3">
+            <AllowanceGap {item} compact />
+            {#if spot}
+              <p class="text-xs text-muted">
+                Article en cause : <a href={spot.articleUrl} rel="external">{spot.articleLabel}</a>
+              </p>
+            {/if}
+          </div>
+        {/each}
+      </div>
     </div>
 
     <dl class="tally-rows mt-12">
@@ -527,47 +518,14 @@ $effect(() => {
   }
   .lead-result {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-    gap: 3rem;
-    align-items: start;
+    gap: 2.5rem;
     padding-top: 1.5rem;
     border-top: 2px solid var(--ink);
   }
-  .gap-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.92rem;
-    background: var(--bg);
-    border: 1px solid var(--line-strong);
-    border-radius: var(--radius-lg);
-  }
-  .gap-table th,
-  .gap-table td {
-    padding: 0.8rem 0.9rem;
-    border-top: 1px solid var(--line);
-    text-align: left;
-    vertical-align: top;
-  }
-  .gap-table thead th {
-    border-top: 0;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--ink-muted);
-  }
-  .gap-table .num {
-    text-align: right;
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
-  }
-  .gap-table td.num {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 1.05rem;
-  }
-  .gap-table .delta {
-    color: var(--ko);
+  .gap-cases {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 3rem;
   }
   .tally-rows {
     border-top: 1px solid var(--line-strong);
@@ -627,43 +585,13 @@ $effect(() => {
     .plate:nth-child(n + 3) {
       border-top: 1px solid var(--line-strong);
     }
-    .lead-result,
+    .gap-cases,
     .paths {
       grid-template-columns: 1fr;
     }
     .tally-row {
       grid-template-columns: 1fr;
       gap: 0.5rem;
-    }
-  }
-  @media (max-width: 47.99rem) {
-    .gap-table thead {
-      display: none;
-    }
-    .gap-table tr {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      border-top: 1px solid var(--line);
-    }
-    .gap-table tbody tr:first-child {
-      border-top: 0;
-    }
-    .gap-table th[scope='row'] {
-      grid-column: 1 / -1;
-      border-top: 0;
-    }
-    .gap-table td {
-      border-top: 0;
-      padding-top: 0;
-      text-align: left;
-    }
-    .gap-table td::before {
-      content: attr(data-label);
-      display: block;
-      font-family: var(--font-sans);
-      font-size: 0.72rem;
-      font-weight: 600;
-      color: var(--ink-muted);
     }
   }
   @media (max-width: 47.99rem) {

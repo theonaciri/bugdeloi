@@ -1,4 +1,6 @@
 <script lang="ts">
+import { C03_BREAKDOWNS } from '#lib/c03-breakdowns.ts'
+import AllowanceGap from '#lib/components/viz/AllowanceGap.svelte'
 import C03EuroBars from '#lib/components/viz/C03EuroBars.svelte'
 import { formatLegiDate } from '#lib/format.ts'
 import type { PageProps } from './$types'
@@ -179,6 +181,9 @@ function classify(test: (typeof data.cases)[number]) {
               <dd class="mt-2 text-sm leading-relaxed text-muted">{article.lawWhy}</dd>
             </div>
           </dl>
+          {#each C03_BREAKDOWNS.filter((b) => b.name === result.name) as item (item.name)}
+            <AllowanceGap {item} />
+          {/each}
           <p class="text-sm leading-relaxed text-muted">
             <a href={article.url}>{article.label}</a>
             · {article.id} · version du {formatLegiDate(article.version)}
