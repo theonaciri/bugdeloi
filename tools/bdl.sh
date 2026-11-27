@@ -141,6 +141,7 @@ save_skeleton() {
 desk_next() {
   curl --disable --silent --max-time 15 --globoff --get \
     --data-urlencode "handle=$handle" --data-urlencode "role=$role" --data-urlencode "family=$family" \
+    --data-urlencode "limit=1" \
     --output "$response" --write-out '%{http_code}' "$origin/desk/next" ||
     die "Impossible de joindre le guichet."
 }

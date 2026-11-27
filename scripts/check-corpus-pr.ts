@@ -8,9 +8,41 @@
  * - Présence d'au moins un bloc ```catala avec une déclaration/définition/règle
  * - Unicité de chaque `LEGIARTI` dans tout `corpus/`
  * - Unicité de chaque déclaration Catala (structure, énumération, champ d'application hors Test*)
+ * - Pour une traduction dont la fiche d'analyse existe (`corpus/analyses/<LEGIARTI>.md`) :
+ *   le texte cité dans la fiche (dont l'empreinte égale celle de LEGI) figure à l'identique dans le
+ *   fichier, et le champ d'application de l'interface figée est déclaré. Sans base LEGI : la fiche
+ *   fusionnée fait foi, `promote-corpus` recontrôle contre LEGI après fusion.
  */
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
+import { normalizeLegalText, sha256Hex } from '../packages/core/src/legi.ts'
+
+/** Même normalisation que `promote-corpus` : espaces et apostrophes unifiés. */
+function normalize(text: string): string {
+  return text
+    .replace(/\r\n/g, '\n')
+    .replace(/[\u00a0\u202f]/g, ' ')
+    .replace(/[’']/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+/** Texte officiel et interface figée d'une fiche d'analyse, si sa citation a l'empreinte LEGI. */
+function frozenAnalysis(legiarti: string): { text: string; scope: string | null } | null {
+  const path = join(workdir, 'analyses', `${legiarti}.md`)
+  if (!existsSync(path)) return null
+  const fiche = readFileSync(path, 'utf8')
+  const hash = /SHA-256\s*`([0-9a-f]{64})`/.exec(fiche)?.[1]
+  const quote = fiche
+    .split('\n')
+    .filter((l) => l.startsWith('>'))
+    .map((l) => l.replace(/^>\s?/, ''))
+    .join('\n')
+  if (!hash || !quote || sha256Hex(normalizeLegalText(quote)) !== hash) return null
+  const section = fiche.split(/^##\s+Interface[^\n]*\n/im)[1]?.split(/^##\s+/m)[0] ?? ''
+  const scope = /`(\p{Lu}[\p{L}\p{N}_]*)@v\d+`/u.exec(section)?.[1] ?? null
+  return { text: quote, scope }
+}
 
 const workdir = 'corpus'
 const files = Array.from(new Bun.Glob('**/*.catala_fr').scanSync({ cwd: workdir })).sort()
@@ -57,7 +89,26 @@ for (const file of files) {
     }
   }
 
+  const prose = normalize(raw.replace(/```catala[\s\S]*?```/g, ' '))
+  const declaredScopes = new Set(
+    codeBlocks.flatMap((b) =>
+      [...b.matchAll(/^\s*déclaration\s+champ d'application\s+([^\s:]+)\s*:/gm)].map((m) => m[1]),
+    ),
+  )
   for (const legiarti of headings) {
+    const frozen = legiarti && !isInterface ? frozenAnalysis(legiarti) : null
+    if (frozen && !prose.includes(normalize(frozen.text))) {
+      console.error(
+        `[N2 ECHEC] ${file} : le texte de ${legiarti} diffère de celui de corpus/analyses/${legiarti}.md (texte LEGI). Recopie-le à l'identique.`,
+      )
+      process.exit(1)
+    }
+    if (frozen?.scope && !declaredScopes.has(frozen.scope)) {
+      console.error(
+        `[N2 ECHEC] ${file} : aucun « déclaration champ d'application ${frozen.scope} » alors que l'interface figée de ${legiarti} est ${frozen.scope}.`,
+      )
+      process.exit(1)
+    }
     const prev = seenLegiarti.get(legiarti)
     if (prev && prev !== file) {
       console.error(`[N1 DOUBLON] ${legiarti} est déjà formalisé dans ${prev} et redéfini dans ${file}.`)

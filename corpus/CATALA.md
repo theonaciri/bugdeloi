@@ -1,0 +1,111 @@
+# Catala 1.3.2 pour les traductions du corpus
+
+Ce guide rassemble la syntaxe française dont une traduction a besoin et les pièges rencontrés sur les
+premiers lots. Chaque exemple vient d’un fichier du corpus ; aucun code de l’Inria ou de la DGFiP n’est
+recopié. La référence complète du langage est sur <https://catala-lang.org>.
+
+## Plan d’un fichier
+
+````text
+#### Article <numéro>|<LEGIARTI>
+
+<texte officiel, recopié tel quel depuis task.legal_units[0].text>
+
+Interface `<Nom>@v1`. Version applicable à compter du <date_debut>, sans date de fin connue.
+
+<une ou deux phrases sur ce que l’appelant fournit et ce que la sortie signifie>
+
+```catala
+… déclarations, champ d’application, tests …
+```
+````
+
+Le titre et le texte sont écrits par `tools/bdl.sh next`. Le texte reste identique au caractère près :
+`tools/bdl.sh check` le compare à la citation de la fiche d’analyse, et `promote-corpus` à LEGI.
+
+## Dates de validité
+
+`task.legal_units[0].date_debut` borne la version : `assertion date_d_application >= |AAAA-MM-JJ|`. Une
+`date_fin` égale à `2999-01-01` est la convention DILA pour « sans date de fin connue » : n’écris alors
+aucune assertion de fin. Une vraie date de fin donne `assertion date_d_application < |AAAA-MM-JJ|`.
+
+## Types
+
+| Besoin                  | Catala                                                      | Exemple dans le corpus |
+| ----------------------- | ----------------------------------------------------------- | ---------------------- |
+| Montant                 | `argent`, littéral `1 000 €`                                | CGI 28                 |
+| Taux ou proportion      | `décimal`, littéral `0,25` ou `20%`                         | CGI 8 bis, CGI 278     |
+| Année, compte, code     | `entier`                                                    | CGI 11, CGI 12         |
+| Date                    | `date`, littéral `                                          | 2026-01-01             | `   | tous |
+| Oui ou non              | `booléen`, `vrai`, `faux`                                   | CGI 4 bis              |
+| Valeur qui peut manquer | `optionnel de argent`, `Présent contenu 10 €`, `Absent`     | CGI 8 bis, 29, 30      |
+| Liste                   | `liste de argent`, littéral `[2 000 €; 1 500 €]`            | CGI 28                 |
+| Enregistrement          | `déclaration structure Nom:` puis `donnée x contenu argent` | CGI 4 A, 12            |
+| Choix fermé             | `déclaration énumération Nom:` puis `-- Cas`                | CGI 14                 |
+
+Catala n’a pas de type texte : un lieu, un identifiant ou un code est un `entier` (CGI 11) ou une
+énumération quand la liste des valeurs est fermée. Préfixe chaque structure et chaque énumération par le
+nom de l’interface (`AssietteTerritorialeIrRevenu`) : les noms sont uniques dans tout le corpus.
+
+## Expressions utiles
+
+```catala
+# Filtrer une liste (CGI 4 A)
+liste de revenu parmi revenus tel que revenu.source_française
+
+# Transformer chaque élément (CGI 12)
+transforme chaque élément parmi éléments en élément.montant
+
+# Existence (CGI 4 bis)
+existe attribuée parmi attributions tel que attribuée
+
+# Somme et nombre (CGI 28, CGI 4 A)
+Argent.somme de charges
+nombre de revenus_retenus
+
+# Valeur optionnelle (CGI 30)
+selon loyer_par_comparaison sous forme
+-- Présent contenu loyer : loyer
+-- Absent : loyer_direct
+
+# Énumération avec cas par défaut (CGI 14)
+selon catégorie sous forme
+-- AutreBien : faux
+-- n'importe quel : vrai
+```
+
+**Précédence** : `Argent.somme de` et `transforme … en` s’étendent jusqu’à la fin de l’expression. Mets des
+parenthèses avant une comparaison, sinon Catala compare à l’intérieur :
+`(Argent.somme de (transforme chaque r parmi l en r.montant)) = 1 000 €`.
+
+**Arrondi** : le produit d’un `argent` par un `décimal` est arrondi au centime par Catala. Si le texte ne
+fixe pas d’arrondi, écris au-dessus de la définition
+`# TODO juridique : le texte ne fixe pas d’arrondi ; Catala arrondit au centime…`, pour qu’un relecteur
+le voie (AGENTS.md §7).
+
+## Citations et tests
+
+Chaque constante, dans le code comme dans les tests, est précédée dans les trois lignes au-dessus d’un
+commentaire qui cite sa source : `# CGI, article 28 : …` pour une règle, `# LEGIARTI… : cas …` pour une
+valeur d’essai. Un test couvre chaque règle et chaque branche (le cas où l’article s’applique et celui où il
+ne s’applique pas). Il compare des nombres, des booléens ou des valeurs optionnelles ; pour une liste,
+compare `nombre de …` et `Argent.somme de …`.
+
+```catala
+#[test]
+déclaration champ d'application TestRevenuNetFoncier:
+  bénéficiaire champ d'application RevenuNetFoncier
+
+champ d'application TestRevenuNetFoncier:
+  # LEGIARTI000006302228 : 12 000 € de revenu brut, 2 000 € et 1 500 € de charges.
+  définition bénéficiaire.date_d_application égal à |2026-01-01|
+  définition bénéficiaire.revenu_brut égal à 12 000 €
+  définition bénéficiaire.charges_de_la_propriété égal à [2 000 €; 1 500 €]
+  assertion bénéficiaire.revenu_net_foncier = 8 500 €
+```
+
+## Contrôler
+
+`tools/bdl.sh check <id>` lance `scripts/check-corpus-pr.ts` (en-têtes, doublons, texte et nom du champ
+d’application comparés à la fiche d’analyse) puis `clerk test` dans le conteneur Catala épinglé. Une
+erreur « Incompatible types: got bool, expected money » vient presque toujours d’une parenthèse manquante.
