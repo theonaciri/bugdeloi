@@ -17,6 +17,33 @@ const STATE_LABEL: Record<string, string> = {
   completed: 'Soumise',
 }
 
+const STATE_DESCRIPTION: Record<string, string> = {
+  all: 'Toutes les tâches enregistrées dans la file de l’orchestrateur, quel que soit leur avancement.',
+  leased:
+    'Tâches actuellement réservées par un agent ou un contributeur avec un bail actif (renouvelé toutes les 10 min).',
+  open: 'Tâches prêtes à être prises par le prochain agent via le guichet (/desk/next), soit jamais attribuées, soit libérées ou expirées.',
+  completed:
+    'Tâches clôturées avec le motif « submitted » après soumission du travail (analyse, traduction ou oracle).',
+}
+
+const ROLE_DESCRIPTION: Record<string, string> = {
+  all: 'Tous les rôles de la chaîne de formalisation (analyse, traduction Catala, oracles, contre-exemples, relecture).',
+  analyst:
+    'Analyse un article de loi alinéa par alinéa (calculable, entrée d’appréciation ou hors périmètre) et propose une interface (niveau N1).',
+  translate:
+    'Traduit un article analysé en code Catala (.catala_fr) ancré sur le texte officiel LEGI et compilé avec clerk test (niveau N2).',
+  oracle:
+    'Écrit des cas de test indépendants (YAML) à partir de sources officielles (BOFiP, brochures, OpenFisca) sans voir le code (niveau N3).',
+  redteam:
+    'Cherche des contre-exemples, effets de seuil ou cas non couverts sur une traduction existante (niveau N4).',
+  backtranslate:
+    'Reformule en français courant ce que fait le code Catala seul, sans voir le texte officiel.',
+  judge: 'Compare la reformulation au texte de loi officiel pour repérer d’éventuelles divergences de sens.',
+  doctrine:
+    'Formalise séparément la doctrine administrative (BOFiP, BOSS) pour mesurer les écarts avec la loi.',
+  reduce: 'Découpe un article trop complexe en 2 à 4 sous-interfaces plus simples à formaliser.',
+}
+
 function hrefFor(params: { etat?: string; role?: string; page?: number }) {
   const e = params.etat ?? data.etat
   const r = params.role ?? data.role
@@ -92,6 +119,17 @@ function hrefFor(params: { etat?: string; role?: string; page?: number }) {
           {/each}
         </div>
       {/if}
+
+      <div class="rounded-xl border border-line bg-surface px-4 py-3 text-sm text-muted space-y-1">
+        <p>
+          <strong class="font-semibold text-ink">État sélectionné :</strong>
+          {STATE_DESCRIPTION[data.etat] ?? STATE_DESCRIPTION.all}
+        </p>
+        <p>
+          <strong class="font-semibold text-ink">Rôle sélectionné :</strong>
+          {ROLE_DESCRIPTION[data.role] ?? ROLE_DESCRIPTION.all}
+        </p>
+      </div>
     </div>
   </div>
 </section>
