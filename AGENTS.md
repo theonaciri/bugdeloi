@@ -308,7 +308,11 @@ Podman ou Docker.
   relu par le contrôle N1). Sous le titre, le texte officiel **verbatim** de la version visée, puis les
   blocs ` ```catala `.
 - **Un bloc de code suit l'alinéa qu'il implémente.** Pas de code « orphelin » loin de son texte.
-- **Dates de validité** explicites : la version visée est un paramètre, pas une supposition.
+- **Dates de validité** explicites : la version visée est un paramètre, pas une supposition
+  (`assertion date_d_application >= |date_debut|` ; une `date_fin` à `2999-01-01` signifie « sans fin
+  connue » et n'appelle aucune assertion de fin).
+- **Syntaxe et pièges connus** : [`corpus/CATALA.md`](corpus/CATALA.md) (listes, valeurs optionnelles,
+  sommes, précédence, absence de type texte, arrondi au centime).
 - **Arrondis** : toujours explicites, avec la citation qui les impose. Si le texte est muet, ne choisis
   pas en silence : expose le choix comme paramètre et ouvre un finding `ARRONDI` candidat.
 - **Standards non calculables** : entrées `appréciation_<notion>` documentées (règle 7).

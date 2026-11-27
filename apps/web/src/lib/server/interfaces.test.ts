@@ -59,6 +59,8 @@ describe('chemin du fichier Catala (hiérarchie Légifrance)', () => {
     expect(sectionSlug('Partie législative')).toBeNull()
     expect(sectionSlug("Partie réglementaire - Décrets en Conseil d'Etat")).toBe('decrets-en-conseil-detat')
     expect(sectionSlug('Chapitre préliminaire : Dispositions générales')).toBe('chapitre-preliminaire')
+    expect(sectionSlug('1re Sous-section : Revenus fonciers')).toBe('sous-section1')
+    expect(sectionSlug('2e Sous-section : Bénéfices industriels et commerciaux')).toBe('sous-section2')
   })
 
   test('retrouve le chemin d’un fichier existant du corpus (CGI 278)', () => {

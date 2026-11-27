@@ -158,9 +158,12 @@ export function sectionSlug(title: string): string | null {
   if (p.startsWith('partie reglementaire')) return slugify(head.split(/\s+-\s+/)[1] ?? head) || null
   const words = head.split(/\s+/)
   const first = plain(words[0] ?? '')
-  // « Première Partie », « Deuxième partie »
-  if (words.length >= 2 && ORDINALS[first] !== undefined && plain(words[1] ?? '') === 'partie') {
-    return `partie${ORDINALS[first]}`
+  // Ordinal avant le type : « Première Partie », « 1re Sous-section », « 2e Section »
+  const ordinal = numberOf(words[0] ?? '')
+  const kindAfter = plain(words[1] ?? '')
+  if (words.length >= 2 && ordinal && KINDS.includes(kindAfter)) {
+    const rest = words.slice(2).map(slugify).filter(Boolean)
+    return [`${kindAfter}${ordinal}`, ...rest].join('-')
   }
   if (KINDS.includes(first)) {
     const n = numberOf(words[1] ?? '')

@@ -8,6 +8,7 @@ Ce dossier regroupe les formalisations Catala, les interfaces typées et les cas
 - `interfaces/` : signatures de scopes versionnées (`Nom@vN`) figées avant traduction.
 - `oracles/` : cas de test au format YAML (données et dérivations citées, jamais de code recopié).
 - `clerk.toml` : configuration du compilateur Catala 1.3.2 pour lancer `clerk test`.
+- `CATALA.md` : syntaxe utile et pièges connus pour écrire une traduction.
 
 ## Licence et sources
 
