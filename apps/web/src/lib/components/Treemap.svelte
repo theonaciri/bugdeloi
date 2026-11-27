@@ -69,14 +69,14 @@ const h = (r: TreemapRect) => r.y1 - r.y0
       <p class="font-semibold">{active.node.label}</p>
       <p class="text-muted">
         {#if active.node.kind === 'article' && active.node.level}
-          {levelName(active.node.level)}{active.node.flags?.includes('contested') ? ' · contesté' : ''} · cliquer pour lire l’article
+          {levelName(active.node.level)}{active.node.flags?.includes('contested') ? ' · contesté' : ''} · cliquez pour consulter l’article
         {:else}
           {plural(totalOf(active.node.counts), 'article en vigueur', 'articles en vigueur')} : {describeCounts(active.node.counts)}
-          · cliquer pour descendre
+          · cliquez pour ouvrir cette section
         {/if}
       </p>
     {:else}
-      <p class="text-muted">Survolez une tuile pour le détail ; cliquez pour descendre dans la section.</p>
+      <p class="text-muted">Survolez une tuile pour afficher le détail. Cliquez pour ouvrir la section ou l’article.</p>
     {/if}
   </div>
 </div>

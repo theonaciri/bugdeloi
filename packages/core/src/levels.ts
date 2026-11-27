@@ -41,7 +41,7 @@ export const LEVEL_INFO: Record<Level, LevelInfo> = {
     level: 'N2',
     label: 'Compilé',
     meaning:
-      'Texte officiel cité à l’identique de LEGI, code Catala compilé et tests verts avec la version épinglée du compilateur ; les constructions interdites sont absentes et chaque constante cite l’alinéa qui la fixe.',
+      'Texte officiel cité à l’identique de LEGI, code Catala compilé et tests réussis dans la version épinglée du compilateur. Les constructions interdites sont absentes et chaque constante cite l’alinéa qui la fixe.',
     colorToken: '--level-n2',
     pattern: 'dots',
   },
@@ -49,7 +49,7 @@ export const LEVEL_INFO: Record<Level, LevelInfo> = {
     level: 'N3',
     label: 'Testé',
     meaning:
-      'Tous les cas d’oracle passent, issus d’au moins deux sources indépendantes dont une non issue d’un LLM ; aucun auteur d’oracle n’est de la famille de modèles du traducteur ; aucun conflit d’exceptions ni cas non couvert.',
+      'Tous les cas d’oracle réussissent, à partir d’au moins deux sources indépendantes dont une non issue d’une IA. Aucun auteur d’oracle n’appartient à la famille de modèles du traducteur, et aucun conflit d’exceptions ni cas non couvert n’est détecté.',
     colorToken: '--level-n3',
     pattern: 'hatch',
   },
@@ -57,7 +57,7 @@ export const LEVEL_INFO: Record<Level, LevelInfo> = {
     level: 'N4',
     label: 'Éprouvé',
     meaning:
-      'Au moins 10 000 entrées générées (dont chaque seuil ± 1 €) comparées à une implémentation indépendante sans divergence inexpliquée ; au moins 80 % des mutations détectées ; relecture aveugle jugée équivalente par une troisième famille de modèles ; 7 jours de red team sans contre-exemple accepté.',
+      'Au moins 10 000 entrées générées (dont chaque seuil à ± 1 €) sont comparées à une implémentation indépendante sans divergence inexpliquée. Au moins 80 % des mutations sont détectées, une rétro-traduction aveugle est jugée équivalente par une troisième famille de modèles, et 7 jours d’examen contradictoire se déroulent sans contre-exemple retenu.',
     colorToken: '--level-n4',
     pattern: 'solid',
   },
@@ -65,7 +65,7 @@ export const LEVEL_INFO: Record<Level, LevelInfo> = {
     level: 'N5',
     label: 'Certifié',
     meaning:
-      'Tous les contrôles précédents, plus une revue humaine signée par un relecteur juriste identifié.',
+      'Tous les contrôles des niveaux précédents sont validés, et un juriste identifié a signé une relecture des choix d’interprétation.',
     colorToken: '--level-n5',
     pattern: 'cross',
   },
@@ -73,7 +73,7 @@ export const LEVEL_INFO: Record<Level, LevelInfo> = {
     level: 'REF',
     label: 'Référence',
     meaning:
-      'La version en vigueur de l’article est formalisée par des chercheurs ou une administration (Inria, DGFiP, CNAF), et leur suite de tests réussit quand nous l’exécutons. Ce n’est pas une formalisation BugDeLoi.',
+      'La version en vigueur de l’article est formalisée par des chercheurs ou une administration (Inria, DGFiP, CNAF), et sa suite de tests réussit dans notre environnement de compilation épinglé. Ce marqueur signale un travail externe à BugDeLoi.',
     colorToken: '--level-ref',
     pattern: 'star',
   },

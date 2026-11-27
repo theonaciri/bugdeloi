@@ -206,13 +206,14 @@ const coche = 'flex items-start gap-2.5 text-sm text-ink'
       Revenu disponible et effet d’un amendement
     </h1>
     <p class="mt-5 max-w-[68ch] text-lg leading-relaxed text-muted">
-      Un foyer ne subit jamais une seule loi à la fois. Ici, cinq règles s’additionnent : l’impôt sur le revenu, les
-      allocations familiales, l’aide au logement, la prime d’activité et le revenu de solidarité active (RSA). Le calcul
-      se fait dans votre navigateur.
+      La situation financière d’un foyer dépend simultanément de plusieurs dispositifs fiscaux et sociaux. Ce simulateur
+      combine cinq règles en vigueur : l’impôt sur le revenu, les allocations familiales, l’aide personnalisée au
+      logement (APL), la prime d’activité et le revenu de solidarité active (RSA). Tous les calculs s’exécutent
+      localement dans votre navigateur.
     </p>
     <p class="mt-3 max-w-[68ch] text-sm leading-relaxed text-muted">
-      Modèle simplifié, non relu par un juriste. Il montre comment les règles se combinent. Il ne donne pas le montant
-      que vous toucherez.
+      Ce modèle simplifié n’a pas fait l’objet d’une relecture juridique. Il illustre l’interaction entre plusieurs
+      dispositifs et ne se substitue pas aux simulateurs officiels.
     </p>
   </div>
 </section>
@@ -377,7 +378,7 @@ const coche = 'flex items-start gap-2.5 text-sm text-ink'
           </p>
           <p class="mt-2 text-sm {deltaDisponible < 0 ? 'font-semibold text-ko' : 'text-muted'}">
             Effet du dernier euro gagné : {signes(deltaDisponible)}
-            {#if deltaDisponible < 0}(gagner un euro de plus fait perdre de l’argent){/if}
+            {#if deltaDisponible < 0}(un euro de revenu supplémentaire réduit le revenu disponible){/if}
           </p>
         </div>
 
@@ -434,8 +435,8 @@ const coche = 'flex items-start gap-2.5 text-sm text-ink'
         </p>
         {#if res.rsaAplIndetermine}
           <p class="rounded-xl border border-line bg-bg px-4 py-3 text-sm text-ink">
-            Cas limite : le RSA dépend de l’aide au logement, et inversement. Aucune des deux situations n’est cohérente.
-            Le modèle affiche alors un RSA nul. Ce choix est le nôtre, pas celui de la loi.
+            Cas limite : le RSA dépend de l’aide au logement, et inversement, sans point fixe cohérent. Le modèle
+            retient alors un RSA nul. Cette convention relève du simulateur et ne figure pas dans le texte de loi.
           </p>
         {/if}
       </div>
@@ -570,7 +571,7 @@ const coche = 'flex items-start gap-2.5 text-sm text-ink'
 
 <section class="border-t border-line bg-surface">
   <div class="container-wide py-12">
-    <h2 class="text-2xl text-ink">Données et vérifications</h2>
+    <h2 class="text-2xl text-ink">Données et contrôles</h2>
     <p class="mt-3 max-w-[68ch] text-sm leading-relaxed text-muted">
       Ce simulateur croise plusieurs textes de loi en vigueur en 2026. Les comparaisons croisées et les données
       brutes sont publiques :

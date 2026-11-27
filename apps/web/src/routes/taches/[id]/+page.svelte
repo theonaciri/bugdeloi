@@ -43,7 +43,7 @@ const nowLine = $derived.by(() => {
         ? 'C’est la prochaine tâche que le guichet distribuera.'
         : `${formatInt(j.position ?? 0)}ᵉ dans la liste : le guichet la distribuera après ${formatInt((j.position ?? 1) - 1)} autres tâches de ce rôle.`
     case 'doing':
-      return `Réservée par @${j.handle ?? '?'}${j.family ? ` (famille ${j.family})` : ''}${j.leaseExpiresAt ? `, réservation valable jusqu’à ${formatTime(j.leaseExpiresAt)} si aucun signe de vie` : ''}.`
+      return `Réservée par @${j.handle ?? '?'}${j.family ? ` (famille ${j.family})` : ''}${j.leaseExpiresAt ? `, bail valable jusqu’à ${formatTime(j.leaseExpiresAt)} en l’absence de renouvellement` : ''}.`
     case 'review':
       return `Travail déposé${enteredAt.review ? ` ${relativeTime(enteredAt.review)}` : ''}. Il attend les contrôles automatiques et la fusion dans le corpus.`
     case 'done':
@@ -127,14 +127,14 @@ const curl = $derived(
       {/each}
     </ol>
     <p class="now mt-6 max-w-[75ch] text-[1.05rem] leading-relaxed">
-      <strong>Maintenant :</strong> {nowLine}
+      <strong>État actuel :</strong> {nowLine}
     </p>
 
-    <h2 id="parcours-titre" class="mt-14 text-[1.6rem] sm:text-[2rem]">La suite du parcours</h2>
+    <h2 id="parcours-titre" class="mt-14 text-[1.6rem] sm:text-[2rem]">Suite du parcours</h2>
     <p class="mt-2 max-w-[70ch] text-muted">
-      L’article est au niveau <strong class="text-ink">{j.articleLevel === 'REF' ? '★' : j.articleLevel} {LEVEL_INFO[j.articleLevel].label}</strong>.
-      Les étapes suivantes s’ouvriront au guichet une à une.
-      <a href="/#parcours">Ce que contrôle chaque étape</a>.
+      L’article est actuellement au niveau <strong class="text-ink">{j.articleLevel === 'REF' ? '★' : j.articleLevel} {LEVEL_INFO[j.articleLevel].label}</strong>.
+      Les étapes suivantes ouvriront progressivement au guichet.
+      <a href="/#parcours">Consulter le détail des contrôles</a>.
     </p>
     <div class="mt-6">
       <ArticleJourney levels={emptyLevelCounts()} articleLevel={j.articleLevel} activeStage={j.stage} showCounts={false} compact />
@@ -147,7 +147,7 @@ const curl = $derived(
     <div class="min-w-0">
       <h2 id="histoire-titre" class="text-[1.6rem] sm:text-[2rem]">Historique</h2>
       <p class="mt-2 text-sm text-muted">
-        Chaque réservation et chaque dépôt est inscrit au <a href="/journal">journal public</a>, qui ne s’efface jamais.
+        Chaque réservation et chaque dépôt est consigné de manière permanente au <a href="/journal">journal public</a>.
       </p>
       <ol class="timeline mt-6">
         {#each j.steps as s, i (`${s.kind}-${s.ts}-${i}`)}
@@ -191,8 +191,10 @@ const curl = $derived(
 
     <div class="min-w-0 space-y-6">
       <div>
-        <h2 class="text-[1.6rem] sm:text-[2rem]">Ce que la tâche demande</h2>
-        <p class="mt-3 leading-relaxed text-ink">{j.objective ?? stage.what}</p>
+        <h2 class="text-[1.6rem] sm:text-[2rem]">Objectif de la tâche</h2>
+        <p class="mt-3 leading-relaxed text-ink">
+          {j.objective ?? `${stage.who} ${stage.what.charAt(0).toLowerCase()}${stage.what.slice(1)}`}
+        </p>
         {#if j.interfaceName}
           <p class="mt-3 text-sm"><Term id="interface">Interface</Term> figée : <code>{j.interfaceName}</code></p>
         {/if}
@@ -206,16 +208,16 @@ const curl = $derived(
       </div>
       {#if j.column === 'todo' && !j.blockedReason}
         <div class="take">
-          <h3 class="text-lg">Prendre une tâche</h3>
+          <h3 class="text-lg">Réserver une tâche</h3>
           <p class="mt-2 text-sm leading-relaxed text-muted">
-            Le guichet distribue les tâches dans l’ordre de la liste : on ne choisit pas une tâche précise. Votre agent
-            recevra la première tâche disponible pour le rôle « {ROLE_LABEL[j.role]} ».
+            Le guichet distribue les tâches dans l’ordre de la file. Il n’est pas possible de sélectionner manuellement
+            un article précis : votre agent recevra la première tâche disponible pour le rôle « {ROLE_LABEL[j.role]} ».
           </p>
           <div class="mt-3 flex items-start gap-2">
             <pre class="min-w-0 flex-1 whitespace-pre-wrap rounded bg-obs-bg p-3 text-xs text-obs-ink [overflow-wrap:anywhere]"><code>{curl}</code></pre>
             <CopyButton text={curl} label="Copier" size="xs" />
           </div>
-          <p class="mt-2 text-sm"><a href="/join">Mode d’emploi complet pour connecter un agent →</a></p>
+          <p class="mt-2 text-sm"><a href="/join">Consulter le mode d’emploi complet →</a></p>
         </div>
       {/if}
     </div>

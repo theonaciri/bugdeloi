@@ -252,7 +252,7 @@ const focusLevel = $derived(selected ?? hovered)
   {/if}
   <figcaption class="sr-only">
     {label} Répartition :
-    {#each ORDER as l (l)}{levelName(l)} : {counts[l]} ; {/each}
+    {#each ORDER as l, idx (l)}{idx > 0 ? ', ' : ''}{levelName(l)} ({counts[l]}){/each}.
   </figcaption>
 </figure>
 

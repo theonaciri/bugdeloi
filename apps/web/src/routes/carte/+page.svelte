@@ -21,17 +21,17 @@ const breakdown = $derived(
 
 <svelte:head>
   <title>{map.focus.isRoot ? `Carte du ${map.codeTitle}` : map.focus.title} · Carte · BugDeLoi</title>
-  <meta name="description" content="Explorez les articles en vigueur, chapitre par chapitre, et découvrez où en sont les vérifications." />
+  <meta name="description" content="Explorez les articles en vigueur par chapitre et consultez leur niveau de preuve dans le Code général des impôts, le Code de la sécurité sociale et le Code de la construction et de l’habitation." />
 </svelte:head>
 
 <header class="bg-bg">
   <div class="container-wide space-y-6 py-12 sm:py-16">
-    <h1 class="text-4xl tracking-tight sm:text-5xl">Explorer les codes de la loi</h1>
+    <h1 class="text-4xl tracking-tight sm:text-5xl">Carte des codes</h1>
     <p class="max-w-3xl font-display text-xl leading-relaxed text-ink/90">
-      Chaque rectangle représente un chapitre, une section ou un article. Plus un chapitre contient d’articles en
-      vigueur, plus son rectangle est grand. Les couleurs et les motifs indiquent où en sont les vérifications.
-      L’étoile signale un article couvert par un programme indépendant dont les tests réussissent chez nous.
-      Cliquez sur un chapitre pour zoomer, ou sur un article pour le lire.
+      Chaque rectangle représente un chapitre, une section ou un article, avec une surface proportionnelle au nombre
+      d’articles en vigueur. Les couleurs et les motifs indiquent le niveau de preuve atteint. Le marqueur ★ signale un
+      article formalisé par la recherche publique ou une administration dont la suite de tests réussit dans notre
+      environnement épinglé. Sélectionnez un chapitre pour zoomer ou un article pour ouvrir sa fiche.
     </p>
 
     <nav aria-label="Choix du code">
@@ -113,10 +113,10 @@ const breakdown = $derived(
           <h3 id="legende" class="text-xl">Lire la légende</h3>
           <LevelLegend compact />
           <p class="text-sm leading-relaxed text-muted">
-            Les bandes colorées ou hachurées montrent la part des articles à chaque niveau de vérification.
+            Les bandes colorées ou hachurées représentent la répartition des articles selon leur niveau de preuve.
             Un contour orange en pointillés signale une objection en cours d’examen.
           </p>
-          <p class="text-sm"><a href="/methode#niveaux">Comprendre les niveaux de vérification</a></p>
+          <p class="text-sm"><a href="/methode#niveaux">Comprendre les niveaux de preuve</a></p>
         </aside>
       </div>
     {/if}

@@ -153,9 +153,9 @@ function applyPreset(p: (typeof presets)[number]) {
       Impôt sur le revenu 2026 : simulateur et effets de seuil
     </h1>
     <p class="mt-5 max-w-[68ch] text-lg leading-relaxed text-muted">
-      Ce calculateur tourne entièrement dans votre navigateur à partir du texte en vigueur des articles 193, 194 et 197
-      du Code général des impôts (barème 2026). Il donne les mêmes montants, au centime près, que notre programme Catala
-      exécuté dans son bac à sable (12 tests réussis, 30 cas de contrôle concordants).
+      Ce calculateur s’exécute localement dans votre navigateur à partir du texte en vigueur des articles 193, 194, 197
+      et 1657 du Code général des impôts (barème 2026). Il produit les mêmes montants, au centime près, que le programme
+      Catala exécuté en environnement isolé (14 tests réussis et 30 cas d’oracle concordants).
     </p>
     <div class="mt-6 max-w-[68ch] rounded-xl border border-notice-line/50 bg-notice/60 px-5 py-3.5 text-sm text-notice-ink">
       <strong>Périmètre :</strong> ce noyau calcule le barème progressif, le quotient familial, son plafonnement,
@@ -421,10 +421,10 @@ function applyPreset(p: (typeof presets)[number]) {
       Coudes et falaises repérés euro par euro
     </h2>
     <p class="mt-3 max-w-[68ch] text-base leading-relaxed text-muted">
-      En testant automatiquement chaque euro de revenu entre 0 € et 200 000 € sur quatre foyers types, notre programme
-      repère <strong>{data.c06.totalKinks} changements brusques de taux marginal</strong> (des « coudes »),
-      <strong>{data.c06.totalCliffs} falaise</strong> sur le barème progressif seul, mais
-      <strong>{data.c06.totalCliffs1657} falaises réelles</strong> dès que l’on applique le seuil de recouvrement de 61 €
+      En testant automatiquement chaque euro de revenu entre 0 € et 200 000 € sur quatre foyers types, le détecteur
+      relève <strong>{data.c06.totalKinks} changements brusques de taux marginal</strong> (des coudes),
+      <strong>{data.c06.totalCliffs} falaise</strong> sur le barème progressif seul, et
+      <strong>{data.c06.totalCliffs1657} falaises</strong> dès que l’on applique le seuil de recouvrement de 61 €
       (CGI art. 1657 1 bis).
     </p>
     <div class="mt-5 grid gap-5 lg:grid-cols-2">
@@ -513,8 +513,8 @@ function applyPreset(p: (typeof presets)[number]) {
       </div>
       <div>
         <p class="text-xs font-medium text-muted">Programme Catala 1.3.2</p>
-        <p class="mt-1 font-display text-2xl font-semibold text-brand-strong tabular">14/14 tests verts</p>
-        <p class="mt-1 text-xs text-muted">4 empreintes LEGI vérifiées + rétro-traduction publiée.</p>
+        <p class="mt-1 font-display text-2xl font-semibold text-brand-strong tabular">14/14 tests réussis</p>
+        <p class="mt-1 text-xs text-muted">4 empreintes LEGI concordantes et rétro-traduction publiée.</p>
       </div>
     </div>
   </div>
@@ -541,7 +541,7 @@ function applyPreset(p: (typeof presets)[number]) {
     </ul>
     <div class="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
       <a href={data.links.catala} rel="external">Programme Catala 1.3.2 (noyau_ir.catala_fr)</a>
-      <a href={data.links.oracles} rel="external">30 cas de vérification YAML</a>
+      <a href={data.links.oracles} rel="external">30 cas d’oracle YAML</a>
       <a href={data.links.backtranslation} rel="external">Rétro-traduction française du programme</a>
       <a href={data.links.report} rel="external">Rapport complet du détecteur C0.6</a>
     </div>

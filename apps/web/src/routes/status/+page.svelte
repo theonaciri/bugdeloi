@@ -70,7 +70,7 @@ const runLabel: Record<string, string> = {
       </div>
 
       <div class="py-5">
-        <dt class="font-semibold">Dernière vérification des programmes de référence (Inria)</dt>
+        <dt class="font-semibold">Dernier rejeu des programmes de référence (Inria)</dt>
         <dd class="mt-1">
           {#if h.lastReplication}
             <p>

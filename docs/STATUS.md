@@ -30,6 +30,13 @@
 
 ## Journal des décisions
 
+- 2026-11-27 — Révision rédactionnelle complète du site (passe Impeccable `clarify` + ton neutre, naturel et
+  scientifique) : suppression des formules rhétoriques (« X, article par article », « du texte au test », « X, pas Y »),
+  des points-virgules et des tirets cadratins dans les textes d’interface, remplacement des tournures familières
+  (« chez nous », « signe de vie », « passés au crible »), conjugaison des verbes d’action dans le parcours d’un
+  article et suppression du doublon `sr-only` sur l’acteur, alignement strict sur le vocabulaire contraint (AGENTS.md
+  §1.11 et §6).
+
 - 2026-11-27 — Mode sombre retiré (un seul thème clair). Fond teinté d’un jaune-vert très pâle, complémentaire
   de l’encre violette (`--bg: #f5f6e9`). Passe impeccable (clarify + polish) sur tout le site : titres sans
   formules ni point final, graisses de titres unifiées, fautes corrigées, boutons « pilule » alignés sur les

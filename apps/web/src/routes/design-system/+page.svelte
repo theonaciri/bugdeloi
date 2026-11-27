@@ -138,9 +138,9 @@ const sampleCases: EuroCase[] = [
 const sampleRace: RaceTrack[] = [
   {
     id: 'c01',
-    title: 'Vérification des tests Inria',
+    title: 'Rejeu des tests Inria',
     subtitle: 'Catala 1.3.2 épinglé par digest',
-    summary: '171/171 tests verts · 8 suites actives',
+    summary: '171/171 tests réussis · 8 suites actives',
     statusBadge: '100 % exécuté',
     statusTone: 'emerald',
     href: '/references',
@@ -270,7 +270,7 @@ $effect(() => {
           Système de design
         </h1>
         <p class="text-base leading-relaxed text-muted sm:text-lg">
-          Les couleurs, les typographies et les composants du site, en direct. Les composants reposent sur <code class="text-ink">@ui-sdk/svelte</code> et Tailwind 4 ; les agents peuvent les piloter via WebMCP et <code class="text-ink">/api/mcp</code>. Règles complètes : <code class="text-ink">docs/DESIGN.md</code>.
+          Catalogue des couleurs, des typographies et des composants du site. Les composants reposent sur <code class="text-ink">@ui-sdk/svelte</code> et Tailwind 4. Les agents peuvent les inspecter via WebMCP et <code class="text-ink">/api/mcp</code>. Documentation complète dans <code class="text-ink">docs/DESIGN.md</code>.
         </p>
       </div>
       <div class="flex flex-wrap items-center gap-2.5">
@@ -329,14 +329,14 @@ $effect(() => {
     <div class="grid gap-8 lg:grid-cols-3">
       <div class="space-y-2">
         <p class="font-law text-3xl font-semibold tracking-tight">Source Serif 4</p>
-        <p class="text-xs text-muted">La loi, et seulement la loi : texte officiel cité</p>
+        <p class="text-xs text-muted">Réservée aux citations de textes officiels</p>
         <p class="pt-2 font-law text-base leading-relaxed text-ink">
           « Les allocations familiales sont dues à partir du deuxième enfant à charge. »
         </p>
       </div>
       <div class="space-y-2">
         <p class="font-display text-2xl font-extrabold tracking-tight [font-stretch:118%]">Archivo</p>
-        <p class="text-xs text-muted">Notre voix : titres élargis, interface, chiffres tabulaires</p>
+        <p class="text-xs text-muted">Titres élargis, interface et tableaux numériques</p>
         <p class="pt-2 text-sm leading-relaxed text-ink tabular">
           13 950 articles · 285,24 € · 171/171 tests
         </p>
@@ -507,7 +507,7 @@ $effect(() => {
   <div class="container-wide space-y-14">
     <div class="space-y-6">
       <h2 id="ds-obs" class="text-3xl text-obs-ink">
-        Course des chantiers
+        Avancement des chantiers
       </h2>
       <ChantierRace tracks={sampleRace} />
     </div>
@@ -596,6 +596,6 @@ $effect(() => {
   description="Idéal pour inspecter un article, un constat ou le flux WebMCP sans perdre son contexte."
 >
   <p class="text-sm text-muted leading-relaxed">
-    Ce panneau glisse depuis le bord droit, gère la restauration du focus et partage les mêmes jetons clair/sombre que tout le site.
+    Ce panneau glisse depuis le bord droit, gère la restauration du focus et partage les mêmes jetons graphiques que le reste du site.
   </p>
 </Drawer>

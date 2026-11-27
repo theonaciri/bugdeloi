@@ -213,11 +213,11 @@ const counts = $derived({
 
         <p class="text-sm leading-relaxed text-muted">
           {#if active.status === 'passed'}
-            La traduction automatique de la loi en vigueur donne exactement le même montant que le programme de référence d’Inria.
+            La formalisation de la loi en vigueur produit le même montant au centime près que le programme de référence de l’Inria.
           {:else if active.classification === 'erreur_oracle'}
-            La lecture littérale de l’article en vigueur contredit le programme de référence d’Inria. Deux relectures indépendantes ont confirmé l’écart ; un juriste doit trancher.
+            La lecture littérale de l’article en vigueur diverge du programme de référence de l’Inria. Deux relectures indépendantes ont confirmé cet écart. Un juriste doit encore trancher.
           {:else}
-            Écart d’un centime : Inria arrondit chaque composante avant d’additionner, tandis que notre programme arrondit uniquement le total final.
+            Écart d’un centime lié à l’ordre d’arrondi. Le programme de l’Inria arrondit chaque composante avant d’additionner, alors que la formalisation testée arrondit uniquement le total final.
           {/if}
         </p>
       </aside>

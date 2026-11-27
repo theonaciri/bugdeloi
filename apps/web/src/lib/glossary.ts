@@ -32,45 +32,47 @@ const entries: GlossaryEntry[] = [
     id: 'article',
     term: 'Article',
     group: 'loi',
-    short: 'L’unité de base d’un code de loi (par exemple « article 278 du Code général des impôts »).',
-    more: 'Un article change au fil des réformes : chaque rédaction successive est une version distincte.',
+    short:
+      'Unité élémentaire d’un code législatif ou réglementaire (par exemple l’article 278 du Code général des impôts).',
+    more: 'Un article évolue au fil des réformes. Chaque rédaction successive constitue une version distincte.',
   },
   {
     id: 'version',
     term: 'Version d’un article',
     group: 'loi',
-    short: 'Une rédaction précise d’un article, valable entre deux dates.',
-    more: 'Légifrance donne à chaque version un identifiant unique et nous en gardons l’empreinte numérique pour détecter le moindre changement de texte.',
+    short: 'Rédaction datée d’un article, applicable entre une date de début et une date de fin.',
+    more: 'Légifrance attribue à chaque version un identifiant unique. BugDeLoi en calcule l’empreinte numérique afin de détecter toute modification du texte.',
     technical: 'LEGIARTI, text_sha256',
   },
   {
     id: 'en-vigueur',
     term: 'En vigueur',
     group: 'loi',
-    short: 'Qui s’applique à la date de la dernière mise à jour officielle du code.',
-    more: 'Le nombre d’articles en vigueur est recalculé chaque nuit, à la date de la dernière mise à jour publiée par la DILA.',
+    short: 'Applicable à la date de la dernière mise à jour officielle du code.',
+    more: 'Le nombre d’articles en vigueur est recalculé chaque nuit à la date de projection publiée par la DILA.',
   },
   {
     id: 'legi',
     term: 'LEGI (DILA)',
     group: 'loi',
-    short: 'La base officielle des textes de loi publiée par l’État, celle qui alimente Légifrance.',
-    more: 'BugDeLoi l’importe chaque nuit et ne travaille que sur ce texte authentique.',
+    short:
+      'Base officielle des codes et lois en vigueur diffusée par la Direction de l’information légale et administrative, qui alimente Légifrance.',
+    more: 'BugDeLoi importe ces archives chaque nuit et formalise uniquement le texte officiel qu’elles contiennent.',
   },
   {
     id: 'catala',
     term: 'Catala',
     group: 'loi',
     short:
-      'Un langage de programmation conçu par des chercheurs de l’Inria pour écrire la loi sous forme de calcul exécutable.',
-    more: 'Le code s’écrit sous chaque alinéa du texte, gère les règles et leurs exceptions, et signale un conflit entre deux exceptions ou un cas que le texte ne couvre pas.',
+      'Langage de programmation conçu par des chercheurs de l’Inria pour formaliser des textes juridiques sous forme de calculs exécutables.',
+    more: 'Le code s’écrit directement sous chaque alinéa, modélise les principes et leurs exceptions, et signale à l’exécution les conflits d’exceptions ou les cas non couverts.',
   },
   {
     id: 'appreciation',
     term: 'Entrée d’appréciation',
     group: 'loi',
     short:
-      'Une notion que seul un humain peut trancher (« faute grave », « délai raisonnable ») : on la laisse comme une donnée d’entrée, jamais comme une formule inventée.',
+      'Notion juridique qui relève d’une évaluation humaine (par exemple « faute grave » ou « délai raisonnable »). Elle reste déclarée comme entrée explicite du calcul plutôt que traduite par une formule arbitraire.',
     technical: 'appréciation_…',
   },
   // Le travail
@@ -78,15 +80,16 @@ const entries: GlossaryEntry[] = [
     id: 'tache',
     term: 'Tâche',
     group: 'travail',
-    short: 'Un travail précis sur un article précis : par exemple « analyser l’article 172 du CGI ».',
-    more: 'Une tâche a un rôle (analyse, traduction…) et fait monter l’article d’un niveau quand elle est intégrée.',
+    short:
+      'Unité de travail portant sur un article et un rôle précis, par exemple analyser l’article 172 du CGI.',
+    more: 'Une fois contrôlée et fusionnée, la tâche fait progresser l’article au niveau suivant.',
   },
   {
     id: 'guichet',
     term: 'Guichet',
     group: 'travail',
-    short: 'Le programme qui distribue les tâches, une par une, aux contributeurs qui en demandent.',
-    more: 'Il ne connaît qu’une liste : les tâches à prendre, dans un ordre fixe. On parle aussi d’orchestrateur.',
+    short: 'Service qui attribue les tâches une par une aux contributeurs qui en font la demande.',
+    more: 'Il gère une file ordonnée des tâches à prendre. Ce composant joue le rôle d’orchestrateur.',
     technical: 'GET /desk/next',
   },
   {
@@ -94,8 +97,8 @@ const entries: GlossaryEntry[] = [
     term: 'Réservation',
     group: 'travail',
     short:
-      'Quand un contributeur prend une tâche, personne d’autre ne la reçoit pendant 20 minutes, prolongées à chaque signe de vie (6 heures au plus).',
-    more: 'Sans signe de vie, la réservation expire et la tâche revient dans la liste.',
+      'Verrou temporaire attribuant une tâche à un seul contributeur pendant 20 minutes, renouvelable jusqu’à 6 heures au maximum.',
+    more: 'En l’absence de renouvellement, la réservation expire et la tâche revient en tête de liste.',
     technical: 'bail (lease), /desk/beat',
   },
   {
@@ -103,39 +106,41 @@ const entries: GlossaryEntry[] = [
     term: 'Rôle',
     group: 'travail',
     short:
-      'La nature du travail demandé : analyser, traduire, écrire des tests, chercher des contre-exemples, relire.',
-    more: 'Chaque tâche a un seul rôle, et l’auteur d’un travail ne peut jamais en être le contrôleur.',
+      'Nature du travail demandé pour une tâche : analyse, traduction, rédaction d’oracles, recherche de contre-exemples ou relecture.',
+    more: 'Chaque tâche correspond à un rôle unique. L’auteur d’une contribution ne peut jamais en assurer le contrôle.',
   },
   {
     id: 'analyse',
     term: 'Analyse',
     group: 'travail',
     short:
-      'Lire un article alinéa par alinéa et dire ce qui se calcule, ce qui relève d’une appréciation humaine et ce qui sort du sujet.',
-    more: 'L’analyse propose aussi l’interface du futur calcul. Elle fait passer l’article au niveau N1.',
+      'Examen d’un article alinéa par alinéa afin de distinguer les règles calculables, les entrées d’appréciation et les passages hors périmètre.',
+    more: 'L’analyse propose également l’interface du futur calcul et fait passer l’article au niveau N1.',
     technical: 'rôle analyst',
   },
   {
     id: 'interface',
     term: 'Interface',
     group: 'travail',
-    short: 'La liste des entrées et des sorties du calcul d’un article, fixée avant d’écrire le code.',
-    more: 'La fixer à l’avance empêche le traducteur d’adapter la question à sa réponse, et permet d’écrire des tests sans voir le code.',
+    short: 'Signature formelle des entrées et des sorties d’un article, figée avant l’écriture du code.',
+    more: 'Cette séparation empêche d’ajuster la spécification à l’implémentation et permet de rédiger des cas de test sans accès au code.',
     technical: 'Nom@vN',
   },
   {
     id: 'traduction',
     term: 'Traduction',
     group: 'travail',
-    short: 'Écrire le calcul d’un article en Catala, sous le texte officiel, en respectant l’interface.',
-    more: 'Elle fait passer l’article au niveau N2 quand le compilateur l’accepte et que ses tests passent.',
+    short:
+      'Formalisation des règles d’un article en Catala sous le texte officiel, conformément à son interface figée.',
+    more: 'Elle fait passer l’article au niveau N2 lorsque le compilateur accepte le code et que les tests réussissent.',
     technical: 'rôle translate',
   },
   {
     id: 'relecture-pr',
     term: 'En relecture',
     group: 'travail',
-    short: 'Le travail est déposé dans le dépôt public et attend les contrôles automatiques puis la fusion.',
+    short:
+      'État d’une contribution déposée dans le dépôt public en attente des contrôles automatiques et de la fusion.',
     technical: 'pull request',
   },
   {
@@ -143,8 +148,8 @@ const entries: GlossaryEntry[] = [
     term: 'Famille de modèles',
     group: 'travail',
     short:
-      'Le fournisseur de l’IA qui a produit un travail (Anthropic, OpenAI, Google, Mistral…), ou « humain ».',
-    more: 'Un test ou une relecture doit venir d’une autre famille que l’auteur, pour éviter des erreurs partagées.',
+      'Fournisseur du modèle d’IA ayant produit une contribution (Anthropic, OpenAI, Google, Mistral…), ou la mention « humain ».',
+    more: 'Tout test ou contrôle indépendant doit provenir d’une autre famille que celle de l’auteur afin de limiter les erreurs corrélées.',
   },
   // Les contrôles
   {
@@ -152,31 +157,31 @@ const entries: GlossaryEntry[] = [
     term: 'Niveau de preuve',
     group: 'preuve',
     short:
-      'Le dernier contrôle réussi par un article, de N0 (texte importé) à N5 (relu et signé par un juriste).',
-    more: 'Chaque niveau est contrôlé par un programme ou par un humain identifié, jamais par l’avis d’une IA.',
+      'Dernier contrôle validé pour un article, sur une échelle cumulative allant de N0 (texte importé) à N5 (relecture signée par un juriste).',
+    more: 'Chaque passage de niveau repose sur un programme déterministe ou sur une revue humaine signée. L’avis d’une IA ne constitue jamais une preuve.',
   },
   {
     id: 'compilateur',
     term: 'Compilateur',
     group: 'preuve',
     short:
-      'Le programme qui lit le code Catala et refuse tout ce qui est incohérent (types faux, renvoi inconnu).',
-    more: 'Nous l’utilisons dans une version figée par empreinte : tout le monde obtient le même résultat.',
+      'Programme qui analyse le code Catala et rejette toute incohérence de syntaxe, de typage ou de référence.',
+    more: 'BugDeLoi exécute une image de compilation figée par empreinte cryptographique afin de garantir des résultats reproductibles.',
   },
   {
     id: 'oracle',
     term: 'Oracle',
     group: 'preuve',
     short:
-      'Une source indépendante qui donne le résultat attendu d’un calcul : exemple chiffré du BOFiP, brochure officielle, OpenFisca, tests de l’Inria.',
-    more: 'Le compilateur vérifie que le code est cohérent, pas qu’il calcule juste. L’oracle compare au résultat attendu, écrit sans voir le code.',
+      'Source indépendante fournissant le résultat attendu d’un calcul : exemple du BOFiP, brochure officielle, OpenFisca ou suite de tests de l’Inria.',
+    more: 'Le compilateur contrôle la cohérence interne du code, sans pouvoir juger de sa conformité au texte de loi. L’oracle compare les sorties du programme à des valeurs de référence établies sans accès au code.',
   },
   {
     id: 'red-team',
     term: 'Contre-exemple',
     group: 'preuve',
     short:
-      'Un cas concret où la traduction donne un résultat contraire au texte. En trouver un vaut autant qu’une preuve.',
+      'Jeu d’entrées concret pour lequel la traduction produit un résultat contraire au texte de loi. Une réfutation documentée a la même valeur scientifique qu’une validation.',
     technical: 'rôle redteam',
   },
   {
@@ -184,7 +189,7 @@ const entries: GlossaryEntry[] = [
     term: 'Rétro-traduction',
     group: 'preuve',
     short:
-      'Faire reformuler le code en français par quelqu’un qui n’a pas vu le texte, puis comparer au texte officiel.',
+      'Reformulation en français d’un programme Catala par un lecteur sans accès au texte officiel, suivie d’une comparaison avec la loi.',
     technical: 'rôles backtranslate, judge',
   },
   {
@@ -192,15 +197,15 @@ const entries: GlossaryEntry[] = [
     term: '★ Référence',
     group: 'preuve',
     short:
-      'Un article déjà formalisé par la recherche publique ou l’administration (Inria, DGFiP, CNAF), dont les tests passent chez nous.',
-    more: 'Ce n’est pas un travail de BugDeLoi : c’est un point de comparaison.',
+      'Article dont la version en vigueur est déjà formalisée par la recherche publique ou une administration (Inria, DGFiP, CNAF), avec une suite de tests rejouée avec succès dans notre environnement épinglé.',
+    more: 'Ce marqueur identifie un travail extérieur à BugDeLoi qui sert de point de comparaison.',
   },
   {
     id: 'certificat',
     term: 'Certificat',
     group: 'preuve',
     short:
-      'Un fichier qui fixe les versions exactes (texte, code, compilateur) pour que n’importe qui puisse rejouer un résultat.',
+      'Fichier qui fixe les versions exactes du texte, du code et du compilateur afin que tout tiers puisse reproduire un résultat à l’identique.',
     technical: 'bdl replay',
   },
   // Les constats
@@ -209,34 +214,35 @@ const entries: GlossaryEntry[] = [
     term: 'Constat',
     group: 'constats',
     short:
-      'Un signalement possible dans la loi (renvoi vers un article abrogé, conflit, effet de seuil…), tant qu’un humain ne l’a pas jugé.',
+      'Anomalie potentielle détectée dans un texte de loi (renvoi vers un article abrogé, conflit de règles, effet de seuil…), avant qualification humaine.',
   },
   {
     id: 'reproduit',
     term: 'Reproduit',
     group: 'constats',
-    short: 'Un constat confirmé par une seconde chaîne indépendante (autre code, autres données).',
+    short:
+      'Constat confirmé par une seconde chaîne indépendante utilisant un code et des données traités séparément.',
   },
   {
     id: 'qualifie',
     term: 'Qualifié',
     group: 'constats',
     short:
-      'Un constat jugé par un humain, avec un verdict motivé et signé. Seuls ces constats entrent dans les compteurs publics.',
+      'Constat examiné par un relecteur humain ayant consigné un verdict motivé et signé. Seuls les constats qualifiés entrent dans les compteurs publics.',
   },
   {
     id: 'renvoi-mort',
     term: 'Renvoi vers un article abrogé',
     group: 'constats',
-    short: 'Un article en vigueur qui cite un autre article qui ne s’applique plus.',
-    more: 'Ce n’est pas toujours une erreur : certains renvois visent volontairement une ancienne rédaction.',
+    short: 'Citation, dans un article en vigueur, d’un autre article qui n’est plus applicable.',
+    more: 'Ce cas ne constitue pas nécessairement une erreur. Certains renvois visent délibérément une rédaction antérieure ou une mesure transitoire.',
     technical: 'REF_MORTE',
   },
   {
     id: 'falaise',
     term: 'Effet de falaise',
     group: 'constats',
-    short: 'Un seuil où gagner un euro de plus fait perdre davantage en impôts ou en aides.',
+    short: 'Seuil au-delà duquel une hausse de revenu d’un euro entraîne une baisse du revenu disponible.',
     technical: 'FALAISE',
   },
 ]

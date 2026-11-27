@@ -51,8 +51,8 @@ function hrefFor(params: { niveau?: string; categorie?: string; code?: string; p
       Parcourir le travail par niveau de preuve
     </h1>
     <p class="mt-4 max-w-[60ch] text-lg leading-relaxed text-muted">
-      Filtrez les articles en vigueur par niveau de preuve (de N0 texte brut jusqu’à N5 certifié, ainsi que les
-      articles ★ Référence) et par code pour consulter directement chaque fiche et son code Catala.
+      Filtrez les articles en vigueur par niveau de preuve (de N0 Brut à N5 Certifié, ainsi que le marqueur ★
+      Référence) et par code afin de consulter chaque fiche et son programme Catala.
     </p>
 
     <!-- Filtres par niveau de preuve -->
@@ -63,7 +63,7 @@ function hrefFor(params: { niveau?: string; categorie?: string; code?: string; p
           aria-current={data.niveau === 'formalises' ? 'page' : undefined}
           class="inline-flex items-center gap-2 rounded-[var(--radius)] border border-line px-4 py-2 text-sm font-medium no-underline transition hover:border-brand aria-[current=page]:border-brand aria-[current=page]:bg-brand-soft aria-[current=page]:font-semibold aria-[current=page]:text-brand-strong"
         >
-          <span>Formalisés (N1–N5 + ★)</span>
+          <span>Formalisés (N1 à N5 et ★)</span>
           <span class="text-xs tabular text-muted">{formatInt(data.formalisesTotal)}</span>
         </a>
         <a

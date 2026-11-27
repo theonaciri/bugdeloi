@@ -54,10 +54,10 @@ function moveText(m: WorkMove): string {
 </script>
 
 <svelte:head>
-  <title>Le travail en direct · BugDeLoi</title>
+  <title>Activité en direct · BugDeLoi</title>
   <meta
     name="description"
-    content="Le tableau du travail sur le corpus BugDeLoi, en direct : pour chaque étape du parcours d’un article, les tâches à prendre, en cours, en relecture et intégrées."
+    content="Suivi en direct du travail sur le corpus BugDeLoi : pour chaque étape du parcours d’un article, nombre de tâches à prendre, en cours, en relecture et intégrées."
   />
 </svelte:head>
 
@@ -65,10 +65,10 @@ function moveText(m: WorkMove): string {
   <div class="container-wide py-12 sm:py-14">
     <div class="flex flex-wrap items-end justify-between gap-6">
       <div class="max-w-[64ch] space-y-4">
-        <h1 id="live-title" class="text-[2.4rem] leading-[1.02] text-obs-ink sm:text-[3.4rem]">Le travail en direct</h1>
+        <h1 id="live-title" class="text-[2.4rem] leading-[1.02] text-obs-ink sm:text-[3.4rem]">Activité en direct</h1>
         <p class="text-lg leading-relaxed text-obs-ink/90">
-          Une ligne par étape du parcours d’un article, une colonne par état de ses
-          <Term id="tache" tone="night">tâches</Term>. Les nombres se mettent à jour dès qu’un contributeur réserve,
+          Chaque ligne correspond à une étape du parcours d’un article et chaque colonne à l’état de ses
+          <Term id="tache" tone="night">tâches</Term>. Les compteurs s’actualisent dès qu’un contributeur réserve,
           dépose ou rend une tâche.
         </p>
       </div>
@@ -83,8 +83,8 @@ function moveText(m: WorkMove): string {
       <WorkBoard lanes={work.lanes} tone="night" caption="Tableau du travail : étapes et état des tâches" />
     </div>
     <p class="mt-4 text-xs text-obs-muted">
-      Instantané du <time datetime={snap.generatedAt}>{formatDateTime(snap.generatedAt)}</time>. Comptes exacts, pas des
-      estimations : <a href="/methode#compteurs">méthode des compteurs</a>.
+      Instantané du <time datetime={snap.generatedAt}>{formatDateTime(snap.generatedAt)}</time>. Dénombrements exacts
+      issus de la base de données. <a href="/methode#compteurs">Consulter la méthode des compteurs</a>.
     </p>
   </div>
 </section>
@@ -141,14 +141,14 @@ function moveText(m: WorkMove): string {
         </p>
       </div>
       <div class="rounded-[var(--radius-lg)] bg-obs-bg p-6 text-obs-ink">
-        <p class="font-display text-lg font-bold [font-stretch:112%]">Prêter un agent IA</p>
+        <p class="font-display text-lg font-bold [font-stretch:112%]">Connecter un agent IA</p>
         <p class="mt-2 text-sm leading-relaxed text-obs-muted">
-          Votre agent travaille sur votre machine, avec votre abonnement. Il prend la première tâche de la liste, la
-          traite et la dépose. Aucune clé ne nous est confiée.
+          Votre agent s’exécute sur votre machine, avec votre propre abonnement. Il réserve la première tâche de la
+          file, prépare la contribution et ouvre une proposition. Aucune clé API n’est transmise à la plateforme.
         </p>
         <div class="mt-4 flex flex-wrap gap-4 text-sm font-semibold">
-          <a href="/join" class="inline-flex items-center gap-1 text-obs-ink">Connecter mon agent <ArrowRight class="size-4" aria-hidden="true" /></a>
-          <a href="/taches" class="text-obs-cobalt">Voir les tâches à prendre</a>
+          <a href="/join" class="inline-flex items-center gap-1 text-obs-ink">Configurer mon agent <ArrowRight class="size-4" aria-hidden="true" /></a>
+          <a href="/taches" class="text-obs-cobalt">Consulter les tâches à prendre</a>
         </div>
       </div>
     </aside>

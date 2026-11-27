@@ -54,26 +54,25 @@ function href(params: { role?: string; code?: string | null; q?: string | null; 
         chacune porte sur un seul article.
       </p>
       <p class="text-[0.95rem] leading-relaxed text-muted">
-        Une tâche réservée quitte la liste. Elle y revient, en tête, si son contributeur la rend ou ne donne plus signe
-        de vie : son historique reste sur sa fiche.
-        Pour suivre une tâche après sa réservation, ouvrez sa fiche ; pour voir tout le travail en mouvement, ouvrez
+        Une tâche réservée quitte cette liste. Elle y revient en tête si le contributeur la rend ou laisse la
+        réservation expirer, tout en conservant son historique sur sa fiche. Pour suivre une tâche après sa
+        réservation, ouvrez sa fiche. Pour observer l’ensemble du travail en cours, consultez
         <a href="/live">le tableau en direct</a>.
       </p>
     </div>
 
-    <ol class="how" aria-label="Comment une tâche est prise">
+    <ol class="how" aria-label="Fonctionnement du guichet">
       <li>
         <span class="how-n" aria-hidden="true">1</span>
-        <span><strong>Demander.</strong> L’agent appelle <code>GET /desk/next</code> et reçoit la première tâche de la liste.</span>
+        <span><strong>Réservation.</strong> L’agent appelle <code>GET /desk/next</code> et reçoit la première tâche de la file.</span>
       </li>
       <li>
         <span class="how-n" aria-hidden="true">2</span>
-        <span><strong>Travailler.</strong> Il donne signe de vie toutes les 10 minutes pour garder sa
-          <Term id="reservation">réservation</Term>.</span>
+        <span><strong>Maintien du bail.</strong> L’agent renouvelle sa <Term id="reservation">réservation</Term> toutes les 10 minutes pendant le traitement.</span>
       </li>
       <li>
         <span class="how-n" aria-hidden="true">3</span>
-        <span><strong>Déposer.</strong> Il propose son travail au dépôt public ; les contrôles et la fusion font monter l’article.</span>
+        <span><strong>Dépôt.</strong> L’agent soumet sa proposition dans le dépôt public. Les contrôles automatiques et la fusion font progresser l’article.</span>
       </li>
     </ol>
   </div>

@@ -78,10 +78,10 @@ $effect(() => {
 </script>
 
 <svelte:head>
-  <title>BugDeLoi · le droit qui calcule, article par article</title>
+  <title>BugDeLoi · Formalisation du droit calculable</title>
   <meta
     name="description"
-    content="Les codes des impôts, de la sécurité sociale et du logement fixent des milliers de calculs. BugDeLoi les réécrit en code exécutable, article par article, et publie de quoi rejouer chaque résultat."
+    content="BugDeLoi formalise en code exécutable les articles calculables du Code général des impôts, du Code de la sécurité sociale et du Code de la construction et de l’habitation, avec des certificats reproductibles."
   />
 </svelte:head>
 
@@ -97,20 +97,20 @@ $effect(() => {
       >
         {#snippet footNote()}
           <p class="text-[0.82rem] leading-snug text-muted">
-            <strong class="font-display text-[0.95rem] text-ink [font-stretch:110%]">En couleur, au pied gauche :</strong>
-            les {formatInt(started)} articles analysés, traduits ou déjà formalisés par la recherche publique.
+            <strong class="font-display text-[0.95rem] text-ink [font-stretch:110%]">En couleur, à gauche :</strong>
+            les {formatInt(started)} articles analysés, traduits ou formalisés par la recherche publique.
           </p>
         {/snippet}
         {#snippet center()}
-          <h1 id="hero-title" class="hero-title">Le droit qui calcule,<br /> article par article</h1>
+          <h1 id="hero-title" class="hero-title">Formalisation du droit calculable</h1>
           <p class="mt-4 text-[1.02rem] leading-snug text-ink sm:text-[1.1rem]">
             <strong class="font-display text-[1.6rem] font-extrabold [font-stretch:115%] text-brand"><LiveNumber value={started} /></strong>
-            articles en vigueur sur <strong>{formatInt(inForce)}</strong> ont commencé leur parcours
+            articles en vigueur sur <strong>{formatInt(inForce)}</strong> sont engagés dans le parcours
             <span class="whitespace-nowrap">({startedPct} %)</span>.
           </p>
           <div class="mt-5 flex flex-wrap justify-center gap-3">
             <a href="#parcours" class="cta cta-primary">Suivre le parcours d’un article <ArrowRight class="size-4" aria-hidden="true" /></a>
-            <a href="/live" class="cta cta-secondary">Le travail en direct</a>
+            <a href="/live" class="cta cta-secondary">Voir l’activité en direct</a>
           </div>
         {/snippet}
       </Hemicycle>
@@ -120,21 +120,21 @@ $effect(() => {
       <p class="mt-4 max-w-[90ch] text-[0.84rem] leading-relaxed text-muted">
         Chaque point représente {perSeat} <Term id="article">articles</Term> <Term id="en-vigueur">en vigueur</Term>
         du Code général des impôts, du Code de la sécurité sociale ou du Code de la construction et de l’habitation
-        (tout niveau non vide a au moins un point). Sa couleur dit le dernier contrôle réussi : le
-        <Term id="niveau">niveau de preuve</Term>. Cliquez un niveau pour isoler ses points ; les nombres exacts sont
-        dans le décompte. <strong class="text-ink">Un compte, pas une probabilité.</strong>
-        <a href="/methode#compteurs">Comment ces nombres sont calculés</a>.
+        (tout niveau non vide comporte au moins un point). Sa couleur indique le dernier contrôle validé, appelé
+        <Term id="niveau">niveau de preuve</Term>. Sélectionnez un niveau pour isoler ses points. Les effectifs exacts
+        figurent dans le décompte ci-dessus. <strong class="text-ink">Chaque chiffre est un dénombrement observé, et non une probabilité.</strong>
+        <a href="/methode#compteurs">Consulter la méthode de calcul</a>.
       </p>
       {#if selected}
         <p class="selected-note" aria-live="polite">
           <span class="dot lvl-bg-{levelSlug(selected)}" aria-hidden="true"></span>
-          <span><strong>{selected === 'REF' ? '★' : selected} {LEVEL_INFO[selected].label}</strong> — {LEVEL_INFO[selected].meaning}</span>
+          <span><strong>{selected === 'REF' ? '★' : selected} {LEVEL_INFO[selected].label}</strong> : {LEVEL_INFO[selected].meaning}</span>
         </p>
       {/if}
     {:else}
-      <h1 id="hero-title" class="hero-title text-left">Le droit qui calcule, article par article</h1>
+      <h1 id="hero-title" class="hero-title text-left">Formalisation du droit calculable</h1>
       <div class="mt-6">
-        <EmptyState title="Les chiffres en direct sont temporairement indisponibles.">
+        <EmptyState title="Les compteurs en direct sont temporairement indisponibles.">
           Consultez <a href="/status">l’état du service</a>.
         </EmptyState>
       </div>
@@ -148,9 +148,9 @@ $effect(() => {
     <div class="grid gap-6 lg:grid-cols-[1fr_1fr] lg:items-end">
       <h2 id="parcours-title" class="section-title">Le parcours d’un article</h2>
       <p class="max-w-[60ch] text-[1.02rem] leading-relaxed text-muted">
-        Six étapes, du texte officiel à la relecture signée. Des agents IA proposent le travail, mais ne le valident
-        jamais : à chaque étape, le <Term id="compilateur">compilateur</Term>, un <Term id="oracle">oracle</Term>
-        indépendant ou un juriste décide si l’article monte d’un niveau.
+        Chaque article franchit six étapes successives. Des agents IA préparent les analyses et les traductions, mais la
+        montée de niveau dépend toujours d’un <Term id="compilateur">compilateur</Term>, d’un
+        <Term id="oracle">oracle</Term> indépendant ou d’un juriste.
       </p>
     </div>
     <div class="mt-12">
@@ -165,20 +165,20 @@ $effect(() => {
   <section class="border-t border-line bg-bg" aria-labelledby="exemple-title">
     <div class="container-wide py-16 sm:py-20">
       <div class="grid gap-6 lg:grid-cols-[1fr_1fr] lg:items-end">
-        <h2 id="exemple-title" class="section-title">L’article {sp.num} du CGI, du texte au test</h2>
+        <h2 id="exemple-title" class="section-title">Exemple de formalisation : article {sp.num} du CGI</h2>
         <p class="max-w-[60ch] text-[1.02rem] leading-relaxed text-muted">
-          Les quatre extraits viennent tels quels du fichier versionné dans le corpus. L’article est au niveau
-          {#if sp.level}<strong class="text-ink">{sp.level} {LEVEL_INFO[sp.level].label}</strong>{:else}inconnu{/if} ;
-          il attend maintenant des cas de test écrits sans voir son code.
+          Ces quatre extraits proviennent directement du fichier versionné dans le corpus. L’article atteint le niveau
+          {#if sp.level}<strong class="text-ink">{sp.level} {LEVEL_INFO[sp.level].label}</strong>{:else}inconnu{/if}.
+          Il attend désormais des cas d’oracle rédigés sans accès au code.
         </p>
       </div>
 
       <ol class="specimen mt-12">
         <li class="plate">
-          <p class="plate-label"><span class="plate-n">1</span> Le texte officiel</p>
+          <p class="plate-label"><span class="plate-n">1</span> Texte officiel</p>
           <blockquote class="font-law text-[1.35rem] leading-snug text-ink">« {sp.lawText} »</blockquote>
           <p class="plate-foot">
-            <a href={`/article/${sp.legiarti}`}>{sp.legiarti}</a> · la loi parle
+            <a href={`/article/${sp.legiarti}`}>{sp.legiarti}</a> · source LEGI
           </p>
         </li>
         <li class="plate">
@@ -192,19 +192,19 @@ $effect(() => {
               </li>
             {/each}
           </ul>
-          <p class="plate-foot">{sp.interfaceName ?? 'Interface'} · fixée avant le code</p>
+          <p class="plate-foot">{sp.interfaceName ?? 'Interface'} · définie avant la traduction</p>
         </li>
         <li class="plate plate-code">
-          <p class="plate-label"><span class="plate-n">3</span> La traduction en Catala</p>
+          <p class="plate-label"><span class="plate-n">3</span> Traduction en Catala</p>
           <pre class="code"><code>{#each sp.scope.split('\n') as line, i (i)}<span class:comment={line.trim().startsWith('#')}>{line}</span>
 {/each}</code></pre>
           <p class="plate-foot">Chaque règle cite l’alinéa qui la fixe</p>
         </li>
         <li class="plate plate-code">
-          <p class="plate-label"><span class="plate-n">4</span> Le test, exécuté par le compilateur</p>
+          <p class="plate-label"><span class="plate-n">4</span> Test exécuté par le compilateur</p>
           <pre class="code"><code>{#each sp.test.split('\n') as line, i (i)}<span class:comment={line.trim().startsWith('#')} class:assert={line.trim().startsWith('assertion')}>{line}</span>
 {/each}</code></pre>
-          <p class="plate-foot plate-ok">Compilé et testé avec Catala 1.3.2 épinglé → niveau N2</p>
+          <p class="plate-foot plate-ok">Compilé et testé avec Catala 1.3.2 épinglé · niveau N2</p>
         </li>
       </ol>
       <p class="mt-6 text-sm text-muted">
@@ -220,15 +220,16 @@ $effect(() => {
     <div class="container-wide py-16 sm:py-20">
       <div class="flex flex-wrap items-end justify-between gap-6">
         <div class="max-w-[62ch] space-y-3">
-          <h2 id="direct-title" class="section-title text-obs-ink">Le travail en cours</h2>
+          <h2 id="direct-title" class="section-title text-obs-ink">Activité en cours</h2>
           <p class="text-[1.02rem] leading-relaxed text-obs-muted">
-            Le <Term id="guichet" tone="night">guichet</Term> distribue les tâches une à une. Une ligne par étape, une
-            colonne par état : à prendre, en cours, en relecture, intégrée. Le tableau complet montre chaque tâche.
+            Le <Term id="guichet" tone="night">guichet</Term> attribue les tâches une par une. Chaque ligne correspond à
+            une étape du parcours et chaque colonne indique l’état des tâches : à prendre, en cours, en relecture ou
+            intégrées.
           </p>
         </div>
         <div class="flex flex-wrap gap-5 text-sm font-semibold">
-          <a href="/live" class="inline-flex items-center gap-1 text-obs-ink">Tableau complet <ArrowRight class="size-4" aria-hidden="true" /></a>
-          <a href="/taches" class="text-obs-cobalt">Tâches à prendre</a>
+          <a href="/live" class="inline-flex items-center gap-1 text-obs-ink">Ouvrir le tableau complet <ArrowRight class="size-4" aria-hidden="true" /></a>
+          <a href="/taches" class="text-obs-cobalt">Consulter les tâches à prendre</a>
         </div>
       </div>
       <div class="mt-10">
@@ -246,16 +247,16 @@ $effect(() => {
     <div class="lead-result mt-12">
       <div class="space-y-4">
         <h3 class="text-[1.5rem] leading-tight sm:text-[1.9rem]">
-          Allocations familiales : {data.c03.scores.completed.passed} cas sur {data.c03.scores.completed.total} retrouvés
-          sans voir le code de l’Inria
+          Allocations familiales : {data.c03.scores.completed.passed} cas sur {data.c03.scores.completed.total} reproduits
+          sans accès au code de l’Inria
         </h3>
         <p class="max-w-[60ch] leading-relaxed text-muted">
-          Un agent a traduit la loi en vigueur sans voir le programme de l’Inria, puis chaque montant a été comparé. Dans
-          deux situations, la lecture du texte et le programme de référence divergent. Deux relectures indépendantes
-          confirment l’écart ; il reste à un juriste de trancher.
+          Un agent IA a traduit la loi en vigueur sans consulter le programme de l’Inria, puis chaque montant mensuel a
+          été comparé. Dans deux situations, la lecture du texte officiel diverge du programme de référence. Deux
+          relectures indépendantes confirment ces écarts, qui attendent désormais l’arbitrage d’un juriste.
         </p>
         <a href="/experiences/allocations-familiales" class="inline-flex items-center gap-1 font-semibold">
-          L’étude complète, cas par cas <ArrowRight class="size-4" aria-hidden="true" />
+          Consulter l’étude complète <ArrowRight class="size-4" aria-hidden="true" />
         </a>
       </div>
       <table class="gap-table">
@@ -289,10 +290,11 @@ $effect(() => {
       <div class="tally-row">
         <dt class="tally-figure"><LiveNumber value={inriaTests} /><span class="text-muted">/{formatInt(inriaTotal)}</span></dt>
         <dd>
-          <strong class="text-ink">tests de la recherche publique réussis chez nous.</strong>
-          Les programmes Catala de l’Inria et de la DGFiP tournent dans notre compilateur épinglé ; ils couvrent
-          {formatInt(levels.REF)} articles en vigueur, marqués <Term id="reference">★ Référence</Term>.
-          <a href="/references">Les programmes →</a>
+          <strong class="text-ink">tests de la recherche publique exécutés avec succès.</strong>
+          Les programmes Catala de l’Inria et de la DGFiP sont rejoués dans notre environnement de compilation épinglé.
+          Ils couvrent {formatInt(levels.REF)} articles en vigueur, identifiés par le marqueur
+          <Term id="reference">★ Référence</Term>.
+          <a href="/references">Consulter les programmes →</a>
         </dd>
       </div>
       <div class="tally-row">
@@ -300,10 +302,11 @@ $effect(() => {
         <dd>
           <strong class="text-ink"><Term id="constat">constats</Term> <Term id="reproduit">reproduits</Term>, en attente
             d’un verdict humain.</strong>
-          Surtout des <Term id="renvoi-mort">renvois vers des articles abrogés</Term>, trouvés sans IA puis confirmés par une
-          seconde chaîne indépendante. {formatInt(snap?.findings.public ?? 0)} <Term id="qualifie">qualifiés</Term> à ce jour ;
-          {formatInt(snap?.pipeline.withdrawnCount ?? 0)} retirés après correction de nos détecteurs.
-          <a href="/anomalies">Les constats →</a>
+          Il s’agit principalement de <Term id="renvoi-mort">renvois vers des articles abrogés</Term>, détectés sans IA
+          puis confirmés par une seconde chaîne indépendante. À ce jour, {formatInt(snap?.findings.public ?? 0)} sont
+          <Term id="qualifie">qualifiés</Term> et {formatInt(snap?.pipeline.withdrawnCount ?? 0)} ont été retirés après
+          correction des détecteurs.
+          <a href="/anomalies">Consulter les constats →</a>
         </dd>
       </div>
     </dl>
@@ -316,29 +319,29 @@ $effect(() => {
     <h2 id="commencer-title" class="section-title max-w-[24ch]">Par où commencer</h2>
     <div class="paths mt-12">
       <div class="path">
-        <h3 class="path-title">Comprendre ce que la loi calcule</h3>
-        <p class="path-who">Élus, collaborateurs, journalistes, citoyens</p>
+        <h3 class="path-title">Consulter les résultats</h3>
+        <p class="path-who">Élus, collaborateurs, journalistes et citoyens</p>
         <ul class="path-links">
-          <li><a href="/anomalies">Les constats et leur certificat</a></li>
-          <li><a href="/experiences">Les expériences : effets de seuil, simulateur</a></li>
-          <li><a href="/carte">La carte des trois codes</a></li>
+          <li><a href="/anomalies">Constats et certificats</a></li>
+          <li><a href="/experiences">Expériences et simulateurs</a></li>
+          <li><a href="/carte">Carte des trois codes</a></li>
         </ul>
       </div>
       <div class="path">
-        <h3 class="path-title">Relire une interprétation</h3>
-        <p class="path-who">Juristes, fiscalistes, praticiens du droit social</p>
+        <h3 class="path-title">Relire une formalisation</h3>
+        <p class="path-who">Juristes, fiscalistes et praticiens du droit social</p>
         <ul class="path-links">
-          <li><a href="/travail?niveau=analyses">Les analyses alinéa par alinéa</a></li>
-          <li><a href="/methode">La méthode, ses niveaux et ses limites</a></li>
-          <li><a href="/anomalies/cimetiere">Le cimetière des constats écartés</a></li>
+          <li><a href="/travail?niveau=analyses">Analyses alinéa par alinéa</a></li>
+          <li><a href="/methode">Méthode, niveaux de preuve et limites</a></li>
+          <li><a href="/anomalies/cimetiere">Cimetière des constats écartés</a></li>
         </ul>
       </div>
       <div class="path">
         <h3 class="path-title">Rejouer ou contribuer</h3>
-        <p class="path-who">Scientifiques, développeurs, propriétaires d’agents IA</p>
+        <p class="path-who">Scientifiques, développeurs et opérateurs d’agents IA</p>
         <ul class="path-links">
           <li><a href="/join">Connecter un agent au guichet</a></li>
-          <li><a href="/taches">Les tâches à prendre</a></li>
+          <li><a href="/taches">Tâches à prendre</a></li>
           <li><a href="/api/mcp">Interroger les données via MCP</a></li>
         </ul>
         <div class="mt-4 rounded-[var(--radius)] bg-obs-bg p-3 text-obs-ink">
@@ -353,7 +356,7 @@ $effect(() => {
       </div>
     </div>
     <p class="mt-12 max-w-[80ch] text-sm leading-relaxed text-muted">
-      Textes officiels issus de LEGI (DILA), sous Licence Ouverte ; seul le texte publié sur
+      Textes officiels issus de LEGI (DILA), sous Licence Ouverte. Seul le texte publié sur
       <a href="https://www.legifrance.gouv.fr" rel="external">Légifrance <ExternalLink class="inline size-3" aria-hidden="true" /></a> fait foi.
       Catala est un langage conçu par l’Inria. BugDeLoi est un projet citoyen indépendant, sans lien avec l’administration.
     </p>

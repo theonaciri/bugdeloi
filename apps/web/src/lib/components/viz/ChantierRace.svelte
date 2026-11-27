@@ -105,7 +105,7 @@ const badgeTone: Record<RaceTrack['statusTone'], string> = {
     <div class="flex flex-wrap items-center gap-x-6 gap-y-2">
       <span class="inline-flex items-center gap-2">
         <span class="size-2.5 rounded-full bg-obs-ink"></span>
-        <span>Étape vérifiée</span>
+        <span>Étape accomplie</span>
       </span>
       <span class="inline-flex items-center gap-2">
         <span class="size-3 rounded-full border-2 border-obs-amber"></span>

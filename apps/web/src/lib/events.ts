@@ -37,38 +37,38 @@ type Explanation = {
 }
 
 const importWhy =
-  'Les services de l’État (la DILA, qui publie Légifrance) diffusent les textes de loi officiels dans des archives publiques. BugDeLoi les importe pour travailler uniquement sur le texte authentique, daté jour par jour.'
+  'La Direction de l’information légale et administrative (DILA), qui publie Légifrance, diffuse les textes de loi officiels sous forme d’archives publiques. BugDeLoi importe ces archives afin de travailler exclusivement sur le texte authentique, daté jour par jour.'
 const replayWhy =
-  'Des chercheurs publics (Inria) et des administrations ont déjà traduit certains articles en programmes de calcul. BugDeLoi exécute leurs tests officiels pour vérifier que nous obtenons exactement les mêmes résultats.'
+  'Des équipes de recherche publique (Inria) et des administrations ont formalisé certains articles en programmes exécutables. BugDeLoi exécute leurs suites de tests officielles dans un environnement épinglé afin de contrôler la reproductibilité des résultats.'
 const referenceMeaning =
-  'Ce résultat porte sur des programmes écrits par des chercheurs ou des administrations. Les niveaux N0 à N5 mesurent séparément les vérifications réalisées par BugDeLoi.'
+  'Ce résultat concerne des programmes développés par des chercheurs ou des administrations. Les niveaux N0 à N5 mesurent séparément les contrôles réalisés par BugDeLoi.'
 
 const deskWhy =
-  'Le guichet distribue le travail sur le corpus, une tâche à la fois (un rôle × un article). Chaque réservation et chaque libération est inscrite au journal pour que l’on puisse suivre le parcours de chaque tâche.'
+  'Le guichet distribue le travail sur le corpus, une tâche à la fois (un rôle pour un article). Chaque réservation et chaque libération est consignée au journal afin de retracer le parcours complet de chaque tâche.'
 
 const events: Record<string, Explanation> = {
   'desk.claimed': {
-    title: 'Une tâche a été réservée',
+    title: 'Réservation d’une tâche',
     why: deskWhy,
     meaning:
-      'Un contributeur (humain ou agent IA) travaille sur cette tâche. Personne d’autre ne la recevra tant que sa réservation est active : 20 minutes, prolongées à chaque signe de vie, 6 heures au plus.',
-    next: 'Le contributeur dépose son travail (la tâche passe en relecture), la rend avec un motif, ou laisse expirer la réservation (la tâche revient dans la liste).',
+      'Un contributeur (humain ou agent IA) travaille actuellement sur cette tâche. Tant que sa réservation est active (20 minutes, renouvelables jusqu’à 6 heures), la tâche n’est pas attribuée à un autre participant.',
+    next: 'Le contributeur dépose sa proposition (la tâche passe en relecture), rend la tâche avec un motif, ou laisse la réservation expirer (la tâche revient dans la liste).',
     diagram: { from: 'Tâche à prendre', to: 'Tâche en cours', relation: 'Réserver' },
   },
   'desk.released': {
-    title: 'Une tâche a été déposée ou rendue',
+    title: 'Dépôt ou restitution d’une tâche',
     why: deskWhy,
     meaning:
-      'Avec le motif « travail déposé », la contribution attend les contrôles automatiques et la fusion dans le corpus. Avec un autre motif, la tâche revient dans la liste des tâches à prendre.',
-    next: 'Une fois la contribution fusionnée, les contrôles mécaniques font monter l’article d’un niveau (N1 pour une analyse, N2 pour une traduction).',
+      'Avec le motif « travail déposé », la contribution attend les contrôles automatiques et la fusion dans le corpus. Avec tout autre motif, la tâche revient dans la liste des tâches à prendre.',
+    next: 'Après fusion de la contribution, les contrôles automatiques font progresser l’article au niveau suivant (N1 pour une analyse, N2 pour une traduction).',
     diagram: { from: 'Tâche en cours', to: 'Tâche en relecture', relation: 'Déposer' },
   },
   article_promoted: {
     title: 'Promotion d’articles formalisés en Catala',
-    why: 'Un article traduit en Catala monte de niveau quand des programmes le contrôlent : le texte cité doit être identique à celui de Légifrance, puis le code doit compiler et passer ses tests avec la version épinglée de Catala (1.3.2), sans accès au réseau.',
+    why: 'Un article traduit en Catala progresse de niveau après contrôle automatique : le texte cité doit correspondre à l’identique à LEGI, et le code doit compiler et réussir ses tests dans la version épinglée de Catala (1.3.2), sans accès réseau.',
     meaning:
-      'Ces articles ont passé ces contrôles sans erreur de compilation, sans conflit entre règles et sans cas laissé sans réponse. Ils sont désormais comptés au niveau N2.',
-    next: 'Viennent ensuite des cas de test écrits sans voir le code, à partir de sources officielles (N3), des comparaisons sur des milliers de cas (N4), puis la relecture signée d’un juriste (N5).',
+      'Ces articles ont franchi l’ensemble de ces contrôles sans erreur de compilation, sans conflit d’exceptions et sans cas non couvert. Ils sont désormais classés au niveau N2.',
+    next: 'Les étapes suivantes consistent à rédiger des cas d’oracle sans accès au code (N3), à mener un test différentiel sur 10 000 cas (N4), puis à obtenir la revue signée d’un juriste (N5).',
     diagram: diagrams.level,
   },
   'ingest.started': {

@@ -31,10 +31,10 @@ const GITHUB_BASE = 'https://github.com/theonaciri/bugdeloi/tree/main/packages/p
       Mesurer l’effet d’un amendement en euros avant le vote
     </h1>
     <p class="mt-5 max-w-[68ch] text-lg leading-relaxed text-muted">
-      Quand un amendement budgétaire modifie un article de loi déjà formalisé, notre moteur
-      <code>packages/parlement</code> lit son dispositif au format ouvert <strong>Tricoteuses</strong> (données de
-      l’Assemblée nationale), vérifie quels articles sont touchés et calcule l’écart d’impôt en euros sur quatre
-      foyers types.
+      Lorsqu’un amendement budgétaire modifie un article de loi déjà formalisé, le module
+      <code>packages/parlement</code> analyse son dispositif au format ouvert <strong>Tricoteuses</strong> (données de
+      l’Assemblée nationale), identifie les articles concernés et calcule l’écart d’impôt en euros sur quatre foyers
+      types.
     </p>
     <p class="mt-3 max-w-[68ch] text-base leading-relaxed text-muted">
       <strong>Principe de prudence :</strong> seul le dispositif juridique fixe des paramètres. Dès qu’une phrase
@@ -75,7 +75,7 @@ const GITHUB_BASE = 'https://github.com/theonaciri/bugdeloi/tree/main/packages/p
     <p class="mt-3 max-w-[68ch] text-base leading-relaxed text-muted">
       Les trois amendements ci-dessous proviennent du jeu de test
       <code>packages/parlement/src/fixtures/plf2026-sample.json</code>. Ils sont marqués comme fictifs et servent à
-      vérifier la chaîne de lecture et de calcul (42 tests unitaires verts).
+      tester la chaîne de lecture et de calcul (42 tests unitaires réussis).
     </p>
 
     <div class="mt-8 space-y-8">

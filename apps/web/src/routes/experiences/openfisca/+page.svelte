@@ -33,8 +33,8 @@ const GITHUB_BASE = 'https://github.com/theonaciri/bugdeloi/blob/main/replicatio
       Comparaison avec OpenFisca-France
     </h1>
     <p class="mt-5 max-w-[68ch] text-lg leading-relaxed text-muted">
-      Un programme ne peut jamais se valider lui-même. Pour vérifier nos formalisations de l’impôt sur le revenu
-      (2026) et des allocations familiales, nous les confrontons automatiquement à
+      Un programme ne peut jamais se valider lui-même. Pour contrôler nos formalisations de l’impôt sur le revenu
+      (2026) et des allocations familiales, nous les comparons automatiquement à
       <strong>OpenFisca-France {c08.versions.openfisca_france}</strong>, un moteur socio-fiscal libre indépendant
       maintenu par une autre équipe.
     </p>

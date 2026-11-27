@@ -11,13 +11,13 @@ import type { PageData } from './$types'
 let { data }: { data: PageData } = $props()
 
 const levelDescriptions: Record<Level, string> = {
-  N0: 'Nous avons enregistré le texte officiel, son identifiant, les dates de sa version et son empreinte numérique.',
-  N1: 'L’article est analysé alinéa par alinéa (calculable, entrée d’appréciation ou hors périmètre) avec son empreinte LEGI vérifiée et une interface proposée avant traduction Catala.',
-  N2: 'Le fichier cite le texte officiel à l’identique, respecte les règles du langage Catala et passe tous ses tests avec la version prévue de l’outil. Chaque montant, taux ou seuil renvoie au passage qui le fixe.',
-  N3: 'Le programme donne les résultats attendus pour tous les cas testés, sans règles contradictoires ni situation laissée sans réponse. Les réponses viennent d’au moins deux sources indépendantes, dont au moins une sans IA. Toute IA qui prépare ces réponses vient d’un autre fournisseur que celle qui a traduit le texte.',
-  N4: 'Au moins 10 000 cas, dont les seuils testés à 1 € de part et d’autre, sont comparés à un programme indépendant. Tous les écarts sont expliqués. Les tests repèrent au moins 80 % des erreurs introduites volontairement. Une reformulation faite à partir du code seul est jugée équivalente au texte officiel par une troisième famille d’IA. Pendant sept jours de recherche ouverte d’erreurs, aucun contre-exemple n’est retenu.',
-  N5: 'En plus de tous les contrôles précédents, un juriste identifié relit les choix d’interprétation et signe sa revue.',
-  REF: 'La version en vigueur figure dans un programme écrit par des chercheurs ou une administration. Leur suite contient au moins un test et sa dernière exécution chez nous a réussi. L’étoile signale un travail extérieur à BugDeLoi.',
+  N0: 'Le texte officiel est importé depuis LEGI avec son identifiant, ses dates de version et son empreinte numérique.',
+  N1: 'L’article est analysé alinéa par alinéa (calculable, entrée d’appréciation ou hors périmètre) avec une empreinte LEGI concordante et une interface proposée avant toute traduction Catala.',
+  N2: 'Le fichier cite le texte officiel à l’identique, respecte les règles du langage Catala et réussit tous ses tests dans la version épinglée du compilateur. Chaque montant, taux ou seuil cite le passage qui le fixe.',
+  N3: 'Le programme produit les résultats attendus sur l’ensemble des cas d’oracle, sans conflit d’exceptions ni cas non couvert. Les oracles proviennent d’au moins deux sources indépendantes, dont une non issue d’une IA. Toute IA participant à leur rédaction appartient à un autre fournisseur que celle qui a traduit l’article.',
+  N4: 'Au moins 10 000 cas, incluant chaque seuil à ± 1 €, sont comparés à une implémentation indépendante sans écart inexpliqué. La suite de tests détecte au moins 80 % des mutations introduites volontairement. Une rétro-traduction rédigée à partir du code seul est jugée équivalente au texte officiel par une troisième famille de modèles. Pendant sept jours d’examen contradictoire, aucun contre-exemple n’est retenu.',
+  N5: 'En plus des contrôles des niveaux précédents, un juriste identifié relit les choix d’interprétation et signe sa revue dans l’historique Git.',
+  REF: 'La version en vigueur figure dans un programme publié par la recherche publique ou une administration. Sa suite comporte au moins un test et sa dernière exécution dans notre environnement épinglé a réussi. Ce marqueur identifie un travail externe à BugDeLoi.',
 }
 
 const lifecycle = [
@@ -58,17 +58,17 @@ const verdicts = [
 </script>
 
 <svelte:head>
-  <title>La méthode et ses limites · BugDeLoi</title>
-  <meta name="description" content="Découvrez comment BugDeLoi contrôle ses traductions de la loi, examine les signalements et calcule les chiffres du site." />
+  <title>Méthode et limites · BugDeLoi</title>
+  <meta name="description" content="Méthode de formalisation de BugDeLoi : niveaux de preuve N0 à N5, traitement des signalements, calcul des compteurs et limites du projet." />
 </svelte:head>
 
 <header class="bg-bg">
   <div class="container-wide space-y-6 py-12 sm:py-16">
-    <h1 class="text-4xl tracking-tight text-ink sm:text-5xl">La méthode et ses limites</h1>
+    <h1 class="text-4xl tracking-tight text-ink sm:text-5xl">Méthode et limites</h1>
     <p class="max-w-[64ch] text-lg leading-relaxed text-muted">
-      On ne croit jamais une intelligence artificielle sur parole. Les IA aident à lire les articles de loi et à les
-      traduire en calculs ; seuls des tests automatiques, des sources indépendantes et des juristes valident un
-      résultat.
+      Aucune évaluation produite par une intelligence artificielle ne vaut preuve. Les modèles aident à lire les
+      articles de loi et à les formaliser en Catala, mais chaque niveau repose sur des contrôles automatiques, des
+      sources indépendantes ou une relecture humaine signée.
     </p>
     <nav aria-label="Sur cette page">
       <ul class="flex flex-wrap gap-x-6 gap-y-3 text-sm font-semibold">
@@ -161,10 +161,10 @@ const verdicts = [
       <div class="space-y-1">
         <dt class="font-semibold text-ink">Oracle (de test)</dt>
         <dd class="leading-relaxed text-muted">
-          Terme classique de la recherche en informatique (<em>test oracle</em>) : la source de vérité indépendante qui
-          indique, pour une entrée donnée, le résultat attendu. Le compilateur Catala vérifie que le code est cohérent,
-          mais seuls les oracles (exemples du BOFiP, brochures DGFiP, OpenFisca, tests Inria, dérivations manuelles)
-          confirment que le calcul correspond bien à la loi.
+          Terme classique de la recherche en informatique (<em>test oracle</em>) : source de vérité indépendante qui
+          indique, pour une entrée donnée, le résultat attendu. Le compilateur Catala contrôle la cohérence interne du
+          code, mais seuls les oracles (exemples du BOFiP, brochures DGFiP, OpenFisca, tests Inria, dérivations
+          manuelles) permettent de comparer le calcul au résultat attendu par la loi.
         </dd>
       </div>
       <div class="space-y-1">
@@ -238,23 +238,23 @@ const verdicts = [
     </div>
 
     <div id="pourquoi-separer" class="scroll-mt-24 max-w-[64ch] space-y-4">
-      <h3 class="text-2xl">Pourquoi séparer l’analyse de la traduction ?</h3>
+      <h3 class="text-2xl">Séparation entre analyse et traduction</h3>
       <dl class="grid gap-x-10 gap-y-5 sm:grid-cols-2">
         <div>
-          <dt class="font-semibold text-ink">Trier avant de coder</dt>
-          <dd class="mt-1 text-sm leading-relaxed text-muted">Beaucoup d’articles sont procéduraux ou hors sujet : l’analyse repère vite ce qui se calcule vraiment.</dd>
+          <dt class="font-semibold text-ink">Filtrage préalable</dt>
+          <dd class="mt-1 text-sm leading-relaxed text-muted">De nombreux articles sont purement procéduraux ou non calculables. L’analyse identifie en amont les dispositions qui se prêtent à une formalisation.</dd>
         </div>
         <div>
-          <dt class="font-semibold text-ink">Fixer la question avant la réponse</dt>
-          <dd class="mt-1 text-sm leading-relaxed text-muted">L’interface est figée avant le code : le traducteur ne peut pas adapter l’énoncé à sa traduction.</dd>
+          <dt class="font-semibold text-ink">Spécification figée avant le code</dt>
+          <dd class="mt-1 text-sm leading-relaxed text-muted">L’interface est fixée avant la traduction afin d’éviter que la signature ne soit ajustée a posteriori à l’implémentation.</dd>
         </div>
         <div>
-          <dt class="font-semibold text-ink">Tester sans voir le code</dt>
-          <dd class="mt-1 text-sm leading-relaxed text-muted">Avec l’interface seule, un autre auteur écrit les cas de test sans jamais lire la traduction.</dd>
+          <dt class="font-semibold text-ink">Oracles rédigés à l’aveugle</dt>
+          <dd class="mt-1 text-sm leading-relaxed text-muted">À partir de l’interface seule, un second contributeur peut écrire des cas de test sans consulter la traduction.</dd>
         </div>
         <div>
-          <dt class="font-semibold text-ink">Faire apparaître les ambiguïtés</dt>
-          <dd class="mt-1 text-sm leading-relaxed text-muted">Deux traductions indépendantes d’une même interface qui divergent sur un cas révèlent une ambiguïté du texte.</dd>
+          <dt class="font-semibold text-ink">Détection des ambiguïtés</dt>
+          <dd class="mt-1 text-sm leading-relaxed text-muted">Si deux traductions indépendantes conformes à la même interface divergent sur une entrée, l’écart signale une ambiguïté potentielle du texte.</dd>
         </div>
       </dl>
     </div>
@@ -263,8 +263,8 @@ const verdicts = [
       <div class="max-w-[64ch] space-y-2">
         <h3 class="text-2xl">Glossaire</h3>
         <p class="leading-relaxed text-muted">
-          Chaque mot souligné en pointillé sur le site renvoie ici. Une définition par mot, en français courant ; le nom
-          employé dans le code vient en second.
+          Chaque terme souligné en pointillé sur le site renvoie à sa définition ci-dessous. Chaque entrée donne une
+          explication en français courant, suivie le cas échéant du nom utilisé dans le code.
         </p>
       </div>
       {#each Object.entries(GLOSSARY_GROUPS) as [group, title] (group)}
@@ -289,10 +289,11 @@ const verdicts = [
 <section class="border-t border-line bg-surface" aria-labelledby="anomalies">
   <div class="container-wide space-y-8 py-12 sm:py-16">
     <div class="max-w-[64ch] space-y-3">
-      <h2 id="anomalies" class="scroll-mt-24 text-3xl text-ink sm:text-4xl">Du signalement à l’anomalie qualifiée</h2>
+      <h2 id="anomalies" class="scroll-mt-24 text-3xl text-ink sm:text-4xl">Cycle de vie d’un signalement</h2>
       <p class="leading-relaxed text-muted">
-        Un signalement n’est qu’un point de départ : un renvoi vers un article abrogé peut être voulu, par exemple
-        quand une règle continue de s’appliquer aux situations anciennes. Les types de signalements examinés :
+        Un signalement automatique n’est qu’une hypothèse de travail : un renvoi vers un article abrogé peut par
+        exemple relever d’une disposition transitoire volontaire. Les catégories de signalements suivies sont les
+        suivantes :
       </p>
     </div>
     <ul class="grid gap-x-8 sm:grid-cols-2">
@@ -343,11 +344,11 @@ const verdicts = [
 <section class="border-t border-line bg-surface" aria-labelledby="compteurs">
   <div class="container-wide space-y-8 py-12 sm:py-16">
     <div class="max-w-[64ch] space-y-3">
-      <h2 id="compteurs" class="scroll-mt-24 text-3xl text-ink sm:text-4xl">Comment chaque chiffre est calculé</h2>
+      <h2 id="compteurs" class="scroll-mt-24 text-3xl text-ink sm:text-4xl">Calcul des compteurs</h2>
       <p class="leading-relaxed text-muted">
-        <strong class="text-ink">Un compte, pas une probabilité.</strong> Chaque compteur indique combien d’éléments
-        remplissent une condition précise. Par exemple, le nombre d’articles passés au niveau N3 indique l’avancement
-        des contrôles effectués.
+        <strong class="text-ink">Chaque chiffre est un dénombrement observé, et non une probabilité.</strong> Chaque
+        compteur mesure le nombre d’éléments satisfaisant un critère précis. Ainsi, le nombre d’articles au niveau N3
+        reflète l’avancement des contrôles effectués à cette date.
       </p>
     </div>
 
@@ -355,26 +356,26 @@ const verdicts = [
       <div id="compteur-articles" class="scroll-mt-24 space-y-1 py-4">
         <dt class="font-semibold text-ink">Articles en vigueur recensés</dt>
         <dd class="leading-relaxed text-muted">
-          Nous comptons les versions applicables à la date de mise à jour de chaque code suivi : le code général des
-          impôts, le code de la sécurité sociale et le code de la construction et de l’habitation. La DILA, l’organisme
-          public qui publie Légifrance, fournit les dates de validité et l’état de chaque version. Chaque version
-          d’article a son propre identifiant unique, appelé LEGIARTI. Une version dont l’abrogation est prévue compte
-          jusqu’à la date où celle-ci prend effet. Les anciennes versions restent en base pour consultation.
+          Ce compteur recense les versions applicables à la date de mise à jour de chaque code suivi : le Code général des
+          impôts, le Code de la sécurité sociale et le Code de la construction et de l’habitation. La DILA fournit les
+          dates de validité et l’état de chaque version, identifiée par un numéro unique LEGIARTI. Une version dont
+          l’abrogation est différée reste comptée jusqu’à la date d’effet de cette abrogation. Les versions antérieures
+          restent accessibles en base pour consultation.
         </dd>
       </div>
       <div id="compteur-parcours" class="scroll-mt-24 space-y-1 py-4">
-        <dt class="font-semibold text-ink">Hémicycle de l’accueil et articles ayant commencé leur parcours</dt>
+        <dt class="font-semibold text-ink">Hémicycle de l’accueil et articles engagés dans le parcours</dt>
         <dd class="leading-relaxed text-muted">
-          Un point pour 10 articles en vigueur (40 sur petit écran), coloré par niveau (sans statut = N0) ; tout
-          niveau non vide reçoit au moins un point et N0 prend le reste. Les nombres exacts figurent dans le décompte. « Ont commencé leur parcours » =
-          articles en vigueur moins ceux au niveau N0 : N1 à N5 et ★ Référence. Les sièges sont rangés par angle, de la
-          ★ au pied gauche jusqu’à N0.
+          Chaque point représente 10 articles en vigueur (40 sur petit écran), colorés selon leur niveau (N0 par défaut).
+          Tout niveau non vide reçoit au moins un point et le niveau N0 occupe le reste. Les effectifs exacts figurent
+          dans le décompte associé. Les articles engagés dans le parcours correspondent aux articles en vigueur hors N0
+          (niveaux N1 à N5 et ★ Référence). Les points sont classés par angle, de ★ à gauche jusqu’à N0 à droite.
         </dd>
       </div>
       <div id="compteur-tableau" class="scroll-mt-24 space-y-1 py-4">
         <dt class="font-semibold text-ink">Tableau du travail (tâches à prendre, en cours, en relecture, intégrées)</dt>
         <dd class="leading-relaxed text-muted">
-          <strong class="text-ink">À prendre</strong> : tâches inscrites ni terminées ni réservées dont le texte est
+          <strong class="text-ink">À prendre</strong> : tâches inscrites ni déposées ni réservées dont le texte est
           toujours identique à LEGI, plus les articles que le guichet transformerait en tâche au prochain appel.
           <strong class="text-ink">En cours</strong> : réservations actives. <strong class="text-ink">En relecture</strong> :
           tâches déposées dont l’article n’a pas encore atteint le niveau visé. <strong class="text-ink">Intégrées</strong> :

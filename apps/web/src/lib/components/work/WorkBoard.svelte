@@ -20,10 +20,10 @@ let {
 }: { lanes: BoardLane[]; maxCards?: number; tone?: 'paper' | 'night'; caption: string } = $props()
 
 const HINT: Record<Column, string> = {
-  todo: 'le guichet les donne dans l’ordre',
+  todo: 'attribuées dans l’ordre de la file',
   doing: 'réservées par un contributeur',
   review: 'déposées, en attente de fusion',
-  done: 'l’article a monté d’un niveau',
+  done: 'article promu au niveau visé',
 }
 
 function moreHref(lane: BoardLane, column: Column): string | null {

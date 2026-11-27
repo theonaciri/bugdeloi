@@ -197,41 +197,40 @@ const current = (item: { href: string; matchPrefix?: string }) => {
         <span class="font-display text-lg font-semibold">BugDeLoi</span>
       </a>
       <p class="leading-relaxed">
-        Traduire le droit calculable français en règles exécutables, documenter chaque écart de manière reproductible et ouvrir les données aux citoyens, journalistes, juristes et agents IA.
+        Observatoire citoyen qui formalise le droit calculable français en code exécutable, documente chaque écart de manière reproductible et publie ses données en accès libre.
       </p>
-      <p class="text-xs italic text-subtle">Un compte, pas une probabilité.</p>
     </div>
 
     <nav aria-label="Explorer">
       <p class="kicker mb-3 text-ink">Explorer</p>
       <ul class="space-y-2">
         <li><a href="/carte">Carte des codes (CGI, CSS, CCH)</a></li>
-        <li><a href="/experiences/allocations-familiales">Allocations familiales · impact en €</a></li>
-        <li><a href="/taches">Tâches à prendre</a> · <a href="/live">Travail en direct</a></li>
+        <li><a href="/experiences/allocations-familiales">Allocations familiales · comparaison en euros</a></li>
+        <li><a href="/taches">Tâches à prendre</a> · <a href="/live">Activité en direct</a></li>
         <li><a href="/references">Programmes de référence ★ (Inria)</a></li>
         <li><a href="/anomalies">Anomalies qualifiées</a></li>
-        <li><a href="/anomalies/cimetiere">Cimetière des constats rejetés</a></li>
+        <li><a href="/anomalies/cimetiere">Cimetière des constats écartés</a></li>
       </ul>
     </nav>
 
     <nav aria-label="Transparence et agents">
-      <p class="kicker mb-3 text-ink">Transparence & Agents</p>
+      <p class="kicker mb-3 text-ink">Transparence et agents</p>
       <ul class="space-y-2">
-        <li><a href="/methode">Méthode, niveaux N0–N5 et limites</a></li>
+        <li><a href="/methode">Méthode, niveaux N0 à N5 et limites</a></li>
         <li><a href="/journal">Journal public</a> · <a href="/feed.atom">Flux Atom</a></li>
         <li><a href="/design-system">Système de design et WebMCP</a></li>
         <li><a href="/api/mcp">Serveur MCP (/api/mcp)</a> · <a href="/join.txt">/join.txt</a></li>
-        <li><a href="/registre">Registre des comptes</a> · <a href="/status">État</a></li>
+        <li><a href="/registre">Registre des comptes</a> · <a href="/status">État du service</a></li>
       </ul>
     </nav>
 
     <div class="space-y-3 text-xs leading-relaxed">
-      <p class="kicker text-ink">Sources & licences</p>
+      <p class="kicker text-ink">Sources et licences</p>
       <p>
         Textes officiels issus de la base LEGI de la Direction de l’information légale et administrative (DILA), Licence Ouverte 2.0. Le texte publié sur Légifrance fait foi.
       </p>
       <p>
-        Code sous licence GNU AGPL-3.0-or-later. Aucun cookie, aucun traceur, aucune clé API stockée.
+        Code publié sous licence GNU AGPL-3.0-or-later. Aucun cookie, aucun traceur et aucune clé API stockée.
       </p>
     </div>
   </div>

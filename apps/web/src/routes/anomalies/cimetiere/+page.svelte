@@ -16,9 +16,8 @@ let { data }: PageProps = $props()
     <p class="text-sm"><a href="/anomalies">← Retour aux anomalies</a></p>
     <h1 class="text-4xl tracking-tight sm:text-5xl">Cimetière des signalements écartés</h1>
     <p class="max-w-3xl font-display text-xl leading-relaxed text-ink/90">
-      Un juriste peut écarter un signalement parce que le renvoi à une ancienne loi était volontaire
-      ou parce que notre programme a fait une erreur. Nous conservons ces dossiers et le motif de
-      chaque décision pour que chacun puisse comprendre pourquoi ces signalements ont été écartés.
+      Lorsqu’un relecteur écarte un signalement, par exemple parce qu’un renvoi vers un texte antérieur est volontaire
+      ou parce qu’un détecteur a commis une erreur, le dossier reste archivé ici avec le motif signé de la décision.
     </p>
   </div>
 </header>

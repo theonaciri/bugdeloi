@@ -333,7 +333,8 @@ export async function taskJourney(id: string): Promise<TaskJourney | null> {
           ts: ev.ts.toISOString(),
           kind: 'expired',
           title: 'Réservation expirée',
-          detail: 'Le contributeur n’a plus donné signe de vie : la tâche est revenue dans la liste.',
+          detail:
+            'La réservation n’a pas été renouvelée dans le délai imparti. La tâche est revenue dans la liste.',
           handle: openClaim.handle,
           family: null,
         })
@@ -343,7 +344,7 @@ export async function taskJourney(id: string): Promise<TaskJourney | null> {
         ts: ev.ts.toISOString(),
         kind: 'claimed',
         title: 'Réservée',
-        detail: 'Le guichet a confié la tâche à ce contributeur.',
+        detail: 'Le guichet a attribué la tâche à ce contributeur.',
         handle: handleOf(ev.actor),
         family: str(p.family),
       })
@@ -356,7 +357,7 @@ export async function taskJourney(id: string): Promise<TaskJourney | null> {
         title: reason === 'submitted' ? 'Travail déposé' : 'Rendue',
         detail:
           reason === 'submitted'
-            ? 'Le contributeur a déposé son travail : il passe en relecture.'
+            ? 'Le contributeur a déposé sa proposition. La tâche passe en relecture.'
             : `Le contributeur a rendu la tâche (motif : ${reason ?? 'non précisé'}). Elle revient dans la liste.`,
         handle: handleOf(ev.actor),
         family: str(p.family),
@@ -378,7 +379,7 @@ export async function taskJourney(id: string): Promise<TaskJourney | null> {
         ts: row.completedAt.toISOString(),
         kind: 'submitted',
         title: 'Travail déposé',
-        detail: 'Le contributeur a déposé son travail : il passe en relecture.',
+        detail: 'Le contributeur a déposé sa proposition. La tâche passe en relecture.',
         handle: row.handle,
         family: row.family,
       })
@@ -408,7 +409,8 @@ export async function taskJourney(id: string): Promise<TaskJourney | null> {
       ts: row.expiresAt.toISOString(),
       kind: 'expired',
       title: 'Réservation expirée',
-      detail: 'Le contributeur n’a plus donné signe de vie : la tâche est revenue dans la liste.',
+      detail:
+        'La réservation n’a pas été renouvelée dans le délai imparti. La tâche est revenue dans la liste.',
       handle: openClaim.handle,
       family: null,
     })

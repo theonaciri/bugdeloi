@@ -25,27 +25,27 @@ let running = $state(false)
 const serverTools = [
   {
     name: 'get_project_snapshot',
-    label: 'Snapshot projet',
+    label: 'Instantané du projet',
     args: {},
-    desc: 'Compteurs temps réel, codes, C0.1, C0.2, desk.',
+    desc: 'Compteurs en direct, codes, C0.1, C0.2 et état du guichet.',
   },
   {
     name: 'list_findings',
     label: 'Constats reproduits (5)',
     args: { status: 'reproduced', limit: 5 },
-    desc: 'Constats pré-qualification reproduits par machine.',
+    desc: 'Constats reproduits avant qualification humaine.',
   },
   {
     name: 'get_c03_experiment',
     label: 'Expérience C0.3',
     args: {},
-    desc: '17 cas allocations familiales + contre-vérifications.',
+    desc: '17 cas sur les allocations familiales et relectures indépendantes.',
   },
   {
     name: 'search_articles',
     label: 'Chercher « D755-5 »',
     args: { query: 'D755-5', limit: 5 },
-    desc: 'Recherche plein texte & numéro dans les 3 codes.',
+    desc: 'Recherche plein texte et par numéro dans les trois codes.',
   },
 ]
 

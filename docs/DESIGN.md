@@ -1,6 +1,6 @@
 ---
 name: BugDeLoi
-description: Le droit qui calcule, article par article — observatoire citoyen du droit calculable.
+description: Observatoire citoyen de formalisation du droit calculable français.
 colors:
   paper: "#f5f6e9"
   surface: "#fdfdf8"

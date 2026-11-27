@@ -18,8 +18,8 @@ function codeLabel(code: string): string {
 
 <section class="bg-bg">
   <div class="container-wide py-12 sm:py-16">
-    <h1 class="text-4xl tracking-tight sm:text-5xl">Articles déjà modélisés par la recherche (★)</h1>
-    <p class="mt-4 max-w-[68ch] text-lg leading-relaxed text-muted">Des chercheurs publics (notamment l’Inria) et des administrations ont traduit une centaine d’articles en Catala. L’étoile ★ marque les articles en vigueur dont nous exécutons leurs tests avec succès : c’est leur travail, pas le nôtre, et il nous sert de point de comparaison.</p>
+    <h1 class="text-4xl tracking-tight sm:text-5xl">Articles formalisés par la recherche publique (★)</h1>
+    <p class="mt-4 max-w-[68ch] text-lg leading-relaxed text-muted">Des équipes de recherche publique (notamment l’Inria) et des administrations ont formalisé des articles de loi en Catala. Le marqueur ★ identifie les articles en vigueur dont la suite de tests officielle réussit dans notre environnement épinglé. Ces travaux externes servent de référence et de point de comparaison.</p>
     <p class="mt-5"><a href="/methode#compteur-avancement">Comment l’étoile ★ est attribuée</a></p>
     <p class="mt-3"><strong>{plural(data.articles.length, 'article')} ★ dans cette liste</strong>{#if data.exclude} · <a href="/references">Inclure l’exemple de l’accueil</a>{/if}</p>
   </div>

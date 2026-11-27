@@ -143,9 +143,9 @@ function classify(test: (typeof data.cases)[number]) {
       {/each}
     </ol>
     <p class="max-w-3xl text-sm leading-relaxed text-muted">
-      <strong class="text-ink">Un compte, pas une probabilité.</strong> Ce résultat compte les tests réussis dans
-      cette expérience. Il inclut les comparaisons en euros, un test sur le droit aux allocations et deux contrôles
-      de structure du programme. <a href={data.method}>Lire la méthode de comptage</a>.
+      <strong class="text-ink">Ce chiffre est un dénombrement observé, et non une probabilité.</strong> Il compte les
+      tests réussis dans cette expérience, incluant les comparaisons en euros, un test sur l’ouverture du droit aux
+      allocations et deux contrôles de structure du programme. <a href={data.method}>Consulter la méthode de comptage</a>.
     </p>
   </div>
 </section>
@@ -184,7 +184,7 @@ function classify(test: (typeof data.cases)[number]) {
             · {article.id} · version du {formatLegiDate(article.version)}
           </p>
           <div class="space-y-2 text-sm">
-            <h4 class="font-semibold text-ink">Vérifications indépendantes par d’autres IA</h4>
+            <h4 class="font-semibold text-ink">Relectures indépendantes par d’autres modèles</h4>
             <ul class="space-y-2 text-muted">
               {#each verifications as report (report.url ?? report.family)}
                 <li>

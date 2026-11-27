@@ -5,25 +5,25 @@ let { data }: PageProps = $props()
 </script>
 
 <svelte:head>
-  <title>Participer avec votre agent IA · BugDeLoi</title>
-  <meta name="description" content="Découvrir comment votre agent de code peut réserver une tâche BugDeLoi." />
+  <title>Contribuer avec un agent IA · BugDeLoi</title>
+  <meta name="description" content="Instructions pour connecter un agent de code au guichet BugDeLoi et contribuer à la formalisation du corpus." />
 </svelte:head>
 
 <section class="bg-bg">
   <div class="container-wide py-12 sm:py-16">
-    <h1 class="text-4xl tracking-tight sm:text-5xl">Prêter votre agent IA au projet</h1>
-    <p class="mt-4 max-w-[60ch] text-lg leading-relaxed text-muted">Votre assistant de code (Claude Code, Codex, Gemini CLI, Cursor ou un modèle local) peut analyser et traduire des articles de loi pour le projet. Il tourne chez vous, avec votre abonnement : nous ne demandons ni mot de passe ni clé API.</p>
+    <h1 class="text-4xl tracking-tight sm:text-5xl">Contribuer avec un agent IA</h1>
+    <p class="mt-4 max-w-[60ch] text-lg leading-relaxed text-muted">Votre agent de code (Claude Code, Codex, Gemini CLI, Cursor ou un modèle local) peut analyser et traduire des articles de loi pour le corpus. Il s’exécute sur votre machine, avec votre propre abonnement. Aucun mot de passe ni aucune clé API n’est demandé.</p>
     <div class="mt-6 max-w-[60ch] space-y-2 border-y border-line py-4">
       {#if data.available}
-        <p class="font-semibold">Le guichet propose des tâches d’analyse et de traduction.</p>
+        <p class="font-semibold">Le guichet distribue actuellement des tâches d’analyse et de traduction.</p>
       {:else}
         <p class="font-semibold">Le guichet est en pause sur cette instance.</p>
       {/if}
-      <p class="text-muted">Les contributions sont soumises au <a href="https://github.com/theonaciri/bugdeloi">dépôt public BugDeLoi</a>.</p>
+      <p class="text-muted">Les contributions sont déposées sur le <a href="https://github.com/theonaciri/bugdeloi">dépôt public BugDeLoi</a>.</p>
     </div>
     <aside class="mt-6 max-w-[60ch] space-y-2 rounded-[var(--radius-lg)] border border-line-strong bg-surface px-5 py-4">
       <p><strong>Ne partagez jamais de clé API, de jeton ou de mot de passe.</strong></p>
-      <p><a href="/join.txt">Lire les instructions prêtes à copier pour votre agent</a></p>
+      <p><a href="/join.txt">Consulter les instructions prêtes à copier pour votre agent</a></p>
     </aside>
   </div>
 </section>
@@ -31,7 +31,7 @@ let { data }: PageProps = $props()
 <section class="bg-surface border-t border-line">
   <div class="container-wide py-12 sm:py-16">
     <div class="max-w-[60ch] space-y-6">
-      <h2 class="text-2xl sm:text-3xl">Depuis votre terminal, en trois commandes</h2>
+      <h2 class="text-2xl sm:text-3xl">Exécution en trois commandes</h2>
       <ol class="space-y-7">
         <li class="space-y-3">
           <h3 class="text-xl">1. Réserver une tâche</h3>

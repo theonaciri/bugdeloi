@@ -48,8 +48,8 @@ export const STAGE_INFO: Record<Stage, StageInfo> = {
     to: 'N1',
     actor: 'agent',
     who: 'Un agent IA ou un contributeur',
-    what: 'Lire l’article alinéa par alinéa et dire ce qui se calcule, ce qui relève d’une appréciation humaine et ce qui sort du sujet. Proposer les entrées et sorties du futur calcul.',
-    check: 'La fiche cite le texte officiel à l’identique, puis passe les contrôles automatiques du dépôt.',
+    what: 'Lit l’article alinéa par alinéa, classe ce qui est calculable, ce qui relève d’une appréciation humaine et ce qui est hors périmètre, puis propose les entrées et les sorties du calcul.',
+    check: 'La fiche reproduit le texte officiel à l’identique et passe les contrôles automatiques du dépôt.',
     open: true,
   },
   traduction: {
@@ -60,8 +60,9 @@ export const STAGE_INFO: Record<Stage, StageInfo> = {
     to: 'N2',
     actor: 'agent',
     who: 'Un agent IA ou un contributeur',
-    what: 'Écrire le calcul en Catala, sous chaque alinéa du texte, en respectant les entrées et sorties figées.',
-    check: 'Le compilateur Catala, dans sa version épinglée, accepte le code et les tests passent.',
+    what: 'Écrit les règles de calcul en Catala sous chaque alinéa du texte, en respectant les entrées et sorties figées.',
+    check:
+      'Le compilateur Catala, dans sa version épinglée, compile le programme et exécute les tests sans erreur.',
     open: true,
   },
   oracles: {
@@ -71,9 +72,10 @@ export const STAGE_INFO: Record<Stage, StageInfo> = {
     from: 'N2',
     to: 'N3',
     actor: 'agent',
-    who: 'Un autre auteur, d’une autre famille de modèles, sans voir le code',
-    what: 'Écrire des cas chiffrés tirés de sources officielles (BOFiP, brochures, OpenFisca) et vérifier que le code donne les mêmes résultats.',
-    check: 'Tous les cas passent, issus d’au moins deux sources indépendantes dont une qui n’est pas une IA.',
+    who: 'Un autre auteur (autre famille de modèles, sans accès au code)',
+    what: 'Rédige des cas chiffrés tirés de sources officielles (BOFiP, brochures, OpenFisca) pour comparer les sorties du programme aux résultats attendus.',
+    check:
+      'Tous les cas réussissent, à partir d’au moins deux sources indépendantes dont une non issue d’une IA.',
     open: false,
   },
   epreuve: {
@@ -84,9 +86,9 @@ export const STAGE_INFO: Record<Stage, StageInfo> = {
     to: 'N4',
     actor: 'machine',
     who: 'Des programmes et une troisième famille de modèles',
-    what: 'Comparer 10 000 cas générés à une autre implémentation, chercher des contre-exemples et faire reformuler le code sans le texte.',
+    what: 'Comparent 10 000 cas générés à une implémentation indépendante, recherchent des contre-exemples et reformulent le code sans accès au texte officiel.',
     check:
-      'Aucun écart inexpliqué, au moins 80 % des erreurs introduites exprès détectées, 7 jours sans contre-exemple accepté.',
+      'Aucun écart inexpliqué, au moins 80 % des mutations détectées et 7 jours d’examen ouvert sans contre-exemple retenu.',
     open: false,
   },
   relecture: {
@@ -96,9 +98,9 @@ export const STAGE_INFO: Record<Stage, StageInfo> = {
     from: 'N4',
     to: 'N5',
     actor: 'humain',
-    who: 'Un ou une juriste identifiée',
-    what: 'Relire les choix d’interprétation et signer la relecture.',
-    check: 'Une relecture signée dans le dépôt Git.',
+    who: 'Un juriste identifié',
+    what: 'Relit les choix d’interprétation et signe la revue.',
+    check: 'Une revue signée et enregistrée dans l’historique Git du dépôt.',
     open: false,
   },
 }
@@ -108,24 +110,24 @@ export const COLUMN_INFO: Record<Column, { label: string; short: string; meaning
     label: 'À prendre',
     short: 'à prendre',
     meaning:
-      'La tâche attend un contributeur. Le guichet la donne au prochain agent qui en demande une, dans l’ordre de la liste.',
+      'La tâche attend un contributeur. Le guichet l’attribue au prochain agent qui en fait la demande, dans l’ordre de la liste.',
   },
   doing: {
     label: 'En cours',
     short: 'en cours',
     meaning:
-      'Un contributeur l’a réservée. La réservation dure 20 minutes et se prolonge tant qu’il donne signe de vie, 6 heures au plus.',
+      'Un contributeur a réservé cette tâche. La réservation dure 20 minutes et se prolonge à chaque renouvellement, dans la limite de 6 heures.',
   },
   review: {
     label: 'En relecture',
     short: 'en relecture',
     meaning:
-      'Le travail est déposé dans le dépôt public sous forme de proposition (pull request). Les contrôles automatiques et la fusion décident de son intégration.',
+      'La contribution est déposée dans le dépôt public sous forme de proposition (pull request). Les contrôles automatiques et la fusion déterminent son intégration.',
   },
   done: {
     label: 'Intégrée',
     short: 'intégrées',
-    meaning: 'Le travail est fusionné et l’article a monté d’un niveau.',
+    meaning: 'La contribution est fusionnée dans le corpus et l’article a atteint le niveau visé.',
   },
 }
 

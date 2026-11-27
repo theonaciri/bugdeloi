@@ -53,9 +53,10 @@ const stations: Station[] = [
     verb: 'Importer',
     level: 'N0',
     actor: 'machine',
-    who: 'Un programme, chaque nuit',
-    what: 'Charger le texte officiel de chaque article depuis la base publique de la DILA (Légifrance).',
-    check: 'L’identifiant et l’empreinte du texte sont enregistrés : le moindre changement se voit.',
+    who: 'Un programme automatique, chaque nuit',
+    what: 'Importe le texte officiel de chaque article depuis la base publique LEGI (DILA).',
+    check:
+      'L’identifiant officiel et l’empreinte numérique du texte sont enregistrés afin de détecter toute modification.',
     termId: 'legi',
   },
   ...STAGES.map((s) => {
@@ -75,7 +76,6 @@ const stations: Station[] = [
 ]
 
 const actorIcon = { machine: Cpu, agent: Bot, humain: UserRound } as const
-const actorLabel = { machine: 'Machine', agent: 'Agent IA ou contributeur', humain: 'Humain' } as const
 
 function lane(stage: Station['key']): BoardLane | undefined {
   return lanes.find((l) => l.stage === stage)
@@ -91,7 +91,7 @@ function stateOf(st: Station): 'passed' | 'current' | 'next' | 'future' | null {
 }
 </script>
 
-<ol class="journey" class:compact aria-label="Le parcours d’un article, étape par étape">
+<ol class="journey" class:compact aria-label="Les six étapes de formalisation d’un article">
   {#each stations as st, i (st.key)}
     {@const Icon = actorIcon[st.actor]}
     {@const l = st.key === 'texte' ? undefined : lane(st.key)}
@@ -114,21 +114,21 @@ function stateOf(st: Station): 'passed' | 'current' | 'next' | 'future' | null {
         {#if !compact}
           <p class="mt-3 flex items-start gap-1.5 text-[0.8rem] font-semibold text-ink">
             <Icon class="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
-            <span><span class="sr-only">{actorLabel[st.actor]} : </span>{st.who}</span>
+            <span>{st.who}</span>
           </p>
           <p class="mt-1.5 text-[0.88rem] leading-relaxed text-muted">{st.what}</p>
           <p class="mt-2 text-[0.8rem] leading-relaxed text-ink"><strong class="font-semibold">Contrôle :</strong> {st.check}</p>
         {/if}
         {#if showCounts}<p class="station-count">
           {#if st.key === 'texte'}
-            <strong>{formatInt(levels.N0)}</strong> articles en sont là
+            <strong>{formatInt(levels.N0)}</strong> articles à ce stade
           {:else if l && open}
-            <strong>{formatInt(l.counts.done)}</strong> articles l’ont franchie
+            <strong>{formatInt(l.counts.done)}</strong> articles ont franchi cette étape
             {#if l.counts.todo > 0}<br /><strong>{formatInt(l.counts.todo)}</strong> tâches à prendre{/if}
             {#if l.counts.todo === 0 && l.waiting > 0}<br /><strong>{formatInt(l.waiting)}</strong> articles attendent une interface figée{/if}
           {:else if l}
-            <span class="text-subtle">Pas encore distribuée par le guichet</span>
-            {#if l.waiting > 0}<br /><strong>{formatInt(l.waiting)}</strong> articles l’attendent{/if}
+            <span class="text-subtle">Non encore ouverte au guichet</span>
+            {#if l.waiting > 0}<br /><strong>{formatInt(l.waiting)}</strong> articles en attente{/if}
           {/if}
         </p>{/if}
         {#if state}<p class="state-label" data-state={state}>{STATE_LABEL[state]}</p>{/if}

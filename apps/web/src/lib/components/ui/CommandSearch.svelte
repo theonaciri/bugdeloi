@@ -48,31 +48,31 @@ const quickLinks = [
   {
     href: '/carte',
     label: 'Carte interactive des codes',
-    desc: 'CGI, CSS, CCH · 13 950 articles en vigueur',
+    desc: 'CGI, CSS et CCH : articles en vigueur par chapitre',
     icon: MapIcon,
   },
   {
     href: '/experiences/allocations-familiales',
     label: 'Expérience C0.3 · Allocations familiales',
-    desc: 'Traduction aveugle : 12/17 cas, écarts Guyane & Mayotte',
+    desc: 'Traduction à l’aveugle : 12 cas sur 17 concordants, écarts Guyane et Mayotte',
     icon: BookOpen,
   },
   {
     href: '/anomalies',
-    label: 'Anomalies & Cimetière',
+    label: 'Anomalies et cimetière',
     desc: 'Registre qualifié et constats reproduits',
     icon: ShieldAlert,
   },
   {
     href: '/design-system',
-    label: 'Design System & WebMCP',
-    desc: 'Composants @ui-sdk/svelte, tokens et inspecteur MCP',
+    label: 'Système de design et WebMCP',
+    desc: 'Composants @ui-sdk/svelte, jetons graphiques et inspecteur MCP',
     icon: Cpu,
   },
   {
     href: '/methode',
-    label: 'Méthode & niveaux N0–N5',
-    desc: 'Définitions mécaniques, limites et compteurs',
+    label: 'Méthode et niveaux N0 à N5',
+    desc: 'Définitions mécaniques, limites et calcul des compteurs',
     icon: FileText,
   },
 ]
@@ -196,7 +196,7 @@ function close() {
           {/each}
         </ul>
       {:else if loading}
-        <p class="px-3 py-6 text-center text-sm text-muted">Recherche dans les 13 950 articles en vigueur…</p>
+        <p class="px-3 py-6 text-center text-sm text-muted">Recherche dans les articles en vigueur…</p>
       {:else if errorMsg}
         <p class="px-3 py-6 text-center text-sm text-ko">{errorMsg}</p>
       {:else if results && results.articles.length === 0 && results.findings.length === 0}

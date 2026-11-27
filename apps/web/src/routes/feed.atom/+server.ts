@@ -21,7 +21,7 @@ export const GET: RequestHandler = async ({ url }) => {
       const title = e.headline
       const summary = [e.detail || explainEvent(e.type).why, `Type : ${e.type}`, `Acteur : ${e.actor}`]
         .filter(Boolean)
-        .join(' — ')
+        .join(' · ')
       const link = `${origin}${eventHref(e.id)}`
       return `  <entry>
     <id>tag:bugdeloi,2026:event/${e.id}</id>
@@ -36,7 +36,7 @@ export const GET: RequestHandler = async ({ url }) => {
   const xml = `<?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="fr">
   <id>tag:bugdeloi,2026:journal</id>
-  <title>BugDeLoi — journal public</title>
+  <title>BugDeLoi · Journal public</title>
   <subtitle>Site citoyen indépendant · pas un service officiel · pas un conseil juridique</subtitle>
   <updated>${esc(updated)}</updated>
   <link rel="self" href="${esc(`${origin}/feed.atom`)}"/>

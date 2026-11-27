@@ -12,7 +12,7 @@ const title = $derived(a.num ? `Article ${a.num}` : a.id)
 
 <svelte:head>
   <title>{title} · {a.text.short ?? a.text.title} · BugDeLoi</title>
-  <meta name="description" content="{title} du {a.text.title} : texte officiel, historique des versions et état des vérifications." />
+  <meta name="description" content="{title} du {a.text.title} : texte officiel LEGI, historique des versions et niveau de preuve." />
 </svelte:head>
 
 <article>
@@ -178,35 +178,35 @@ const title = $derived(a.num ? `Article ${a.num}` : a.id)
 
       <aside class="min-w-0 space-y-8 lg:border-l lg:border-line lg:pl-8">
         <section class="space-y-3" aria-labelledby="niveau">
-          <h2 id="niveau" class="text-xl">Où en sont les contrôles ?</h2>
+          <h2 id="niveau" class="text-xl">Niveau de preuve</h2>
           <LevelBadge level={a.level} flags={a.flags} />
           {#if a.level === 'N0'}
             <p class="text-sm leading-relaxed text-muted">
-              Seul le texte officiel est enregistré pour l’instant. Aucun programme de calcul ayant passé
-              nos contrôles n’a encore été rattaché à cet article.
+              Seul le texte officiel est enregistré à ce stade. Aucune formalisation ayant passé les contrôles n’est
+              encore rattachée à cet article.
             </p>
           {:else}
             <p class="text-sm leading-relaxed text-muted">{LEVEL_INFO[a.level].meaning}</p>
           {/if}
           {#if a.levelUpdatedAt}<p class="text-xs text-muted">Niveau mis à jour le {formatDateTime(a.levelUpdatedAt)}.</p>{/if}
-          <p class="text-sm"><a href="/methode#niveaux">Comprendre les niveaux de vérification</a></p>
+          <p class="text-sm"><a href="/methode#niveaux">Comprendre les niveaux de preuve</a></p>
         </section>
 
         <section class="space-y-3 border-t border-line pt-6" aria-labelledby="couverture">
-          <h2 id="couverture" class="text-xl">Déjà programmé par la recherche ?</h2>
+          <h2 id="couverture" class="text-xl">Couverture par la recherche publique</h2>
           {#if a.level === 'REF'}
             <p class="text-sm leading-relaxed text-muted">
-              Une équipe de recherche ou une administration a traduit cette version en programme. Ses tests
-              automatiques réussissent dans notre environnement.
+              Une équipe de recherche publique ou une administration a formalisé cette version en programme exécutable.
+              Sa suite de tests réussit dans notre environnement de compilation épinglé.
             </p>
           {:else if a.coverage.length === 0}
             <p class="text-sm leading-relaxed text-muted">
-              Nous n’avons trouvé aucune mention de cet article ou de ses anciennes versions dans les programmes
-              de recherche ou d’administrations publiques que nous suivons.
+              Aucune mention de cet article ni de ses versions antérieures n’a été relevée dans les programmes de
+              recherche ou d’administrations publiques suivis.
             </p>
           {:else}
             <p class="text-sm leading-relaxed text-muted">
-              Des programmes de recherche ou d’administrations publiques citent cet article ou une de ses versions.
+              Des programmes de recherche ou d’administrations publiques citent cet article ou l’une de ses versions.
             </p>
           {/if}
           {#if a.coverage.length > 0}
@@ -223,8 +223,8 @@ const title = $derived(a.num ? `Article ${a.num}` : a.id)
             </ul>
           {/if}
           <p class="text-sm leading-relaxed text-muted">
-            L’étoile ★ indique que le programme met en code la version en vigueur et que sa suite de tests
-            automatiques réussit chez nous. Une simple citation ne suffit pas.
+            Le marqueur ★ exige que le programme formalise la version en vigueur et que sa suite de tests réussisse dans
+            notre environnement épinglé. Une simple citation ne suffit pas.
           </p>
         </section>
 

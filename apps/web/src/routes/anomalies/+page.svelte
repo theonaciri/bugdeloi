@@ -10,7 +10,7 @@ const lastPage = $derived(Math.max(1, Math.ceil(pending.total / pending.pageSize
 const filters = $derived([
   { type: null, label: 'Tous', count: totalAll },
   { type: 'REF_MORTE', label: 'Renvois vers un article abrogé', count: pending.refMorteCount },
-  { type: 'SYNTAXE', label: 'Fautes de ponctuation', count: pending.syntaxeCount },
+  { type: 'SYNTAXE', label: 'Défauts typographiques', count: pending.syntaxeCount },
 ])
 
 function listHref(type: string | null, page = 1) {
@@ -43,17 +43,16 @@ function readableClaim(claim: string) {
   <div class="container-wide space-y-5 py-12 sm:py-16">
     <h1 class="text-4xl tracking-tight sm:text-5xl">Anomalies et signalements</h1>
     <p class="max-w-3xl font-display text-xl leading-relaxed text-ink/90">
-      Les programmes de BugDeLoi repèrent des problèmes possibles dans la loi française : des renvois vers des
-      articles abrogés, des fautes de ponctuation ou des effets de seuil, par exemple quand gagner un euro fait
-      perdre plus d’un euro d’aide.
+      Les détecteurs de BugDeLoi signalent des anomalies potentielles dans les codes suivis : renvois vers des
+      articles abrogés, défauts typographiques ou effets de seuil entraînant une baisse du revenu disponible.
     </p>
     <p class="max-w-3xl leading-relaxed text-muted">
-      Une règle temporaire peut renvoyer volontairement à un ancien texte et tromper un programme.
-      <strong class="text-ink">Une anomalie entre au compteur après relecture et verdict signé par un juriste.</strong>
+      Une disposition transitoire peut renvoyer volontairement à une rédaction antérieure.
+      <strong class="text-ink">Un signalement n’entre dans le compteur public qu’après reproduction indépendante et verdict humain signé.</strong>
     </p>
     <nav aria-label="En savoir plus sur les signalements" class="flex flex-wrap gap-x-5 gap-y-2 text-sm">
-      <a href="/methode#cycle">Comprendre le processus de vérification</a>
-      <a href="/anomalies/cimetiere">Voir les signalements rejetés (cimetière)</a>
+      <a href="/methode#cycle">Consulter le processus de qualification</a>
+      <a href="/anomalies/cimetiere">Consulter les signalements écartés (cimetière)</a>
     </nav>
   </div>
 </header>
@@ -95,13 +94,14 @@ function readableClaim(claim: string) {
       </ul>
     {:else}
       <div class="max-w-3xl space-y-2 border-y border-line py-5">
-        <p class="font-semibold">0 anomalie validée par un juriste à ce jour.</p>
+        <p class="font-semibold">0 anomalie qualifiée par un juriste à ce jour.</p>
         <p class="leading-relaxed text-muted">
           {#if totalAll > 0}
-            Les programmes ont terminé leur vérification croisée sur les premiers signalements. Ces dossiers sont
-            prêts pour la relecture humaine. Le compteur restera à zéro jusqu’au premier verdict qui confirme une anomalie.
+            La reproduction indépendante est achevée sur les premiers lots de signalements. Ces dossiers sont prêts
+            pour la relecture humaine. Le compteur reste à zéro jusqu’au premier verdict motivé confirmant un défaut du
+            texte ou une lacune.
           {:else}
-            Les premiers dossiers seront soumis à un juriste après le contrôle par un second programme indépendant.
+            Les premiers dossiers seront soumis à relecture humaine après reproduction par une seconde chaîne indépendante.
           {/if}
         </p>
       </div>
@@ -151,7 +151,7 @@ function readableClaim(claim: string) {
           <li class="grid gap-3 py-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
             <div class="min-w-0 space-y-1.5">
               <h3 class="text-xl">
-                {item.type === 'SYNTAXE' ? 'Faute de ponctuation' : item.typeLabel}
+                {item.type === 'SYNTAXE' ? 'Défaut typographique' : item.typeLabel}
               </h3>
               <p class="max-w-[70ch] leading-relaxed">{readableClaim(item.claim)}</p>
               <p class="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-sm text-muted">

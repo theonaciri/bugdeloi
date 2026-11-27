@@ -18,13 +18,13 @@ const currentLevel = $derived(selected ?? initial)
 const info = $derived(LEVEL_INFO[currentLevel])
 
 const checkerByLevel: Record<Level, string> = {
-  N0: 'Texte officiel chargé depuis la DILA avec son empreinte cryptographique.',
-  N1: 'Fiche d’analyse validée : empreinte LEGI vérifiée, interface proposée et classement alinéa par alinéa.',
-  N2: 'Texte officiel cité à l’identique, compilation Catala et tests verts dans l’environnement épinglé ; chaque constante est sourcée.',
-  N3: 'Validation contre au moins deux sources indépendantes (dont une non issue d’une IA).',
-  N4: '10 000 cas testés contre une implémentation tierce, tests de mutation ≥ 80 % et 7 jours de contre-attaques.',
+  N0: 'Texte officiel importé depuis la DILA avec son empreinte cryptographique.',
+  N1: 'Fiche d’analyse validée : empreinte LEGI concordante, interface proposée et classement alinéa par alinéa.',
+  N2: 'Texte officiel cité à l’identique, compilation Catala et tests réussis dans l’environnement épinglé. Chaque constante cite sa source.',
+  N3: 'Contrôle sur au moins deux sources d’oracles indépendantes, dont une non issue d’une IA.',
+  N4: '10 000 cas comparés à une implémentation tierce, score de mutation d’au moins 80 % et 7 jours d’examen contradictoire.',
   N5: 'Relecture juridique complète et signée par un juriste identifié.',
-  REF: 'Formalisation réalisée par des chercheurs ou une administration (Inria, DGFiP…) dont les tests réussissent chez nous.',
+  REF: 'Formalisation réalisée par la recherche publique ou une administration (Inria, DGFiP, CNAF), dont la suite de tests réussit dans l’environnement épinglé.',
 }
 
 const neverProof = [

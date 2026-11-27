@@ -99,15 +99,15 @@ function formatEventCopy(r: typeof event.$inferSelect): { headline: string; deta
     const demoted = num('demoted')
     if (promoted !== null && demoted !== null && demoted > 0) {
       return {
-        headline: `Audit des étoiles ★ : ${frInt.format(promoted)} articles confirmés, ${frInt.format(demoted)} retirés`,
-        detail: `${frInt.format(demoted)} articles cités par Inria mais sans code effectif ont été retirés ; ${frInt.format(promoted)} articles en vigueur restent couverts par des tests réussis.`,
+        headline: `Mise à jour des marqueurs ★ : ${frInt.format(promoted)} articles confirmés, ${frInt.format(demoted)} retirés`,
+        detail: `${frInt.format(demoted)} articles cités par l’Inria sans bloc de code exécutable ont été retirés. ${frInt.format(promoted)} articles en vigueur restent couverts par des tests réussis.`,
       }
     }
     if (promoted !== null) {
       return {
-        headline: `${frInt.format(promoted)} articles en vigueur reliés aux programmes Inria`,
+        headline: `${frInt.format(promoted)} articles en vigueur reliés aux programmes de l’Inria`,
         detail:
-          'Chaque étoile ★ indique un article couvert par un programme de recherche dont les tests passent chez nous.',
+          'Chaque marqueur ★ signale un article couvert par un programme de la recherche publique dont la suite de tests réussit dans l’environnement épinglé.',
       }
     }
   }
@@ -121,21 +121,21 @@ function formatEventCopy(r: typeof event.$inferSelect): { headline: string; deta
     if (confirmed !== null && refuted !== null) {
       if (isDila) {
         return {
-          headline: `${frInt.format(confirmed)} renvois vers des articles abrogés confirmés sur les archives officielles`,
-          detail: `Vérification croisée sur les fichiers XML bruts de Légifrance : ${frInt.format(confirmed)} confirmés, ${frInt.format(refuted)} infirmé${refuted > 1 ? 's' : ''}${undetermined ? `, ${frInt.format(undetermined)} indéterminés` : ''}.`,
+          headline: `${frInt.format(confirmed)} renvois vers des articles abrogés reproduits sur les archives officielles`,
+          detail: `Reproduction indépendante sur les fichiers XML bruts de la DILA : ${frInt.format(confirmed)} confirmés, ${frInt.format(refuted)} infirmé${refuted > 1 ? 's' : ''}${undetermined ? `, ${frInt.format(undetermined)} indéterminés` : ''}.`,
         }
       }
       if (isTricoteuses) {
         return {
-          headline: `${frInt.format(confirmed)} fautes de ponctuation confirmées, ${frInt.format(refuted)} faux signalements écartés`,
-          detail: `Vérification croisée sur « La loi sous git » : les ${frInt.format(confirmed)} défauts typographiques sont confirmés et ${frInt.format(refuted)} erreurs de nos détecteurs ont été retirées.`,
+          headline: `${frInt.format(confirmed)} défauts typographiques reproduits, ${frInt.format(refuted)} signalements infirmés`,
+          detail: `Reproduction indépendante sur « La loi sous git » : les ${frInt.format(confirmed)} défauts typographiques sont confirmés et ${frInt.format(refuted)} erreurs des détecteurs ont été retirées.`,
         }
       }
       return {
-        headline: `Vérification indépendante : ${frInt.format(confirmed)} confirmés, ${frInt.format(refuted)} écartés`,
+        headline: `Reproduction indépendante : ${frInt.format(confirmed)} confirmés, ${frInt.format(refuted)} infirmés`,
         detail: undetermined
           ? `${frInt.format(undetermined)} cas restent indéterminés sur cette source.`
-          : 'Contrôle croisé terminé sur des données traitées séparément.',
+          : 'Contrôle indépendant terminé sur des données traitées séparément.',
       }
     }
   }
@@ -155,8 +155,8 @@ function formatEventCopy(r: typeof event.$inferSelect): { headline: string; deta
           cch !== null ? `Logement (${frInt.format(cch)})` : null,
         ].filter(Boolean)
         return {
-          headline: `${frInt.format(total)} articles en vigueur passés au crible`,
-          detail: `Contrôle automatique des renvois abrogés et de la typographie : ${parts.join(', ')}.`,
+          headline: `${frInt.format(total)} articles en vigueur contrôlés automatiquement`,
+          detail: `Contrôle déterministe des renvois abrogés et de la typographie : ${parts.join(', ')}.`,
         }
       }
     }
@@ -169,8 +169,8 @@ function formatEventCopy(r: typeof event.$inferSelect): { headline: string; deta
     ).length
     if (runs.length > 0) {
       return {
-        headline: `Programmes Inria vérifiés : ${frInt.format(passed)} suites exécutées avec succès`,
-        detail: 'Exécution des suites de tests officielles dans notre environnement Catala 1.3.2.',
+        headline: `Programmes de l’Inria rejoués : ${frInt.format(passed)} suites réussies`,
+        detail: 'Exécution des suites de tests officielles dans l’environnement Catala 1.3.2 épinglé.',
       }
     }
   }
@@ -178,10 +178,10 @@ function formatEventCopy(r: typeof event.$inferSelect): { headline: string; deta
   if (r.type === 'ingest.finished') {
     const archive = typeof p.archive === 'string' ? p.archive : null
     return {
-      headline: 'Mise à jour des textes officiels de loi',
+      headline: 'Mise à jour des textes officiels LEGI',
       detail: archive
-        ? `Lot officiel Légifrance chargé (${archive}).`
-        : 'Nouvelles versions d’articles chargées depuis la base officielle.',
+        ? `Archive officielle DILA importée (${archive}).`
+        : 'Nouvelles versions d’articles importées depuis la base officielle LEGI.',
     }
   }
 
@@ -193,13 +193,13 @@ function formatEventCopy(r: typeof event.$inferSelect): { headline: string; deta
     if (r.type === 'desk.claimed') {
       return {
         headline: `${handle} a réservé ${role} de ${label}`,
-        detail: `Le guichet a confié cette tâche à ${handle}${family}. La réservation dure 20 minutes, prolongée à chaque signe de vie.`,
+        detail: `Le guichet a attribué cette tâche à ${handle}${family}. La réservation dure 20 minutes et se prolonge à chaque renouvellement.`,
       }
     }
     if (p.reason === 'submitted') {
       return {
         headline: `${handle} a déposé ${role} de ${label}`,
-        detail: 'Le travail passe en relecture : contrôles automatiques puis fusion dans le corpus.',
+        detail: 'La contribution passe en relecture : contrôles automatiques puis fusion dans le corpus.',
       }
     }
     return {
@@ -210,8 +210,8 @@ function formatEventCopy(r: typeof event.$inferSelect): { headline: string; deta
 
   if (r.type === 'finding.qualified' && r.subject) {
     return {
-      headline: `Anomalie ${r.subject} validée par un juriste`,
-      detail: 'Verdict motivé enregistré et consultable dans le registre public.',
+      headline: `Anomalie ${r.subject} qualifiée par un relecteur humain`,
+      detail: 'Verdict motivé consigné dans l’historique Git et consultable au registre public.',
     }
   }
 
@@ -227,15 +227,15 @@ function formatEventCopy(r: typeof event.$inferSelect): { headline: string; deta
     return {
       headline: `${count} ${count > 1 ? 'articles promus' : 'article promu'} au niveau ${level} Compilé`,
       detail: list.length
-        ? `Texte cité à l’identique de Légifrance, code compilé et tests réussis avec Catala 1.3.2 : ${list.join(', ')}.`
-        : 'Texte cité à l’identique de Légifrance, code compilé et tests réussis avec Catala 1.3.2.',
+        ? `Texte cité à l’identique de LEGI, code compilé et tests réussis avec Catala 1.3.2 : ${list.join(', ')}.`
+        : 'Texte cité à l’identique de LEGI, code compilé et tests réussis avec Catala 1.3.2.',
     }
   }
 
   if (r.type === 'finding.published' && r.subject) {
     return {
       headline: `Anomalie ${r.subject} publiée au registre`,
-      detail: 'Constat reproduit, validé par un humain et accompagné de son certificat.',
+      detail: 'Constat reproduit, qualifié par un humain et accompagné de son certificat de rejeu.',
     }
   }
 

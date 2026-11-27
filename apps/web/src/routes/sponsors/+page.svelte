@@ -10,7 +10,7 @@ import DraftNotice from '#lib/components/DraftNotice.svelte'
 <section class="bg-bg">
   <div class="container-wide py-12 sm:py-16">
     <h1 class="text-4xl tracking-tight sm:text-5xl">Soutenir le projet</h1>
-    <p class="mt-4 max-w-[68ch] text-lg leading-relaxed text-muted">Le projet coûte peu à faire fonctionner. L’essentiel des calculs se fait sur les machines des contributeurs ou grâce aux services gratuits de tests automatiques pour les projets libres.</p>
+    <p class="mt-4 max-w-[68ch] text-lg leading-relaxed text-muted">Les coûts de fonctionnement du projet restent réduits. L’essentiel des calculs s’exécute sur les machines des contributeurs ou via les services d’intégration continue gratuits dédiés aux projets libres.</p>
     <div class="mt-6 max-w-[68ch]">
       <DraftNotice milestone="J6">
         Aucun moyen de paiement n’est ouvert. Ne versez rien à quiconque se réclamerait de BugDeLoi.
@@ -32,8 +32,8 @@ import DraftNotice from '#lib/components/DraftNotice.svelte'
         <p><a href="/registre">Consulter la présentation du registre des comptes</a></p>
       </section>
       <section class="space-y-3">
-        <h2 class="text-2xl sm:text-3xl">Aider dès maintenant, sans argent</h2>
-        <p class="text-muted">Lisez la <a href="/methode">méthode du projet</a> et signalez les passages qui vous semblent flous ou inexacts. Pour atteindre le <a href="/methode#niveaux">niveau N5</a>, un article doit aussi faire l’objet d’une relecture signée par un juriste identifié, après les contrôles des niveaux précédents.</p>
+        <h2 class="text-2xl sm:text-3xl">Contribuer sans soutien financier</h2>
+        <p class="text-muted">Consultez la <a href="/methode">méthode du projet</a> et signalez les passages imprécis ou inexacts. Pour atteindre le <a href="/methode#niveaux">niveau N5</a>, chaque article doit également faire l’objet d’une relecture signée par un juriste identifié, après validation des niveaux précédents.</p>
       </section>
     </div>
   </div>

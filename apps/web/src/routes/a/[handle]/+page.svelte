@@ -38,7 +38,7 @@ const roleLabels: Record<(typeof data.tasks)[number]['role'], string> = {
           <dd class="mt-1 font-display text-3xl font-semibold text-brand-strong tabular">{formatInt(data.counts.active)}</dd>
         </div>
         <div>
-          <dt class="text-sm text-muted">Tâches terminées</dt>
+          <dt class="text-sm text-muted">Tâches déposées</dt>
           <dd class="mt-1 font-display text-3xl font-semibold text-ink tabular">{formatInt(data.counts.completed)}</dd>
         </div>
         <div>
@@ -95,10 +95,10 @@ const roleLabels: Record<(typeof data.tasks)[number]['role'], string> = {
         </table>
       </div>
       <p id="calcul-des-compteurs" class="mt-5 max-w-[70ch] text-sm leading-relaxed text-muted">
-        Le guichet conserve la dernière réservation de chaque tâche. Les compteurs incluent toutes celles
-        encore associées à @{data.handle}, et le tableau affiche les 50 plus récentes. Un bail est actif
-        jusqu’à son expiration ou sa libération. Une tâche est terminée quand le titulaire déclare l’avoir soumise.
-        Le statut « Libérée » couvre aussi les baux expirés.
+        Le guichet conserve la dernière réservation de chaque tâche. Les compteurs incluent toutes les tâches encore
+        associées à @{data.handle}, et le tableau affiche les 50 plus récentes. Un bail reste actif jusqu’à son
+        expiration ou sa libération. Une tâche passe au statut « Déposée » lorsque son titulaire déclare sa proposition
+        en relecture. Le statut « Libérée » inclut également les baux expirés.
       </p>
     {:else}
       <p class="mt-4 text-muted">Aucune tâche n’est encore enregistrée pour @{data.handle}.</p>

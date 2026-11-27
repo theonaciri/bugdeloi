@@ -9,7 +9,7 @@ let { data }: PageProps = $props()
 const item = $derived(data.finding)
 const rejected = $derived(item.status === 'rejected')
 const pending = $derived(item.status === 'candidate' || item.status === 'reproduced')
-const title = $derived(item.type === 'SYNTAXE' ? 'Faute de ponctuation' : item.typeLabel)
+const title = $derived(item.type === 'SYNTAXE' ? 'Défaut typographique' : item.typeLabel)
 const currentStep = $derived(findingSteps.findIndex((step) => step.status === item.status))
 const otherArticles = $derived(
   item.articles.filter((article) => article.id !== item.source?.id && article.id !== item.target?.id),
@@ -97,8 +97,8 @@ function articleLabel(ref: typeof item.source, fallback: string) {
       </section>
 
       <section class="space-y-4 border-t border-line pt-8" aria-labelledby="verification">
-        <h2 id="verification" class="text-2xl sm:text-3xl">Où en sont les contrôles ?</h2>
-        <ol class="grid border-y border-line sm:grid-cols-2 lg:grid-cols-4" aria-label="Étapes de vérification du signalement">
+        <h2 id="verification" class="text-2xl sm:text-3xl">Avancement des contrôles</h2>
+        <ol class="grid border-y border-line sm:grid-cols-2 lg:grid-cols-4" aria-label="Étapes de traitement du signalement">
           {#each findingSteps as step, index (step.status)}
             {@const reached = rejected ? index < 2 : index < currentStep}
             {@const active = item.status === step.status}
@@ -247,9 +247,9 @@ function articleLabel(ref: typeof item.source, fallback: string) {
         <a href={ref.url} target="_blank" rel="external noopener">Lire l’article sur Légifrance</a>
       </p>
       <dl class="space-y-1 text-sm">
-        <div><dt class="inline text-muted">État.</dt> <dd class="inline">{etatLabel(ref.etat)}</dd></div>
-        <div><dt class="inline text-muted">Début de la version.</dt> <dd class="inline">{ref.dateDebut ? formatLegiDate(ref.dateDebut) : 'Date inconnue'}</dd></div>
-        <div><dt class="inline text-muted">Fin de la version.</dt> <dd class="inline">{ref.dateFin ? formatLegiDate(ref.dateFin) : 'Date inconnue'}</dd></div>
+        <div><dt class="inline text-muted">État :</dt> <dd class="inline">{etatLabel(ref.etat)}</dd></div>
+        <div><dt class="inline text-muted">Début de la version :</dt> <dd class="inline">{ref.dateDebut ? formatLegiDate(ref.dateDebut) : 'Date inconnue'}</dd></div>
+        <div><dt class="inline text-muted">Fin de la version :</dt> <dd class="inline">{ref.dateFin ? formatLegiDate(ref.dateFin) : 'Date inconnue'}</dd></div>
       </dl>
     </div>
   {/if}
