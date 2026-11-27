@@ -65,6 +65,9 @@ export default defineConfig({
       },
     }),
   ],
+  // `font-src 'self'` refuse les polices en `data:` : on n'intègre jamais un fichier de police
+  // dans le CSS, même un petit sous-ensemble Unicode (sinon ses glyphes tombent sur la police de repli).
+  build: { assetsInlineLimit: (file) => (/\.woff2?$/.test(file) ? false : undefined) },
   server: { host: '127.0.0.1', port: 19070, strictPort: true },
   preview: { host: '127.0.0.1', port: 19070, strictPort: true },
 })
