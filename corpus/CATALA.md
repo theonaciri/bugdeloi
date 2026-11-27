@@ -136,10 +136,13 @@ fixe pas d’arrondi, écris au-dessus de la définition
 le voie (AGENTS.md §7). L’écart possible reste alors sous 1 € : ce n’est pas un finding `ARRONDI`, qui
 suppose deux placements d’arrondi distants de plus de 1 € (AGENTS.md §4.4).
 
-**Parts égales** : un montant réparti en N parts arrondies au centime ne fait plus le total (50 000,03 €
-en cinq parts de 10 000,01 € font 50 000,05 €). Donne le reliquat à la dernière part,
-`si rang = 4 alors profit - part * 4,0 sinon part`, pour que la somme des parts égale le montant, et
-expose ce choix par un `# TODO juridique` (CGI 38 quater).
+**Parts égales** : un montant réparti en N parts arrondies au plus proche ne fait plus le total (50 000,03 €
+en cinq parts de 10 000,01 € font 50 000,05 €), et la dernière part peut devenir négative (0,03 €).
+Arrondis les N − 1 premières parts au centime inférieur, en centimes :
+`(Argent.arrondi_par_défaut de ((profit * 100,0) / 5,0)) * 0,01`, puis donne le reliquat à la dernière,
+`si rang = 4 alors profit - part * 4,0 sinon part`. La somme égale le montant, aucune part n’est négative,
+et un `# TODO juridique` expose ce choix (CGI 38 quater). Teste un montant dont le reliquat n’est pas nul
+et un montant de quelques centimes.
 
 ## Citations et tests
 

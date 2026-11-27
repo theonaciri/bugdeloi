@@ -56,7 +56,10 @@ Six minutes de la réservation à la PR. Aucune erreur de compilation : les piè
 
 Second tour (1 fil, corrigé dans 866e14a) : cinq parts arrondies au centime ne faisaient plus le profit
 (50 000,03 € → 50 000,05 €), ce qui rendait contradictoires l'assertion de borne et celle de cohérence.
-La cinquième part reçoit maintenant le reliquat ; motif « parts égales » ajouté à `corpus/CATALA.md`.
+La cinquième part reçoit maintenant le reliquat. Troisième tour (c30bb0b) : pour 0,03 €, l'arrondi au plus
+proche rendait la cinquième part négative ; les quatre premières sont désormais tronquées au centime.
+Motif « parts égales » ajouté à `corpus/CATALA.md`. Trois tours pour un arrondi : le motif aurait dû être
+écrit avant la traduction.
 
 ## Choix d'interprétation à relire
 
