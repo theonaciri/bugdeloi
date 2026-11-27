@@ -110,6 +110,6 @@ export const C03_BREAKDOWNS: readonly AllowanceBreakdown[] = [
     inriaCents: 31584,
     lawCents: 19245,
     caveat:
-      'Les données du test ne disent pas si l’aîné poursuit des études, ni si les 300 € perçus par l’enfant de 5 ans comptent comme revenu professionnel. Selon ces faits, la loi donne 173,32 € ou 121,30 €. Aucune lecture relevée ne donne 315,84 €.',
+      'Les données du test ne disent pas tout. Les 192,45 € supposent que l’aîné poursuit des études et que les 300 € perçus par l’enfant de 5 ans ne lui font pas perdre le droit (la condition de revenu ne viserait que la prolongation pour études). Si l’une de ces deux exclusions s’applique, la loi donne 173,32 € ; si les deux s’appliquent, 121,30 €. Aucune lecture relevée ne donne 315,84 €.',
   },
 ] as const

@@ -142,8 +142,8 @@ const kinds = $derived([...new Set(item.lines.map(kindOf))])
               </span>
             </span>
           </th>
-          <td class="num">{line.inriaCents === null ? '—' : eur(line.inriaCents)}</td>
-          <td class="num">{line.lawCents === null ? '—' : eur(line.lawCents)}</td>
+          <td class="num">{#if line.inriaCents === null}<span class="text-xs text-muted">non compté</span>{:else}{eur(line.inriaCents)}{/if}</td>
+          <td class="num">{#if line.lawCents === null}<span class="text-xs text-muted">non compté</span>{:else}{eur(line.lawCents)}{/if}</td>
         </tr>
       {/each}
     </tbody>
