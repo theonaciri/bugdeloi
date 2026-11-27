@@ -45,6 +45,9 @@ déclaration champ d'application TestCategorieRevenusFonciers:
   réserve_article_15 champ d'application CategorieRevenusFonciers
   qualification_refusée champ d'application CategorieRevenusFonciers
   autre_bien champ d'application CategorieRevenusFonciers
+  propriété_bâtie champ d'application CategorieRevenusFonciers
+  outillage_attaché champ d'application CategorieRevenusFonciers
+  installation_assimilable champ d'application CategorieRevenusFonciers
 
 champ d'application TestCategorieRevenusFonciers:
   # LEGIARTI000006302217, date de début de la version : le cas s'applique dès le premier jour.
@@ -95,4 +98,28 @@ champ d'application TestCategorieRevenusFonciers:
   définition autre_bien.réserve_article_15_applicable égal à faux
   définition autre_bien.appréciation_qualification_du_bien égal à vrai
   assertion non autre_bien.catégorie_foncière_selon_14
+  # LEGIARTI000006302217, date de début de la version : le cas s'applique dès le premier jour.
+  définition propriété_bâtie.date_d_application égal à |2005-01-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; 1°, propriété bâtie (maison, usine).
+  définition propriété_bâtie.catégorie_du_bien égal à PropriétéBâtie
+  définition propriété_bâtie.inclus_dans_bénéfice_professionnel égal à faux
+  définition propriété_bâtie.réserve_article_15_applicable égal à faux
+  définition propriété_bâtie.appréciation_qualification_du_bien égal à vrai
+  assertion propriété_bâtie.catégorie_foncière_selon_14
+  # LEGIARTI000006302217, date de début de la version : le cas s'applique dès le premier jour.
+  définition outillage_attaché.date_d_application égal à |2005-01-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; 1° a, outillage attaché au fonds ou sur fondations spéciales.
+  définition outillage_attaché.catégorie_du_bien égal à OutillageAttachéOuSurFondationsSpéciales
+  définition outillage_attaché.inclus_dans_bénéfice_professionnel égal à faux
+  définition outillage_attaché.réserve_article_15_applicable égal à faux
+  définition outillage_attaché.appréciation_qualification_du_bien égal à vrai
+  assertion outillage_attaché.catégorie_foncière_selon_14
+  # LEGIARTI000006302217, date de début de la version : le cas s'applique dès le premier jour.
+  définition installation_assimilable.date_d_application égal à |2005-01-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; 1° b, installation assimilable à une construction.
+  définition installation_assimilable.catégorie_du_bien égal à InstallationAssimilableÀUneConstruction
+  définition installation_assimilable.inclus_dans_bénéfice_professionnel égal à faux
+  définition installation_assimilable.réserve_article_15_applicable égal à faux
+  définition installation_assimilable.appréciation_qualification_du_bien égal à vrai
+  assertion installation_assimilable.catégorie_foncière_selon_14
 ```

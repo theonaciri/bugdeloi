@@ -35,6 +35,7 @@ déclaration champ d'application TestQuotePartCoproprieteCheval:
   étalon_conforme champ d'application QuotePartCoproprieteCheval
   étalon_non_conforme champ d'application QuotePartCoproprieteCheval
   conditions_non_remplies champ d'application QuotePartCoproprieteCheval
+  non_membre champ d'application QuotePartCoproprieteCheval
 
 champ d'application TestQuotePartCoproprieteCheval:
   # LEGIARTI000006302211, date de début de la version : le cas s'applique dès le premier jour.
@@ -77,4 +78,14 @@ champ d'application TestQuotePartCoproprieteCheval:
   définition conditions_non_remplies.résultat_déclaré égal à 20 000 €
   définition conditions_non_remplies.proportion_des_droits égal à 0,1
   assertion conditions_non_remplies.résultat_imputable = Absent
+  # LEGIARTI000006302211, date de début de la version : le cas s'applique dès le premier jour.
+  définition non_membre.date_d_application égal à |1997-04-11|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; personne qui n'est pas membre de la copropriété.
+  définition non_membre.membre égal à faux
+  définition non_membre.conditions_238_bis_m_remplies égal à vrai
+  définition non_membre.copropriété_d_étalon égal à faux
+  définition non_membre.appréciation_conformité_aux_statuts_types égal à faux
+  définition non_membre.résultat_déclaré égal à 20 000 €
+  définition non_membre.proportion_des_droits égal à 0,1
+  assertion non_membre.résultat_imputable = Absent
 ```
