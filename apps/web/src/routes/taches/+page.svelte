@@ -5,16 +5,36 @@ import type { PageProps } from './$types'
 let { data }: PageProps = $props()
 
 const STATE_TABS = [
-  { key: 'all', label: 'Toutes' },
+  { key: 'all', label: 'Tous les états' },
   { key: 'leased', label: 'En cours' },
   { key: 'open', label: 'Disponibles' },
   { key: 'completed', label: 'Soumises' },
 ] as const
 
 const STATE_LABEL: Record<string, string> = {
+  all: 'Tous les états',
   open: 'Disponible',
   leased: 'En cours',
   completed: 'Soumise',
+}
+
+const STATE_HEADING: Record<string, string> = {
+  all: 'Tous les états',
+  open: 'Disponibles',
+  leased: 'En cours',
+  completed: 'Soumises',
+}
+
+const ROLE_HEADING: Record<string, string> = {
+  all: 'Tous les rôles',
+  analyst: 'analyst',
+  translate: 'translate',
+  oracle: 'oracle',
+  redteam: 'redteam',
+  backtranslate: 'backtranslate',
+  judge: 'judge',
+  doctrine: 'doctrine',
+  reduce: 'reduce',
 }
 
 const STATE_DESCRIPTION: Record<string, string> = {
@@ -120,14 +140,22 @@ function hrefFor(params: { etat?: string; role?: string; page?: number }) {
         </div>
       {/if}
 
-      <div class="rounded-xl border border-line bg-surface px-4 py-3 text-sm text-muted space-y-1">
+      <div class="rounded-xl border border-line bg-surface px-4 py-3 text-sm text-muted space-y-1.5">
         <p>
-          <strong class="font-semibold text-ink">État sélectionné :</strong>
+          <strong class="font-semibold text-ink">{STATE_HEADING[data.etat] ?? 'Tous les états'} :</strong>
           {STATE_DESCRIPTION[data.etat] ?? STATE_DESCRIPTION.all}
         </p>
         <p>
-          <strong class="font-semibold text-ink">Rôle sélectionné :</strong>
+          <strong class="font-semibold text-ink">{ROLE_HEADING[data.role] ?? data.role} :</strong>
           {ROLE_DESCRIPTION[data.role] ?? ROLE_DESCRIPTION.all}
+        </p>
+        <p class="pt-1 text-xs border-t border-line/70">
+          <strong class="font-semibold text-ink">Analyse</strong> = classement d’un article alinéa par alinéa et
+          proposition d’interface (N1) ·
+          <strong class="font-semibold text-ink">Traduction</strong> = écriture du code Catala compilé à partir du
+          texte officiel LEGI (N2) ·
+          <strong class="font-semibold text-ink">Oracle</strong> = cas de test indépendant issu d’une source officielle
+          (BOFiP, brochure, OpenFisca) pour vérifier le calcul sans voir le code (N3).
         </p>
       </div>
     </div>
