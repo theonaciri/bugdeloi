@@ -19,8 +19,8 @@ const info = $derived(LEVEL_INFO[currentLevel])
 
 const checkerByLevel: Record<Level, string> = {
   N0: 'Texte officiel chargé depuis la DILA avec son empreinte cryptographique.',
-  N1: 'Interface figée et texte officiel cité à l’identique, alinéa par alinéa.',
-  N2: 'Compilation Catala et tests verts dans l’environnement épinglé ; chaque constante est sourcée.',
+  N1: 'Fiche d’analyse validée : empreinte LEGI vérifiée, interface proposée et classement alinéa par alinéa.',
+  N2: 'Texte officiel cité à l’identique, compilation Catala et tests verts dans l’environnement épinglé ; chaque constante est sourcée.',
   N3: 'Validation contre au moins deux sources indépendantes (dont une non issue d’une IA).',
   N4: '10 000 cas testés contre une implémentation tierce, tests de mutation ≥ 80 % et 7 jours de contre-attaques.',
   N5: 'Relecture juridique complète et signée par un juriste identifié.',

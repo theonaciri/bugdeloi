@@ -31,9 +31,9 @@ export const LEVEL_INFO: Record<Level, LevelInfo> = {
   },
   N1: {
     level: 'N1',
-    label: 'Ancré',
+    label: 'Analysé',
     meaning:
-      'Interface figée et texte cité à l’identique de LEGI ; chaque alinéa est codé ou déclaré hors périmètre.',
+      'Article classé alinéa par alinéa (calculable, entrée d’appréciation ou hors périmètre) avec une interface proposée avant traduction Catala.',
     colorToken: '--level-n1',
     pattern: 'ring',
   },
@@ -41,7 +41,7 @@ export const LEVEL_INFO: Record<Level, LevelInfo> = {
     level: 'N2',
     label: 'Compilé',
     meaning:
-      'Le code Catala compile et tous ses tests passent avec la version épinglée du compilateur ; les constructions interdites sont absentes et chaque constante cite l’alinéa qui la fixe.',
+      'Texte officiel cité à l’identique de LEGI, code Catala compilé et tests verts avec la version épinglée du compilateur ; les constructions interdites sont absentes et chaque constante cite l’alinéa qui la fixe.',
     colorToken: '--level-n2',
     pattern: 'dots',
   },

@@ -71,7 +71,7 @@ function hrefFor(params: { niveau?: string; categorie?: string; code?: string; p
           aria-current={data.niveau === 'analyses' ? 'page' : undefined}
           class="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 text-sm font-medium no-underline transition hover:border-brand aria-[current=page]:border-brand aria-[current=page]:bg-brand-soft aria-[current=page]:font-semibold aria-[current=page]:text-brand-strong"
         >
-          <span>Analysés (pré-N1)</span>
+          <span>Analyses (détail N1)</span>
           <span class="text-xs tabular text-muted">{formatInt(data.analysesTotal)}</span>
         </a>
         {#each LEVELS as lvl (lvl)}

@@ -637,7 +637,7 @@ $effect(() => {
       <div class="flex flex-wrap items-center justify-between gap-2 text-sm">
         <p class="text-muted">
           <strong class="font-semibold text-ink tabular">{formatInt(data.analyses.total)} articles analysés</strong>
-          (pré-N1, avant traduction Catala) :
+          (niveau N1, avant traduction Catala) :
         </p>
         <a href="/travail?niveau=analyses" class="font-semibold text-brand-strong no-underline hover:underline">
           Parcourir toutes les analyses →

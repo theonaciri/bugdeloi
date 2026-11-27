@@ -9,8 +9,8 @@ let { data }: { data: PageData } = $props()
 
 const levelDescriptions: Record<Level, string> = {
   N0: 'Nous avons enregistré le texte officiel, son identifiant, les dates de sa version et son empreinte numérique.',
-  N1: 'Les données attendues et le résultat à calculer sont définis. Le programme cite le texte officiel à l’identique et indique, pour chaque passage, s’il est traduit en calcul ou pourquoi il est laissé de côté.',
-  N2: 'Le code respecte les règles du langage Catala et celles du projet. Il passe tous ses tests avec la version prévue de l’outil. Chaque montant, taux ou seuil renvoie au passage qui le fixe.',
+  N1: 'L’article est analysé alinéa par alinéa (calculable, entrée d’appréciation ou hors périmètre) avec son empreinte LEGI vérifiée et une interface proposée avant traduction Catala.',
+  N2: 'Le fichier cite le texte officiel à l’identique, respecte les règles du langage Catala et passe tous ses tests avec la version prévue de l’outil. Chaque montant, taux ou seuil renvoie au passage qui le fixe.',
   N3: 'Le programme donne les résultats attendus pour tous les cas testés, sans règles contradictoires ni situation laissée sans réponse. Les réponses viennent d’au moins deux sources indépendantes, dont au moins une sans IA. Toute IA qui prépare ces réponses vient d’un autre fournisseur que celle qui a traduit le texte.',
   N4: 'Au moins 10 000 cas, dont les seuils testés à 1 € de part et d’autre, sont comparés à un programme indépendant. Tous les écarts sont expliqués. Les tests repèrent au moins 80 % des erreurs introduites volontairement. Une reformulation faite à partir du code seul est jugée équivalente au texte officiel par une troisième famille d’IA. Pendant sept jours de recherche ouverte d’erreurs, aucun contre-exemple n’est retenu.',
   N5: 'En plus de tous les contrôles précédents, un juriste identifié relit les choix d’interprétation et signe sa revue.',
@@ -109,7 +109,7 @@ const verdicts = [
     <div class="max-w-4xl rounded-xl border border-line bg-surface p-5 space-y-3">
       <div class="flex flex-wrap items-center justify-between gap-2">
         <h3 class="text-base font-semibold text-ink">
-          Analyses préparatoires (pré-N1) · <span class="tabular">{formatInt(data.analyses.total)}</span> articles
+          Répartition des analyses (niveau N1) · <span class="tabular">{formatInt(data.analyses.total)}</span> fiches
         </h3>
         <a href="/travail?niveau=analyses" class="text-xs font-semibold text-brand-strong no-underline hover:underline">
           Parcourir toutes les analyses →

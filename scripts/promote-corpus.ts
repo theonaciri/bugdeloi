@@ -201,7 +201,73 @@ try {
     })
   })
 
-  console.log(`\n[OK] ${promoted.length} articles vérifiés (N1 + N2) et promus au niveau N2 en base :`)
+  // Promotion N1 Analysé depuis corpus/analyses/LEGIARTI*.md (sans jamais rétrograder N2..N5 / REF)
+  const analysisFiles = Array.from(new Bun.Glob('analyses/LEGIARTI*.md').scanSync({ cwd: workdir })).sort()
+  const analysisIds = analysisFiles
+    .map((f) => /^analyses\/(LEGIARTI\d{12})\.md$/.exec(f)?.[1])
+    .filter((id): id is string => Boolean(id))
+
+  let promotedN1 = 0
+  if (analysisIds.length > 0) {
+    const inForceAnalyses = await db
+      .select({ id: legalArticle.id })
+      .from(legalArticle)
+      .where(and(inArray(legalArticle.id, analysisIds), articleInForce()))
+    const existingStatuses = await db
+      .select({
+        articleId: articleStatus.articleId,
+        level: articleStatus.level,
+        evidence: articleStatus.evidence,
+      })
+      .from(articleStatus)
+      .where(
+        inArray(
+          articleStatus.articleId,
+          inForceAnalyses.map((r) => r.id),
+        ),
+      )
+    const statusById = new Map(existingStatuses.map((s) => [s.articleId, s]))
+
+    const nowN1 = new Date()
+    await db.transaction(async (tx) => {
+      for (const row of inForceAnalyses) {
+        const current = statusById.get(row.id)
+        if (current && current.level !== 'N0') continue
+        const prevEvidence =
+          current?.evidence && typeof current.evidence === 'object'
+            ? (current.evidence as Record<string, unknown>)
+            : {}
+        const evidence = {
+          ...prevEvidence,
+          analysis: {
+            file: `corpus/analyses/${row.id}.md`,
+            verified_at: nowN1.toISOString(),
+          },
+        }
+        await tx
+          .insert(articleStatus)
+          .values({
+            articleId: row.id,
+            level: 'N1',
+            evidence,
+            updatedAt: nowN1,
+          })
+          .onConflictDoUpdate({
+            target: articleStatus.articleId,
+            set: {
+              level: 'N1',
+              evidence,
+              updatedAt: nowN1,
+            },
+          })
+        promotedN1 += 1
+      }
+    })
+  }
+
+  console.log(
+    `\n[OK] ${promoted.length} articles promus au niveau N2 Compilé, ${promotedN1} promus au niveau N1 Analysé.`,
+  )
   for (const art of promoted) {
     console.log(`  - ${art.code} ${art.num} (${art.id}) -> corpus/${art.file}`)
   }
