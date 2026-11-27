@@ -219,7 +219,7 @@ const current = (item: { href: string; matchPrefix?: string }) => {
       <ul class="space-y-2">
         <li><a href="/methode">Méthode, niveaux N0–N5 et limites</a></li>
         <li><a href="/journal">Journal public</a> · <a href="/feed.atom">Flux Atom</a></li>
-        <li><a href="/design-system">Design System & WebMCP</a></li>
+        <li><a href="/design-system">Système de design et WebMCP</a></li>
         <li><a href="/api/mcp">Serveur MCP (/api/mcp)</a> · <a href="/join.txt">/join.txt</a></li>
         <li><a href="/registre">Registre des comptes</a> · <a href="/status">État</a></li>
       </ul>
