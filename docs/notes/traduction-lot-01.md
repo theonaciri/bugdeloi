@@ -41,6 +41,29 @@ itérations de compilation.
 - Les fiches d'analyse gagneraient à donner les types Catala directement (`argent`, `liste de …`,
   `optionnel de …`) plutôt qu'en mots.
 
-## Commentaires CodeRabbit
+## Commentaires CodeRabbit (première relecture, 15 fils)
 
-Voir la section suivante, complétée au fil de la relecture.
+- **Provenance des valeurs d'essai (9 fils).** CodeRabbit refusait tout montant, année ou date des tests
+  absent du texte. La cause était notre propre consigne : join.txt et `.coderabbit.yaml` disaient « des
+  valeurs tirées du texte seul », impossible pour un article sans chiffres. Les tests attribuaient en outre
+  ces valeurs à l'article (`# LEGIARTI… : 12 000 € de revenu brut`). Correction : date d'application =
+  début de la version, entrées annoncées par `# Cas d'essai synthétique : …`, politique écrite dans
+  AGENTS.md §7, CATALA.md, join.txt et `.coderabbit.yaml`.
+- **Couverture (5 fils).** Aucun test au premier jour de la version, aucune exclusion testée sur 14 et 30,
+  branches manquantes sur 11. Corrigé : un cas par règle et par condition qui écarte l'article, désormais
+  exigé par la consigne. Le test de rejet de la veille demandé sur 8 bis et 8 quinquies est impossible
+  (Catala 1.3.2 n'a pas de test d'échec attendu) ; la consigne ne le demande plus.
+- **Arrondi sur 8 bis et 8 quinquies (1 fil).** CodeRabbit demandait un paramètre d'arrondi et un finding
+  `ARRONDI`. Refusé avec motif : l'écart possible est d'un demi-centime, sous le seuil de 1 € du finding, et
+  le paramètre changerait l'interface figée. La consigne le précise maintenant.
+
+Aucun commentaire ne portait sur le texte cité, l'interface ou les règles elles-mêmes : les contrôles
+mécaniques ajoutés à `check-corpus-pr.ts` couvrent ces points avant la relecture.
+
+## Ce qu'un agent doit retenir pour une traduction « simple »
+
+1. Lire la fiche d'analyse, puis `corpus/CATALA.md`.
+2. Écrire la règle avec ses citations, sans aucune valeur absente du texte.
+3. Écrire les tests à la date de début de la version, un cas par règle et par exclusion, valeurs d'essai
+   annoncées comme synthétiques.
+4. `tools/bdl.sh check` doit passer avant la PR.
