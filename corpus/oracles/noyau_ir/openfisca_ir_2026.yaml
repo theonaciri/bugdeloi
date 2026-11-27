@@ -1,0 +1,405 @@
+# Oracles indépendants extraits mécaniquement d'OpenFisca-France 177.1.4
+# (openfisca-core 46.1.0, barème revenus 2025 / imposition 2026, CGI art. 193, 194, 197, 1657).
+# Commande de reproduction :
+#   replications/c0.8-openfisca/.venv/bin/python replications/c0.8-openfisca/compare_openfisca.py
+# Source non-LLM conforme à AGENTS.md §4.1 et §4.3.
+
+- id: openfisca-ir2026-celibataire-0
+  interface: CalculImpôtRevenu@v1
+  module: Noyau_ir
+  source:
+    kind: openfisca_test
+    ref: "openfisca-france 177.1.4 (barème revenus 2025, CGI art. 193, 194, 197, 1657)"
+    url: "https://github.com/openfisca/openfisca-france"
+    retrieved: 2026-11-27
+    legal_units:
+      - LEGIARTI000054373592@2026-07-01
+      - LEGIARTI000033817781@2018-01-01
+      - LEGIARTI000053542636@2026-02-21
+      - LEGIARTI000051219510@2025-02-16
+  author: { handle: openfisca-france, role: oracle, family: humain }
+  blind_to: ["corpus/cgi/livre1/partie1/titre1/chapitre1/section5/noyau_ir.catala_fr"]
+  inputs:
+    revenu_net_imposable: "0 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 1.0
+    impôt_mis_en_recouvrement: "0 €"
+
+- id: openfisca-ir2026-celibataire-11599
+  interface: CalculImpôtRevenu@v1
+  module: Noyau_ir
+  source:
+    kind: openfisca_test
+    ref: "openfisca-france 177.1.4 (barème revenus 2025, seuil tranche 11 % - 1 €)"
+    url: "https://github.com/openfisca/openfisca-france"
+    retrieved: 2026-11-27
+    legal_units:
+      - LEGIARTI000054373592@2026-07-01
+      - LEGIARTI000033817781@2018-01-01
+      - LEGIARTI000053542636@2026-02-21
+      - LEGIARTI000051219510@2025-02-16
+  author: { handle: openfisca-france, role: oracle, family: humain }
+  blind_to: ["corpus/cgi/livre1/partie1/titre1/chapitre1/section5/noyau_ir.catala_fr"]
+  inputs:
+    revenu_net_imposable: "11 599 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 1.0
+    impôt_mis_en_recouvrement: "0 €"
+
+- id: openfisca-ir2026-celibataire-17592
+  interface: CalculImpôtRevenu@v1
+  module: Noyau_ir
+  source:
+    kind: openfisca_test
+    ref: "openfisca-france 177.1.4 (barème revenus 2025, seuil de non-recouvrement 61 € art. 1657 1 bis)"
+    url: "https://github.com/openfisca/openfisca-france"
+    retrieved: 2026-11-27
+    legal_units:
+      - LEGIARTI000054373592@2026-07-01
+      - LEGIARTI000033817781@2018-01-01
+      - LEGIARTI000053542636@2026-02-21
+      - LEGIARTI000051219510@2025-02-16
+  author: { handle: openfisca-france, role: oracle, family: humain }
+  blind_to: ["corpus/cgi/livre1/partie1/titre1/chapitre1/section5/noyau_ir.catala_fr"]
+  inputs:
+    revenu_net_imposable: "17 592 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 1.0
+    impôt_mis_en_recouvrement: "0 €"
+
+- id: openfisca-ir2026-celibataire-25000
+  interface: CalculImpôtRevenu@v1
+  module: Noyau_ir
+  source:
+    kind: openfisca_test
+    ref: "openfisca-france 177.1.4 (barème revenus 2025, tranche 11 % avec décote)"
+    url: "https://github.com/openfisca/openfisca-france"
+    retrieved: 2026-11-27
+    legal_units:
+      - LEGIARTI000054373592@2026-07-01
+      - LEGIARTI000033817781@2018-01-01
+      - LEGIARTI000053542636@2026-02-21
+      - LEGIARTI000051219510@2025-02-16
+  author: { handle: openfisca-france, role: oracle, family: humain }
+  blind_to: ["corpus/cgi/livre1/partie1/titre1/chapitre1/section5/noyau_ir.catala_fr"]
+  inputs:
+    revenu_net_imposable: "25 000 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 1.0
+    impôt_mis_en_recouvrement: "1 244 €"
+
+- id: openfisca-ir2026-celibataire-35000
+  interface: CalculImpôtRevenu@v1
+  module: Noyau_ir
+  source:
+    kind: openfisca_test
+    ref: "openfisca-france 177.1.4 (barème revenus 2025, tranche 30 % hors décote)"
+    url: "https://github.com/openfisca/openfisca-france"
+    retrieved: 2026-11-27
+    legal_units:
+      - LEGIARTI000054373592@2026-07-01
+      - LEGIARTI000033817781@2018-01-01
+      - LEGIARTI000053542636@2026-02-21
+      - LEGIARTI000051219510@2025-02-16
+  author: { handle: openfisca-france, role: oracle, family: humain }
+  blind_to: ["corpus/cgi/livre1/partie1/titre1/chapitre1/section5/noyau_ir.catala_fr"]
+  inputs:
+    revenu_net_imposable: "35 000 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 1.0
+    impôt_mis_en_recouvrement: "3 604 €"
+
+- id: openfisca-ir2026-celibataire-90000
+  interface: CalculImpôtRevenu@v1
+  module: Noyau_ir
+  source:
+    kind: openfisca_test
+    ref: "openfisca-france 177.1.4 (barème revenus 2025, tranche 41 %)"
+    url: "https://github.com/openfisca/openfisca-france"
+    retrieved: 2026-11-27
+    legal_units:
+      - LEGIARTI000054373592@2026-07-01
+      - LEGIARTI000033817781@2018-01-01
+      - LEGIARTI000053542636@2026-02-21
+      - LEGIARTI000051219510@2025-02-16
+  author: { handle: openfisca-france, role: oracle, family: humain }
+  blind_to: ["corpus/cgi/livre1/partie1/titre1/chapitre1/section5/noyau_ir.catala_fr"]
+  inputs:
+    revenu_net_imposable: "90 000 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 1.0
+    impôt_mis_en_recouvrement: "20 701 €"
+
+- id: openfisca-ir2026-celibataire-200000
+  interface: CalculImpôtRevenu@v1
+  module: Noyau_ir
+  source:
+    kind: openfisca_test
+    ref: "openfisca-france 177.1.4 (barème revenus 2025, tranche 45 % sous seuil CEHR)"
+    url: "https://github.com/openfisca/openfisca-france"
+    retrieved: 2026-11-27
+    legal_units:
+      - LEGIARTI000054373592@2026-07-01
+      - LEGIARTI000033817781@2018-01-01
+      - LEGIARTI000053542636@2026-02-21
+      - LEGIARTI000051219510@2025-02-16
+  author: { handle: openfisca-france, role: oracle, family: humain }
+  blind_to: ["corpus/cgi/livre1/partie1/titre1/chapitre1/section5/noyau_ir.catala_fr"]
+  inputs:
+    revenu_net_imposable: "200 000 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 1.0
+    impôt_mis_en_recouvrement: "66 524 €"
+
+- id: openfisca-ir2026-couple-0-enf-25000
+  interface: CalculImpôtRevenu@v1
+  module: Noyau_ir
+  source:
+    kind: openfisca_test
+    ref: "openfisca-france 177.1.4 (barème revenus 2025, imposition commune annulée par décote)"
+    url: "https://github.com/openfisca/openfisca-france"
+    retrieved: 2026-11-27
+    legal_units:
+      - LEGIARTI000054373592@2026-07-01
+      - LEGIARTI000033817781@2018-01-01
+      - LEGIARTI000053542636@2026-02-21
+      - LEGIARTI000051219510@2025-02-16
+  author: { handle: openfisca-france, role: oracle, family: humain }
+  blind_to: ["corpus/cgi/livre1/partie1/titre1/chapitre1/section5/noyau_ir.catala_fr"]
+  inputs:
+    revenu_net_imposable: "25 000 €"
+    situation_familiale: ImpositionCommune
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 2.0
+    impôt_mis_en_recouvrement: "0 €"
+
+- id: openfisca-ir2026-couple-0-enf-45000
+  interface: CalculImpôtRevenu@v1
+  module: Noyau_ir
+  source:
+    kind: openfisca_test
+    ref: "openfisca-france 177.1.4 (barème revenus 2025, couple avec décote partielle)"
+    url: "https://github.com/openfisca/openfisca-france"
+    retrieved: 2026-11-27
+    legal_units:
+      - LEGIARTI000054373592@2026-07-01
+      - LEGIARTI000033817781@2018-01-01
+      - LEGIARTI000053542636@2026-02-21
+      - LEGIARTI000051219510@2025-02-16
+  author: { handle: openfisca-france, role: oracle, family: humain }
+  blind_to: ["corpus/cgi/livre1/partie1/titre1/chapitre1/section5/noyau_ir.catala_fr"]
+  inputs:
+    revenu_net_imposable: "45 000 €"
+    situation_familiale: ImpositionCommune
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 2.0
+    impôt_mis_en_recouvrement: "2 000 €"
+
+- id: openfisca-ir2026-couple-0-enf-80000
+  interface: CalculImpôtRevenu@v1
+  module: Noyau_ir
+  source:
+    kind: openfisca_test
+    ref: "openfisca-france 177.1.4 (barème revenus 2025, couple tranche 30 %)"
+    url: "https://github.com/openfisca/openfisca-france"
+    retrieved: 2026-11-27
+    legal_units:
+      - LEGIARTI000054373592@2026-07-01
+      - LEGIARTI000033817781@2018-01-01
+      - LEGIARTI000053542636@2026-02-21
+      - LEGIARTI000051219510@2025-02-16
+  author: { handle: openfisca-france, role: oracle, family: humain }
+  blind_to: ["corpus/cgi/livre1/partie1/titre1/chapitre1/section5/noyau_ir.catala_fr"]
+  inputs:
+    revenu_net_imposable: "80 000 €"
+    situation_familiale: ImpositionCommune
+    enfants_à_charge_exclusive_ou_principale: 0
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 2.0
+    impôt_mis_en_recouvrement: "10 208 €"
+
+- id: openfisca-ir2026-couple-2-enf-60000
+  interface: CalculImpôtRevenu@v1
+  module: Noyau_ir
+  source:
+    kind: openfisca_test
+    ref: "openfisca-france 177.1.4 (barème revenus 2025, couple 2 enfants avec décote)"
+    url: "https://github.com/openfisca/openfisca-france"
+    retrieved: 2026-11-27
+    legal_units:
+      - LEGIARTI000054373592@2026-07-01
+      - LEGIARTI000033817781@2018-01-01
+      - LEGIARTI000053542636@2026-02-21
+      - LEGIARTI000051219510@2025-02-16
+  author: { handle: openfisca-france, role: oracle, family: humain }
+  blind_to: ["corpus/cgi/livre1/partie1/titre1/chapitre1/section5/noyau_ir.catala_fr"]
+  inputs:
+    revenu_net_imposable: "60 000 €"
+    situation_familiale: ImpositionCommune
+    enfants_à_charge_exclusive_ou_principale: 2
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 3.0
+    impôt_mis_en_recouvrement: "2 543 €"
+
+- id: openfisca-ir2026-couple-2-enf-120000
+  interface: CalculImpôtRevenu@v1
+  module: Noyau_ir
+  source:
+    kind: openfisca_test
+    ref: "openfisca-france 177.1.4 (barème revenus 2025, plafonnement quotient familial 2 demi-parts)"
+    url: "https://github.com/openfisca/openfisca-france"
+    retrieved: 2026-11-27
+    legal_units:
+      - LEGIARTI000054373592@2026-07-01
+      - LEGIARTI000033817781@2018-01-01
+      - LEGIARTI000053542636@2026-02-21
+      - LEGIARTI000051219510@2025-02-16
+  author: { handle: openfisca-france, role: oracle, family: humain }
+  blind_to: ["corpus/cgi/livre1/partie1/titre1/chapitre1/section5/noyau_ir.catala_fr"]
+  inputs:
+    revenu_net_imposable: "120 000 €"
+    situation_familiale: ImpositionCommune
+    enfants_à_charge_exclusive_ou_principale: 2
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 3.0
+    impôt_mis_en_recouvrement: "18 594 €"
+
+- id: openfisca-ir2026-couple-3-enf-100000
+  interface: CalculImpôtRevenu@v1
+  module: Noyau_ir
+  source:
+    kind: openfisca_test
+    ref: "openfisca-france 177.1.4 (barème revenus 2025, 3e enfant = 1 part, plafonnement QF)"
+    url: "https://github.com/openfisca/openfisca-france"
+    retrieved: 2026-11-27
+    legal_units:
+      - LEGIARTI000054373592@2026-07-01
+      - LEGIARTI000033817781@2018-01-01
+      - LEGIARTI000053542636@2026-02-21
+      - LEGIARTI000051219510@2025-02-16
+  author: { handle: openfisca-france, role: oracle, family: humain }
+  blind_to: ["corpus/cgi/livre1/partie1/titre1/chapitre1/section5/noyau_ir.catala_fr"]
+  inputs:
+    revenu_net_imposable: "100 000 €"
+    situation_familiale: ImpositionCommune
+    enfants_à_charge_exclusive_ou_principale: 3
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 4.0
+    impôt_mis_en_recouvrement: "8 980 €"
+
+- id: openfisca-ir2026-parent-isole-1-enf-40000
+  interface: CalculImpôtRevenu@v1
+  module: Noyau_ir
+  source:
+    kind: openfisca_test
+    ref: "openfisca-france 177.1.4 (barème revenus 2025, parent isolé art. 194 II + décote)"
+    url: "https://github.com/openfisca/openfisca-france"
+    retrieved: 2026-11-27
+    legal_units:
+      - LEGIARTI000054373592@2026-07-01
+      - LEGIARTI000033817781@2018-01-01
+      - LEGIARTI000053542636@2026-02-21
+      - LEGIARTI000051219510@2025-02-16
+  author: { handle: openfisca-france, role: oracle, family: humain }
+  blind_to: ["corpus/cgi/livre1/partie1/titre1/chapitre1/section5/noyau_ir.catala_fr"]
+  inputs:
+    revenu_net_imposable: "40 000 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 1
+    appréciation_vit_seul: true
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 2.0
+    impôt_mis_en_recouvrement: "1 787 €"
+
+- id: openfisca-ir2026-parent-isole-1-enf-60000
+  interface: CalculImpôtRevenu@v1
+  module: Noyau_ir
+  source:
+    kind: openfisca_test
+    ref: "openfisca-france 177.1.4 (barème revenus 2025, plafond parent isolé 4 262 €)"
+    url: "https://github.com/openfisca/openfisca-france"
+    retrieved: 2026-11-27
+    legal_units:
+      - LEGIARTI000054373592@2026-07-01
+      - LEGIARTI000033817781@2018-01-01
+      - LEGIARTI000053542636@2026-02-21
+      - LEGIARTI000051219510@2025-02-16
+  author: { handle: openfisca-france, role: oracle, family: humain }
+  blind_to: ["corpus/cgi/livre1/partie1/titre1/chapitre1/section5/noyau_ir.catala_fr"]
+  inputs:
+    revenu_net_imposable: "60 000 €"
+    situation_familiale: Célibataire
+    enfants_à_charge_exclusive_ou_principale: 1
+    appréciation_vit_seul: true
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 2.0
+    impôt_mis_en_recouvrement: "6 842 €"
+
+- id: openfisca-ir2026-veuf-1-enf-90000
+  interface: CalculImpôtRevenu@v1
+  module: Noyau_ir
+  source:
+    kind: openfisca_test
+    ref: "openfisca-france 177.1.4 (barème revenus 2025, veuf avec enfant, réduction complémentaire 2 011 €)"
+    url: "https://github.com/openfisca/openfisca-france"
+    retrieved: 2026-11-27
+    legal_units:
+      - LEGIARTI000054373592@2026-07-01
+      - LEGIARTI000033817781@2018-01-01
+      - LEGIARTI000053542636@2026-02-21
+      - LEGIARTI000051219510@2025-02-16
+  author: { handle: openfisca-france, role: oracle, family: humain }
+  blind_to: ["corpus/cgi/livre1/partie1/titre1/chapitre1/section5/noyau_ir.catala_fr"]
+  inputs:
+    revenu_net_imposable: "90 000 €"
+    situation_familiale: Veuf
+    enfants_à_charge_exclusive_ou_principale: 1
+    appréciation_vit_seul: false
+    domicile_fiscal: Métropole
+  expected:
+    nombre_de_parts: 2.5
+    impôt_mis_en_recouvrement: "13 269 €"

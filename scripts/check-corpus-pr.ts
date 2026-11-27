@@ -16,6 +16,7 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { normalizeLegalText, sha256Hex } from '../packages/core/src/legi.ts'
+import { validateOracleCases } from '../packages/core/src/oracles.ts'
 
 /** Même normalisation que `promote-corpus` : espaces et apostrophes unifiés. */
 function normalize(text: string): string {
@@ -285,6 +286,24 @@ for (const file of files) {
   }
 }
 
+const oracleFiles = Array.from(new Bun.Glob('oracles/**/*.yaml').scanSync({ cwd: workdir })).sort()
+let oracleCasesCount = 0
+for (const file of oracleFiles) {
+  let parsed: unknown
+  try {
+    parsed = Bun.YAML.parse(readFileSync(join(workdir, file), 'utf8'))
+  } catch (err) {
+    console.error(`[N3 ORACLE YAML] ${file} : ${err instanceof Error ? err.message : String(err)}`)
+    process.exit(1)
+  }
+  const res = validateOracleCases(parsed, `corpus/${file}`)
+  if (res.errors.length > 0) {
+    for (const err of res.errors) console.error(`[N3 ORACLE SCHEMA] ${err}`)
+    process.exit(1)
+  }
+  oracleCasesCount += res.cases.length
+}
+
 console.log(
-  `[OK] Corpus PR check : ${files.length} fichiers, ${seenLegiarti.size} LEGIARTI uniques, ${seenSymbols.size} déclarations Catala uniques.`,
+  `[OK] Corpus PR check : ${files.length} fichiers, ${seenLegiarti.size} LEGIARTI uniques, ${seenSymbols.size} déclarations Catala uniques, ${oracleFiles.length} fichiers d'oracles (${oracleCasesCount} cas).`,
 )

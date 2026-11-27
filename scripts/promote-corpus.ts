@@ -20,6 +20,7 @@ import {
   legalText,
 } from '../packages/db/src/index.ts'
 import { runInSandbox } from '../packages/runner/src/index.ts'
+import { runOracleChecks } from './check-oracles.ts'
 
 const checkOnly = process.argv.includes('--check-only')
 const workdir = 'corpus'
@@ -151,17 +152,59 @@ try {
     promoted.push({ id: dbRow.id, code: dbRow.code, num: dbRow.num ?? '', file: item.file })
   }
 
+  const oracleRes = await runOracleChecks(workdir)
+  if (!oracleRes.ok) {
+    for (const err of oracleRes.errors) {
+      console.error(`[N3 ECHEC] ${err}`)
+    }
+    process.exit(1)
+  }
+
   if (checkOnly) {
     console.log(
-      `\n[OK --check-only] ${promoted.length} articles vérifiés (N1 anti-doublon + verbatim LEGI + N2 clerk test).`,
+      `\n[OK --check-only] ${promoted.length} articles vérifiés (N1 anti-doublon + verbatim LEGI + N2 clerk test), ${oracleRes.eligibleN3.length} articles éligibles N3 (${oracleRes.executedCases} cas d'oracle).`,
     )
     process.exit(0)
   }
 
+  const HIGHER_THAN_N2 = new Set(['N3', 'N4', 'N5', 'REF'])
+  const HIGHER_THAN_N3 = new Set(['N4', 'N5', 'REF'])
+  const existingN2Rows = await db
+    .select({
+      articleId: articleStatus.articleId,
+      level: articleStatus.level,
+      evidence: articleStatus.evidence,
+    })
+    .from(articleStatus)
+    .where(
+      inArray(
+        articleStatus.articleId,
+        promoted.map((p) => p.id),
+      ),
+    )
+  const existingN2ById = new Map(existingN2Rows.map((r) => [r.articleId, r]))
+  const eligibleN3ById = new Map(oracleRes.eligibleN3.map((e) => [e.legiarti, e]))
+  const promotedN3: { id: string; code: string; num: string; cases: number; sources: string[] }[] = []
+
   const now = new Date()
   await db.transaction(async (tx) => {
     for (const art of promoted) {
-      const evidence = {
+      const current = existingN2ById.get(art.id)
+      const prevEvidence =
+        current?.evidence && typeof current.evidence === 'object'
+          ? (current.evidence as Record<string, unknown>)
+          : {}
+      const n3Info = eligibleN3ById.get(art.id)
+      const nextLevel = n3Info
+        ? current && HIGHER_THAN_N3.has(current.level)
+          ? current.level
+          : 'N3'
+        : current && HIGHER_THAN_N2.has(current.level)
+          ? current.level
+          : 'N2'
+
+      const evidence: Record<string, unknown> = {
+        ...prevEvidence,
         corpus: {
           file: `corpus/${art.file}`,
           legiarti: art.id,
@@ -170,11 +213,30 @@ try {
           verified_at: now.toISOString(),
         },
       }
+      if (n3Info) {
+        evidence.oracles = {
+          files: n3Info.oracleFiles,
+          total_cases: n3Info.totalCases,
+          non_llm_cases: n3Info.nonLlmCases,
+          sources: n3Info.sources,
+          verified_at: now.toISOString(),
+        }
+        if (nextLevel === 'N3') {
+          promotedN3.push({
+            id: art.id,
+            code: art.code,
+            num: art.num,
+            cases: n3Info.totalCases,
+            sources: n3Info.sources,
+          })
+        }
+      }
+
       await tx
         .insert(articleStatus)
         .values({
           articleId: art.id,
-          level: 'N2',
+          level: nextLevel,
           contested: false,
           evidence,
           updatedAt: now,
@@ -182,7 +244,7 @@ try {
         .onConflictDoUpdate({
           target: articleStatus.articleId,
           set: {
-            level: 'N2',
+            level: nextLevel,
             evidence,
             updatedAt: now,
           },
@@ -199,6 +261,20 @@ try {
         articles: promoted,
       },
     })
+
+    if (promotedN3.length > 0) {
+      await tx.insert(event).values({
+        type: 'oracle.promoted',
+        actor: 'system:oracles',
+        summary: `${promotedN3.length} articles promus au niveau N3 Testé (${promotedN3.map((p) => `${p.code} ${p.num}`).join(', ')})`,
+        payload: {
+          level: 'N3',
+          count: promotedN3.length,
+          executed_cases: oracleRes.executedCases,
+          articles: promotedN3,
+        },
+      })
+    }
   })
 
   // Promotion N1 Analysé depuis corpus/analyses/LEGIARTI*.md (sans jamais rétrograder N2..N5 / REF)
@@ -266,10 +342,11 @@ try {
   }
 
   console.log(
-    `\n[OK] ${promoted.length} articles promus au niveau N2 Compilé, ${promotedN1} promus au niveau N1 Analysé.`,
+    `\n[OK] ${promoted.length} articles vérifiés N2 Compilé, ${promotedN3.length} au niveau N3 Testé, ${promotedN1} promus au niveau N1 Analysé.`,
   )
   for (const art of promoted) {
-    console.log(`  - ${art.code} ${art.num} (${art.id}) -> corpus/${art.file}`)
+    const isN3 = eligibleN3ById.has(art.id)
+    console.log(`  - ${art.code} ${art.num} (${art.id}) [${isN3 ? 'N3' : 'N2'}] -> corpus/${art.file}`)
   }
 } finally {
   await client.end({ timeout: 5 })

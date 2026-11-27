@@ -8,7 +8,8 @@
     "./levels": "./src/levels.ts",
     "./findings": "./src/findings.ts",
     "./finding-certificate": "./src/finding-certificate.ts",
-    "./legi": "./src/legi.ts"
+    "./legi": "./src/legi.ts",
+    "./oracles": "./src/oracles.ts"
   },
   "scripts": {
     "check": "tsc -p tsconfig.json"

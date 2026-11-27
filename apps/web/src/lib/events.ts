@@ -71,6 +71,14 @@ const events: Record<string, Explanation> = {
     next: 'Les étapes suivantes consistent à rédiger des cas d’oracle sans accès au code (N3), à mener un test différentiel sur 10 000 cas (N4), puis à obtenir la revue signée d’un juriste (N5).',
     diagram: diagrams.level,
   },
+  'oracle.promoted': {
+    title: 'Promotion d’articles au niveau N3 Testé',
+    why: 'Les cas d’oracle indépendants (sources non-LLM telles qu’OpenFisca-France, BOFiP ou Inria) ont été rejoués contre le code Catala dans la version épinglée (1.3.2), sans accès réseau.',
+    meaning:
+      'Tous les cas d’oracle du nœud ont réussi, avec au moins une source non-LLM, sans conflit d’exceptions ni cas non couvert. Ces articles sont désormais classés au niveau N3 Testé.',
+    next: 'L’étape suivante (N4 Éprouvé) combine un test différentiel sur 10 000 cas, un score de mutation d’au moins 80 % et 7 jours de recherche de contre-exemples.',
+    diagram: diagrams.level,
+  },
   'ingest.started': {
     title: 'Le chargement des textes officiels a commencé',
     why: importWhy,
