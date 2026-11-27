@@ -55,7 +55,7 @@ const positionClasses = $derived(
   >
     <div class="flex items-start justify-between gap-4 border-b border-line px-5 py-4">
       <div class="min-w-0">
-        <DrawerTitle class="font-serif text-xl font-semibold tracking-tight">{title}</DrawerTitle>
+        <DrawerTitle class="font-display text-xl font-semibold tracking-tight">{title}</DrawerTitle>
         {#if description}
           <DrawerDescription class="mt-0.5 text-xs text-muted">{description}</DrawerDescription>
         {/if}

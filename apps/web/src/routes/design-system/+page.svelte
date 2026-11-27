@@ -335,15 +335,15 @@ $effect(() => {
     <h2 id="ds-typo" class="text-3xl font-semibold">Typographie auto-hébergée</h2>
     <div class="grid gap-8 lg:grid-cols-3">
       <div class="space-y-2">
-        <p class="font-serif text-3xl font-semibold tracking-tight">Newsreader</p>
-        <p class="text-xs text-muted">Titres éditoriaux et textes de loi</p>
-        <p class="pt-2 font-serif text-base leading-relaxed text-ink">
+        <p class="font-law text-3xl font-semibold tracking-tight">Source Serif 4</p>
+        <p class="text-xs text-muted">La loi, et seulement la loi : texte officiel cité</p>
+        <p class="pt-2 font-law text-base leading-relaxed text-ink">
           « Les allocations familiales sont dues à partir du deuxième enfant à charge. »
         </p>
       </div>
       <div class="space-y-2">
-        <p class="font-sans text-2xl font-bold tracking-tight">Plus Jakarta Sans</p>
-        <p class="text-xs text-muted">Interface, navigation et chiffres tabulaires</p>
+        <p class="font-display text-2xl font-extrabold tracking-tight [font-stretch:118%]">Archivo</p>
+        <p class="text-xs text-muted">Notre voix : titres élargis, interface, chiffres tabulaires</p>
         <p class="pt-2 text-sm leading-relaxed text-ink tabular">
           13 950 articles · 285,24 € · 171/171 tests
         </p>
@@ -449,7 +449,7 @@ $effect(() => {
           >
             {#snippet panel(tab)}
               {#if tab === 'un'}
-                <p class="font-serif text-sm text-ink">Article D755-5, II, alinéa 2 : version en vigueur identifiée par son empreinte SHA-256.</p>
+                <p class="font-display text-sm text-ink">Article D755-5, II, alinéa 2 : version en vigueur identifiée par son empreinte SHA-256.</p>
               {:else if tab === 'deux'}
                 <pre class="mono rounded bg-obs-bg p-3 text-xs text-obs-ink"><code>champ d'application CalculAllocations:
   définition montant_mensuel égal à ...</code></pre>
@@ -513,7 +513,7 @@ $effect(() => {
 <section class="band-observatory mt-20 py-18" aria-labelledby="ds-obs">
   <div class="container-wide space-y-14">
     <div class="space-y-6">
-      <h2 id="ds-obs" class="font-serif text-3xl font-semibold text-obs-ink">
+      <h2 id="ds-obs" class="font-display text-3xl font-semibold text-obs-ink">
         Course des chantiers
       </h2>
       <ChantierRace tracks={sampleRace} />
@@ -522,7 +522,7 @@ $effect(() => {
     <div class="space-y-6 border-t border-obs-line pt-12">
       <div class="flex flex-wrap items-end justify-between gap-4">
         <div class="space-y-1">
-          <h2 class="font-serif text-3xl font-semibold text-obs-ink">
+          <h2 class="font-display text-3xl font-semibold text-obs-ink">
             Tester MCP et WebMCP en direct
           </h2>
           <p class="text-sm text-obs-muted">

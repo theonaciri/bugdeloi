@@ -1,13 +1,18 @@
-@import "@fontsource-variable/newsreader";
-@import "@fontsource-variable/plus-jakarta-sans";
+@import "@fontsource-variable/archivo/wdth.css";
+@import "@fontsource-variable/source-serif-4";
 @import "@fontsource-variable/jetbrains-mono";
 @import "tailwindcss";
 @import "./tokens.css";
 
 @theme inline {
   --font-sans: var(--font-sans);
-  --font-serif: var(--font-serif);
+  --font-display: var(--font-display);
+  --font-law: var(--font-law);
+  --font-serif: var(--font-law);
   --font-mono: var(--font-mono);
+
+  --color-mark: var(--mark);
+  --color-mark-ink: var(--mark-ink);
 
   --color-bg: var(--bg);
   --color-surface: var(--surface);
@@ -70,13 +75,30 @@
   h1,
   h2,
   h3 {
-    font-family: var(--font-serif);
-    line-height: 1.12;
+    font-family: var(--font-display);
+    font-stretch: 112%;
+    font-weight: 700;
+    line-height: 1.08;
     text-wrap: balance;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.015em;
   }
 
-  p {
+  h1 {
+    font-stretch: 118%;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+  }
+
+  mark {
+    background: var(--mark);
+    color: var(--mark-ink);
+    padding-inline: 0.12em;
+    border-radius: 2px;
+  }
+
+  p,
+  dd,
+  li {
     text-wrap: pretty;
   }
 
@@ -190,7 +212,7 @@
     margin-top: 0.35rem;
   }
 
-  /* Bande sombre éditoriale (charbon chaud, plein bord, sans grille cyber) */
+  /* Bande « séance de nuit » (violet encre profond, plein bord) */
   .band-observatory {
     background: var(--obs-bg);
     color: var(--obs-ink);
@@ -221,7 +243,7 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    border-radius: 999px;
+    border-radius: var(--radius);
     padding: 0.65rem 1.25rem;
     font-weight: 600;
     font-size: 0.92rem;
@@ -413,7 +435,7 @@
 }
 
 .legal-text {
-  font-family: var(--font-serif);
+  font-family: var(--font-law);
   font-size: 1.1rem;
   line-height: 1.75;
 }

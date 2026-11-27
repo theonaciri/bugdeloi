@@ -27,7 +27,7 @@ const GITHUB_BASE = 'https://github.com/theonaciri/bugdeloi/tree/main/packages/p
       <span class="mx-1.5">/</span>
       <span>Veille parlementaire (Tricoteuses)</span>
     </p>
-    <h1 class="mt-4 max-w-4xl font-serif text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
+    <h1 class="mt-4 max-w-4xl font-display text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
       Mesurer l’effet d’un amendement en euros avant le vote
     </h1>
     <p class="mt-5 max-w-[68ch] text-lg leading-relaxed text-muted">
@@ -46,7 +46,7 @@ const GITHUB_BASE = 'https://github.com/theonaciri/bugdeloi/tree/main/packages/p
 
 <section class="border-t border-line bg-surface">
   <div class="container-wide py-12 sm:py-16">
-    <h2 class="font-serif text-2xl font-semibold text-ink sm:text-3xl">
+    <h2 class="font-display text-2xl font-semibold text-ink sm:text-3xl">
       Les {data.articlesSuivis.length} articles actuellement suivis
     </h2>
     <p class="mt-3 max-w-[68ch] text-base leading-relaxed text-muted">
@@ -59,7 +59,7 @@ const GITHUB_BASE = 'https://github.com/theonaciri/bugdeloi/tree/main/packages/p
           class="rounded-xl border border-line bg-bg p-4 no-underline transition hover:border-brand"
         >
           <p class="text-xs font-semibold uppercase tracking-wide text-muted">{art.code}</p>
-          <p class="mt-1 font-serif text-lg font-semibold text-ink">Article {art.article}</p>
+          <p class="mt-1 font-display text-lg font-semibold text-ink">Article {art.article}</p>
           <p class="mt-1 font-mono text-xs text-muted">{art.legiarti}</p>
         </a>
       {/each}
@@ -69,7 +69,7 @@ const GITHUB_BASE = 'https://github.com/theonaciri/bugdeloi/tree/main/packages/p
 
 <section class="border-t border-line bg-bg">
   <div class="container-wide py-12 sm:py-16">
-    <h2 class="font-serif text-2xl font-semibold text-ink sm:text-3xl">
+    <h2 class="font-display text-2xl font-semibold text-ink sm:text-3xl">
       Exemples de démonstration (amendements fictifs PLF 2026)
     </h2>
     <p class="mt-3 max-w-[68ch] text-base leading-relaxed text-muted">
@@ -82,7 +82,7 @@ const GITHUB_BASE = 'https://github.com/theonaciri/bugdeloi/tree/main/packages/p
       {#each data.resultats as item}
         <article class="rounded-2xl border border-line bg-surface p-6 sm:p-8">
           <div class="flex flex-wrap items-baseline justify-between gap-2">
-            <h3 class="font-serif text-xl font-semibold text-ink sm:text-2xl">
+            <h3 class="font-display text-xl font-semibold text-ink sm:text-2xl">
               Amendement {item.amendement.numero} ({item.amendement.articleCible})
             </h3>
             <span class="rounded-full border border-line bg-bg px-3 py-1 text-xs font-semibold text-brand-strong">
@@ -136,7 +136,7 @@ const GITHUB_BASE = 'https://github.com/theonaciri/bugdeloi/tree/main/packages/p
 
 <section class="border-t border-line bg-surface">
   <div class="container-wide py-12 sm:py-16">
-    <h2 class="font-serif text-2xl font-semibold text-ink sm:text-3xl">
+    <h2 class="font-display text-2xl font-semibold text-ink sm:text-3xl">
       Code source et expériences liées
     </h2>
     <p class="mt-3 max-w-[68ch] text-base leading-relaxed text-muted">

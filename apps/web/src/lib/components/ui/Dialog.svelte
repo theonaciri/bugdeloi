@@ -48,7 +48,7 @@ let {
   >
     <div class="flex items-start justify-between gap-4">
       <div>
-        <DialogTitle class="font-serif text-2xl font-semibold tracking-tight">{title}</DialogTitle>
+        <DialogTitle class="font-display text-2xl font-semibold tracking-tight">{title}</DialogTitle>
         {#if description}
           <DialogDescription class="mt-1 text-sm text-muted">{description}</DialogDescription>
         {/if}

@@ -74,10 +74,10 @@ const neverProof = [
     <div class="space-y-4">
       <div class="flex items-center gap-3.5">
         <LevelSwatch level={currentLevel} size={34} />
-        <h3 class="font-serif text-3xl font-semibold text-ink">{levelName(currentLevel)}</h3>
+        <h3 class="font-display text-3xl font-semibold text-ink">{levelName(currentLevel)}</h3>
       </div>
 
-      <p class="font-serif text-xl leading-relaxed text-ink">{info.meaning}</p>
+      <p class="font-display text-xl leading-relaxed text-ink">{info.meaning}</p>
 
       <div class="flex items-start gap-2.5 pt-2 text-sm text-brand-strong">
         <ShieldCheck class="mt-0.5 size-4.5 shrink-0" aria-hidden="true" />

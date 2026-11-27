@@ -1,8 +1,8 @@
 import { randomUUID } from 'node:crypto'
 import { sha256Hex } from '@bugdeloi/core/legi'
-import { type Db, deskTask, legalArticle, legalText } from '@bugdeloi/db'
+import { type Db, deskTask, event, legalArticle, legalText } from '@bugdeloi/db'
 import { and, eq, gt, isNull, lte, or, sql } from 'drizzle-orm'
-import { currentDeskTask, newDeskTask, newDeskTaskFilter, taskArticle } from './desk-catalog.ts'
+import { currentDeskTask, newDeskTask, newDeskTaskFilter, taskArticle, taskLabel } from './desk-catalog.ts'
 
 type TaskRow = typeof deskTask.$inferSelect
 type Assignment = {
@@ -27,10 +27,38 @@ const readWrite = { accessMode: 'read write' } as const
 const time = sql`statement_timestamp()`
 const heartbeatExpiry = sql`${time} + interval '20 minutes'`
 
-async function claimOneInTx(
-  tx: Parameters<Parameters<Db['transaction']>[0]>[0],
-  { handle, role, family }: Assignment,
-): Promise<ClaimedTask | null> {
+type Tx = Parameters<Parameters<Db['transaction']>[0]>[0]
+
+/**
+ * Journal public (append-only) : chaque réservation et chaque libération devient un événement.
+ * C'est la seule mémoire du parcours d'une tâche : la ligne `desk_task` ne garde que le dernier bail.
+ * Le battement (`/desk/beat`) n'est pas journalisé.
+ */
+async function logDeskEvent(
+  tx: Tx,
+  type: 'desk.claimed' | 'desk.released',
+  taskId: string,
+  handle: string,
+  payload: Record<string, unknown>,
+) {
+  await tx.insert(event).values({ type, actor: `github:${handle}`, subject: taskId, payload })
+}
+
+async function claimOneInTx(tx: Tx, assignment: Assignment): Promise<ClaimedTask | null> {
+  const claimed = await reserveInTx(tx, assignment)
+  if (claimed) {
+    const unit = claimed.task.legal_units[0]
+    await logDeskEvent(tx, 'desk.claimed', claimed.task.id, assignment.handle.toLowerCase(), {
+      role: assignment.role,
+      family: assignment.family,
+      legiarti: unit?.legiarti ?? null,
+      label: taskLabel(claimed.task),
+    })
+  }
+  return claimed
+}
+
+async function reserveInTx(tx: Tx, { handle, role, family }: Assignment): Promise<ClaimedTask | null> {
   const [available] = await tx
     .select({ id: deskTask.id })
     .from(deskTask)
@@ -119,7 +147,17 @@ export async function claimTasks(
 export async function updateLease(db: Db, lease: string, reason?: ReleaseReason) {
   return db.transaction(async (tx) => {
     const leaseMatches = eq(deskTask.leaseDigest, sha256Hex(lease))
-    const [current] = await tx.select({ id: deskTask.id }).from(deskTask).where(leaseMatches).for('update')
+    const [current] = await tx
+      .select({
+        id: deskTask.id,
+        role: deskTask.role,
+        handle: deskTask.leaseHandle,
+        family: deskTask.leaseFamily,
+        payload: deskTask.payload,
+      })
+      .from(deskTask)
+      .where(leaseMatches)
+      .for('update')
     if (!current) return null
 
     // L'heure est lue au début de l'UPDATE, après toute attente du verrou.
@@ -139,6 +177,15 @@ export async function updateLease(db: Db, lease: string, reason?: ReleaseReason)
       )
       .where(and(eq(deskTask.id, current.id), gt(deskTask.leaseExpiresAt, time)))
       .returning({ expires_at: deskTask.leaseExpiresAt })
+    if (row && reason) {
+      await logDeskEvent(tx, 'desk.released', current.id, current.handle ?? 'anonymous', {
+        role: current.role,
+        family: current.family,
+        reason,
+        legiarti: current.payload.legal_units[0]?.legiarti ?? null,
+        label: taskLabel(current.payload),
+      })
+    }
     return row ?? null
   }, readWrite)
 }

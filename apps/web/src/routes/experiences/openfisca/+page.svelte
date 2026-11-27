@@ -29,7 +29,7 @@ const GITHUB_BASE = 'https://github.com/theonaciri/bugdeloi/blob/main/replicatio
       <span class="mx-1.5">/</span>
       <span>Comparaison OpenFisca-France (C0.8)</span>
     </p>
-    <h1 class="mt-4 max-w-4xl font-serif text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
+    <h1 class="mt-4 max-w-4xl font-display text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
       Vérifier nos calculs face à OpenFisca-France
     </h1>
     <p class="mt-5 max-w-[68ch] text-lg leading-relaxed text-muted">
@@ -42,26 +42,26 @@ const GITHUB_BASE = 'https://github.com/theonaciri/bugdeloi/blob/main/replicatio
     <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <div class="rounded-xl border border-line bg-surface p-5">
         <p class="text-xs font-semibold uppercase tracking-wide text-muted">Foyers comparés</p>
-        <p class="mt-2 font-serif text-3xl font-semibold text-ink">{fmtInt(c08.foyersCompares)}</p>
+        <p class="mt-2 font-display text-3xl font-semibold text-ink">{fmtInt(c08.foyersCompares)}</p>
         <p class="mt-1 text-xs text-muted">
           {fmtInt(c08.foyersGeneres.ir)} impôt sur le revenu · {fmtInt(c08.foyersGeneres.af)} allocations familiales
         </p>
       </div>
       <div class="rounded-xl border border-line bg-surface p-5">
         <p class="text-xs font-semibold uppercase tracking-wide text-muted">Allocations familiales</p>
-        <p class="mt-2 font-serif text-3xl font-semibold text-brand-strong">100 %</p>
+        <p class="mt-2 font-display text-3xl font-semibold text-brand-strong">100 %</p>
         <p class="mt-1 text-xs text-muted">Accord exact sur tous les foyers dans le périmètre</p>
       </div>
       <div class="rounded-xl border border-line bg-surface p-5">
         <p class="text-xs font-semibold uppercase tracking-wide text-muted">Différences de périmètre</p>
-        <p class="mt-2 font-serif text-3xl font-semibold text-ink">
+        <p class="mt-2 font-display text-3xl font-semibold text-ink">
           {fmtInt(c08.ecartsParCategorie.difference_de_perimetre)}
         </p>
         <p class="mt-1 text-xs text-muted">Règles modélisées d’un seul côté (CEHR, outre-mer, enfant 20 ans)</p>
       </div>
       <div class="rounded-xl border border-line bg-surface p-5">
         <p class="text-xs font-semibold uppercase tracking-wide text-muted">Candidat d’arrondi</p>
-        <p class="mt-2 font-serif text-3xl font-semibold text-notice-ink">
+        <p class="mt-2 font-display text-3xl font-semibold text-notice-ink">
           {fmtInt(c08.ecartsParCategorie.divergence_simulateur)}
         </p>
         <p class="mt-1 text-xs text-muted">Tous liés au même ordre d’arrondi autour de la décote</p>
@@ -72,7 +72,7 @@ const GITHUB_BASE = 'https://github.com/theonaciri/bugdeloi/blob/main/replicatio
 
 <section class="border-t border-line bg-surface">
   <div class="container-wide py-12 sm:py-16">
-    <h2 class="font-serif text-2xl font-semibold text-ink sm:text-3xl">
+    <h2 class="font-display text-2xl font-semibold text-ink sm:text-3xl">
       Ce que la comparaison a mis au jour : un candidat d’arrondi à 17 593 €
     </h2>
     <p class="mt-4 max-w-[68ch] text-base leading-relaxed text-muted">
@@ -126,7 +126,7 @@ const GITHUB_BASE = 'https://github.com/theonaciri/bugdeloi/blob/main/replicatio
 
 <section class="border-t border-line bg-bg">
   <div class="container-wide py-12 sm:py-16">
-    <h2 class="font-serif text-2xl font-semibold text-ink sm:text-3xl">
+    <h2 class="font-display text-2xl font-semibold text-ink sm:text-3xl">
       Les {fmtInt(c08.ecartsParCategorie.difference_de_perimetre)} différences de périmètre expliquées
     </h2>
     <p class="mt-3 max-w-[68ch] text-base leading-relaxed text-muted">
@@ -150,7 +150,7 @@ const GITHUB_BASE = 'https://github.com/theonaciri/bugdeloi/blob/main/replicatio
 
 <section class="border-t border-line bg-surface">
   <div class="container-wide py-12 sm:py-16">
-    <h2 class="font-serif text-2xl font-semibold text-ink sm:text-3xl">
+    <h2 class="font-display text-2xl font-semibold text-ink sm:text-3xl">
       Données brutes et reproductibilité
     </h2>
     <p class="mt-3 max-w-[68ch] text-base leading-relaxed text-muted">

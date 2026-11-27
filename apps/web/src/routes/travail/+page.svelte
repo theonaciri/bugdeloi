@@ -47,7 +47,7 @@ function hrefFor(params: { niveau?: string; categorie?: string; code?: string; p
 
 <section class="bg-bg">
   <div class="container-wide py-12 sm:py-16">
-    <h1 class="max-w-4xl font-serif text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
+    <h1 class="max-w-4xl font-display text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
       Parcourir le travail par niveau de preuve
     </h1>
     <p class="mt-4 max-w-[68ch] text-lg leading-relaxed text-muted">
@@ -272,7 +272,7 @@ function hrefFor(params: { niveau?: string; categorie?: string; code?: string; p
       {/if}
     {:else}
       <div class="mt-6 rounded-xl border border-line bg-bg p-8 text-center">
-        <p class="font-serif text-lg font-semibold text-ink">Aucun article à ce niveau pour l’instant.</p>
+        <p class="font-display text-lg font-semibold text-ink">Aucun article à ce niveau pour l’instant.</p>
         <p class="mt-2 text-sm text-muted">
           Chaque contribution communautaire fait progresser les articles de N0 vers N5.
         </p>

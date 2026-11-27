@@ -32,8 +32,6 @@ import { CODES, LEGIARTI_RE, LEGISCTA_RE, legifranceArticleUrl } from '@bugdeloi
 import { articleInForce } from '@bugdeloi/db/predicates'
 import {
   articleStatus,
-  DESK_ROLES,
-  deskTask,
   event,
   finding,
   ingestRun,
@@ -45,14 +43,13 @@ import {
   replicationRun,
   sweepRun,
 } from '@bugdeloi/db/schema'
-import { and, asc, count, desc, eq, ilike, inArray, isNotNull, isNull, or, type SQL, sql } from 'drizzle-orm'
+import { and, asc, count, desc, eq, ilike, inArray, isNull, or, type SQL, sql } from 'drizzle-orm'
 import { journalGroupLabels } from '../events.ts'
-import { asLevel, countAtLeast, emptyLevelCounts, type Level, type LevelCounts } from '../levels.ts'
+import { asLevel, countAtLeast, emptyLevelCounts, type Level } from '../levels.ts'
 import { MAP_WINDOW, type MapArticleRow, type MapCountRow, type MapSectionRow } from '../map-tree.ts'
 import { sanitizeLegalHtml } from '../sanitize.ts'
 import type {
   CodeProgress,
-  DeskPublicStats,
   FindingPreview,
   JournalEntry,
   PipelineStats,
@@ -63,7 +60,7 @@ import type {
   SuiteInfo,
 } from '../snapshot.ts'
 import { db } from './db.ts'
-import { currentDeskTask, newDeskTaskFilter } from './desk-catalog.ts'
+import { workBoard } from './work.ts'
 
 const publicFindingFilter = inArray(finding.status, PUBLIC_FINDING_STATUSES)
 const rejectedFindingFilter = and(
@@ -188,6 +185,29 @@ function formatEventCopy(r: typeof event.$inferSelect): { headline: string; deta
     }
   }
 
+  if (r.type === 'desk.claimed' || r.type === 'desk.released') {
+    const handle = r.actor.startsWith('github:') ? `@${r.actor.slice(7)}` : 'Un contributeur'
+    const label = typeof p.label === 'string' ? p.label : (r.subject ?? 'un article')
+    const role = p.role === 'translate' ? 'la traduction' : 'l’analyse'
+    const family = typeof p.family === 'string' ? ` (famille ${p.family})` : ''
+    if (r.type === 'desk.claimed') {
+      return {
+        headline: `${handle} a réservé ${role} de ${label}`,
+        detail: `Le guichet a confié cette tâche à ${handle}${family}. La réservation dure 20 minutes, prolongée à chaque signe de vie.`,
+      }
+    }
+    if (p.reason === 'submitted') {
+      return {
+        headline: `${handle} a déposé ${role} de ${label}`,
+        detail: 'Le travail passe en relecture : contrôles automatiques puis fusion dans le corpus.',
+      }
+    }
+    return {
+      headline: `${handle} a rendu ${role} de ${label}`,
+      detail: `Motif déclaré : ${typeof p.reason === 'string' ? p.reason : 'non précisé'}. La tâche revient dans la liste des tâches à prendre.`,
+    }
+  }
+
   if (r.type === 'finding.qualified' && r.subject) {
     return {
       headline: `Anomalie ${r.subject} validée par un juriste`,
@@ -244,8 +264,9 @@ function publicEvent(r: typeof event.$inferSelect): PublicEvent {
 }
 
 /** Les `limit` derniers événements publics, du plus récent au plus ancien. */
-export async function latestEvents(limit = 10): Promise<PublicEvent[]> {
-  const rows = await db().select().from(event).where(publicEventFilter).orderBy(desc(event.id)).limit(limit)
+export async function latestEvents(limit = 10, withDesk = false): Promise<PublicEvent[]> {
+  const where = withDesk ? publicEventFilter : and(publicEventFilter, sql`${event.type} not like 'desk.%'`)
+  const rows = await db().select().from(event).where(where).orderBy(desc(event.id)).limit(limit)
   return rows.map(publicEvent)
 }
 
@@ -692,77 +713,6 @@ async function referenceSuites(): Promise<SuiteInfo[]> {
 }
 
 /** Une tâche est disponible si elle n'est ni terminée ni couverte par un bail actif. */
-async function deskPublicStats(): Promise<DeskPublicStats> {
-  const active = sql`(${deskTask.completedAt} is null and coalesce(${deskTask.leaseExpiresAt} > statement_timestamp(), false))`
-  const [roles, recent, analyses, translations] = await db().transaction(
-    (tx) =>
-      Promise.all([
-        tx
-          .select({
-            role: deskTask.role,
-            open: sql<number>`count(*) filter (where ${deskTask.completedAt} is null and not ${active} and ${currentDeskTask})`.mapWith(
-              Number,
-            ),
-            active: sql<number>`count(*) filter (where ${active})`.mapWith(Number),
-            completed: sql<number>`count(${deskTask.completedAt})`.mapWith(Number),
-          })
-          .from(deskTask)
-          .groupBy(deskTask.role),
-        tx
-          .select({
-            taskId: deskTask.id,
-            payload: deskTask.payload,
-            role: deskTask.role,
-            handle: deskTask.leaseHandle,
-            family: deskTask.leaseFamily,
-            startedAt: deskTask.leaseStartedAt,
-            expiresAt: deskTask.leaseExpiresAt,
-            active: sql<boolean>`${active}`,
-          })
-          .from(deskTask)
-          .where(and(isNotNull(deskTask.leaseHandle), isNotNull(deskTask.leaseStartedAt)))
-          .orderBy(desc(deskTask.leaseStartedAt), asc(deskTask.role), asc(deskTask.leaseHandle))
-          .limit(100),
-        tx.select({ total: count() }).from(legalArticle).where(newDeskTaskFilter('analyst')),
-        tx.select({ total: count() }).from(legalArticle).where(newDeskTaskFilter('translate')),
-      ]),
-    { isolationLevel: 'repeatable read', accessMode: 'read only' },
-  )
-  const unassigned = { analyst: analyses[0]?.total ?? 0, translate: translations[0]?.total ?? 0 }
-  return {
-    enabled: process.env.DESK_ENABLED === '1',
-    open: roles.reduce((total, row) => total + row.open, unassigned.analyst + unassigned.translate),
-    activeLeases: roles.reduce((total, row) => total + row.active, 0),
-    completed: roles.reduce((total, row) => total + row.completed, 0),
-    byRole: Object.fromEntries(
-      DESK_ROLES.map((role) => {
-        const row = roles.find((row) => row.role === role)
-        const extra = role === 'analyst' || role === 'translate' ? unassigned[role] : 0
-        return [
-          role,
-          { open: (row?.open ?? 0) + extra, active: row?.active ?? 0, completed: row?.completed ?? 0 },
-        ]
-      }),
-    ),
-    recentHandles: recent.flatMap(({ handle, startedAt, expiresAt, payload, ...row }) => {
-      if (!handle || !startedAt) return []
-      const firstUnit = payload?.legal_units?.[0]
-      const legiarti = typeof firstUnit?.legiarti === 'string' ? firstUnit.legiarti : null
-      const node = typeof payload?.node === 'string' ? payload.node : null
-      return [
-        {
-          ...row,
-          node,
-          legiarti,
-          handle,
-          startedAt: startedAt.toISOString(),
-          expiresAt: expiresAt ? expiresAt.toISOString() : null,
-        },
-      ]
-    }),
-  }
-}
-
 /** Événements du journal pendant les 14 jours civils à Paris, jour courant compris. */
 async function publicActivity(): Promise<Snapshot['activitySeries']> {
   const day = sql<string>`to_char(${event.ts} at time zone 'Europe/Paris', 'YYYY-MM-DD')`
@@ -803,7 +753,7 @@ export async function snapshot(): Promise<Snapshot> {
     fictional,
     pipeline,
     suites,
-    desk,
+    work,
     activitySeries,
     reproducedPreview,
   ] = await Promise.all([
@@ -816,7 +766,7 @@ export async function snapshot(): Promise<Snapshot> {
     hasFictionalData(),
     pipelineStats(),
     referenceSuites(),
-    deskPublicStats(),
+    workBoard(),
     publicActivity(),
     reproducedPreviews(),
   ])
@@ -835,7 +785,7 @@ export async function snapshot(): Promise<Snapshot> {
     referenceExample: example,
     pipeline,
     suites,
-    desk,
+    work,
     activitySeries,
     reproducedPreview,
   }
@@ -1602,46 +1552,7 @@ export async function findingDetail(id: string, database = db()) {
 
 /** Événements publics pour /feed.atom (mêmes règles que le journal de l'accueil). */
 export async function feedEvents(limit = 50): Promise<PublicEvent[]> {
-  return latestEvents(limit)
+  return latestEvents(limit, true)
 }
 
-// ---------------------------------------------------------------------------
-// Compteurs par niveau de preuve (cache mémoire court, 60 s)
-// ---------------------------------------------------------------------------
-
-const LEVEL_COUNTS_TTL_MS = 60_000
-const levelCountsCache = new Map<string, { expiresAt: number; counts: LevelCounts }>()
-
-/**
- * Compteurs d'articles en vigueur par niveau de preuve (`N0`–`N5`, `REF`),
- * optionnellement filtrés sur un `textId` (`LEGITEXT…`).
- * Mis en cache 60 s en mémoire pour éviter de rescanner ~72k versions à chaque requête.
- */
-export async function getLevelCounts(textId?: string): Promise<LevelCounts> {
-  const key = textId ?? 'all'
-  const now = Date.now()
-  const cached = levelCountsCache.get(key)
-  if (cached && cached.expiresAt > now) {
-    return { ...cached.counts }
-  }
-
-  const baseCond = textId ? and(articleInForce(), eq(legalArticle.textId, textId)) : articleInForce()
-  const rows = await db()
-    .select({
-      level: articleStatus.level,
-      total: count(),
-    })
-    .from(legalArticle)
-    .leftJoin(articleStatus, eq(articleStatus.articleId, legalArticle.id))
-    .where(baseCond)
-    .groupBy(articleStatus.level)
-
-  const counts = emptyLevelCounts()
-  for (const row of rows) {
-    const lvl = asLevel(row.level)
-    counts[lvl] += Number(row.total)
-  }
-
-  levelCountsCache.set(key, { expiresAt: now + LEVEL_COUNTS_TTL_MS, counts })
-  return { ...counts }
-}
+export { getLevelCounts } from './level-counts.ts'

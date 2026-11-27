@@ -43,11 +43,12 @@ $effect(() => {
 
 const nav = [
   { href: '/carte', label: 'Carte' },
-  { href: '/experiences/allocations-familiales', label: 'Expériences', matchPrefix: '/experiences' },
-  { href: '/anomalies', label: 'Constats' },
-  { href: '/journal', label: 'Journal' },
-  { href: '/methode', label: 'Méthode' },
+  { href: '/taches', label: 'Tâches' },
   { href: '/live', label: 'En direct' },
+  { href: '/anomalies', label: 'Constats' },
+  { href: '/experiences', label: 'Expériences' },
+  { href: '/methode', label: 'Méthode' },
+  { href: '/journal', label: 'Journal' },
 ]
 
 const current = (item: { href: string; matchPrefix?: string }) => {
@@ -62,7 +63,7 @@ const current = (item: { href: string; matchPrefix?: string }) => {
 
 <a
   href="#contenu"
-  class="sr-only-focusable fixed left-3 top-3 z-50 rounded-full border border-brand bg-surface px-4 py-2 text-sm font-semibold text-ink shadow-md"
+  class="sr-only-focusable fixed left-3 top-3 z-50 rounded-[var(--radius)] border border-brand bg-surface px-4 py-2 text-sm font-semibold text-ink shadow-md"
 >
   Aller au contenu
 </a>
@@ -95,7 +96,7 @@ const current = (item: { href: string; matchPrefix?: string }) => {
   <div class="container-wide flex h-17 items-center justify-between gap-4">
     <a href="/" class="flex items-center gap-2.5 text-ink no-underline shrink-0">
       <img src={icon} alt="" width="28" height="28" />
-      <span class="font-serif text-[1.4rem] font-semibold tracking-tight">BugDeLoi</span>
+      <span class="font-display text-[1.35rem] font-extrabold tracking-tight [font-stretch:118%]">BugDeLoi</span>
       <span class="hidden text-xs text-muted 2xl:inline">· observatoire du droit calculable</span>
     </a>
 
@@ -107,8 +108,9 @@ const current = (item: { href: string; matchPrefix?: string }) => {
               href={item.href}
               aria-current={current(item) ? 'page' : undefined}
               class={cn(
-                'block whitespace-nowrap rounded-full px-3.5 py-1.5 text-[0.88rem] font-medium text-muted no-underline transition-colors hover:text-ink hover:bg-surface-2/70',
-                'aria-[current=page]:text-ink aria-[current=page]:font-semibold aria-[current=page]:bg-surface-2',
+                'relative block whitespace-nowrap px-3 py-2 text-[0.9rem] font-medium text-muted no-underline transition-colors hover:text-ink',
+                "after:absolute after:inset-x-3 after:-bottom-[0.95rem] after:h-[3px] after:bg-transparent after:content-['']",
+                'aria-[current=page]:text-ink aria-[current=page]:font-semibold aria-[current=page]:after:bg-brand',
               )}
             >
               {item.label}
@@ -123,7 +125,7 @@ const current = (item: { href: string; matchPrefix?: string }) => {
         type="button"
         onclick={() => (searchOpen = true)}
         aria-label="Rechercher un article de loi ou un constat"
-        class="inline-flex h-9 items-center gap-2 rounded-full bg-surface-2/85 px-3.5 text-xs font-medium text-muted transition-colors hover:bg-surface-3 hover:text-ink cursor-pointer"
+        class="inline-flex h-9 items-center gap-2 rounded-[var(--radius)] bg-surface-2/85 px-3.5 text-xs font-medium text-muted transition-colors hover:bg-surface-3 hover:text-ink cursor-pointer"
       >
         <Search class="size-3.5" aria-hidden="true" />
         <span class="hidden md:inline">Rechercher un article…</span>
@@ -141,7 +143,7 @@ const current = (item: { href: string; matchPrefix?: string }) => {
         onclick={() => (mobileNavOpen = !mobileNavOpen)}
         aria-expanded={mobileNavOpen}
         aria-label="Ouvrir le menu de navigation"
-        class="inline-flex size-9 items-center justify-center rounded-full bg-surface-2 text-ink lg:hidden cursor-pointer"
+        class="inline-flex size-9 items-center justify-center rounded-[var(--radius)] bg-surface-2 text-ink lg:hidden cursor-pointer"
       >
         {#if mobileNavOpen}
           <X class="size-4" aria-hidden="true" />
@@ -193,7 +195,7 @@ const current = (item: { href: string; matchPrefix?: string }) => {
     <div class="space-y-3">
       <a href="/" class="flex items-center gap-2 text-ink no-underline">
         <img src={icon} alt="" width="24" height="24" />
-        <span class="font-serif text-lg font-semibold">BugDeLoi</span>
+        <span class="font-display text-lg font-semibold">BugDeLoi</span>
       </a>
       <p class="leading-relaxed">
         Traduire le droit calculable français en règles exécutables, documenter chaque écart de manière reproductible et ouvrir les données aux citoyens, journalistes, juristes et agents IA.
@@ -206,6 +208,7 @@ const current = (item: { href: string; matchPrefix?: string }) => {
       <ul class="space-y-2">
         <li><a href="/carte">Carte des codes (CGI, CSS, CCH)</a></li>
         <li><a href="/experiences/allocations-familiales">Allocations familiales · impact en €</a></li>
+        <li><a href="/taches">Tâches à prendre</a> · <a href="/live">Travail en direct</a></li>
         <li><a href="/references">Programmes de référence ★ (Inria)</a></li>
         <li><a href="/anomalies">Anomalies qualifiées</a></li>
         <li><a href="/anomalies/cimetiere">Cimetière des constats rejetés</a></li>

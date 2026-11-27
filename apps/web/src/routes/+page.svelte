@@ -1,310 +1,45 @@
 <script lang="ts">
-import { AlertTriangle, ArrowRight, Bot, CheckCircle2, ExternalLink, Terminal } from '@lucide/svelte'
+import { ArrowRight, ExternalLink, Terminal } from '@lucide/svelte'
 import EmptyState from '#lib/components/EmptyState.svelte'
-import { Button, CopyButton, HoverCard, SegmentedControl, Tabs } from '#lib/components/ui/index.ts'
-import {
-  C03EuroBars,
-  ChantierRace,
-  type FunnelStage,
-  HomeTreemap,
-  ProofScaleInteractive,
-  type RaceTrack,
-  SinceLastVisit,
-  SweepFunnel,
-} from '#lib/components/viz/index.ts'
-import ProjectPipelineIllustration from '#lib/components/viz/ProjectPipelineIllustration.svelte'
-import { getShellActions } from '#lib/context/shell.ts'
-import { formatDateTime, formatInt, formatLegiDate, plural } from '#lib/format.ts'
-import { addCounts, emptyLevelCounts } from '#lib/levels.ts'
+import Term from '#lib/components/Term.svelte'
+import { CopyButton } from '#lib/components/ui/index.ts'
+import ArticleJourney from '#lib/components/work/ArticleJourney.svelte'
+import Hemicycle from '#lib/components/work/Hemicycle.svelte'
+import LevelTally from '#lib/components/work/LevelTally.svelte'
+import LiveNumber from '#lib/components/work/LiveNumber.svelte'
+import WorkBoard from '#lib/components/work/WorkBoard.svelte'
+import { formatInt } from '#lib/format.ts'
+import { addCounts, emptyLevelCounts, LEVEL_INFO, type Level, levelSlug } from '#lib/levels.ts'
 import type { Snapshot } from '#lib/snapshot.ts'
 import type { PageProps } from './$types'
 
 let { data }: PageProps = $props()
-const shell = getShellActions()
 
 let live = $state<Snapshot | null>(null)
-let sseConnected = $state(false)
-let findingFilter = $state('all')
+let selected = $state<Level | null>(null)
+let perSeat = $state(10)
 
 const snap = $derived(live ?? data.snapshot)
-const example = $derived(snap?.referenceExample ?? null)
 
-const totals = $derived.by(() => {
+const levels = $derived.by(() => {
   const counts = emptyLevelCounts()
   for (const code of snap?.codes ?? []) addCounts(counts, code.byLevel)
   return counts
 })
-
-const inForceTotal = $derived((snap?.codes ?? []).reduce((sum, code) => sum + code.inForce, 0))
-const catalaFormalized = $derived(totals.REF + totals.N1 + totals.N2 + totals.N3 + totals.N4 + totals.N5)
-const catalaProgressPct = $derived(
-  inForceTotal > 0 ? ((catalaFormalized / inForceTotal) * 100).toFixed(2).replace('.', ',') : '0,00',
+const inForce = $derived((snap?.codes ?? []).reduce((sum, c) => sum + c.inForce, 0))
+const started = $derived(inForce - levels.N0)
+const startedPct = $derived(
+  inForce > 0 ? ((started / inForce) * 100).toLocaleString('fr-FR', { maximumFractionDigits: 1 }) : '0',
 )
-const totalInriaTests = $derived((snap?.suites ?? []).reduce((sum, suite) => sum + suite.passed, 0))
-const activeSuites = $derived((snap?.suites ?? []).filter((s) => s.tests > 0))
-const latestEvent = $derived(snap?.events?.[0] ?? null)
+const inriaTests = $derived((snap?.suites ?? []).reduce((n, s) => n + s.passed, 0))
+const inriaTotal = $derived((snap?.suites ?? []).reduce((n, s) => n + s.tests, 0))
+const lanes = $derived(snap?.work.lanes ?? [])
 
 const euros = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' })
 const fmtEur = (cents: number) => euros.format(cents / 100)
 const fmtDelta = (cents: number) => `${cents > 0 ? '+' : ''}${euros.format(cents / 100)}`
 
-function relativeTime(iso: string): string {
-  const diffSec = Math.max(0, Math.round((Date.now() - Date.parse(iso)) / 1000))
-  if (diffSec < 60) return `il y a ${diffSec} s`
-  const min = Math.round(diffSec / 60)
-  if (min < 60) return `il y a ${min} min`
-  const hrs = Math.round(min / 60)
-  if (hrs < 24) return `il y a ${hrs} h`
-  const days = Math.round(hrs / 24)
-  return `il y a ${days} j`
-}
-
-function humanActor(actor: string): string {
-  if (actor === 'system:c0.1') return 'Audit des programmes Inria'
-  if (actor === 'system:sweep') return 'Contrôle des trois codes'
-  if (actor === 'system:ingest') return 'Import Légifrance'
-  if (actor.startsWith('claude/')) return 'Vérification croisée · Anthropic'
-  if (actor.startsWith('codex/')) return 'Vérification croisée · OpenAI'
-  if (actor.startsWith('google/')) return 'Vérification croisée · Google'
-  if (actor.startsWith('github:')) return `@${actor.slice(7)}`
-  return actor
-}
-
-const claudeMcpCommand = $derived(`claude mcp add --transport http bugdeloi ${data.origin}/api/mcp`)
-
-const filteredFindings = $derived.by(() => {
-  const list = snap?.reproducedPreview ?? []
-  if (findingFilter === 'SYNTAXE') return list.filter((f) => f.type === 'SYNTAXE')
-  if (findingFilter === 'REF_MORTE') return list.filter((f) => f.type === 'REF_MORTE')
-  return list
-})
-
-const funnelStages = $derived.by<FunnelStage[]>(() => {
-  const p = snap?.pipeline
-  const syntaxe = p?.reproducedByType.SYNTAXE ?? 0
-  const refMorte = p?.reproducedByType.REF_MORTE ?? 0
-  return [
-    {
-      id: 'articles',
-      label: 'Articles en vigueur contrôlés',
-      count: p?.articlesChecked ?? inForceTotal,
-      sublabel: 'Impôts, Sécurité sociale, Construction et habitation',
-      detail:
-        'Chaque article en vigueur à la date officielle est vérifié par quatre programmes déterministes, sans intelligence artificielle.',
-      tone: 'neutral',
-    },
-    {
-      id: 'links',
-      label: 'Liens entre textes analysés',
-      count: p?.linksTotal ?? 0,
-      sublabel: 'Citations, modifications et abrogations suivies dans le temps',
-      detail:
-        'Un renvoi vers une ancienne version d’un article toujours en vigueur n’est pas signalé comme mort.',
-      tone: 'cobalt',
-    },
-    {
-      id: 'reproduced',
-      label: 'Constats reproduits',
-      count: p?.reproducedCount ?? 0,
-      sublabel: `${formatInt(refMorte)} renvois vers un article abrogé · ${formatInt(syntaxe)} défauts typographiques`,
-      detail:
-        'Confirmés par une seconde vérification indépendante (archives officielles XML et « La loi sous git »). Consultables avant tout verdict humain.',
-      tone: 'amber',
-    },
-    {
-      id: 'qualified',
-      label: 'Anomalies qualifiées',
-      count: snap?.findings.public ?? 0,
-      sublabel: 'Verdict humain signé dans Git',
-      detail:
-        'Aucun constat n’entre dans ce compteur avant relecture et verdict motivé d’un humain. Un premier lot de 9 défauts typographiques est prêt.',
-      tone: 'emerald',
-    },
-  ]
-})
-
-const raceTracks = $derived.by<RaceTrack[]>(() => {
-  const p = snap?.pipeline
-  return [
-    {
-      id: 'c01',
-      title: 'Vérification des programmes Inria',
-      subtitle: 'Allocations, APL, impôt sur le revenu, successions',
-      summary: `${formatInt(totalInriaTests)} tests verts · ${activeSuites.length} suites`,
-      statusBadge: '100 % exécuté',
-      statusTone: 'emerald',
-      href: '/references',
-      rungs: [
-        {
-          id: 'img',
-          label: 'Compilateur Catala 1.3.2 figé',
-          state: 'done',
-          detail:
-            'Environnement verrouillé par empreinte cryptographique pour obtenir exactement les mêmes résultats.',
-        },
-        {
-          id: 'af',
-          label: 'Allocations familiales (32 tests)',
-          state: 'done',
-          detail: '32 tests Inria réussis.',
-        },
-        {
-          id: 'apl',
-          label: 'Aides au logement (68 tests)',
-          state: 'done',
-          detail: '68 tests Inria réussis.',
-        },
-        {
-          id: 'ir',
-          label: 'Impôt sur le revenu (54 tests)',
-          state: 'done',
-          detail: '54 tests DGFiP / Inria réussis.',
-        },
-        {
-          id: 'other',
-          label: 'Successions et aides (17 tests)',
-          state: 'done',
-          detail: 'Successions (8), ASP (7) et prestations familiales (2) réussis.',
-        },
-        {
-          id: 'ref',
-          label: 'Report sur la carte ★',
-          state: 'done',
-          detail: `${formatInt(totals.REF)} articles en vigueur reliés sur la carte.`,
-        },
-      ],
-    },
-    {
-      id: 'c02',
-      title: 'Détection mécanique d’anomalies',
-      subtitle: 'Renvois abrogés, numérotation et typographie',
-      summary: `${formatInt(p?.reproducedCount ?? 0)} reproduits · ${formatInt(p?.withdrawnCount ?? 0)} écartés`,
-      statusBadge: 'Relecture attendue',
-      statusTone: 'amber',
-      href: '/anomalies',
-      rungs: [
-        {
-          id: 'ing',
-          label: 'Chargement des trois codes',
-          state: 'done',
-          detail: `${formatInt(inForceTotal)} articles en vigueur et ${formatInt(p?.linksTotal ?? 0)} liens officiels chargés.`,
-        },
-        {
-          id: 'det',
-          label: 'Balayage déterministe',
-          state: 'done',
-          detail: 'Quatre détecteurs sans IA exécutés sur les textes en vigueur.',
-        },
-        {
-          id: 'ind1',
-          label: 'Vérification croisée n° 1',
-          state: 'done',
-          detail: '9 défauts typographiques confirmés ; 7 faux signalements détectés et retirés.',
-        },
-        {
-          id: 'ind2',
-          label: 'Vérification XML Légifrance',
-          state: 'done',
-          detail: '1 110 renvois vers articles abrogés confirmés sur les archives brutes.',
-        },
-        {
-          id: 'qual',
-          label: 'Verdict humain',
-          state: 'blocked',
-          detail: 'Dossier des 9 défauts typographiques prêt pour qualification signée.',
-        },
-        {
-          id: 'pub',
-          label: 'Publication au registre',
-          state: 'todo',
-          detail: 'Inscription au registre public des anomalies qualifiées.',
-        },
-      ],
-    },
-    {
-      id: 'c03',
-      title: 'Allocations familiales à l’aveugle',
-      subtitle: 'Traduire la loi sans voir le code Inria',
-      summary: `${data.c03.scores.completed.passed}/${data.c03.scores.completed.total} cas · 2 écarts contre Inria`,
-      statusBadge: 'Contre-vérifié',
-      statusTone: 'cobalt',
-      href: '/experiences/allocations-familiales',
-      rungs: [
-        {
-          id: 'pack',
-          label: 'Textes officiels isolés',
-          state: 'done',
-          detail: 'Seuls les articles en vigueur et les données d’entrée sont fournis.',
-        },
-        {
-          id: 'sub',
-          label: 'Traduction exécutable',
-          state: 'done',
-          detail: 'Programme compilé sans erreur sous Catala 1.3.2.',
-        },
-        {
-          id: 'audit',
-          label: 'Comparaison chiffrée',
-          state: 'done',
-          detail: '9 montants identiques au centime, 3 écarts d’arrondi de 0,01 €, 2 désaccords.',
-        },
-        {
-          id: 'xcheck',
-          label: 'Double revue indépendante',
-          state: 'done',
-          detail: 'Anthropic et Google ont audité séparément Guyane et Mayotte.',
-        },
-        {
-          id: 'hum',
-          label: 'Arbitrage juriste',
-          state: 'blocked',
-          detail: 'Décision juridique attendue sur les deux écarts contre Inria.',
-        },
-        {
-          id: 'n4',
-          label: 'Tests sur 10 000 foyers',
-          state: 'todo',
-          detail: 'Passage au niveau N4 après arbitrage.',
-        },
-      ],
-    },
-    {
-      id: 'c04_06',
-      title: 'Impôt sur le revenu et effets de seuil',
-      subtitle: 'Barème, quotient familial et décote (CGI 193–197)',
-      summary: 'Guichet et MCP prêts',
-      statusBadge: 'Prochain chantier',
-      statusTone: 'muted',
-      href: '/join',
-      rungs: [
-        {
-          id: 'desk',
-          label: 'Guichet et serveur MCP',
-          state: 'done',
-          detail: 'Accès ouvert aux agents IA et distribution de tâches prêts.',
-        },
-        {
-          id: 'c04',
-          label: 'Ambiguïtés connues',
-          state: 'todo',
-          detail: 'Retrouver les 21 questions juridiques déjà annotées par Inria.',
-        },
-        {
-          id: 'c05',
-          label: 'Noyau IR (art. 193–197)',
-          state: 'todo',
-          detail: 'Formalisation vérifiée contre le BOFiP et OpenFisca.',
-        },
-        {
-          id: 'c06',
-          label: 'Détecteur de falaises',
-          state: 'todo',
-          detail: 'Repérer les zones où un euro gagné réduit le revenu disponible.',
-        },
-      ],
-    },
-  ]
-})
+const mcpCommand = $derived(`claude mcp add --transport http bugdeloi ${data.origin}/api/mcp`)
 
 $effect(() => {
   let es: EventSource | null = null
@@ -314,792 +49,630 @@ $effect(() => {
       const r = await fetch('/api/snapshot.json', { headers: { accept: 'application/json' } })
       if (r.ok) live = (await r.json()) as Snapshot
     } catch {
-      // réseau indisponible
+      // réseau indisponible : on garde le dernier instantané
     }
   }
   const startPolling = () => {
-    sseConnected = false
     poll ??= setInterval(refresh, 30_000)
-  }
-  const stopPolling = () => {
-    if (poll) clearInterval(poll)
-    poll = null
   }
   if (typeof EventSource === 'undefined') {
     startPolling()
   } else {
     es = new EventSource('/api/stream')
-    es.addEventListener('open', () => {
-      sseConnected = true
-    })
     es.addEventListener('snapshot', (e) => {
       try {
         live = JSON.parse((e as MessageEvent<string>).data) as Snapshot
-        sseConnected = true
-        stopPolling()
+        if (poll) clearInterval(poll)
+        poll = null
       } catch {
-        // message illisible
+        // trame illisible
       }
     })
     es.onerror = () => startPolling()
   }
   return () => {
     es?.close()
-    stopPolling()
+    if (poll) clearInterval(poll)
   }
 })
 </script>
 
 <svelte:head>
-  <title>BugDeLoi · vérifier la loi française comme un logiciel</title>
+  <title>BugDeLoi · le droit qui calcule, article par article</title>
   <meta
     name="description"
-    content="La loi française fixe des milliers de calculs (impôts, allocations familiales, aides au logement). BugDeLoi les traduit en formules vérifiables pour mesurer leur effet en euros et repérer les erreurs dans les textes officiels."
+    content="Les codes des impôts, de la sécurité sociale et du logement fixent des milliers de calculs. BugDeLoi les réécrit en code exécutable, article par article, et publie de quoi rejouer chaque résultat."
   />
 </svelte:head>
 
-<!-- BANDE 0 : Dernière nouvelle concrète (plein bord) -->
-{#if latestEvent}
-  <div class="bg-obs-bg text-obs-ink">
-    <div class="container-wide flex flex-wrap items-center justify-between gap-x-6 gap-y-1.5 py-2.5 text-xs sm:text-[0.82rem]">
-      <div class="flex min-w-0 items-center gap-3">
-        <span class="inline-flex shrink-0 items-center gap-2 font-semibold text-obs-amber">
-          <span class="live-dot" aria-hidden="true"></span>
-          À l’instant
-        </span>
-        <a
-          href={`/evenement/${latestEvent.id}`}
-          class="truncate text-obs-ink/95 no-underline hover:text-obs-emerald hover:underline"
-        >
-          {latestEvent.headline}
-        </a>
+<!-- 1. L'assemblée des articles : où en est le corpus, en un regard -->
+<section class="hero" aria-labelledby="hero-title">
+  <div class="container-wide pt-8 pb-10 sm:pt-10">
+    {#if snap}
+      <Hemicycle
+        counts={levels}
+        bind:selected
+        bind:perSeat
+        label={`Hémicycle des ${formatInt(inForce)} articles en vigueur, un point pour ${perSeat} articles, coloré par niveau de preuve.`}
+      >
+        {#snippet footNote()}
+          <p class="text-[0.82rem] leading-snug text-muted">
+            <strong class="font-display text-[0.95rem] text-ink [font-stretch:110%]">En couleur, au pied gauche :</strong>
+            les {formatInt(started)} articles analysés, traduits ou déjà formalisés par la recherche publique.
+          </p>
+        {/snippet}
+        {#snippet center()}
+          <h1 id="hero-title" class="hero-title">Le droit qui calcule,<br /> article par article.</h1>
+          <p class="mt-4 text-[1.02rem] leading-snug text-ink sm:text-[1.1rem]">
+            <strong class="font-display text-[1.6rem] font-extrabold [font-stretch:115%] text-brand"><LiveNumber value={started} /></strong>
+            des <strong>{formatInt(inForce)}</strong> articles en vigueur ont commencé leur parcours
+            <span class="whitespace-nowrap">({startedPct} %).</span>
+          </p>
+          <div class="mt-5 flex flex-wrap justify-center gap-3">
+            <a href="#parcours" class="cta cta-primary">Suivre le parcours d’un article <ArrowRight class="size-4" aria-hidden="true" /></a>
+            <a href="/live" class="cta cta-secondary">Le travail en direct</a>
+          </div>
+        {/snippet}
+      </Hemicycle>
+      <div class="mt-8">
+        <LevelTally counts={levels} bind:selected />
       </div>
-      <div class="flex shrink-0 items-center gap-3 text-obs-muted">
-        <time datetime={latestEvent.ts}>{relativeTime(latestEvent.ts)}</time>
-        <a
-          href={`/evenement/${latestEvent.id}`}
-          class="inline-flex items-center gap-1 font-semibold text-obs-amber no-underline hover:underline"
-        >
-          Voir le détail
-          <ArrowRight class="size-3.5" aria-hidden="true" />
-        </a>
+      <p class="mt-4 max-w-[90ch] text-[0.84rem] leading-relaxed text-muted">
+        Chaque point représente {perSeat} <Term id="article">articles</Term> <Term id="en-vigueur">en vigueur</Term>
+        du Code général des impôts, du Code de la sécurité sociale ou du Code de la construction et de l’habitation
+        (tout niveau non vide a au moins un point). Sa couleur dit le dernier contrôle réussi : le
+        <Term id="niveau">niveau de preuve</Term>. Cliquez un niveau pour isoler ses points ; les nombres exacts sont
+        dans le décompte. <strong class="text-ink">Un compte, pas une probabilité.</strong>
+        <a href="/methode#compteurs">Comment ces nombres sont calculés</a>.
+      </p>
+      {#if selected}
+        <p class="selected-note" aria-live="polite">
+          <span class="dot lvl-bg-{levelSlug(selected)}" aria-hidden="true"></span>
+          <span><strong>{selected === 'REF' ? '★' : selected} {LEVEL_INFO[selected].label}</strong> — {LEVEL_INFO[selected].meaning}</span>
+        </p>
+      {/if}
+    {:else}
+      <h1 id="hero-title" class="hero-title text-left">Le droit qui calcule, article par article.</h1>
+      <div class="mt-6">
+        <EmptyState title="Les chiffres en direct sont temporairement indisponibles.">
+          Consultez <a href="/status">l’état du service</a>.
+        </EmptyState>
       </div>
+    {/if}
+  </div>
+</section>
+
+<!-- 2. Le parcours d'un article -->
+<section id="parcours" class="border-t border-line bg-surface" aria-labelledby="parcours-title">
+  <div class="container-wide py-16 sm:py-20">
+    <div class="grid gap-6 lg:grid-cols-[1fr_1fr] lg:items-end">
+      <h2 id="parcours-title" class="section-title">Six étapes, chacune contrôlée par une machine ou par un humain.</h2>
+      <p class="max-w-[60ch] text-[1.02rem] leading-relaxed text-muted">
+        Un article monte d’un niveau quand il réussit le contrôle de l’étape. Des agents IA proposent le travail ; ils ne
+        le valident jamais. Le juge est le <Term id="compilateur">compilateur</Term>, un
+        <Term id="oracle">oracle</Term> indépendant ou un juriste qui signe.
+      </p>
+    </div>
+    <div class="mt-12">
+      <ArticleJourney {levels} {lanes} />
     </div>
   </div>
-{/if}
+</section>
 
-<!-- BANDE 1 : HERO CLAIR POUR TOUS & JOURNAL EN DIRECT CONCRET -->
-<section class="bg-bg" aria-labelledby="hero-title">
-  <div class="container-wide py-14 sm:py-20 lg:py-24">
-    <div class="grid gap-14 lg:grid-cols-12 lg:items-start">
-      <div class="lg:col-span-7 space-y-7">
-        <div class="space-y-5">
-          <h1
-            id="hero-title"
-            class="font-serif text-[2.85rem] font-semibold leading-[1.03] tracking-tight text-ink sm:text-[4rem] lg:text-[4.65rem]"
-          >
-            Vérifier formellement la loi française par ordinateur.
-          </h1>
-          <p class="max-w-[58ch] font-serif text-xl leading-relaxed text-ink/90 sm:text-[1.42rem]">
-            À la manière d’un assistant de preuve comme Lean pour le logiciel, BugDeLoi traduit progressivement la loi
-            française en Catala avec la communauté pour établir quels articles sont cohérents, applicables et sans
-            incompatibilité ni contournement face au reste du droit.
-          </p>
-          <p class="max-w-[58ch] text-base leading-relaxed text-muted">
-            Chaque article progresse de son texte brut (N0) jusqu’à la certification complète (N5) : le compilateur
-            Catala prouve l’absence de conflit et de cas vide, puis des juristes signent la revue.
-          </p>
-        </div>
-
-        {#if snap}
-          <div class="space-y-3 border-y border-line py-6">
-            <p class="flex flex-wrap items-baseline gap-x-3 gap-y-2 text-base text-ink sm:text-lg tabular">
-              <span>
-                <strong class="font-serif text-2xl font-semibold text-brand-strong sm:text-3xl">{catalaProgressPct} %</strong>
-                formalisé en Catala ({formatInt(catalaFormalized)} / {formatInt(inForceTotal)})
-              </span>
-              <span class="text-line-strong" aria-hidden="true">·</span>
-              <span>
-                <strong class="font-serif text-2xl font-semibold text-ink sm:text-3xl">{formatInt(totals.N5)}</strong>
-                niveau N5
-              </span>
-              <span class="text-line-strong" aria-hidden="true">·</span>
-              <span>
-                <strong class="font-serif text-2xl font-semibold text-notice-ink sm:text-3xl">{formatInt(snap.pipeline.reproducedCount)}</strong>
-                incompatibilités &amp; renvois cassés
-              </span>
-            </p>
-            <p class="text-xs text-muted">
-              {formatInt(totals.REF)} articles ★ Référence ({formatInt(totalInriaTests)} tests Catala 1.3.2 verts) · {formatInt(snap.findings.public)} anomalie qualifiée par un humain ·
-              <strong class="font-medium text-ink">Un compte, pas une probabilité.</strong>
-              <a href="/methode#compteurs">Méthode →</a>
-            </p>
-          </div>
-        {:else}
-          <EmptyState title="Les chiffres en direct sont temporairement indisponibles.">
-            Consultez <a href="/status">l’état du service</a>.
-          </EmptyState>
-        {/if}
-
-        <div class="flex flex-wrap items-center gap-3.5 pt-1">
-          <Button href="/join" variant="ink" size="lg">
-            Contribuer en Catala
-            <ArrowRight class="size-4" aria-hidden="true" />
-          </Button>
-          <Button href="#lois-verifiees" variant="secondary" size="lg">
-            Lois vérifiées
-          </Button>
-          <Button href="/anomalies" variant="ghost" size="lg">
-            Voir les incompatibilités
-          </Button>
-        </div>
+<!-- 3. Un exemple réel, de bout en bout -->
+{#if data.specimen}
+  {@const sp = data.specimen}
+  <section class="border-t border-line bg-bg" aria-labelledby="exemple-title">
+    <div class="container-wide py-16 sm:py-20">
+      <div class="grid gap-6 lg:grid-cols-[1fr_1fr] lg:items-end">
+        <h2 id="exemple-title" class="section-title">Un vrai article, du texte au test : l’article {sp.num} du CGI.</h2>
+        <p class="max-w-[60ch] text-[1.02rem] leading-relaxed text-muted">
+          Ce qui suit est lu directement dans le fichier du corpus, sans retouche. L’article est aujourd’hui au niveau
+          {#if sp.level}<strong class="text-ink">{sp.level} {LEVEL_INFO[sp.level].label}</strong>{:else}inconnu{/if} ;
+          l’étape suivante est l’écriture de cas de test indépendants.
+        </p>
       </div>
 
-      <!-- Journal en direct : titres factuels et chiffrés -->
-      <aside
-        class="min-w-0 lg:col-span-5 lg:border-l lg:border-line lg:pl-12 space-y-5"
-        aria-labelledby="live-panel-title"
-      >
-        <div class="flex items-baseline justify-between gap-3">
-          <h2 id="live-panel-title" class="flex items-center gap-2 text-sm font-semibold text-ink">
-            <span class="live-dot" aria-hidden="true"></span>
-            {sseConnected ? 'Journal en direct' : 'Dernières vérifications'}
-          </h2>
-          <a href="/journal" class="text-xs font-semibold text-brand-strong no-underline hover:underline">
-            Tout le journal →
-          </a>
-        </div>
-
-        {#if snap && snap.events.length > 0}
-          <ul class="divide-y divide-line border-t border-line">
-            {#each snap.events.slice(0, 4) as ev (ev.id)}
-              <li class="min-w-0 py-4">
-                <div class="flex items-baseline justify-between gap-3 text-xs">
-                  <span class="min-w-0 truncate font-medium text-brand-strong">{humanActor(ev.actor)}</span>
-                  <time datetime={ev.ts} class="shrink-0 text-subtle tabular">{relativeTime(ev.ts)}</time>
-                </div>
-                <a
-                  href={`/evenement/${ev.id}`}
-                  class="mt-1 block font-serif text-[1.12rem] font-medium leading-snug text-ink no-underline hover:text-brand-strong hover:underline"
-                >
-                  {ev.headline}
-                </a>
-                <p class="mt-1 text-xs leading-relaxed text-muted">
-                  {ev.detail}
-                </p>
+      <ol class="specimen mt-12">
+        <li class="plate">
+          <p class="plate-label"><span class="plate-n">1</span> Le texte officiel</p>
+          <blockquote class="font-law text-[1.35rem] leading-snug text-ink">« {sp.lawText} »</blockquote>
+          <p class="plate-foot">
+            <a href={`/article/${sp.legiarti}`}>{sp.legiarti}</a> · la loi parle
+          </p>
+        </li>
+        <li class="plate">
+          <p class="plate-label"><span class="plate-n">2</span> <span><Term id="interface">Interface</Term> figée</span></p>
+          <ul class="space-y-2">
+            {#each sp.fields as f (f.name)}
+              <li class="field-row">
+                <span class="field-kind" data-kind={f.kind}>{f.kind}</span>
+                <code class="min-w-0 text-[0.8rem] [overflow-wrap:anywhere]">{f.name}</code>
+                <span class="text-[0.72rem] text-subtle">{f.type}</span>
               </li>
             {/each}
           </ul>
-        {:else}
-          <p class="text-sm text-muted">En attente des premières opérations publiques.</p>
-        {/if}
-      </aside>
-    </div>
-  </div>
-</section>
-
-<!-- BANDE 1.2 : ÉTAT DE LA VÉRIFICATION FORMELLE DES LOIS -->
-<section id="lois-verifiees" class="border-t border-line bg-surface py-14 sm:py-16" aria-labelledby="lois-verifiees-title">
-  <div class="container-wide space-y-8">
-    <div class="flex flex-wrap items-end justify-between gap-4">
-      <div class="max-w-3xl space-y-2">
-        <h2 id="lois-verifiees-title" class="font-serif text-3xl font-semibold text-ink sm:text-4xl">
-          Quelles lois sont vérifiées par l’ordinateur aujourd’hui ?
-        </h2>
-        <p class="text-base leading-relaxed text-muted">
-          Un article n’est déclaré vérifié qu’une fois traduit en Catala, compilé sans conflit ni cas non couvert,
-          confronté à des oracles indépendants et relu par un juriste. Voici l’état exact et transparent du corpus.
-        </p>
-      </div>
-      <div class="flex flex-wrap items-center gap-4">
-        <a href="/travail?niveau=formalises" class="text-sm font-semibold text-brand-strong no-underline hover:underline">
-          Parcourir tout le travail ({formatInt(totals.N1 + totals.N2 + totals.N3 + totals.N4 + totals.N5 + totals.REF)}) →
-        </a>
-        <a href="/methode" class="text-sm font-semibold text-muted no-underline hover:text-ink hover:underline">
-          Échelle de preuve N0 → N5 →
-        </a>
-      </div>
-    </div>
-
-    <div class="grid gap-6 lg:grid-cols-3">
-      <!-- Widget 1 : Niveau N5 Certifié -->
-      <article class="flex flex-col justify-between rounded-2xl border border-line bg-bg p-6 sm:p-7">
-        <div class="space-y-4">
-          <div class="flex items-center justify-between gap-2">
-            <span class="rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand-strong">
-              Niveau N5 · Certifié
-            </span>
-            <span class="text-xs font-medium text-muted">Objectif final</span>
-          </div>
-          <h3 class="font-serif text-2xl font-semibold text-ink">
-            Lois sans contradiction ni inapplicabilité
-          </h3>
-          <p class="text-sm leading-relaxed text-muted">
-            Articles formalisés en Catala, testés sur au moins 10 000 cas contre des implémentations indépendantes,
-            exempts de conflit d’exceptions, de cas vide ou de contournement, avec revue juridique humaine signée.
-          </p>
-          <div class="rounded-xl border border-line bg-surface p-4">
-            <p class="text-xs font-semibold uppercase tracking-wide text-muted">Articles au niveau N5</p>
-            <p class="mt-1 font-serif text-3xl font-semibold text-ink tabular">{formatInt(totals.N5)}</p>
-            <p class="mt-0.5 text-xs text-muted">sur {formatInt(inForceTotal)} articles en vigueur · chantier ouvert à la communauté</p>
-          </div>
-        </div>
-        <div class="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
-          <a
-            href="/join"
-            class="inline-flex items-center gap-1.5 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
-          >
-            Formaliser un article
-            <ArrowRight class="size-4" aria-hidden="true" />
-          </a>
-          <a href="/methode" class="text-xs font-semibold text-muted no-underline hover:text-ink hover:underline">
-            Critères N1 → N5 →
-          </a>
-        </div>
-      </article>
-
-      <!-- Widget 2 : Articles ★ Référence -->
-      <article class="flex flex-col justify-between rounded-2xl border border-line bg-bg p-6 sm:p-7">
-        <div class="space-y-4">
-          <div class="flex items-center justify-between gap-2">
-            <span class="rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand-strong">
-              ★ Référence · Catala 1.3.2
-            </span>
-            <span class="text-xs font-medium text-muted">Inria · DGFiP · CNAF</span>
-          </div>
-          <h3 class="font-serif text-2xl font-semibold text-ink">
-            Lois déjà formalisées et exécutées en Catala
-          </h3>
-          <p class="text-sm leading-relaxed text-muted">
-            Versions en vigueur formalisées par des chercheurs ou administrations (impôt sur le revenu, allocations
-            familiales, aides au logement, successions) dont les suites de tests passent dans notre compilateur épinglé.
-          </p>
-          <div class="rounded-xl border border-line bg-surface p-4">
-            <p class="text-xs font-semibold uppercase tracking-wide text-muted">Articles ★ Référence</p>
-            <p class="mt-1 font-serif text-3xl font-semibold text-brand-strong tabular">{formatInt(totals.REF)}</p>
-            <p class="mt-0.5 text-xs text-muted">{formatInt(totalInriaTests)} tests Catala verts · {activeSuites.length} suites vérifiées</p>
-          </div>
-        </div>
-        <div class="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
-          <a
-            href="/references"
-            class="inline-flex items-center gap-1.5 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
-          >
-            Voir les {formatInt(totals.REF)} articles
-            <ArrowRight class="size-4" aria-hidden="true" />
-          </a>
-          <a href="/carte" class="text-xs font-semibold text-muted no-underline hover:text-ink hover:underline">
-            Explorer la carte →
-          </a>
-        </div>
-      </article>
-
-      <!-- Widget 3 : Incompatibilités et renvois cassés -->
-      <article class="flex flex-col justify-between rounded-2xl border border-line bg-bg p-6 sm:p-7">
-        <div class="space-y-4">
-          <div class="flex items-center justify-between gap-2">
-            <span class="rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand-strong">
-              Incompatibilités &amp; contradictions
-            </span>
-            <span class="text-xs font-medium text-muted">Contrôle continu</span>
-          </div>
-          <h3 class="font-serif text-2xl font-semibold text-ink">
-            Renvois abrogés, conflits et cas inapplicables
-          </h3>
-          <p class="text-sm leading-relaxed text-muted">
-            Détection mécanique des renvois vers des articles abrogés et des défauts de forme sur les trois codes,
-            complétée par la recherche de conflits logiques et de boucles circulaires à mesure que Catala progresse.
-          </p>
-          <div class="rounded-xl border border-line bg-surface p-4">
-            <p class="text-xs font-semibold uppercase tracking-wide text-muted">Constats reproduits</p>
-            <p class="mt-1 font-serif text-3xl font-semibold text-notice-ink tabular">
-              {formatInt(snap?.pipeline.reproducedCount ?? 0)}
-            </p>
-            <p class="mt-0.5 text-xs text-muted">en attente de qualification humaine signée dans Git</p>
-          </div>
-        </div>
-        <div class="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
-          <a
-            href="/anomalies"
-            class="inline-flex items-center gap-1.5 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
-          >
-            Consulter les constats
-            <ArrowRight class="size-4" aria-hidden="true" />
-          </a>
-          <a href="/anomalies/cimetiere" class="text-xs font-semibold text-muted no-underline hover:text-ink hover:underline">
-            Cimetière →
-          </a>
-        </div>
-      </article>
-    </div>
-
-    <div class="rounded-xl border border-line bg-bg px-5 py-4 space-y-3">
-      <div class="flex flex-wrap items-center justify-between gap-2 text-sm">
-        <p class="text-muted">
-          <strong class="font-semibold text-ink tabular">{formatInt(data.analyses.total)} articles analysés</strong>
-          (niveau N1, avant traduction Catala) :
-        </p>
-        <a href="/travail?niveau=analyses" class="font-semibold text-brand-strong no-underline hover:underline">
-          Parcourir toutes les analyses →
-        </a>
-      </div>
-      <div class="flex flex-wrap gap-2 text-xs">
-        <a
-          href="/travail?niveau=analyses&categorie=calculable"
-          class="rounded-full border border-line bg-surface px-3 py-1 font-medium text-ink no-underline hover:border-brand tabular"
-        >
-          Calculable · {formatInt(data.analyses.byCategory.calculable)}
-        </a>
-        <a
-          href="/travail?niveau=analyses&categorie=mixte"
-          class="rounded-full border border-line bg-surface px-3 py-1 font-medium text-ink no-underline hover:border-brand tabular"
-        >
-          Mixte · {formatInt(data.analyses.byCategory.mixte)}
-        </a>
-        <a
-          href="/travail?niveau=analyses&categorie=hors_perimetre"
-          class="rounded-full border border-line bg-surface px-3 py-1 font-medium text-ink no-underline hover:border-brand tabular"
-        >
-          Hors périmètre · {formatInt(data.analyses.byCategory.hors_perimetre)}
-        </a>
-        {#if data.analyses.byCategory.autre > 0}
-          <a
-            href="/travail?niveau=analyses&categorie=autre"
-            class="rounded-full border border-line bg-surface px-3 py-1 font-medium text-muted no-underline hover:border-brand tabular"
-          >
-            À préciser · {formatInt(data.analyses.byCategory.autre)}
-          </a>
-        {/if}
-      </div>
-    </div>
-
-    <div class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-line bg-bg px-5 py-4 text-sm">
-      <p class="text-muted">
-        <strong class="font-semibold text-ink">Annexes d’étalonnage :</strong>
-        simulateur multi-lois (effets de seuil), comparaison croisée OpenFisca-France et veille parlementaire Tricoteuses.
-      </p>
-      <a href="/experiences" class="font-semibold text-brand-strong no-underline hover:underline">
-        Ouvrir les annexes →
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- BANDE 1.5 : COMMENT FONCTIONNE BUGDELOI & ÉTAT DU PROJET -->
-<section id="fonctionnement" class="border-t border-line bg-bg py-16 sm:py-20" aria-labelledby="pipeline-title">
-  <div class="container-wide space-y-8">
-    <div class="max-w-3xl space-y-2.5">
-      <h2 id="pipeline-title" class="font-serif text-3xl font-semibold text-ink sm:text-4xl">
-        Comment fonctionne BugDeLoi et où en est le projet
-      </h2>
-      <p class="text-base leading-relaxed text-muted sm:text-lg">
-        De l’import automatique des lois chaque nuit jusqu’aux simulateurs gratuits dans votre navigateur : chaque
-        étape est publique, reproductible et mesurée en direct.
+          <p class="plate-foot">{sp.interfaceName ?? 'Interface'} · fixée avant le code</p>
+        </li>
+        <li class="plate plate-code">
+          <p class="plate-label"><span class="plate-n">3</span> La traduction en Catala</p>
+          <pre class="code"><code>{#each sp.scope.split('\n') as line, i (i)}<span class:comment={line.trim().startsWith('#')}>{line}</span>
+{/each}</code></pre>
+          <p class="plate-foot">Chaque règle cite l’alinéa qui la fixe</p>
+        </li>
+        <li class="plate plate-code">
+          <p class="plate-label"><span class="plate-n">4</span> Le test, exécuté par le compilateur</p>
+          <pre class="code"><code>{#each sp.test.split('\n') as line, i (i)}<span class:comment={line.trim().startsWith('#')} class:assert={line.trim().startsWith('assertion')}>{line}</span>
+{/each}</code></pre>
+          <p class="plate-foot plate-ok">Compilé et testé avec Catala 1.3.2 épinglé → niveau N2</p>
+        </li>
+      </ol>
+      <p class="mt-6 text-sm text-muted">
+        Fichier : <a href={`https://github.com/theonaciri/bugdeloi/blob/main/${sp.path}`} rel="external" class="[overflow-wrap:anywhere]">{sp.path}</a>
       </p>
     </div>
-    <ProjectPipelineIllustration
-      inForceArticles={inForceTotal}
-      refArticles={totals.REF}
-      reproducedSignals={snap?.pipeline.reproducedCount ?? 0}
-      openDeskTasks={snap?.desk.open ?? 0}
-    />
-  </div>
-</section>
+  </section>
+{/if}
 
-<!-- BANDE 2 : DE LA LOI AU MONTANT EN EUROS & CONSTATS REPRODUITS -->
-<section id="impact-euros" class="border-t border-line bg-surface py-18 sm:py-24" aria-labelledby="impact-title">
-  <div class="container-wide space-y-10">
-    <div class="max-w-3xl space-y-3">
-      <h2 id="impact-title" class="font-serif text-3xl font-semibold text-ink sm:text-5xl">
-        De l’article de loi au montant en euros
-      </h2>
-      <p class="text-base leading-relaxed text-muted sm:text-lg">
-        Consultez nos premiers résultats vérifiables : des écarts chiffrés sur les allocations familiales, les constats mécaniques ouverts avant verdict humain, et un exemple d’article traduit par la recherche publique.
-      </p>
-    </div>
-
-    <Tabs
-      defaultValue="c03"
-      ariaLabel="Résultats vérifiables de BugDeLoi"
-      items={[
-        { value: 'c03', label: 'Allocations familiales (impact €)', badge: `${data.c03.scores.completed.passed}/${data.c03.scores.completed.total}` },
-        { value: 'constats', label: 'Constats reproduits avant verdict', badge: formatInt(snap?.pipeline.reproducedCount ?? 0) },
-        { value: 'inria', label: 'Texte officiel et code Inria ★', badge: `${formatInt(totals.REF)} ★` },
-      ]}
-    >
-      {#snippet panel(tab)}
-        {#if tab === 'c03'}
-          <div class="space-y-12 pt-4">
-            <p class="max-w-[75ch] text-sm leading-relaxed text-muted">
-              Pour tester notre méthode, nous avons fait programmer les allocations familiales à partir du texte de loi seul, puis comparé chaque montant à celui du programme de référence écrit par les chercheurs d’<HoverCard>
-                {#snippet trigger()}Inria{/snippet}
-                {#snippet content()}
-                  <p class="font-semibold text-ink">Inria (Institut national de recherche en sciences du numérique)</p>
-                  <p class="mt-1 text-xs leading-relaxed text-muted">
-                    Les chercheurs d’Inria ont créé le langage Catala et codé plusieurs prestations françaises publiques (allocations familiales, APL, impôt sur le revenu). Leurs programmes nous servent de base de comparaison.
-                  </p>
-                {/snippet}
-              </HoverCard>.
-              Sur 14 situations chiffrées, <strong class="text-ink">9 tombent juste au centime</strong>, 3 diffèrent d’un centime d’arrondi, et <strong class="text-ink">2 révèlent un désaccord sur ce que prévoit réellement la loi en vigueur</strong> :
-            </p>
-
-            <!-- Deux cas phares : Guyane & Mayotte, explicites sur qui donne quel montant -->
-            <div class="grid gap-8 lg:grid-cols-2">
-              {#each data.c03.spotlights as spot (spot.name)}
-                {@const delta = spot.actualCents - spot.expectedCents}
-                <article class="flex flex-col justify-between gap-6 rounded-[var(--radius-xl)] bg-bg p-7 sm:p-9">
-                  <div class="space-y-5">
-                    <div class="flex flex-wrap items-baseline justify-between gap-3">
-                      <h3 class="font-serif text-2xl font-semibold text-ink">{spot.territory}</h3>
-                      <span class="font-serif text-2xl font-semibold tabular text-ko">
-                        {fmtDelta(delta)} <span class="text-sm font-normal text-muted">/ mois</span>
-                      </span>
-                    </div>
-
-                    <dl class="grid gap-6 border-y border-line py-5 sm:grid-cols-2">
-                      <div>
-                        <dt class="text-xs font-semibold text-muted">Montant du programme Inria</dt>
-                        <dd class="font-serif mt-1 text-3xl font-semibold tabular text-ink">
-                          {fmtEur(spot.expectedCents)}
-                        </dd>
-                        <dd class="mt-1.5 text-xs leading-relaxed text-muted">{spot.inriaWhy}</dd>
-                      </div>
-                      <div>
-                        <dt class="text-xs font-semibold text-brand-strong">Ce que donne la loi en vigueur</dt>
-                        <dd class="font-serif mt-1 text-3xl font-semibold tabular text-brand-strong">
-                          {fmtEur(spot.actualCents)}
-                        </dd>
-                        <dd class="mt-1.5 text-xs leading-relaxed text-muted">{spot.lawWhy}</dd>
-                      </div>
-                    </dl>
-
-                    <p class="text-sm leading-relaxed text-ink">{spot.summary}</p>
-                  </div>
-
-                  <div class="flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4 text-xs text-muted">
-                    <a href={spot.articleUrl} rel="external" class="inline-flex items-center gap-1 font-medium">
-                      {spot.articleLabel}
-                      <ExternalLink class="size-3" aria-hidden="true" />
-                    </a>
-                    <span>
-                      Relectures :
-                      {spot.verifications.map((v) => `${v.family ?? 'indépendante'} (${v.verdict ?? 'rapport'})`).join(' · ')}
-                    </span>
-                  </div>
-                </article>
-              {/each}
-            </div>
-
-            <div class="space-y-5">
-              <div class="flex flex-wrap items-baseline justify-between gap-3">
-                <div>
-                  <h3 class="font-serif text-2xl font-semibold text-ink">
-                    Les 14 montants mensuels comparés
-                  </h3>
-                  <p class="mt-1 text-sm text-muted">
-                    Résultat provisoire en attente de validation par un juriste · cliquez sur une ligne pour lire l’explication.
-                  </p>
-                </div>
-                <a
-                  href="/experiences/allocations-familiales"
-                  class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-strong no-underline hover:underline"
-                >
-                  Ouvrir l’étude complète
-                  <ArrowRight class="size-4" aria-hidden="true" />
-                </a>
-              </div>
-              <C03EuroBars cases={data.c03.cases} />
-            </div>
-          </div>
-        {:else if tab === 'constats'}
-          <div id="constats-c02" class="space-y-8 pt-4">
-            <div class="flex flex-wrap items-start justify-between gap-4 rounded-[var(--radius-lg)] bg-notice/70 p-5 text-sm text-notice-ink">
-              <div class="flex items-start gap-3 max-w-4xl">
-                <AlertTriangle class="mt-0.5 size-4.5 shrink-0" aria-hidden="true" />
-                <p class="leading-relaxed">
-                  <strong>En attente de verdict humain :</strong> ces constats ont été confirmés par une vérification indépendante sur les fichiers officiels de Légifrance et sont ouverts à tous (juristes, journalistes, agents). Ils ne comptent pas encore parmi les anomalies qualifiées ({formatInt(snap?.findings.public ?? 0)}).
-                </p>
-              </div>
-              <a href="/api/findings?status=reproduced&limit=20" class="shrink-0 text-xs font-semibold text-notice-ink underline">
-                Export JSON →
-              </a>
-            </div>
-
-            <div class="grid gap-12 lg:grid-cols-[23rem_1fr] lg:items-start">
-              <div class="space-y-4">
-                <h3 class="font-serif text-xl font-semibold text-ink">Entonnoir du contrôle mécanique</h3>
-                <SweepFunnel stages={funnelStages} />
-              </div>
-
-              <div class="space-y-5">
-                <div class="flex flex-wrap items-center justify-between gap-3">
-                  <SegmentedControl
-                    bind:value={findingFilter}
-                    ariaLabel="Filtrer les constats reproduits"
-                    size="sm"
-                    options={[
-                      { value: 'all', label: 'Échantillon', badge: snap?.reproducedPreview.length ?? 0 },
-                      { value: 'SYNTAXE', label: 'Typographie', badge: snap?.pipeline.reproducedByType.SYNTAXE ?? 0 },
-                      { value: 'REF_MORTE', label: 'Renvois abrogés', badge: snap?.pipeline.reproducedByType.REF_MORTE ?? 0 },
-                    ]}
-                  />
-                  <span class="text-xs text-muted">Ouvrir un constat affiche son certificat reproductible</span>
-                </div>
-
-                <div class="divide-y divide-line border-y border-line">
-                  {#each filteredFindings.slice(0, 6) as item (item.id)}
-                    <a
-                      href={`/anomalies/${item.id}`}
-                      class="group block px-2 py-4 text-ink no-underline transition-colors hover:bg-bg/80"
-                    >
-                      <div class="flex flex-wrap items-baseline justify-between gap-2">
-                        <span class="font-semibold text-sm text-brand-strong group-hover:underline">
-                          {item.typeLabel}
-                          {#if item.articleCode || item.articleNum}
-                            <span class="font-normal text-muted">
-                              · {[item.articleCode, item.articleNum ? `art. ${item.articleNum}` : null].filter(Boolean).join(' ')}
-                            </span>
-                          {/if}
-                        </span>
-                        <span class="mono text-xs text-subtle">{item.id}</span>
-                      </div>
-                      <p class="mt-1.5 text-sm leading-relaxed text-ink">{item.claim}</p>
-                      {#if item.excerpt}
-                        <p class="mt-2 font-serif text-sm text-muted line-clamp-2">
-                          « …{item.excerpt.before}<mark class="rounded bg-notice px-1 text-notice-ink font-semibold">{item.excerpt.marked}</mark>{item.excerpt.after}… »
-                        </p>
-                      {/if}
-                    </a>
-                  {/each}
-                </div>
-              </div>
-            </div>
-          </div>
-        {:else if example}
-          <div class="space-y-8 pt-4">
-            <div class="flex flex-wrap items-baseline justify-between gap-4 border-b border-line pb-5">
-              <div>
-                <h3 class="font-serif text-3xl font-semibold text-ink">{example.title}</h3>
-                <p class="mt-1 text-sm text-muted">
-                  {example.codeTitle} · <a href={`/article/${example.id}`}>Article {example.num ?? example.id}</a>
-                  {#if example.versionDate} · version du {formatLegiDate(example.versionDate)}{/if}
-                </p>
-              </div>
-              <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-strong">
-                <CheckCircle2 class="size-4" aria-hidden="true" />
-                {plural(example.tests, 'test Inria exécuté', 'tests Inria exécutés')}
-              </span>
-            </div>
-
-            <div class="grid gap-10 md:grid-cols-2 md:items-start">
-              <div class="space-y-4">
-                <h4 class="text-sm font-semibold text-ink">Texte officiel (Légifrance)</h4>
-                <blockquote cite={example.legifranceUrl} class="legal-text text-ink wrap-anywhere">
-                  {@html example.textHtml}
-                </blockquote>
-                <p class="text-xs text-muted">
-                  <a href={example.legifranceUrl} rel="external" class="inline-flex items-center gap-1">
-                    Lire sur Légifrance
-                    <ExternalLink class="size-3" aria-hidden="true" />
-                  </a>
-                  · seul le texte publié fait foi.
-                </p>
-              </div>
-
-              <div class="rounded-[var(--radius-xl)] bg-bg p-7 sm:p-8 space-y-5">
-                <h4 class="text-sm font-semibold text-ink">Règle calculée par le programme Inria</h4>
-                <p class="font-serif text-xl leading-relaxed text-ink">{example.description}</p>
-                <p class="text-sm leading-relaxed text-muted">
-                  Tests exécutés avec succès le <time datetime={example.replayDate}>{formatDateTime(example.replayDate)}</time> sous Catala 1.3.2.
-                </p>
-                <div class="flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4 text-sm">
-                  <a href={example.sourceUrl} rel="external" class="inline-flex items-center gap-1 font-semibold">
-                    Code Catala sur GitHub
-                    <ExternalLink class="size-3.5" aria-hidden="true" />
-                  </a>
-                  <a href="/references" class="font-semibold text-brand-strong">
-                    Voir les {formatInt(totals.REF)} articles ★ →
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        {:else}
-          <EmptyState title="Aucun exemple de référence disponible pour le moment." />
-        {/if}
-      {/snippet}
-    </Tabs>
-  </div>
-</section>
-
-<!-- BANDE 3 : AVANCEMENT DES CHANTIERS (bande charbon plein bord) -->
-<section class="band-observatory py-18 sm:py-24" aria-labelledby="race-title">
-  <div class="container-wide space-y-12">
-    <div class="flex flex-wrap items-end justify-between gap-6">
-      <div class="max-w-3xl space-y-3">
-        <h2 id="race-title" class="font-serif text-3xl font-semibold text-obs-ink sm:text-5xl">
-          Où en sont les chantiers
-        </h2>
-        <p class="text-base leading-relaxed text-obs-muted">
-          Avant de publier des constats inédits, nous vérifions notre méthode en exécutant les programmes et tests que la recherche publique a déjà établis.
-        </p>
-      </div>
-      <a
-        href="/methode"
-        class="inline-flex items-center gap-1.5 text-sm font-semibold text-obs-emerald no-underline hover:underline"
-      >
-        Lire le protocole
-        <ArrowRight class="size-4" aria-hidden="true" />
-      </a>
-    </div>
-
-    <ChantierRace tracks={raceTracks} />
-
-    {#if snap && activeSuites.length > 0}
-      <div class="space-y-4 border-t border-obs-line/80 pt-10">
-        <div class="flex flex-wrap items-baseline justify-between gap-2">
-          <p class="text-sm font-medium text-obs-ink">
-            Suites de tests Inria et DGFiP exécutées chez nous
+<!-- 4. Le travail en direct -->
+{#if snap}
+  <section class="band-observatory" aria-labelledby="direct-title">
+    <div class="container-wide py-16 sm:py-20">
+      <div class="flex flex-wrap items-end justify-between gap-6">
+        <div class="max-w-[62ch] space-y-3">
+          <h2 id="direct-title" class="section-title text-obs-ink">Le travail en cours, étape par étape.</h2>
+          <p class="text-[1.02rem] leading-relaxed text-obs-muted">
+            Le <Term id="guichet" tone="night">guichet</Term> distribue les tâches une à une. Chaque ligne est une étape,
+            chaque colonne dit combien de tâches s’y trouvent. Le tableau complet montre chaque tâche et mène à sa fiche.
           </p>
-          <span class="text-sm font-semibold tabular text-obs-emerald">
-            {formatInt(totalInriaTests)} sur {formatInt(totalInriaTests)} réussis
-          </span>
         </div>
-        <div class="grid gap-x-8 gap-y-2 sm:grid-cols-2 lg:grid-cols-4">
-          {#each activeSuites as suite (suite.subject)}
-            <div class="flex items-baseline justify-between gap-3 border-b border-obs-line/70 py-2.5">
-              <span class="truncate text-sm text-obs-muted">{suite.folder.replaceAll('_', ' ')}</span>
-              <span class="mono shrink-0 text-xs font-semibold tabular text-obs-emerald">
-                {suite.passed}/{suite.tests}
-              </span>
-            </div>
+        <div class="flex flex-wrap gap-5 text-sm font-semibold">
+          <a href="/live" class="inline-flex items-center gap-1 text-obs-ink">Tableau complet <ArrowRight class="size-4" aria-hidden="true" /></a>
+          <a href="/taches" class="text-obs-cobalt">Tâches à prendre</a>
+        </div>
+      </div>
+      <div class="mt-10">
+        <WorkBoard lanes={snap.work.lanes} maxCards={0} tone="night" caption="Tableau du travail : étapes et état des tâches" />
+      </div>
+    </div>
+  </section>
+{/if}
+
+<!-- 5. Ce qui a déjà été établi -->
+<section class="bg-surface" aria-labelledby="resultats-title">
+  <div class="container-wide py-16 sm:py-20">
+    <h2 id="resultats-title" class="section-title max-w-[22ch]">Ce que l’on peut déjà rejouer.</h2>
+
+    <div class="lead-result mt-12">
+      <div class="space-y-4">
+        <h3 class="text-[1.5rem] leading-tight sm:text-[1.9rem]">
+          Allocations familiales : {data.c03.scores.completed.passed} cas sur {data.c03.scores.completed.total} retrouvés à
+          l’aveugle, deux écarts à trancher.
+        </h3>
+        <p class="max-w-[60ch] leading-relaxed text-muted">
+          Un agent a traduit la loi en vigueur sans voir le programme de l’Inria, puis chaque montant a été comparé. Sur
+          deux situations, la lecture du texte et le programme de référence ne donnent pas le même montant. Deux relectures
+          indépendantes confirment l’écart ; un juriste doit maintenant trancher.
+        </p>
+        <a href="/experiences/allocations-familiales" class="inline-flex items-center gap-1 font-semibold">
+          L’étude complète, cas par cas <ArrowRight class="size-4" aria-hidden="true" />
+        </a>
+      </div>
+      <table class="gap-table">
+        <caption class="sr-only">Écarts mensuels entre le programme Inria et la lecture de la loi en vigueur</caption>
+        <thead>
+          <tr>
+            <th scope="col">Situation</th>
+            <th scope="col" class="num">Programme Inria</th>
+            <th scope="col" class="num">Loi en vigueur</th>
+            <th scope="col" class="num">Écart / mois</th>
+          </tr>
+        </thead>
+        <tbody>
+          {#each data.c03.spotlights as spot (spot.name)}
+            {@const delta = spot.actualCents - spot.expectedCents}
+            <tr>
+              <th scope="row">
+                <span class="block font-semibold">{spot.territory}</span>
+                <a href={spot.articleUrl} rel="external" class="text-xs">{spot.articleLabel}</a>
+              </th>
+              <td class="num" data-label="Programme Inria">{fmtEur(spot.expectedCents)}</td>
+              <td class="num" data-label="Loi en vigueur">{fmtEur(spot.actualCents)}</td>
+              <td class="num delta" data-label="Écart / mois">{fmtDelta(delta)}</td>
+            </tr>
           {/each}
-        </div>
+        </tbody>
+      </table>
+    </div>
+
+    <dl class="tally-rows mt-12">
+      <div class="tally-row">
+        <dt class="tally-figure"><LiveNumber value={inriaTests} /><span class="text-muted">/{formatInt(inriaTotal)}</span></dt>
+        <dd>
+          <strong class="text-ink">tests de la recherche publique réussis chez nous.</strong>
+          Les programmes Catala de l’Inria et de la DGFiP tournent dans notre compilateur épinglé ; ils couvrent
+          {formatInt(levels.REF)} articles en vigueur, marqués <Term id="reference">★ Référence</Term>.
+          <a href="/references">Les programmes →</a>
+        </dd>
       </div>
-    {/if}
+      <div class="tally-row">
+        <dt class="tally-figure"><LiveNumber value={snap?.pipeline.reproducedCount ?? 0} /></dt>
+        <dd>
+          <strong class="text-ink"><Term id="constat">constats</Term> <Term id="reproduit">reproduits</Term>, en attente
+            d’un verdict humain.</strong>
+          Surtout des <Term id="renvoi-mort">renvois vers des articles abrogés</Term>, trouvés sans IA puis confirmés par une
+          seconde chaîne indépendante. {formatInt(snap?.findings.public ?? 0)} <Term id="qualifie">qualifiés</Term> à ce jour ;
+          {formatInt(snap?.pipeline.withdrawnCount ?? 0)} retirés après correction de nos détecteurs.
+          <a href="/anomalies">Les constats →</a>
+        </dd>
+      </div>
+    </dl>
   </div>
 </section>
 
-<!-- BANDE 4 : CARTE INTERACTIVE PLEINE LARGEUR -->
-<section id="carte-vivante" class="band-observatory border-t border-obs-line/60 py-18 sm:py-24" aria-labelledby="map-title">
-  <div class="container-wide space-y-8">
-    <div class="max-w-3xl space-y-2">
-      <h2 id="map-title" class="font-serif text-3xl font-semibold text-obs-ink sm:text-5xl">
-        La carte des trois codes
-      </h2>
-      <p class="text-base text-obs-muted">
-        Chaque rectangle reflète la taille d’une section ; activez les étoiles ★ pour situer les articles déjà couverts par des tests.
-      </p>
-    </div>
-
-    {#if data.mapPreviews.length > 0}
-      <HomeTreemap previews={data.mapPreviews} onOpenSearch={() => shell?.openSearch()} />
-    {:else}
-      <p class="text-sm text-obs-muted">
-        La carte interactive apparaîtra dès le retour de la base des textes.
-      </p>
-    {/if}
-  </div>
-</section>
-
-<!-- BANDE 5 : ÉCHELLE DE PREUVE -->
-<section class="bg-surface py-18 sm:py-24" aria-labelledby="proof-title">
-  <div class="container-wide space-y-10">
-    <div class="flex flex-wrap items-end justify-between gap-4">
-      <div class="max-w-3xl space-y-2">
-        <h2 id="proof-title" class="font-serif text-3xl font-semibold text-ink sm:text-4xl">
-          L’échelle des niveaux de preuve
-        </h2>
-        <p class="text-base text-muted">
-          Nous n’écrivons jamais qu’un article est « prouvé » : chaque palier indique le contrôle mécanique ou humain qui a réussi.
-        </p>
+<!-- 6. Par où commencer -->
+<section class="border-t border-line bg-bg" aria-labelledby="commencer-title">
+  <div class="container-wide py-16 sm:py-20">
+    <h2 id="commencer-title" class="section-title max-w-[24ch]">Par où commencer, selon ce que vous cherchez.</h2>
+    <div class="paths mt-12">
+      <div class="path">
+        <h3 class="path-title">Comprendre ce que la loi calcule</h3>
+        <p class="path-who">Élus, collaborateurs, journalistes, citoyens</p>
+        <ul class="path-links">
+          <li><a href="/anomalies">Les constats et leur certificat</a></li>
+          <li><a href="/experiences">Les expériences : effets de seuil, simulateur</a></li>
+          <li><a href="/carte">La carte des trois codes</a></li>
+        </ul>
       </div>
-      <a href="/methode#niveaux" class="text-sm font-semibold text-brand-strong no-underline hover:underline">
-        Méthode complète →
-      </a>
-    </div>
-
-    <ProofScaleInteractive counts={totals} initial="REF" />
-  </div>
-</section>
-
-<!-- BANDE 6 : MÉMOIRE DU PROJET & PARTICIPATION -->
-<section class="border-t border-line bg-bg py-18 sm:py-24" aria-labelledby="join-title">
-  <div class="container-wide space-y-12">
-    <div class="grid gap-6 lg:grid-cols-2">
-      <SinceLastVisit events={snap?.events ?? []} />
-
-      <article class="flex h-full flex-col justify-between rounded-[var(--radius-xl)] bg-surface p-7 sm:p-8">
-        <div class="space-y-3">
-          <h2 class="font-serif text-2xl font-semibold text-ink">Le Cimetière · erreurs assumées</h2>
-          <p class="text-sm leading-relaxed text-muted">
-            {snap?.pipeline.rejectedCount
-              ? `${formatInt(snap.pipeline.rejectedCount)} constats écartés par relecture humaine, et `
-              : ''}
-            <strong class="text-ink">{formatInt(snap?.pipeline.withdrawnCount ?? 0)} signalements</strong> déjà retirés automatiquement après correction de nos détecteurs (numéros réattribués, citations imbriquées). Une réfutation documentée vaut une preuve.
-          </p>
-        </div>
-        <div class="mt-6">
-          <a href="/anomalies/cimetiere" class="text-sm font-semibold text-brand-strong no-underline hover:underline">
-            Ouvrir le cimetière public →
-          </a>
-        </div>
-      </article>
-    </div>
-
-    <div class="grid gap-8 border-t border-line pt-12 lg:grid-cols-2">
-      <div class="space-y-5">
-        <h2 id="join-title" class="font-serif text-3xl font-semibold text-ink sm:text-4xl">
-          Relire comme juriste, journaliste ou citoyen
-        </h2>
-        <p class="max-w-[54ch] text-base leading-relaxed text-muted">
-          Les machines balaient des milliers d’articles, mais le verdict final reste humain. Chaque fiche donne accès à l’extrait officiel, au lien Légifrance et à la commande de vérification.
-        </p>
-        <div class="flex flex-wrap items-center gap-3 pt-1">
-          <Button href="/anomalies" variant="ink" size="md">
-            Consulter le registre
-            <ArrowRight class="size-4" aria-hidden="true" />
-          </Button>
-          <Button href="/sponsors" variant="secondary" size="md">
-            Transparence et soutien
-          </Button>
-        </div>
+      <div class="path">
+        <h3 class="path-title">Relire une interprétation</h3>
+        <p class="path-who">Juristes, fiscalistes, praticiens du droit social</p>
+        <ul class="path-links">
+          <li><a href="/travail?niveau=analyses">Les analyses alinéa par alinéa</a></li>
+          <li><a href="/methode">La méthode, ses niveaux et ses limites</a></li>
+          <li><a href="/anomalies/cimetiere">Le cimetière des constats écartés</a></li>
+        </ul>
       </div>
-
-      <div class="rounded-[var(--radius-xl)] bg-obs-bg p-7 sm:p-9 text-obs-ink space-y-5">
-        <div class="space-y-2">
-          <h2 class="font-serif text-2xl font-semibold text-obs-ink sm:text-3xl">
-            Connecter un agent IA (MCP et WebMCP)
-          </h2>
-          <p class="text-sm leading-relaxed text-obs-muted">
-            Toutes les données publiques sont interrogeables sans clé API via <code class="text-obs-ink">/api/mcp</code>, et chaque contrôle de cette page est pilotable en WebMCP.
-          </p>
-        </div>
-
-        <div class="rounded-[var(--radius)] bg-obs-surface p-3.5">
+      <div class="path">
+        <h3 class="path-title">Rejouer ou contribuer</h3>
+        <p class="path-who">Scientifiques, développeurs, propriétaires d’agents IA</p>
+        <ul class="path-links">
+          <li><a href="/join">Connecter un agent au guichet</a></li>
+          <li><a href="/taches">Les tâches à prendre</a></li>
+          <li><a href="/api/mcp">Interroger les données via MCP</a></li>
+        </ul>
+        <div class="mt-4 rounded-[var(--radius)] bg-obs-bg p-3 text-obs-ink">
           <div class="flex items-center justify-between gap-2 pb-2">
-            <span class="mono inline-flex items-center gap-1.5 text-xs text-obs-emerald">
-              <Terminal class="size-3.5" aria-hidden="true" />
-              Commande MCP
+            <span class="inline-flex items-center gap-1.5 font-mono text-[0.72rem] text-obs-muted">
+              <Terminal class="size-3.5" aria-hidden="true" /> Commande MCP
             </span>
-            <CopyButton text={claudeMcpCommand} label="Copier" tone="observatory" size="xs" />
+            <CopyButton text={mcpCommand} label="Copier" tone="observatory" size="xs" />
           </div>
-          <pre class="overflow-x-auto text-xs text-obs-ink/90"><code>{claudeMcpCommand}</code></pre>
-        </div>
-
-        <div class="flex flex-wrap items-center gap-3">
-          <Button variant="observatory" size="sm" onclick={() => shell?.openAgent()}>
-            <Bot class="size-4" aria-hidden="true" />
-            Tester ici
-          </Button>
-          <Button href="/join" variant="observatoryOutline" size="sm">
-            Mode d’emploi /join
-          </Button>
-          <a href="/design-system" class="text-xs font-semibold text-obs-emerald no-underline hover:underline">
-            Design System →
-          </a>
+          <pre class="overflow-x-auto text-[0.72rem]"><code>{mcpCommand}</code></pre>
         </div>
       </div>
     </div>
+    <p class="mt-12 max-w-[80ch] text-sm leading-relaxed text-muted">
+      Textes officiels issus de LEGI (DILA), sous Licence Ouverte ; seul le texte publié sur
+      <a href="https://www.legifrance.gouv.fr" rel="external">Légifrance <ExternalLink class="inline size-3" aria-hidden="true" /></a> fait foi.
+      Catala est un langage conçu par l’Inria. BugDeLoi est un projet citoyen indépendant, sans lien avec l’administration.
+    </p>
   </div>
 </section>
+
+<style>
+  .hero {
+    background:
+      radial-gradient(ellipse 60% 55% at 50% 100%, var(--surface) 0%, transparent 70%),
+      var(--bg);
+  }
+  .hero-title {
+    font-size: clamp(1.9rem, 3.1vw, 2.6rem);
+    font-stretch: 106%;
+    line-height: 1.04;
+    text-align: center;
+  }
+  .section-title {
+    font-size: clamp(1.9rem, 3.4vw, 2.9rem);
+    line-height: 1.04;
+  }
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    height: 2.75rem;
+    padding: 0 1.15rem;
+    border-radius: var(--radius);
+    font-weight: 700;
+    font-size: 0.92rem;
+    text-decoration: none;
+    transition:
+      background-color 150ms ease,
+      border-color 150ms ease;
+  }
+  .cta-primary {
+    background: var(--brand);
+    color: var(--brand-ink);
+  }
+  .cta-primary:hover {
+    background: var(--brand-strong);
+  }
+  .cta-secondary {
+    border: 1.5px solid var(--ink);
+    color: var(--ink);
+    background: var(--surface);
+  }
+  .cta-secondary:hover {
+    background: var(--surface-2);
+  }
+  .selected-note {
+    display: flex;
+    gap: 0.6rem;
+    align-items: baseline;
+    margin-top: 0.9rem;
+    max-width: 90ch;
+    padding: 0.75rem 0.9rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  .selected-note .dot {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 999px;
+    flex: none;
+  }
+  .specimen {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr 1.35fr 1.35fr;
+    gap: 0;
+    border: 1.5px solid var(--ink);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--surface);
+  }
+  .plate {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.25rem 1.2rem 1.1rem;
+    border-left: 1px solid var(--line-strong);
+    min-width: 0;
+  }
+  .plate:first-child {
+    border-left: 0;
+  }
+  .plate-label {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+  .plate-n {
+    display: grid;
+    place-items: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--bg);
+    font-size: 0.72rem;
+    font-weight: 800;
+    flex: none;
+  }
+  .plate-foot {
+    margin-top: auto;
+    padding-top: 0.7rem;
+    border-top: 1px dashed var(--line-strong);
+    font-size: 0.74rem;
+    color: var(--ink-muted);
+  }
+  .plate-ok {
+    color: var(--ok);
+    font-weight: 600;
+  }
+  .plate-code {
+    background: var(--obs-bg);
+    color: var(--obs-ink);
+    border-left-color: var(--obs-line-strong);
+  }
+  .plate-code .plate-n {
+    background: var(--obs-ink);
+    color: var(--obs-bg);
+  }
+  .plate-code .plate-foot {
+    color: var(--obs-muted);
+    border-top-color: var(--obs-line-strong);
+  }
+  .plate-code .plate-ok {
+    color: var(--obs-emerald);
+  }
+  .code {
+    font-size: 0.74rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .code .comment {
+    color: var(--obs-amber);
+  }
+  .code .assert {
+    color: var(--obs-emerald);
+    font-weight: 700;
+  }
+  .field-row {
+    display: grid;
+    grid-template-columns: 4.6rem minmax(0, 1fr);
+    gap: 0.2rem 0.5rem;
+    align-items: baseline;
+  }
+  .field-row > :last-child {
+    grid-column: 2;
+  }
+  .field-kind {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink-muted);
+  }
+  .field-kind[data-kind='résultat'] {
+    color: var(--brand);
+  }
+  .lead-result {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: 3rem;
+    align-items: start;
+    padding-top: 1.5rem;
+    border-top: 2px solid var(--ink);
+  }
+  .gap-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+    background: var(--bg);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-lg);
+  }
+  .gap-table th,
+  .gap-table td {
+    padding: 0.8rem 0.9rem;
+    border-top: 1px solid var(--line);
+    text-align: left;
+    vertical-align: top;
+  }
+  .gap-table thead th {
+    border-top: 0;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .gap-table .num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .gap-table td.num {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.05rem;
+  }
+  .gap-table .delta {
+    color: var(--ko);
+  }
+  .tally-rows {
+    border-top: 1px solid var(--line-strong);
+  }
+  .tally-row {
+    display: grid;
+    grid-template-columns: 11rem minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: baseline;
+    padding: 1.1rem 0;
+    border-bottom: 1px solid var(--line-strong);
+  }
+  .tally-figure {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-stretch: 118%;
+    font-size: 2.1rem;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .tally-row dd {
+    max-width: 75ch;
+    line-height: 1.6;
+    color: var(--ink-muted);
+  }
+  .paths {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2.5rem;
+  }
+  .path {
+    padding-top: 1rem;
+    border-top: 2px solid var(--ink);
+    min-width: 0;
+  }
+  .path-title {
+    font-size: 1.3rem;
+  }
+  .path-who {
+    margin-top: 0.35rem;
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+  }
+  .path-links {
+    margin-top: 1rem;
+    display: grid;
+    gap: 0.55rem;
+    font-weight: 600;
+  }
+  @media (max-width: 63.99rem) {
+    .specimen {
+      grid-template-columns: 1fr 1fr;
+    }
+    .plate:nth-child(3) {
+      border-left: 0;
+    }
+    .plate:nth-child(n + 3) {
+      border-top: 1px solid var(--line-strong);
+    }
+    .lead-result,
+    .paths {
+      grid-template-columns: 1fr;
+    }
+    .tally-row {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+  }
+  @media (max-width: 47.99rem) {
+    .gap-table thead {
+      display: none;
+    }
+    .gap-table tr {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      border-top: 1px solid var(--line);
+    }
+    .gap-table tbody tr:first-child {
+      border-top: 0;
+    }
+    .gap-table th[scope='row'] {
+      grid-column: 1 / -1;
+      border-top: 0;
+    }
+    .gap-table td {
+      border-top: 0;
+      padding-top: 0;
+      text-align: left;
+    }
+    .gap-table td::before {
+      content: attr(data-label);
+      display: block;
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--ink-muted);
+    }
+  }
+  @media (max-width: 47.99rem) {
+    .specimen {
+      grid-template-columns: 1fr;
+    }
+    .plate {
+      border-left: 0;
+      border-top: 1px solid var(--line-strong);
+    }
+    .plate:first-child {
+      border-top: 0;
+    }
+  }
+</style>

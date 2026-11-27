@@ -1,7 +1,8 @@
 # AGENTS.md — Règles pour tous les agents LLM de BugDeLoi
 
-> Statut : **v0.1, J0 en cours** (25/11/2026). Les commandes, chemins et endpoints marqués _(prévu)_
-> n'existent pas encore. Plan d'ensemble : [`docs/PLAN.md`](docs/PLAN.md). Avancement vivant et
+> Statut : **v0.2** (27/11/2026) — guichet ouvert (analyse, traduction), corpus N1/N2 en cours. Les
+> commandes, chemins et endpoints marqués _(prévu)_ n'existent pas encore. Plan d'origine (25/11,
+> conservé tel quel) : [`docs/PLAN.md`](docs/PLAN.md). Avancement vivant et
 > journal des décisions : [`docs/STATUS.md`](docs/STATUS.md) — **lis-le avant de commencer, mets-le à
 > jour en finissant.** En cas de contradiction, **ce fichier fait foi** pour les niveaux de preuve et
 > les certificats.
@@ -230,8 +231,10 @@ Le pseudo GitHub et la famille du modèle sont déclaratifs.
 2. Toutes les 10 min, appelle `POST /desk/beat?lease=<id>`. Le bail dure 20 min après le dernier
    battement, dans la limite de 6 h depuis la prise. Un `410` indique un bail clos. **Arrête-toi**.
 3. Travaille **uniquement** dans les chemins autorisés de la tâche.
-4. `POST /desk/release?lease=<id>&reason=<motif>` renvoie `204`. `submitted` clôt la tâche.
-   Les autres motifs et l'expiration du bail la remettent à disposition. Garde ton identifiant de bail privé.
+4. `POST /desk/release?lease=<id>&reason=<motif>` renvoie `204`. `submitted` fait passer la tâche
+   **en relecture**. Les autres motifs et l'expiration du bail la remettent **à prendre**. Garde ton
+   identifiant de bail privé.
+5. Suis ta tâche sur sa fiche publique `/taches/<id>` (`analyst-<LEGIARTI>` ou `translate-<LEGIARTI>-vN`).
 
 Motifs de libération : `submitted` · `text_mismatch` (le texte fourni ne correspond pas à LEGI) ·
 `ambiguous_text` (lecture impossible sans choix d'interprétation : décris-le) · `missing_dependency`
@@ -240,6 +243,26 @@ l'article) · `needs_reduction` · `out_of_time` · `other`.
 
 Attribution : un bail actif par tâche. Le guichet limite le débit par IP. En cas de `429`, respecte
 `Retry-After`.
+
+### États d'une tâche et journal (source unique : `apps/web/src/lib/work.ts`)
+
+Une **tâche** = un rôle × un article. Elle fait monter l'article d'**une étape** du parcours
+(analyser N0→N1, traduire N1→N2, tester N2→N3, éprouver N3→N4, relire N4→N5). Le guichet ne connaît
+**qu'un état : « à prendre »**. La page `/taches` est cette liste, dans l'ordre exact de distribution
+(tâches rendues d'abord, puis nouvelles tâches par `LEGIARTI`). Le reste du parcours est **dérivé** :
+
+| Colonne          | Condition mécanique                                                                   |
+| ---------------- | ------------------------------------------------------------------------------------- |
+| **À prendre**    | Ni terminée ni réservée, texte toujours identique à LEGI (ou calculable à la volée)   |
+| **En cours**     | Bail actif                                                                            |
+| **En relecture** | Libérée avec `submitted`, article pas encore au niveau visé (PR en attente de fusion) |
+| **Intégrée**     | Article au niveau visé ou au-dessus (après fusion et `promote-corpus`)                |
+
+Chaque réservation et chaque libération écrit un événement **append-only** dans `event`
+(`desk.claimed`, `desk.released` avec `role`, `family`, `reason`, `legiarti`, `label` ; `actor =
+github:<handle>`). Le battement n'est pas journalisé. La fiche `/taches/<id>` et le tableau `/live`
+(Kanban : une ligne par étape, quatre colonnes) se lisent uniquement depuis ces données.
+On n'écrit jamais « soumise » ou « terminée » au public : on écrit « déposée » / « en relecture ».
 
 ### Soumission au corpus _(prévu)_
 
@@ -314,13 +337,13 @@ pour la sandbox · GitHub Actions pour la vérification de référence.
 ### 9.2 Organisation
 
 ```
-apps/web        SvelteKit : pages SSR, /api/*, SSE (/api/stream) ; /desk/* au J3     ✔
+apps/web        SvelteKit : pages SSR, /api/*, SSE (/api/stream), /desk/*, /taches, /live ✔
 apps/worker     pg-boss : ingestion LEGI/BOFiP, pré-check sandbox, oracles, agrégats  (prévu)
 packages/core   échelle de preuve, types de findings, normalisation/empreinte LEGI   ✔
 packages/db     schéma Drizzle (contrat partagé), client, migrations               ✔
 packages/ingest stock + incréments LEGI → Postgres (reprise et date de projection par code) ✔
 packages/runner exécution Catala sandboxée (Podman rootless, image par digest)      ✔
-packages/cli    bdl (setup, next, check, submit, replay)                           (prévu)
+packages/cli    bdl (setup, next, check, submit ; replay prévu)                    ✔
 infra/          image Catala (infra/catala, verrou image.lock.json), systemd       ✔
 replications/   rejeux de référence : c0.1 (bun replications/c0.1/run.ts)          ✔
 docs/           PLAN.md, STATUS.md (avancement vivant), décisions                   ✔

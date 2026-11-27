@@ -19,9 +19,9 @@
   "dependencies": {
     "@bugdeloi/core": "workspace:*",
     "@bugdeloi/db": "workspace:*",
+    "@fontsource-variable/archivo": "^5.3.0",
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
-    "@fontsource-variable/newsreader": "^5.3.0",
-    "@fontsource-variable/plus-jakarta-sans": "^5.3.0",
+    "@fontsource-variable/source-serif-4": "^5.3.1",
     "@lucide/svelte": "^1.80.0",
     "@ui-sdk/core": "^0.1.0-beta.17",
     "@ui-sdk/svelte": "^0.1.0-beta.17",

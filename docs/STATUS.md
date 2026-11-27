@@ -25,9 +25,20 @@
 | C0.4 · Rappel des ambiguïtés connues (Inria/DGFiP)         | gemini-4-neon + gpt-6.2-sol              | ✔ fait — 113 annotations extraites (`catala-examples@9e251b93`), 44 sur 25 articles en base ; témoin mécanique `2/44` (4,55 %), analyste aveugle Gemini 4 Neon **`16/44` (36,36 %)**                                                                                               | `replications/c0.4/`                                                              |
 | J5 · Noyau IR 2026 (C0.5), falaises (C0.6) & simulateur    | gemini-4-neon + gpt-6.2-sol              | ✔ fait — CGI art. 193, 194, 197 + 1657 1 bis en Catala 1.3.2 (`14/14` tests verts, `4/4` empreintes LEGI), différentiel `10 000` foyers (`0` divergence), mutation `15/16` (`93,75 %`), rétro-traduction, **4 falaises 61 € (+6 100 %)** et simulateur `/experiences/impot-revenu` | `corpus/cgi/.../noyau_ir.catala_fr`, `replications/c0.6/`, `apps/web`             |
 | Worker nocturne LEGI + balayage C0.2 (systemd timer)       | claude-sonnet-5-5 (medium)               | ✔ fait — `nightly-sync.sh` avec verrou `flock`, `bugdeloi-nightly.service/.timer` (03 h 30 Paris), installé automatiquement par `deploy.sh`                                                                                                                                        | `scripts/nightly-sync.sh`, `infra/systemd/`, `docs/notes/nightly-worker.md`       |
+| Refonte pédagogique · tâches, Kanban, Hémicycle            | claude-opus-5-5 (orchestrateur)          | ✔ fait — `/taches` liste unique, `/taches/[id]` parcours, `/live` Kanban, accueil et `/methode` refaits, événements `desk.*`                                                                                                                                                       | `apps/web`, `PRODUCT.md`, `docs/DESIGN.md`                                        |
 | J6 · Doctrine BOFiP côte à côte & vérificateur N5          | claude-sonnet-5-5 (high) + gemini-4-neon | ✔ fait — index BOFiP (`18` articles, `29` références) affiché séparément sur `/article/[legiarti]`, vérificateur de revues juristes signées Git N5 (`29` tests verts)                                                                                                              | `corpus/doctrine/`, `qualifications/n5-reviews/`, `apps/web`                      |
 
 ## Journal des décisions
+
+- 2026-11-27 — **Refonte du suivi des tâches et du site.** Le guichet n'expose qu'un état : « à prendre »
+  (`/taches`, ordre exact de distribution). Chaque réservation et libération est journalisée
+  (`desk.claimed`, `desk.released`, append-only) ; le parcours d'une tâche se lit sur sa fiche
+  `/taches/<id>` (à prendre → en cours → en relecture → intégrée, historique daté, étapes suivantes) et
+  sur le tableau Kanban `/live` (une ligne par étape, quatre colonnes). Glossaire unique
+  (`lib/glossary.ts`, composant `Term`). Nouvelle identité « Hémicycle » (Archivo / Source Serif 4 pour
+  la loi seulement / JetBrains Mono, encre violette, bande « séance de nuit ») ; accueil réécrit autour
+  d'un hémicycle des articles en vigueur, du parcours en six étapes et d'un exemple réel (CGI 278).
+  `PRODUCT.md` créé, `docs/DESIGN.md` réécrit, `docs/PLAN.md` marqué comme plan d'origine.
 
 - 2026-11-26 — `/desk/next` calcule la disponibilité sur la projection LEGI courante. Les tâches sont
   inscrites au premier bail, avec verrouillage PostgreSQL et sans réserve périodique. Les traductions
@@ -78,6 +89,8 @@
 
 ## Pièges connus
 
+- Desk : les tâches antérieures au 27/11/2026 n'ont pas d'événements `desk.*` ; leur fiche reconstitue
+  seulement le dernier bail conservé dans `desk_task`.
 - Desk : activer avec `DESK_ENABLED=1` après migration et ingestion LEGI. Les baux existants
   conservent leur historique. Une nouvelle réservation requiert des versions et empreintes courantes.
 - Desk : pseudo GitHub et famille déclaratifs. La limite de 30 requêtes par minute et par IP est

@@ -1,5 +1,9 @@
 # BugDeLoi — Plan technique (v0, 25/11/2026)
 
+> **Document historique.** C'est le plan d'origine, conservé tel quel pour mémoire. Le projet a évolué
+> depuis (guichet à liste unique, suivi des tâches par fiche et tableau, identité « Hémicycle »).
+> L'état réel est dans [`STATUS.md`](STATUS.md), les règles dans [`AGENTS.md`](../AGENTS.md).
+
 > Statut : **J0 en cours** (démarré le 25/11/2026). Ce document fixe l'objectif final, les choix
 > techniques, les marqueurs de preuve et l'ordre de construction. Les règles opérationnelles pour les
 > agents sont dans [`AGENTS.md`](../AGENTS.md) (qui fait foi pour les niveaux de preuve et les

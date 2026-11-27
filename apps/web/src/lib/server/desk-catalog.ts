@@ -1,4 +1,4 @@
-import { legifranceArticleUrl, sha256Hex } from '@bugdeloi/core/legi'
+import { CODES, legifranceArticleUrl, sha256Hex } from '@bugdeloi/core/legi'
 import { articleInForce, articleStatus, deskTask, legalArticle, legalText } from '@bugdeloi/db'
 import { and, eq, isNotNull, ne, notInArray, or, sql } from 'drizzle-orm'
 import { translations } from './desk-translations.ts'
@@ -100,4 +100,31 @@ export function newDeskTask(row: TaskArticle, role: 'analyst' | 'translate') {
       allowed_paths: [spec?.path ?? `analyses/${row.id}.md`],
     },
   } satisfies typeof deskTask.$inferInsert
+}
+
+const SHORT_BY_TITLE = new Map<string, string>(Object.values(CODES).map((c) => [c.title, c.short]))
+const SHORT_BY_ID = new Map<string, string>(Object.values(CODES).map((c) => [c.id, c.short]))
+
+/** Sigle d'un code (« CGI ») à partir de son titre ou de son identifiant LEGITEXT. */
+export function codeShort(titleOrId: string | null | undefined): string | null {
+  if (!titleOrId) return null
+  return SHORT_BY_ID.get(titleOrId) ?? SHORT_BY_TITLE.get(titleOrId.replace(/'/g, '’')) ?? null
+}
+
+/** Libellé court et lisible d'un article : « CGI art. 1657 ». */
+export function articleLabel(code: string | null, num: string | null, legiarti: string | null): string {
+  if (num) return `${code ? `${code} ` : ''}art. ${num}`
+  return legiarti ?? 'article inconnu'
+}
+
+/** Libellé d'une tâche à partir de son contenu, sans requête. */
+export function taskLabel(payload: {
+  node?: string
+  context_pack?: { code_title?: string; article_number?: string | null }
+}): string {
+  return articleLabel(
+    codeShort(payload.context_pack?.code_title),
+    payload.context_pack?.article_number ?? null,
+    payload.node ?? null,
+  )
 }

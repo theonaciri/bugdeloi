@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-27T05:10:00Z",
+  "title": "Design System: BugDeLoi",
+  "extensions": {
+    "colorMeta": {
+      "stamp-violet": {
+        "role": "primary",
+        "displayName": "Encre de tampon violette",
+        "canonical": "#4b2fb5",
+        "tonalRamp": ["#eeebfb", "#cfc6f3", "#4b2fb5", "#3b2196", "#17132b"]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Papier imprimé froid",
+        "canonical": "#f2f3f5",
+        "tonalRamp": ["#ffffff", "#f2f3f5", "#e9ebef", "#dde0e6", "#b4bac5"]
+      },
+      "night": {
+        "role": "neutral",
+        "displayName": "Séance de nuit",
+        "canonical": "#17132b",
+        "tonalRamp": ["#120f22", "#17132b", "#201b39", "#2a2447", "#4a4275"]
+      },
+      "highlighter": { "role": "tertiary", "displayName": "Surligneur", "canonical": "#fff07a" }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Archivo élargi",
+        "purpose": "Titres : notre voix, élargie (wdth 112–118)."
+      },
+      "law": { "displayName": "Source Serif 4", "purpose": "Uniquement le texte officiel de la loi." },
+      "mono": { "displayName": "JetBrains Mono", "purpose": "Identifiants, code Catala, commandes." }
+    },
+    "shadows": [
+      { "name": "shadow-xs", "value": "0 1px 2px rgb(20 22 27 / 0.06)", "purpose": "Cartes de tâche." },
+      {
+        "name": "shadow-lg",
+        "value": "0 16px 36px -12px rgb(20 22 27 / 0.22), 0 3px 10px -4px rgb(20 22 27 / 0.08)",
+        "purpose": "Définitions du glossaire au survol."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Balayage de l'hémicycle (1,4 s), défilement des nombres en direct (0,7 s)."
+      }
+    ],
+    "breakpoints": [
+      { "name": "md", "value": "48rem" },
+      { "name": "lg", "value": "64rem" },
+      { "name": "xl", "value": "80rem" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Bouton principal",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Action principale d'une page, encre violette.",
+      "html": "<a class=\"ds-cta\" href=\"#\">Suivre le parcours d’un article →</a>",
+      "css": ".ds-cta{display:inline-flex;align-items:center;gap:.45rem;height:2.75rem;padding:0 1.15rem;border-radius:.375rem;background:#4b2fb5;color:#fff;font:700 .92rem/1 'Archivo Variable',sans-serif;text-decoration:none}.ds-cta:hover{background:#3b2196}"
+    },
+    {
+      "name": "Carte de tâche",
+      "kind": "card",
+      "refersTo": "task-card",
+      "description": "Une tâche sur le tableau ; mène à sa fiche.",
+      "html": "<a class=\"ds-task\" href=\"#\"><span class=\"r\">Analyse</span><b>CGI art. 172</b><span class=\"m\">@contributeur · openai · réservée il y a 4 min</span></a>",
+      "css": ".ds-task{display:block;padding:.5rem .65rem;background:#fff;border:1px solid #dcdfe5;border-radius:.375rem;color:#14161b;text-decoration:none;font-family:'Archivo Variable',sans-serif}.ds-task .r,.ds-task .m{display:block;font-size:.72rem;color:#4a505c}.ds-task b{display:block;font-size:.95rem;font-stretch:108%}"
+    },
+    {
+      "name": "Tampon de statut",
+      "kind": "chip",
+      "refersTo": "stamp",
+      "description": "Statut d'une tâche sur sa fiche (À prendre, En cours, En relecture, Intégrée).",
+      "html": "<span class=\"ds-stamp\">En relecture</span>",
+      "css": ".ds-stamp{display:inline-block;padding:.4rem .9rem;border:3px solid #4b2fb5;border-radius:4px;color:#4b2fb5;font:800 1.15rem/1 'Archivo Variable',sans-serif;font-stretch:118%;letter-spacing:.08em;text-transform:uppercase;transform:rotate(-4deg)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "L'Hémicycle",
+    "overview": "Le corpus est une assemblée : chaque article en vigueur est un siège coloré par son niveau de preuve. Une tâche suit une procédure, étape par étape. Papier froid, encre noire, une seule couleur de marque (encre de tampon violette), une bande de nuit pour le travail en direct.",
+    "keyCharacteristics": [
+      "Hémicycle d'un point par article",
+      "Tableau Kanban par étape",
+      "Trois voix typographiques : nous, la loi, la machine",
+      "Glossaire unique au survol"
+    ]
+  }
+}

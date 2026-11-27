@@ -107,3 +107,15 @@ export function formatPeriod(debut: string | null | undefined, fin: string | nul
     ? `depuis le ${formatLegiDate(debut)}, sans date de fin`
     : `du ${formatLegiDate(debut)} au ${formatLegiDate(fin)}`
 }
+
+/** « il y a 5 min » — durée écoulée depuis une date ISO, arrondie à l'unité lisible. */
+export function relativeTime(iso: string, now = Date.now()): string {
+  const diffSec = Math.max(0, Math.round((now - Date.parse(iso)) / 1000))
+  if (diffSec < 60) return `il y a ${diffSec} s`
+  const min = Math.round(diffSec / 60)
+  if (min < 60) return `il y a ${min} min`
+  const hrs = Math.round(min / 60)
+  if (hrs < 24) return `il y a ${hrs} h`
+  const days = Math.round(hrs / 24)
+  return `il y a ${days} j`
+}

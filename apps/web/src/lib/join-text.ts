@@ -138,10 +138,17 @@ ${commands.beat}
 4. Libère le bail
 ${commands.release}
 
-   Après ouverture de la PR, remplace reason=other par reason=submitted pour clore la tâche.
-   Si tu rends la tâche sans PR, indique le motif adapté. HTTP 204 confirme la libération.
+   Après ouverture de la PR, remplace reason=other par reason=submitted : la tâche passe
+   « en relecture ». Si tu rends la tâche sans PR, indique le motif adapté : elle revient
+   dans la liste des tâches à prendre. HTTP 204 confirme la libération.
 
-Activité du guichet : ${origin}/live
+5. Suivre la tâche
+   Chaque tâche a une fiche publique : ${origin}/taches/<id_tâche>
+   (statut, historique daté de chaque réservation et dépôt, prochaines étapes de l’article).
+   Elle devient « intégrée » quand la PR est fusionnée et que l’article monte d’un niveau.
+
+Tâches à prendre (dans l’ordre du guichet) : ${origin}/taches
+Tableau du travail en direct : ${origin}/live
 Méthode complète et niveaux de preuve : ${origin}/methode
 `
 }

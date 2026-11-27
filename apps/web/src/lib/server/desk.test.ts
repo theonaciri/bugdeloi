@@ -1,6 +1,14 @@
 import { describe, expect, test } from 'bun:test'
 import { sha256Hex } from '@bugdeloi/core/legi'
-import { createSql, type DeskTaskPayload, deskTask, legalArticle, legalText, schema } from '@bugdeloi/db'
+import {
+  createSql,
+  type DeskTaskPayload,
+  deskTask,
+  event,
+  legalArticle,
+  legalText,
+  schema,
+} from '@bugdeloi/db'
 import { eq, inArray, sql } from 'drizzle-orm'
 import { drizzle } from 'drizzle-orm/postgres-js'
 import { claimTask, updateLease } from './desk.ts'
@@ -163,9 +171,34 @@ test.skipIf(!reachable)(
       expect(await updateLease(database, final.lease, 'submitted')).toEqual({ expires_at: null })
       expect(await updateLease(database, final.lease)).toBeNull()
       expect(await claimTask(database, assignment)).toBeNull()
+
+      // Journal : trois réservations, une libération « other » puis un dépôt ; jamais le battement.
+      const logged = await database
+        .select({ type: event.type, actor: event.actor, payload: event.payload })
+        .from(event)
+        .where(eq(event.subject, id))
+        .orderBy(event.id)
+      expect(logged.map((e) => e.type)).toEqual([
+        'desk.claimed',
+        'desk.claimed',
+        'desk.released',
+        'desk.claimed',
+        'desk.released',
+      ])
+      expect(logged.filter((e) => e.type === 'desk.released').map((e) => e.payload.reason)).toEqual([
+        'other',
+        'submitted',
+      ])
+      expect(logged.every((e) => /^github:(alice|bob|chloe|diane)$/.test(e.actor))).toBe(true)
     } finally {
       try {
-        await database.transaction((tx) => tx.delete(deskTask).where(fixture), { accessMode: 'read write' })
+        await database.transaction(
+          async (tx) => {
+            await tx.delete(event).where(eq(event.subject, id))
+            await tx.delete(deskTask).where(fixture)
+          },
+          { accessMode: 'read write' },
+        )
       } finally {
         await client.end()
       }
@@ -223,12 +256,9 @@ test.skipIf(!reachable)(
       try {
         await database.transaction(
           async (tx) => {
-            await tx.delete(deskTask).where(
-              inArray(
-                deskTask.id,
-                ids.map((id) => `analyst-${id}`),
-              ),
-            )
+            const taskIds = ids.map((id) => `analyst-${id}`)
+            await tx.delete(event).where(inArray(event.subject, taskIds))
+            await tx.delete(deskTask).where(inArray(deskTask.id, taskIds))
             await tx.delete(legalArticle).where(eq(legalArticle.textId, textId))
             await tx.delete(legalText).where(eq(legalText.id, textId))
           },

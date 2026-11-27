@@ -149,7 +149,7 @@ function applyPreset(p: (typeof presets)[number]) {
 <section class="bg-bg">
   <div class="container-wide py-12 sm:py-16">
     <p class="text-sm"><a href="/experiences">← Toutes les expériences</a></p>
-    <h1 class="mt-4 max-w-4xl font-serif text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
+    <h1 class="mt-4 max-w-4xl font-display text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
       Impôt sur le revenu 2026 : simulateur et détection des coudes
     </h1>
     <p class="mt-5 max-w-[68ch] text-lg leading-relaxed text-muted">
@@ -169,7 +169,7 @@ function applyPreset(p: (typeof presets)[number]) {
   <div class="container-wide py-12 sm:py-16">
     <div class="flex flex-wrap items-end justify-between gap-4">
       <div>
-        <h2 id="sim-titre" class="font-serif text-2xl font-semibold text-ink sm:text-3xl">
+        <h2 id="sim-titre" class="font-display text-2xl font-semibold text-ink sm:text-3xl">
           Tester un foyer en direct
         </h2>
         <p class="mt-1.5 text-sm text-muted">
@@ -318,7 +318,7 @@ function applyPreset(p: (typeof presets)[number]) {
         <div class="grid gap-6 border-b border-line pb-6 sm:grid-cols-3">
           <div>
             <p class="text-xs font-medium text-muted">Impôt mis en recouvrement</p>
-            <p class="mt-1 font-serif text-3xl font-semibold text-ink tabular sm:text-4xl">
+            <p class="mt-1 font-display text-3xl font-semibold text-ink tabular sm:text-4xl">
               {fmtCents(resultat.impotMisEnRecouvrement)}
             </p>
             <p class="mt-1 text-xs text-muted">
@@ -329,14 +329,14 @@ function applyPreset(p: (typeof presets)[number]) {
           </div>
           <div>
             <p class="text-xs font-medium text-muted">Taux moyen d’imposition</p>
-            <p class="mt-1 font-serif text-3xl font-semibold text-ink tabular sm:text-4xl">
+            <p class="mt-1 font-display text-3xl font-semibold text-ink tabular sm:text-4xl">
               {pctFmt(tauxMoyenPct)}
             </p>
             <p class="mt-1 text-xs text-muted">Part totale du revenu imposable</p>
           </div>
           <div>
             <p class="text-xs font-medium text-muted">Impôt sur le prochain euro</p>
-            <p class="mt-1 font-serif text-3xl font-semibold tabular sm:text-4xl {tmePct > 42 ? 'text-ko' : tmePct > 15 && tmePct < 17 ? 'text-notice-ink' : 'text-brand-strong'}">
+            <p class="mt-1 font-display text-3xl font-semibold tabular sm:text-4xl {tmePct > 42 ? 'text-ko' : tmePct > 15 && tmePct < 17 ? 'text-notice-ink' : 'text-brand-strong'}">
               {pctFmt(tmePct)}
             </p>
             <p class="mt-1 text-xs text-muted">Taux marginal effectif</p>
@@ -417,7 +417,7 @@ function applyPreset(p: (typeof presets)[number]) {
 
 <section class="border-t border-line bg-bg" aria-labelledby="coudes-titre">
   <div class="container-wide py-12 sm:py-16">
-    <h2 id="coudes-titre" class="font-serif text-2xl font-semibold text-ink sm:text-3xl">
+    <h2 id="coudes-titre" class="font-display text-2xl font-semibold text-ink sm:text-3xl">
       Ce que révèle le détecteur automatique de coudes et falaises (expérience C0.6)
     </h2>
     <p class="mt-3 max-w-[68ch] text-base leading-relaxed text-muted">
@@ -429,7 +429,7 @@ function applyPreset(p: (typeof presets)[number]) {
     </p>
     <div class="mt-5 grid gap-5 lg:grid-cols-2">
       <div class="rounded-xl border border-line bg-surface p-5">
-        <h3 class="font-serif text-lg font-semibold text-ink">La vraie falaise de 61 € (taux marginal : +6 100 %)</h3>
+        <h3 class="font-display text-lg font-semibold text-ink">La vraie falaise de 61 € (taux marginal : +6 100 %)</h3>
         <p class="mt-2 text-sm leading-relaxed text-muted">
           L’article 1657 1 bis du CGI prévoit qu’un impôt inférieur à 61 € n’est pas prélevé. Pour un célibataire,
           un revenu de <strong>17 592 €</strong> donne 60 € d’impôt, donc <strong>0 € à payer</strong>. Avec
@@ -438,7 +438,7 @@ function applyPreset(p: (typeof presets)[number]) {
         </p>
       </div>
       <div class="rounded-xl border border-line bg-surface p-5">
-        <h3 class="font-serif text-lg font-semibold text-ink">Le pic de décote à 43,58 % (pendant 15 €)</h3>
+        <h3 class="font-display text-lg font-semibold text-ink">Le pic de décote à 43,58 % (pendant 15 €)</h3>
         <p class="mt-2 text-sm leading-relaxed text-muted">
           Parce que la décote diminue de 45,25 % par euro d’impôt supplémentaire, le taux réel dans la tranche à 11 %
           est de <strong>15,98 %</strong>. Entre <strong>29 579 € et 29 594 €</strong>, la tranche à 30 % démarre avant
@@ -495,7 +495,7 @@ function applyPreset(p: (typeof presets)[number]) {
     <div class="mt-10 grid gap-6 border-t border-line pt-8 sm:grid-cols-3">
       <div>
         <p class="text-xs font-medium text-muted">Différentiel indépendant</p>
-        <p class="mt-1 font-serif text-2xl font-semibold text-ink tabular">
+        <p class="mt-1 font-display text-2xl font-semibold text-ink tabular">
           {intFmt.format(data.differential.totalCases)} foyers · {data.differential.divergences} divergence
         </p>
         <p class="mt-1 text-xs text-muted">
@@ -504,7 +504,7 @@ function applyPreset(p: (typeof presets)[number]) {
       </div>
       <div>
         <p class="text-xs font-medium text-muted">Score de mutation</p>
-        <p class="mt-1 font-serif text-2xl font-semibold text-ok tabular">
+        <p class="mt-1 font-display text-2xl font-semibold text-ok tabular">
           {data.mutation.killedMutants}/{data.mutation.totalMutants} ({pctFmt(data.mutation.killScorePct)})
         </p>
         <p class="mt-1 text-xs text-muted">
@@ -513,7 +513,7 @@ function applyPreset(p: (typeof presets)[number]) {
       </div>
       <div>
         <p class="text-xs font-medium text-muted">Programme Catala 1.3.2</p>
-        <p class="mt-1 font-serif text-2xl font-semibold text-brand-strong tabular">14/14 tests verts</p>
+        <p class="mt-1 font-display text-2xl font-semibold text-brand-strong tabular">14/14 tests verts</p>
         <p class="mt-1 text-xs text-muted">4 empreintes LEGI vérifiées + rétro-traduction publiée.</p>
       </div>
     </div>
@@ -522,7 +522,7 @@ function applyPreset(p: (typeof presets)[number]) {
 
 <section class="border-t border-line bg-surface" aria-labelledby="sources-ir">
   <div class="container-wide py-12 sm:py-16">
-    <h2 id="sources-ir" class="font-serif text-2xl font-semibold text-ink sm:text-3xl">
+    <h2 id="sources-ir" class="font-display text-2xl font-semibold text-ink sm:text-3xl">
       Articles officiels modélisés et code source vérifiable
     </h2>
     <ul class="mt-6 divide-y divide-line border-y border-line">

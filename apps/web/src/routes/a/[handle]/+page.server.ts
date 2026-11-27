@@ -63,7 +63,7 @@ export const load: PageServerLoad = async ({ params, setHeaders }) => {
       node,
       legiarti: legiarti && isLegiarti(legiarti) ? legiarti : null,
       startedAt: startedAt?.toISOString() ?? null,
-      status: completedAt ? 'Terminée' : active ? 'En cours' : 'Libérée',
+      status: completedAt ? 'Déposée' : active ? 'En cours' : 'Libérée',
     })),
   }
 }

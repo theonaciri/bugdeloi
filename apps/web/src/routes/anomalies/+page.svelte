@@ -41,8 +41,8 @@ function readableClaim(claim: string) {
 
 <header class="bg-bg">
   <div class="container-wide space-y-5 py-12 sm:py-16">
-    <h1 class="font-serif text-4xl font-semibold tracking-tight sm:text-5xl">Anomalies et signalements</h1>
-    <p class="max-w-3xl font-serif text-xl leading-relaxed text-ink/90">
+    <h1 class="font-display text-4xl font-semibold tracking-tight sm:text-5xl">Anomalies et signalements</h1>
+    <p class="max-w-3xl font-display text-xl leading-relaxed text-ink/90">
       Les programmes de BugDeLoi repèrent des problèmes possibles dans la loi française : des renvois vers des
       articles abrogés, des fautes de ponctuation ou des effets de seuil, par exemple quand gagner un euro fait
       perdre plus d’un euro d’aide.
@@ -60,7 +60,7 @@ function readableClaim(claim: string) {
 
 <section class="border-t border-line bg-surface" aria-labelledby="anomalies-validees">
   <div class="container-wide space-y-5 py-12 sm:py-16">
-    <h2 id="anomalies-validees" class="font-serif text-2xl font-semibold sm:text-3xl">
+    <h2 id="anomalies-validees" class="font-display text-2xl font-semibold sm:text-3xl">
       Anomalies validées par un juriste ({formatInt(data.findings.length)})
     </h2>
     {#if data.findings.length > 0}
@@ -68,7 +68,7 @@ function readableClaim(claim: string) {
         {#each data.findings as item (item.id)}
           <li class="grid gap-4 py-5 sm:grid-cols-[minmax(0,1fr)_auto]">
             <div class="space-y-2">
-              <h3 class="font-serif text-xl font-semibold"><a href="/anomalies/{item.id}">{item.typeLabel}</a></h3>
+              <h3 class="font-display text-xl font-semibold"><a href="/anomalies/{item.id}">{item.typeLabel}</a></h3>
               <p>{item.claim}</p>
               {#if item.articles.length}
                 <ul aria-label="Versions d’articles" class="flex flex-wrap gap-x-4 gap-y-1 text-sm">
@@ -113,7 +113,7 @@ function readableClaim(claim: string) {
 <section class="border-t border-line bg-bg" aria-labelledby="signalements">
   <div class="container-wide space-y-6 py-12 sm:py-16">
     <div class="space-y-2">
-      <h2 id="signalements" class="font-serif text-2xl font-semibold sm:text-3xl">
+      <h2 id="signalements" class="font-display text-2xl font-semibold sm:text-3xl">
         Signalements en attente de relecture humaine ({formatInt(totalAll)})
       </h2>
       <p class="text-muted">
@@ -150,7 +150,7 @@ function readableClaim(claim: string) {
         {#each pending.items as item (item.id)}
           <li class="grid gap-3 py-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
             <div class="min-w-0 space-y-1.5">
-              <h3 class="font-serif text-xl font-semibold">
+              <h3 class="font-display text-xl font-semibold">
                 {item.type === 'SYNTAXE' ? 'Faute de ponctuation' : item.typeLabel}
               </h3>
               <p class="leading-relaxed">{readableClaim(item.claim)}</p>

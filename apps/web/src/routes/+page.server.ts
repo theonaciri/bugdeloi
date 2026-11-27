@@ -1,10 +1,13 @@
 import { legifranceArticleUrl } from '@bugdeloi/core/legi'
+import { articleStatus } from '@bugdeloi/db'
+import { eq } from 'drizzle-orm'
 import { C03_CASE_CONTEXT } from '#lib/c03-overview.ts'
-import type { CodeMapPreview, EuroCase } from '#lib/components/viz/index.ts'
-import { getAnalysesSummary } from '#lib/server/analyses.ts'
+import type { EuroCase } from '#lib/components/viz/index.ts'
+import { asLevel } from '#lib/levels.ts'
 import { readVerifications } from '#lib/server/c03-verifications.ts'
+import { db } from '#lib/server/db.ts'
 import { CACHE } from '#lib/server/http.ts'
-import { CODE_KEYS, mapData, snapshot } from '#lib/server/queries.ts'
+import { snapshot } from '#lib/server/queries.ts'
 import summary from '../../../../replications/c0.3/summary.json'
 import type { PageServerLoad } from './$types'
 
@@ -62,54 +65,75 @@ const c03Spotlights = [
   },
 ]
 
-export const load: PageServerLoad = async ({ setHeaders, url }) => {
-  try {
-    const [snap, ...maps] = await Promise.all([snapshot(), ...CODE_KEYS.map((code) => mapData(code, null))])
-    const mapPreviews: CodeMapPreview[] = maps
-      .filter((m): m is NonNullable<typeof m> => Boolean(m?.ingested))
-      .map((m) => {
-        const progress = snap.codes.find((c) => c.short === m.code)
-        return {
-          code: m.code,
-          codeTitle: m.codeTitle,
-          inForce: progress?.inForce ?? 0,
-          refCount: progress?.byLevel.REF ?? 0,
-          focus: m.focus,
-          sections: m.sections,
-          counts: m.counts,
-          articles: m.articles,
-        }
-      })
+/**
+ * Exemple réel pour l'accueil : un article traduit du corpus, lu tel quel dans son fichier.
+ * Rien n'est recopié à la main : texte, interface, code et test viennent du fichier versionné.
+ */
+const specimenFiles = import.meta.glob<string>(
+  '../../../../corpus/cgi/livre1/partie1/titre2/chapitre1/section5/i/a/article_278.catala_fr',
+  { eager: true, query: '?raw', import: 'default' },
+)
+const SPECIMEN_PATH = 'corpus/cgi/livre1/partie1/titre2/chapitre1/section5/i/a/article_278.catala_fr'
 
+function parseSpecimen(raw: string | undefined) {
+  if (!raw) return null
+  const head = /^####\s+Article\s+([^|]+)\|(LEGIARTI\d{12})/m.exec(raw)
+  const code = /```catala\n([\s\S]*?)```/.exec(raw)?.[1]
+  if (!head || !code) return null
+  const afterTitle = raw.slice((head.index ?? 0) + head[0].length).trim()
+  const lawText = afterTitle.split(/\n\s*\n/)[0]?.trim() ?? ''
+  const [main = '', test = ''] = code.split('#[test]')
+  const fields = [...main.matchAll(/^\s*(entrée|résultat)\s+(\S+)\s+contenu\s+(\S+)/gm)].map((m) => ({
+    kind: m[1] as 'entrée' | 'résultat',
+    name: m[2] ?? '',
+    type: m[3] ?? '',
+  }))
+  const scope = main.slice(main.indexOf("champ d'application", main.indexOf('\n\n'))).trim()
+  return {
+    num: head[1]?.trim() ?? '',
+    legiarti: head[2] ?? '',
+    lawText,
+    interfaceName: /Interface `([^`]+)`/.exec(raw)?.[1] ?? null,
+    fields,
+    scope,
+    test: `#[test]${test}`.trim(),
+    path: SPECIMEN_PATH,
+  }
+}
+
+const specimen = parseSpecimen(Object.values(specimenFiles)[0])
+
+async function specimenLevel(legiarti: string) {
+  const [row] = await db()
+    .select({ level: articleStatus.level })
+    .from(articleStatus)
+    .where(eq(articleStatus.articleId, legiarti))
+    .limit(1)
+  return asLevel(row?.level)
+}
+
+export const load: PageServerLoad = async ({ setHeaders, url }) => {
+  const c03 = { scores: summary.scores, cases: c03EuroCases, spotlights: c03Spotlights }
+  try {
+    const [snap, level] = await Promise.all([
+      snapshot(),
+      specimen ? specimenLevel(specimen.legiarti) : Promise.resolve(null),
+    ])
     setHeaders({ 'cache-control': CACHE.live })
     return {
       snapshot: snap,
-      mapPreviews,
-      c03: {
-        scores: summary.scores,
-        cases: c03EuroCases,
-        spotlights: c03Spotlights,
-      },
-      analyses: (() => {
-        const a = getAnalysesSummary()
-        return { total: a.total, byCategory: a.byCategory }
-      })(),
+      c03,
+      specimen: specimen ? { ...specimen, level } : null,
       origin: url.origin,
       dbError: false,
     }
   } catch (e) {
     console.error('[accueil] base injoignable', e)
     setHeaders({ 'cache-control': 'no-store' })
-    const a = getAnalysesSummary()
     return {
       snapshot: null,
-      mapPreviews: [] as CodeMapPreview[],
-      c03: {
-        scores: summary.scores,
-        cases: c03EuroCases,
-        spotlights: c03Spotlights,
-      },
-      analyses: { total: a.total, byCategory: a.byCategory },
+      c03,
+      specimen: specimen ? { ...specimen, level: null } : null,
       origin: url.origin,
       dbError: true,
     }

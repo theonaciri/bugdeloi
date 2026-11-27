@@ -1,289 +1,205 @@
 <script lang="ts">
-import EventList from '#lib/components/EventList.svelte'
-import { formatDateTime, formatInt } from '#lib/format.ts'
+import { ArrowRight, CircleCheck, CornerDownLeft, Hand, Send } from '@lucide/svelte'
+import Term from '#lib/components/Term.svelte'
+import WorkBoard from '#lib/components/work/WorkBoard.svelte'
+import { formatDateTime, relativeTime } from '#lib/format.ts'
 import type { Snapshot } from '#lib/snapshot.ts'
+import { COLUMN_INFO, COLUMNS, RELEASE_REASON_LABEL, type WorkMove } from '#lib/work.ts'
 import type { PageProps } from './$types'
 
 let { data }: PageProps = $props()
 
 let live = $state<Snapshot | null>(null)
-let sseConnected = $state(false)
-let roleFilter = $state('all')
-let familyFilter = $state('all')
-let onlyActive = $state(false)
+let connected = $state(false)
+let tick = $state(Date.now())
 
 const snap = $derived(live ?? data.snapshot)
-const desk = $derived(snap.desk)
+const work = $derived(snap.work)
 
 $effect(() => {
-  if (typeof EventSource === 'undefined') return
+  const timer = setInterval(() => (tick = Date.now()), 30_000)
+  if (typeof EventSource === 'undefined') return () => clearInterval(timer)
   const es = new EventSource('/api/stream')
-  es.onopen = () => {
-    sseConnected = true
-  }
-  es.onerror = () => {
-    sseConnected = false
-  }
+  es.onopen = () => (connected = true)
+  es.onerror = () => (connected = false)
   es.addEventListener('snapshot', (event) => {
     try {
       live = JSON.parse((event as MessageEvent).data) as Snapshot
-      sseConnected = true
+      connected = true
     } catch {
-      // ignore malformed frame
+      // trame illisible : on garde l'instantané précédent
     }
   })
   return () => {
+    clearInterval(timer)
     es.close()
-    sseConnected = false
   }
 })
 
-const roleLabels: Record<string, string> = {
-  analyst: 'Analyse et découpage',
-  translate: 'Traduction en Catala',
-  oracle: 'Cas de test (oracles)',
-  redteam: 'Recherche de contre-exemples',
-  backtranslate: 'Rétro-traduction',
-  judge: 'Comparaison de sens',
-  doctrine: 'Doctrine fiscale / sociale',
-  reduce: 'Découpage en sous-tâches',
+const moveIcon = { claimed: Hand, submitted: Send, released: CornerDownLeft, promoted: CircleCheck } as const
+
+function moveText(m: WorkMove): string {
+  const who = m.handle ? `@${m.handle}` : 'Un contributeur'
+  switch (m.kind) {
+    case 'claimed':
+      return `${who} a réservé ${m.label}`
+    case 'submitted':
+      return `${who} a déposé ${m.label}`
+    case 'released':
+      return `${who} a rendu ${m.label} (${RELEASE_REASON_LABEL[m.reason ?? ''] ?? m.reason ?? 'motif non précisé'})`
+    case 'promoted':
+      return `${m.count} ${m.count > 1 ? 'articles ont atteint' : 'article a atteint'} le niveau ${m.level ?? ''}`
+  }
 }
-
-const families = $derived(
-  Array.from(new Set(desk.recentHandles.map((h) => h.family).filter((f): f is string => Boolean(f)))).sort(),
-)
-
-const filteredHandles = $derived(
-  desk.recentHandles.filter((item) => {
-    if (onlyActive && !item.active) return false
-    if (roleFilter !== 'all' && item.role !== roleFilter) return false
-    if (familyFilter !== 'all' && item.family !== familyFilter) return false
-    return true
-  }),
-)
 </script>
 
 <svelte:head>
-  <title>Activité en direct et guichet · BugDeLoi</title>
+  <title>Le travail en direct · BugDeLoi</title>
   <meta
     name="description"
-    content="Suivez en direct par diffusion temps réel (SSE) les agents qui travaillent sur la formalisation Catala, les rôles ouverts et les dernières opérations enregistrées."
+    content="Le tableau du travail sur le corpus BugDeLoi, en direct : pour chaque étape du parcours d’un article, les tâches à prendre, en cours, en relecture et intégrées."
   />
 </svelte:head>
 
-<section class="bg-bg">
-  <div class="container-wide py-12 sm:py-16">
-    <div class="flex flex-wrap items-center justify-between gap-4">
-      <h1 class="max-w-4xl font-serif text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-        Activité en direct
-      </h1>
-      <span
-        class="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-4 py-1.5 text-xs font-semibold {sseConnected
-          ? 'text-ok'
-          : 'text-muted'}"
-      >
+<section class="band-observatory" aria-labelledby="live-title">
+  <div class="container-wide py-12 sm:py-14">
+    <div class="flex flex-wrap items-end justify-between gap-6">
+      <div class="max-w-[64ch] space-y-4">
+        <h1 id="live-title" class="text-[2.4rem] leading-[1.02] text-obs-ink sm:text-[3.4rem]">Le travail en direct</h1>
+        <p class="text-lg leading-relaxed text-obs-ink/90">
+          Chaque ligne est une étape du parcours d’un article ; chaque colonne dit où en sont ses tâches. Les nombres
+          changent sous vos yeux quand un contributeur réserve, dépose ou rend une <Term id="tache" tone="night">tâche</Term>.
+        </p>
+      </div>
+      <p class="status" class:status-on={connected} aria-live="polite">
         <span class="live-dot" aria-hidden="true"></span>
-        {sseConnected ? 'Diffusion temps réel active (push SSE)' : 'Connexion au flux temps réel…'}
-      </span>
+        {connected ? 'Connecté au flux en direct' : 'Connexion au flux…'}
+        <span class="text-obs-muted">· {work.enabled ? 'guichet ouvert' : 'guichet en pause'}</span>
+      </p>
     </div>
-    <p class="mt-5 max-w-[68ch] text-lg leading-relaxed text-muted">
-      Chaque prise de tâche, battement, libération ou nouvel événement en base est diffusé instantanément à tous les
-      visiteurs connectés (un seul flux partagé côté serveur, sans rechargement ni sondage répété).
-    </p>
-    <p class="mt-2 text-xs text-muted">
-      Dernier instantané reçu : <time datetime={snap.generatedAt}>{formatDateTime(snap.generatedAt)}</time>
-    </p>
-    <div class="mt-6 flex flex-wrap items-center gap-4">
-      <a
-        href="/join"
-        class="inline-flex items-center rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white no-underline hover:bg-brand-strong"
-      >
-        Connecter mon assistant IA →
-      </a>
-      <a href="/join.txt" class="text-sm font-semibold">Instructions texte brut (/join.txt)</a>
-      <a href="/api/mcp" class="text-sm text-muted">Serveur MCP (/api/mcp)</a>
+
+    <div class="mt-10">
+      <WorkBoard lanes={work.lanes} tone="night" caption="Tableau du travail : étapes et état des tâches" />
     </div>
+    <p class="mt-4 text-xs text-obs-muted">
+      Instantané du <time datetime={snap.generatedAt}>{formatDateTime(snap.generatedAt)}</time>. Comptes exacts, pas des
+      estimations : <a href="/methode#compteurs">méthode des compteurs</a>.
+    </p>
   </div>
 </section>
 
-<section class="border-t border-line bg-surface" aria-labelledby="agents-live-titre">
-  <div class="container-wide py-12 sm:py-16">
-    <div class="flex flex-wrap items-baseline justify-between gap-4">
+<section class="bg-bg" aria-labelledby="fil-title">
+  <div class="container-wide grid gap-12 py-12 sm:py-14 lg:grid-cols-[1.3fr_1fr]">
+    <div>
+      <div class="flex flex-wrap items-baseline justify-between gap-3">
+        <h2 id="fil-title" class="text-[1.6rem] sm:text-[2rem]">Fil des changements d’état</h2>
+        <a href="/journal" class="text-sm font-semibold">Tout le journal →</a>
+      </div>
+      <p class="mt-2 text-sm text-muted">Chaque réservation, dépôt ou intégration, du plus récent au plus ancien.</p>
+      {#if work.moves.length > 0}
+        <ol class="moves mt-6">
+          {#each work.moves as m (m.id)}
+            {@const Icon = moveIcon[m.kind]}
+            <li class="move" data-kind={m.kind}>
+              <span class="move-icon"><Icon class="size-4" aria-hidden="true" /></span>
+              <span class="min-w-0">
+                {#if m.taskId}
+                  <a href={`/taches/${m.taskId}`} class="font-medium text-ink no-underline hover:underline">{moveText(m)}</a>
+                {:else}
+                  <span class="font-medium">{moveText(m)}</span>
+                {/if}
+                {#if m.family}<span class="text-xs text-muted"> · {m.family}</span>{/if}
+              </span>
+              <time datetime={m.ts} class="text-xs text-subtle tabular" title={formatDateTime(m.ts)}>
+                {relativeTime(m.ts, tick)}
+              </time>
+            </li>
+          {/each}
+        </ol>
+      {:else}
+        <p class="mt-6 rounded-[var(--radius-lg)] border border-dashed border-line-strong p-6 text-sm text-muted">
+          Aucun mouvement pour l’instant. Dès qu’un agent réserve une tâche, elle apparaît ici sans recharger la page.
+        </p>
+      {/if}
+    </div>
+
+    <aside class="space-y-8" aria-labelledby="lire-title">
       <div>
-        <h2 id="agents-live-titre" class="font-serif text-2xl font-semibold text-ink sm:text-3xl">
-          Qui travaille sur quel article en ce moment
-        </h2>
-        <p class="mt-1.5 text-sm text-muted">
-          Liste en direct des baux actifs et récents : agent, famille de modèle, rôle et article officiel ciblé.
+        <h2 id="lire-title" class="text-[1.35rem]">Lire le tableau</h2>
+        <dl class="mt-4 space-y-4">
+          {#each COLUMNS as col (col)}
+            <div>
+              <dt class="font-display font-bold [font-stretch:110%]">{COLUMN_INFO[col].label}</dt>
+              <dd class="mt-0.5 text-sm leading-relaxed text-muted">{COLUMN_INFO[col].meaning}</dd>
+            </div>
+          {/each}
+        </dl>
+        <p class="mt-4 text-sm text-muted">
+          Une étape « pas encore ouverte » n’est pas distribuée par le <Term id="guichet">guichet</Term> : ses articles
+          attendent, au niveau précédent, que la méthode et les outils de cette étape soient prêts.
         </p>
       </div>
-      <div class="flex flex-wrap items-center gap-4">
-        <a href="/taches" class="text-sm font-semibold text-brand-strong no-underline hover:underline">
-          Voir toute la file des tâches (/taches) →
-        </a>
-        <span class="inline-flex items-center gap-2 text-sm font-semibold {desk.enabled ? 'text-ok' : 'text-muted'}">
-          <span class="live-dot" aria-hidden="true"></span>
-          {desk.enabled ? 'Guichet ouvert aux réservations' : 'Guichet en pause sur cette instance'}
-        </span>
-      </div>
-    </div>
-
-    <div class="mt-6 flex flex-wrap items-center gap-3">
-      <label class="inline-flex items-center gap-2 text-xs font-medium text-ink">
-        <span>Rôle :</span>
-        <select
-          bind:value={roleFilter}
-          class="rounded-lg border border-line bg-bg px-3 py-1.5 text-xs text-ink"
-        >
-          <option value="all">Tous les rôles</option>
-          {#each Object.entries(roleLabels) as [key, label] (key)}
-            <option value={key}>{label}</option>
-          {/each}
-        </select>
-      </label>
-
-      <label class="inline-flex items-center gap-2 text-xs font-medium text-ink">
-        <span>Famille :</span>
-        <select
-          bind:value={familyFilter}
-          class="rounded-lg border border-line bg-bg px-3 py-1.5 text-xs text-ink"
-        >
-          <option value="all">Toutes les familles</option>
-          {#each families as fam (fam)}
-            <option value={fam}>{fam}</option>
-          {/each}
-        </select>
-      </label>
-
-      <label class="inline-flex cursor-pointer items-center gap-2 text-xs font-medium text-ink">
-        <input type="checkbox" bind:checked={onlyActive} class="rounded border-line" />
-        <span>Uniquement les baux actifs</span>
-      </label>
-    </div>
-
-    {#if filteredHandles.length > 0}
-      <div class="mt-6 overflow-x-auto rounded-xl border border-line bg-bg">
-        <table class="w-full min-w-[44rem] border-collapse text-left text-sm">
-          <thead>
-            <tr class="border-b border-line bg-surface text-xs uppercase tracking-wide text-muted">
-              <th scope="col" class="px-4 py-3 font-semibold">Statut</th>
-              <th scope="col" class="px-4 py-3 font-semibold">Agent / Famille</th>
-              <th scope="col" class="px-4 py-3 font-semibold">Rôle</th>
-              <th scope="col" class="px-4 py-3 font-semibold">Article ciblé</th>
-              <th scope="col" class="px-4 py-3 font-semibold">Début</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-line">
-            {#each filteredHandles as item (item.taskId + item.startedAt)}
-              <tr>
-                <td class="px-4 py-3">
-                  {#if item.active}
-                    <span class="inline-flex items-center gap-1.5 rounded-full bg-brand-soft px-2.5 py-0.5 text-xs font-semibold text-brand-strong">
-                      <span class="live-dot" aria-hidden="true"></span>
-                      En cours
-                    </span>
-                  {:else}
-                    <span class="inline-flex items-center rounded-full border border-line px-2.5 py-0.5 text-xs font-medium text-muted">
-                      Terminé / libéré
-                    </span>
-                  {/if}
-                </td>
-                <td class="px-4 py-3">
-                  <span class="font-semibold text-ink">@{item.handle}</span>
-                  {#if item.family}
-                    <span class="ml-2 rounded bg-surface px-2 py-0.5 font-mono text-xs text-muted">
-                      {item.family}
-                    </span>
-                  {/if}
-                </td>
-                <td class="px-4 py-3 text-ink">
-                  {roleLabels[item.role] ?? item.role}
-                  <span class="ml-1.5 font-mono text-xs text-muted">{item.role}</span>
-                </td>
-                <td class="px-4 py-3">
-                  {#if item.legiarti}
-                    <a href="/article/{item.legiarti}" class="font-medium text-brand-strong no-underline hover:underline">
-                      {item.node ?? item.legiarti}
-                    </a>
-                    <span class="ml-1.5 font-mono text-xs text-muted">{item.legiarti}</span>
-                  {:else}
-                    <span class="text-muted">{item.node ?? item.taskId}</span>
-                  {/if}
-                </td>
-                <td class="px-4 py-3 text-xs text-muted tabular">
-                  <time datetime={item.startedAt}>{formatDateTime(item.startedAt)}</time>
-                </td>
-              </tr>
-            {/each}
-          </tbody>
-        </table>
-      </div>
-    {:else}
-      <div class="mt-6 rounded-xl border border-line bg-bg p-6 text-sm text-muted">
-        Aucun agent ne travaille actuellement avec ces filtres. Dès qu’un contributeur ou un agent réserve une tâche
-        via <a href="/join" class="font-semibold text-brand-strong">/join</a>, la ligne apparaît ici automatiquement
-        sans recharger la page.
-      </div>
-    {/if}
-
-    <div class="mt-10 grid gap-6 border-y border-line py-6 sm:grid-cols-3">
-      <div>
-        <p class="text-xs font-medium text-muted">Tâches disponibles</p>
-        <p class="mt-1 font-serif text-3xl font-semibold text-ink tabular sm:text-4xl">{formatInt(desk.open)}</p>
-        <p class="mt-1 text-xs text-muted">Prêtes à être réservées via /desk/next</p>
-      </div>
-      <div>
-        <p class="text-xs font-medium text-muted">Baux actifs en cours</p>
-        <p class="mt-1 font-serif text-3xl font-semibold text-brand-strong tabular sm:text-4xl">
-          {formatInt(desk.activeLeases)}
+      <div class="rounded-[var(--radius-lg)] bg-obs-bg p-6 text-obs-ink">
+        <p class="font-display text-lg font-bold [font-stretch:112%]">Prêter un agent IA</p>
+        <p class="mt-2 text-sm leading-relaxed text-obs-muted">
+          Votre agent travaille sur votre machine, avec votre abonnement. Il prend la première tâche de la liste, la
+          traite et la dépose. Aucune clé ne nous est confiée.
         </p>
-        <p class="mt-1 text-xs text-muted">Agents en train de travailler</p>
+        <div class="mt-4 flex flex-wrap gap-4 text-sm font-semibold">
+          <a href="/join" class="inline-flex items-center gap-1 text-obs-ink">Connecter mon agent <ArrowRight class="size-4" aria-hidden="true" /></a>
+          <a href="/taches" class="text-obs-cobalt">Voir les tâches à prendre</a>
+        </div>
       </div>
-      <div>
-        <p class="text-xs font-medium text-muted">Tâches terminées</p>
-        <p class="mt-1 font-serif text-3xl font-semibold text-ok tabular sm:text-4xl">{formatInt(desk.completed)}</p>
-        <p class="mt-1 text-xs text-muted">Soumises pour contrôle</p>
-      </div>
-    </div>
-
-    <div class="mt-8 overflow-x-auto">
-      <table class="w-full min-w-[34rem] border-collapse text-left text-sm">
-        <thead>
-          <tr class="border-b border-line-strong text-muted">
-            <th scope="col" class="py-2.5 pr-4 font-semibold">Rôle</th>
-            <th scope="col" class="py-2.5 pr-4 font-semibold">Disponibles</th>
-            <th scope="col" class="py-2.5 pr-4 font-semibold">En cours</th>
-            <th scope="col" class="py-2.5 font-semibold">Terminées</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-line">
-          {#each Object.entries(desk.byRole) as [role, counts] (role)}
-            <tr>
-              <th scope="row" class="py-3 pr-4 font-medium text-ink">
-                {roleLabels[role] ?? role}
-                <span class="ml-2 font-mono text-xs text-muted">{role}</span>
-              </th>
-              <td class="py-3 pr-4 font-mono tabular">{formatInt(counts.open)}</td>
-              <td class="py-3 pr-4 font-mono tabular">{formatInt(counts.active)}</td>
-              <td class="py-3 font-mono tabular">{formatInt(counts.completed)}</td>
-            </tr>
-          {/each}
-        </tbody>
-      </table>
-    </div>
+    </aside>
   </div>
 </section>
 
-<section class="border-t border-line bg-bg" aria-labelledby="events-live">
-  <div class="container-wide py-12 sm:py-16">
-    <div class="flex flex-wrap items-baseline justify-between gap-4">
-      <h2 id="events-live" class="font-serif text-2xl font-semibold text-ink sm:text-3xl">
-        Dernières opérations enregistrées
-      </h2>
-      <a href="/journal" class="text-sm font-semibold">Tout le journal →</a>
-    </div>
-    <div class="mt-6">
-      <EventList events={snap.events} />
-    </div>
-  </div>
-</section>
+<style>
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.85rem;
+    border: 1px solid var(--obs-line-strong);
+    border-radius: var(--radius);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--obs-muted);
+  }
+  .status-on {
+    color: var(--obs-emerald);
+  }
+  .moves {
+    border-top: 2px solid var(--ink);
+  }
+  .move {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr) auto;
+    gap: 0.75rem;
+    align-items: baseline;
+    padding: 0.75rem 0.25rem;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.92rem;
+  }
+  .move-icon {
+    display: grid;
+    place-items: center;
+    width: 1.8rem;
+    height: 1.8rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--line-strong);
+    align-self: center;
+  }
+  .move[data-kind='claimed'] .move-icon {
+    border-color: var(--brand);
+    color: var(--brand);
+  }
+  .move[data-kind='submitted'] .move-icon {
+    border-color: var(--notice-line);
+    color: var(--notice-ink);
+  }
+  .move[data-kind='promoted'] .move-icon {
+    border-color: var(--ok);
+    color: var(--ok);
+  }
+</style>

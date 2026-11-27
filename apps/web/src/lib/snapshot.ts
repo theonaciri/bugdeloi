@@ -3,6 +3,7 @@
  * Aucun nombre ici : tout est calculé par `lib/server/queries.ts`.
  */
 import type { LevelCounts } from './levels.ts'
+import type { WorkBoard } from './work.ts'
 
 export interface CodeProgress {
   /** LEGITEXT du code. */
@@ -91,25 +92,6 @@ export interface SuiteInfo {
   finishedAt: string | null
 }
 
-export interface DeskPublicStats {
-  enabled: boolean
-  open: number
-  activeLeases: number
-  completed: number
-  byRole: Record<string, { open: number; active: number; completed: number }>
-  recentHandles: {
-    taskId: string
-    node: string | null
-    legiarti: string | null
-    handle: string
-    family: string | null
-    role: string
-    startedAt: string
-    expiresAt: string | null
-    active: boolean
-  }[]
-}
-
 export interface FindingPreview {
   id: string
   type: string
@@ -139,7 +121,8 @@ export interface Snapshot {
   referenceExample: ReferenceExample | null
   pipeline: PipelineStats
   suites: SuiteInfo[]
-  desk: DeskPublicStats
+  /** Le tableau du travail : une ligne par étape, quatre colonnes (voir `lib/work.ts`). */
+  work: WorkBoard
   activitySeries: { day: string; count: number }[]
   reproducedPreview: FindingPreview[]
 }

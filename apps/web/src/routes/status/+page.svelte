@@ -22,7 +22,7 @@ const runLabel: Record<string, string> = {
 
 <section class="bg-bg">
   <div class="container-wide space-y-4 py-12 sm:py-16">
-    <h1 class="font-serif text-4xl font-semibold tracking-tight sm:text-5xl">État du service</h1>
+    <h1 class="font-display text-4xl font-semibold tracking-tight sm:text-5xl">État du service</h1>
     <p class="text-lg font-semibold">{h.database.ok ? 'Tout fonctionne normalement' : 'La base des textes est temporairement inaccessible'}</p>
     <p class="text-sm text-muted">Relevé du <time datetime={data.generatedAt}>{formatDateTime(data.generatedAt)}</time> · <a href="/api/status.json">Données pour le suivi automatique</a></p>
   </div>
@@ -129,7 +129,7 @@ const runLabel: Record<string, string> = {
 
 <section class="bg-bg border-t border-line" aria-labelledby="journal">
   <div class="container-wide space-y-5 py-12 sm:py-16">
-    <h2 id="journal" class="font-serif text-2xl font-semibold sm:text-3xl">Dernières opérations enregistrées</h2>
+    <h2 id="journal" class="font-display text-2xl font-semibold sm:text-3xl">Dernières opérations enregistrées</h2>
     {#if h.database.ok}
       <EventList events={data.events} />
     {:else}

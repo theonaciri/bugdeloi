@@ -66,7 +66,7 @@ function barPx(count: number): number {
               <span class="text-xs font-bold opacity-50 tabular">0{index + 1}</span>
               <span class="font-semibold text-sm">{stage.label}</span>
             </div>
-            <span class="font-serif text-2xl font-semibold tabular">{formatInt(stage.count)}</span>
+            <span class="font-display text-2xl font-semibold tabular">{formatInt(stage.count)}</span>
           </div>
           <p class={cn('mt-1 text-xs', tone === 'observatory' ? 'text-obs-muted' : 'text-muted')}>
             {stage.sublabel}

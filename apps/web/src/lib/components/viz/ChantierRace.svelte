@@ -124,7 +124,7 @@ const badgeTone: Record<RaceTrack['statusTone'], string> = {
       <div class="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p class="text-xs uppercase tracking-wider text-obs-muted">{selected.track.title}</p>
-          <p class="font-serif mt-0.5 text-xl font-semibold text-obs-ink">{selected.rung.label}</p>
+          <p class="font-display mt-0.5 text-xl font-semibold text-obs-ink">{selected.rung.label}</p>
         </div>
         {#if selected.rung.href ?? selected.track.href}
           <a

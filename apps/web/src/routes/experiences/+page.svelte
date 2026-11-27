@@ -14,7 +14,7 @@ let { data }: PageProps = $props()
 
 <section class="bg-bg">
   <div class="container-wide py-12 sm:py-16">
-    <h1 class="max-w-4xl font-serif text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
+    <h1 class="max-w-4xl font-display text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
       Annexes : simulateurs et étalonnage
     </h1>
     <p class="mt-5 max-w-[68ch] text-lg leading-relaxed text-muted">
@@ -30,7 +30,7 @@ let { data }: PageProps = $props()
     <ul class="divide-y divide-line border-y border-line">
       <li class="grid gap-4 py-8 lg:grid-cols-12 lg:items-baseline">
         <div class="lg:col-span-8">
-          <h2 class="font-serif text-2xl font-semibold text-ink sm:text-3xl">
+          <h2 class="font-display text-2xl font-semibold text-ink sm:text-3xl">
             <a href="/experiences/revenu-disponible" class="no-underline hover:underline">
               Revenu disponible réel (Impôt, Allocations, APL, RSA, Prime d’activité)
             </a>
@@ -64,7 +64,7 @@ let { data }: PageProps = $props()
 
       <li class="grid gap-4 py-8 lg:grid-cols-12 lg:items-baseline">
         <div class="lg:col-span-8">
-          <h2 class="font-serif text-2xl font-semibold text-ink sm:text-3xl">
+          <h2 class="font-display text-2xl font-semibold text-ink sm:text-3xl">
             <a href="/experiences/openfisca" class="no-underline hover:underline">
               Comparaison croisée avec OpenFisca-France (C0.8)
             </a>
@@ -99,7 +99,7 @@ let { data }: PageProps = $props()
 
       <li class="grid gap-4 py-8 lg:grid-cols-12 lg:items-baseline">
         <div class="lg:col-span-8">
-          <h2 class="font-serif text-2xl font-semibold text-ink sm:text-3xl">
+          <h2 class="font-display text-2xl font-semibold text-ink sm:text-3xl">
             <a href="/experiences/parlement" class="no-underline hover:underline">
               Veille parlementaire : impact en euros d’un amendement
             </a>
@@ -132,7 +132,7 @@ let { data }: PageProps = $props()
 
       <li class="grid gap-4 py-8 lg:grid-cols-12 lg:items-baseline">
         <div class="lg:col-span-8">
-          <h2 class="font-serif text-2xl font-semibold text-ink sm:text-3xl">
+          <h2 class="font-display text-2xl font-semibold text-ink sm:text-3xl">
             <a href="/experiences/impot-revenu" class="no-underline hover:underline">
               Impôt sur le revenu 2026 : simulateur et détection des coudes
             </a>
@@ -159,7 +159,7 @@ let { data }: PageProps = $props()
 
       <li class="grid gap-4 py-8 lg:grid-cols-12 lg:items-baseline">
         <div class="lg:col-span-8">
-          <h2 class="font-serif text-2xl font-semibold text-ink sm:text-3xl">
+          <h2 class="font-display text-2xl font-semibold text-ink sm:text-3xl">
             <a href="/experiences/allocations-familiales" class="no-underline hover:underline">
               Allocations familiales : test à l’aveugle face à Inria
             </a>
@@ -183,7 +183,7 @@ let { data }: PageProps = $props()
 
       <li class="grid gap-4 py-8 lg:grid-cols-12 lg:items-baseline">
         <div class="lg:col-span-8">
-          <h2 class="font-serif text-2xl font-semibold text-ink sm:text-3xl">
+          <h2 class="font-display text-2xl font-semibold text-ink sm:text-3xl">
             Rappel des ambiguïtés juridiques connues (C0.4)
           </h2>
           <p class="mt-2.5 max-w-[62ch] text-base leading-relaxed text-muted">

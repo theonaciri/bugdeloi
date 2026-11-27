@@ -18,7 +18,7 @@ function codeLabel(code: string): string {
 
 <section class="bg-bg">
   <div class="container-wide py-12 sm:py-16">
-    <h1 class="font-serif text-4xl font-semibold tracking-tight sm:text-5xl">Articles déjà modélisés par la recherche (★)</h1>
+    <h1 class="font-display text-4xl font-semibold tracking-tight sm:text-5xl">Articles déjà modélisés par la recherche (★)</h1>
     <p class="mt-4 max-w-[68ch] text-lg leading-relaxed text-muted">Avant même que BugDeLoi n’écrive une ligne de code, des chercheurs publics (notamment Inria) et des administrations ont déjà traduit une centaine d’articles en programmes de calcul. L’étoile ★ signale les articles en vigueur dont nous exécutons avec succès les tests officiels.</p>
     <p class="mt-5"><a href="/methode#compteur-avancement">Comment l’étoile ★ est attribuée</a></p>
     <p class="mt-3"><strong>{plural(data.articles.length, 'article')} ★ dans cette liste</strong>{#if data.exclude} · <a href="/references">Inclure l’exemple de l’accueil</a>{/if}</p>
@@ -33,7 +33,7 @@ function codeLabel(code: string): string {
     <div class="divide-y divide-line">
       {#each groups as [code, articles] (code)}
         <section class="py-7 first:pt-0 last:pb-0">
-          <h2 class="font-serif text-2xl font-semibold sm:text-3xl">{code}</h2>
+          <h2 class="font-display text-2xl font-semibold sm:text-3xl">{code}</h2>
           <p class="mt-2 text-sm text-muted">{plural(articles?.length ?? 0, 'article')} ★</p>
           <ul class="mt-4 grid gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
             {#each articles ?? [] as article (article.id)}

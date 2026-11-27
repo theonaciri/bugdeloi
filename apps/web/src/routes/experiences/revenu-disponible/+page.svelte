@@ -202,7 +202,7 @@ const coche = 'flex items-start gap-2.5 text-sm text-ink'
 <section class="bg-bg">
   <div class="container-wide py-12 sm:py-16">
     <p class="text-sm"><a href="/experiences">← Toutes les expériences</a></p>
-    <h1 class="mt-4 max-w-4xl font-serif text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
+    <h1 class="mt-4 max-w-4xl font-display text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
       Revenu disponible réel et impact d’un amendement
     </h1>
     <p class="mt-5 max-w-[68ch] text-lg leading-relaxed text-muted">
@@ -219,7 +219,7 @@ const coche = 'flex items-start gap-2.5 text-sm text-ink'
 
 <section class="border-t border-line bg-surface" aria-labelledby="combo-titre">
   <div class="container-wide py-12 sm:py-16">
-    <h2 id="combo-titre" class="font-serif text-2xl font-semibold text-ink sm:text-3xl">
+    <h2 id="combo-titre" class="font-display text-2xl font-semibold text-ink sm:text-3xl">
       1. Impôt + allocations familiales + APL + prime d’activité et RSA
     </h2>
 
@@ -369,7 +369,7 @@ const coche = 'flex items-start gap-2.5 text-sm text-ink'
       <div class="space-y-6 lg:col-span-7">
         <div class="border-b border-line pb-6" aria-live="polite">
           <p class="text-sm font-medium text-muted">Revenu disponible réel, sur un an</p>
-          <p class="mt-1 font-serif text-5xl font-semibold text-ink tabular">
+          <p class="mt-1 font-display text-5xl font-semibold text-ink tabular">
             {euros.format(res.revenuDisponibleEuros)}
           </p>
           <p class="mt-2 text-sm text-muted">
@@ -442,7 +442,7 @@ const coche = 'flex items-start gap-2.5 text-sm text-ink'
     </div>
 
     <div class="mt-12 border-t border-line pt-8">
-      <h3 class="font-serif text-xl font-semibold text-ink">Effets de seuil à essayer</h3>
+      <h3 class="font-display text-xl font-semibold text-ink">Effets de seuil à essayer</h3>
       <p class="mt-2 max-w-[72ch] text-sm leading-relaxed text-muted">
         Pour un couple avec deux enfants, un seul revenu et un loyer de {euros.format(balayage.foyer.loyerMensuelEuros)}
         par mois en zone 2, un programme a testé chaque euro de {euros.format(balayage.balayage.deEuros)} à
@@ -452,7 +452,7 @@ const coche = 'flex items-start gap-2.5 text-sm text-ink'
       <ul class="mt-5 grid gap-3 md:grid-cols-3">
         {#each baisses as effet (effet.revenuApresEuros)}
           <li class="flex flex-col rounded-xl border border-line bg-bg p-4">
-            <p class="font-serif text-2xl font-semibold text-ko tabular">
+            <p class="font-display text-2xl font-semibold text-ko tabular">
               {signes(effet.variationRevenuDisponibleEuros)}
               <span class="text-sm font-normal text-muted">par an</span>
             </p>
@@ -513,7 +513,7 @@ const coche = 'flex items-start gap-2.5 text-sm text-ink'
 
 <section class="border-t border-line bg-bg" aria-labelledby="amendement-titre">
   <div class="container-wide py-12 sm:py-16">
-    <h2 id="amendement-titre" class="font-serif text-2xl font-semibold text-ink sm:text-3xl">
+    <h2 id="amendement-titre" class="font-display text-2xl font-semibold text-ink sm:text-3xl">
       2. Mesurer l’impact en euros d’un amendement parlementaire
     </h2>
     <p class="mt-3 max-w-[68ch] text-base leading-relaxed text-muted">
@@ -570,7 +570,7 @@ const coche = 'flex items-start gap-2.5 text-sm text-ink'
 
 <section class="border-t border-line bg-surface">
   <div class="container-wide py-12">
-    <h2 class="font-serif text-2xl font-semibold text-ink">Vérifier nos données et aller plus loin</h2>
+    <h2 class="font-display text-2xl font-semibold text-ink">Vérifier nos données et aller plus loin</h2>
     <p class="mt-3 max-w-[68ch] text-sm leading-relaxed text-muted">
       Ce simulateur croise plusieurs textes de loi en vigueur en 2026. Pour garantir l’exactitude des calculs et
       suivre les débats budgétaires, nous publions aussi nos vérifications croisées et nos données brutes :

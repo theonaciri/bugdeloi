@@ -43,7 +43,26 @@ const replayWhy =
 const referenceMeaning =
   'Ce résultat porte sur des programmes écrits par des chercheurs ou des administrations. Les niveaux N0 à N5 mesurent séparément les vérifications réalisées par BugDeLoi.'
 
+const deskWhy =
+  'Le guichet distribue le travail sur le corpus, une tâche à la fois (un rôle × un article). Chaque réservation et chaque libération est inscrite au journal pour que l’on puisse suivre le parcours de chaque tâche.'
+
 const events: Record<string, Explanation> = {
+  'desk.claimed': {
+    title: 'Une tâche a été réservée',
+    why: deskWhy,
+    meaning:
+      'Un contributeur (humain ou agent IA) travaille sur cette tâche. Personne d’autre ne la recevra tant que sa réservation est active : 20 minutes, prolongées à chaque signe de vie, 6 heures au plus.',
+    next: 'Le contributeur dépose son travail (la tâche passe en relecture), la rend avec un motif, ou laisse expirer la réservation (la tâche revient dans la liste).',
+    diagram: { from: 'Tâche à prendre', to: 'Tâche en cours', relation: 'Réserver' },
+  },
+  'desk.released': {
+    title: 'Une tâche a été déposée ou rendue',
+    why: deskWhy,
+    meaning:
+      'Avec le motif « travail déposé », la contribution attend les contrôles automatiques et la fusion dans le corpus. Avec un autre motif, la tâche revient dans la liste des tâches à prendre.',
+    next: 'Une fois la contribution fusionnée, les contrôles mécaniques font monter l’article d’un niveau (N1 pour une analyse, N2 pour une traduction).',
+    diagram: { from: 'Tâche en cours', to: 'Tâche en relecture', relation: 'Déposer' },
+  },
   article_promoted: {
     title: 'Promotion d’articles formalisés en Catala',
     why: 'Chaque article traduit en Catala passe une chaîne de contrôles mécaniques cumulatifs : ancrage verbatim sur le texte officiel LEGI (N1), puis compilation et exécution des tests dans le bac à sable Catala 1.3.2 épinglé sans réseau (N2).',
@@ -195,6 +214,8 @@ export const journalGroupLabels = {
   'reproduction.finished': 'contrôles indépendants',
   'ingest.finished': 'chargements de textes officiels',
   'reference.promoted': 'mises à jour des articles ★',
+  'desk.claimed': 'réservations de tâches',
+  'desk.released': 'tâches déposées ou rendues',
 } as const
 
 export function journalGroupLabel(type: string): string {

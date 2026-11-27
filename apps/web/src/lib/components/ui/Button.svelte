@@ -7,7 +7,7 @@ import { cn } from '#lib/utils/cn.ts'
 export const buttonVariants = tv({
   base: [
     'inline-flex items-center justify-center gap-2 whitespace-nowrap font-semibold',
-    'rounded-full border transition-colors duration-150 cursor-pointer no-underline select-none',
+    'rounded-[var(--radius)] border transition-colors duration-150 cursor-pointer no-underline select-none',
     'disabled:pointer-events-none disabled:opacity-50',
     '[&_svg]:size-4 [&_svg]:shrink-0',
   ],
@@ -19,7 +19,7 @@ export const buttonVariants = tv({
       outline: 'border-line-strong bg-transparent text-ink hover:bg-surface-2',
       ghost: 'border-transparent bg-transparent text-ink hover:bg-surface-2',
       soft: 'border-brand-line bg-brand-soft text-brand-strong hover:brightness-95',
-      observatory: 'border-obs-emerald/40 bg-obs-emerald text-obs-bg hover:brightness-110 font-bold',
+      observatory: 'border-transparent bg-obs-ink text-obs-bg hover:bg-white font-bold',
       observatoryOutline:
         'border-obs-line-strong bg-obs-surface text-obs-ink hover:bg-obs-surface-2 hover:border-obs-muted',
       observatoryGhost: 'border-transparent bg-transparent text-obs-ink hover:bg-obs-surface-2',

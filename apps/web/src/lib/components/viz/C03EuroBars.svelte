@@ -165,7 +165,7 @@ const counts = $derived({
       {@const delta = active.actual - active.expected}
       <aside class="rounded-[var(--radius-xl)] bg-surface-2/75 p-6 sm:p-7 space-y-5 lg:sticky lg:top-24">
         <div class="flex items-baseline justify-between gap-2">
-          <h4 class="font-serif text-xl font-semibold text-ink">{active.name}</h4>
+          <h4 class="font-display text-xl font-semibold text-ink">{active.name}</h4>
           <span
             class={cn(
               'text-xs font-semibold',
@@ -191,11 +191,11 @@ const counts = $derived({
         <dl class="grid grid-cols-2 gap-4 border-y border-line py-4">
           <div>
             <dt class="text-xs text-muted">Programme Inria</dt>
-            <dd class="font-serif mt-1 text-2xl font-semibold tabular text-ink">{fmtEur(active.expected)}</dd>
+            <dd class="font-display mt-1 text-2xl font-semibold tabular text-ink">{fmtEur(active.expected)}</dd>
           </div>
           <div>
             <dt class="text-xs text-muted">Lecture de la loi en vigueur</dt>
-            <dd class="font-serif mt-1 text-2xl font-semibold tabular text-ink">{fmtEur(active.actual)}</dd>
+            <dd class="font-display mt-1 text-2xl font-semibold tabular text-ink">{fmtEur(active.actual)}</dd>
           </div>
         </dl>
 
@@ -203,7 +203,7 @@ const counts = $derived({
           <p class="text-xs text-muted">Écart mensuel entre les deux calculs</p>
           <p
             class={cn(
-              'font-serif mt-0.5 text-2xl font-semibold tabular',
+              'font-display mt-0.5 text-2xl font-semibold tabular',
               delta === 0 ? 'text-ok' : active.classification === 'erreur_oracle' ? 'text-ko' : 'text-notice-ink',
             )}
           >
