@@ -1,0 +1,48 @@
+#### Article 8 bis|LEGIARTI000006302205
+
+Les associés ou actionnaires des sociétés visées à l'article 1655 ter sont personnellement soumis à l'impôt sur le revenu pour la part des revenus sociaux correspondant à leurs droits dans la société.
+
+Interface `QuotePartSocieteIr@v1`. Version applicable à compter du 1979-07-01, sans date de fin connue.
+
+L’appelant indique si la société relève de l’article 1655 ter, si la personne en est associée ou actionnaire, le montant des revenus sociaux et la proportion de ses droits (entre 0 et 1). La sortie est absente quand l’article ne s’applique pas.
+
+```catala
+déclaration champ d'application QuotePartSocieteIr:
+  entrée date_d_application contenu date
+  entrée société_visée_par_1655_ter contenu booléen
+  entrée associé_ou_actionnaire contenu booléen
+  entrée revenus_sociaux contenu argent
+  entrée proportion_des_droits contenu décimal
+  résultat quote_part_soumise_personnellement contenu optionnel de argent
+
+champ d'application QuotePartSocieteIr:
+  # LEGIARTI000006302205, début de validité de la version.
+  assertion date_d_application >= |1979-07-01|
+  # CGI, article 8 bis : part des revenus sociaux correspondant aux droits de l'associé ou actionnaire.
+  # TODO juridique : le texte ne fixe pas d'arrondi ; Catala arrondit au centime le produit d'un montant par un décimal.
+  définition quote_part_soumise_personnellement égal à
+    si société_visée_par_1655_ter et associé_ou_actionnaire
+    alors Présent contenu (revenus_sociaux * proportion_des_droits)
+    sinon Absent
+
+#[test]
+déclaration champ d'application TestQuotePartSocieteIr:
+  associé champ d'application QuotePartSocieteIr
+  société_non_visée champ d'application QuotePartSocieteIr
+
+champ d'application TestQuotePartSocieteIr:
+  # LEGIARTI000006302205 : associé détenant un quart des droits d'une société visée.
+  définition associé.date_d_application égal à |2026-01-01|
+  définition associé.société_visée_par_1655_ter égal à vrai
+  définition associé.associé_ou_actionnaire égal à vrai
+  définition associé.revenus_sociaux égal à 10 000 €
+  définition associé.proportion_des_droits égal à 0,25
+  assertion associé.quote_part_soumise_personnellement = Présent contenu 2 500 €
+  # LEGIARTI000006302205 : société hors du champ de l'article 1655 ter.
+  définition société_non_visée.date_d_application égal à |2026-01-01|
+  définition société_non_visée.société_visée_par_1655_ter égal à faux
+  définition société_non_visée.associé_ou_actionnaire égal à vrai
+  définition société_non_visée.revenus_sociaux égal à 10 000 €
+  définition société_non_visée.proportion_des_droits égal à 0,25
+  assertion société_non_visée.quote_part_soumise_personnellement = Absent
+```

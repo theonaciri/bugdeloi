@@ -1,0 +1,56 @@
+#### Article 8 quinquies|LEGIARTI000006302211
+
+Chaque membre des copropriétés de cheval de course ou d'étalon qui respectent les conditions mentionnées à l'article 238 bis M est personnellement soumis à l'impôt sur le revenu à raison de la part correspondant à ses droits dans les résultats déclarés par la copropriété. Pour l'application de ces dispositions, les statuts et les modalités de fonctionnement des copropriétés d'étalon doivent être conformes à des statuts types approuvés par décret.
+
+Interface `QuotePartCoproprieteCheval@v1`. Version applicable à compter du 1997-04-11, sans date de fin connue.
+
+L’appelant indique si la personne est membre d’une copropriété qui respecte l’article 238 bis M, s’il s’agit d’une copropriété d’étalon et, dans ce cas, si ses statuts et son fonctionnement sont conformes aux statuts types (appréciation). La sortie est absente quand l’article ne s’applique pas.
+
+```catala
+déclaration champ d'application QuotePartCoproprieteCheval:
+  entrée date_d_application contenu date
+  entrée membre contenu booléen
+  entrée conditions_238_bis_m_remplies contenu booléen
+  entrée copropriété_d_étalon contenu booléen
+  entrée appréciation_conformité_aux_statuts_types contenu booléen
+  entrée résultat_déclaré contenu argent
+  entrée proportion_des_droits contenu décimal
+  résultat résultat_imputable contenu optionnel de argent
+
+champ d'application QuotePartCoproprieteCheval:
+  # LEGIARTI000006302211, début de validité de la version.
+  assertion date_d_application >= |1997-04-11|
+  # CGI, article 8 quinquies, première phrase : part du résultat déclaré correspondant aux droits du membre.
+  # CGI, article 8 quinquies, seconde phrase : copropriétés d'étalon conformes aux statuts types.
+  # TODO juridique : le texte ne fixe pas d'arrondi ; Catala arrondit au centime le produit d'un montant par un décimal.
+  définition résultat_imputable égal à
+    si membre et conditions_238_bis_m_remplies
+      et (non copropriété_d_étalon ou appréciation_conformité_aux_statuts_types)
+    alors Présent contenu (résultat_déclaré * proportion_des_droits)
+    sinon Absent
+
+#[test]
+déclaration champ d'application TestQuotePartCoproprieteCheval:
+  cheval_de_course champ d'application QuotePartCoproprieteCheval
+  étalon_non_conforme champ d'application QuotePartCoproprieteCheval
+
+champ d'application TestQuotePartCoproprieteCheval:
+  # LEGIARTI000006302211, première phrase : membre détenant 10 % d'une copropriété de cheval de course.
+  définition cheval_de_course.date_d_application égal à |2026-01-01|
+  définition cheval_de_course.membre égal à vrai
+  définition cheval_de_course.conditions_238_bis_m_remplies égal à vrai
+  définition cheval_de_course.copropriété_d_étalon égal à faux
+  définition cheval_de_course.appréciation_conformité_aux_statuts_types égal à faux
+  définition cheval_de_course.résultat_déclaré égal à 20 000 €
+  définition cheval_de_course.proportion_des_droits égal à 0,1
+  assertion cheval_de_course.résultat_imputable = Présent contenu 2 000 €
+  # LEGIARTI000006302211, seconde phrase : copropriété d'étalon non conforme aux statuts types.
+  définition étalon_non_conforme.date_d_application égal à |2026-01-01|
+  définition étalon_non_conforme.membre égal à vrai
+  définition étalon_non_conforme.conditions_238_bis_m_remplies égal à vrai
+  définition étalon_non_conforme.copropriété_d_étalon égal à vrai
+  définition étalon_non_conforme.appréciation_conformité_aux_statuts_types égal à faux
+  définition étalon_non_conforme.résultat_déclaré égal à 20 000 €
+  définition étalon_non_conforme.proportion_des_droits égal à 0,1
+  assertion étalon_non_conforme.résultat_imputable = Absent
+```

@@ -1,0 +1,49 @@
+#### Article 29|LEGIARTI000006302231
+
+Sous réserve des dispositions des articles 33 ter et 33 quater, le revenu brut des immeubles ou parties d'immeubles donnés en location, est constitué par le montant des recettes brutes perçues par le propriétaire, augmenté du montant des dépenses incombant normalement à ce dernier et mises par les conventions à la charge des locataires. Les subventions et indemnités destinées à financer des charges déductibles sont comprises dans le revenu brut. Il n'est pas tenu compte des sommes versées par les locataires au titre des charges leur incombant. Dans les recettes brutes de la propriété sont comprises notamment celles qui proviennent de la location du droit d'affichage ou du droit de chasse, de la concession du droit d'exploitation des carrières, de redevances tréfoncières ou autres redevances analogues ayant leur origine dans le droit de propriété ou d'usufruit.
+
+Interface `RevenuBrutLocation@v1`. Version applicable à compter du 2005-01-01, sans date de fin connue.
+
+Les recettes brutes incluent déjà, une seule fois, les recettes que la dernière phrase cite (affichage, chasse, carrières, redevances tréfoncières ou analogues). Les sommes versées par les locataires pour leurs propres charges ne sont pas fournies. Quand la réserve des articles 33 ter ou 33 quater s’applique, la sortie est absente et ces articles décident.
+
+```catala
+déclaration champ d'application RevenuBrutLocation:
+  entrée date_d_application contenu date
+  entrée recettes_brutes_propriétaire contenu argent
+  entrée dépenses_propriétaire_transférées contenu argent
+  entrée subventions_et_indemnités_pour_charges_déductibles contenu argent
+  entrée réserve_33_ter_ou_33_quater contenu booléen
+  résultat revenu_brut_selon_29 contenu optionnel de argent
+
+champ d'application RevenuBrutLocation:
+  # LEGIARTI000006302231, début de validité de la version.
+  assertion date_d_application >= |2005-01-01|
+  # CGI, article 29, première phrase : recettes brutes augmentées des dépenses du propriétaire mises à la charge des locataires.
+  # CGI, article 29, deuxième phrase : subventions et indemnités destinées à financer des charges déductibles.
+  # CGI, article 29, troisième phrase : les sommes versées pour les charges des locataires ne sont pas comptées.
+  définition revenu_brut_selon_29 égal à
+    si réserve_33_ter_ou_33_quater alors Absent
+    sinon Présent contenu (recettes_brutes_propriétaire + dépenses_propriétaire_transférées
+      + subventions_et_indemnités_pour_charges_déductibles)
+
+#[test]
+déclaration champ d'application TestRevenuBrutLocation:
+  location champ d'application RevenuBrutLocation
+  réserve champ d'application RevenuBrutLocation
+
+champ d'application TestRevenuBrutLocation:
+  # LEGIARTI000006302231 : 9 600 € de loyers, 400 € de taxe foncière mise à la charge du locataire, 1 000 € de subvention.
+  définition location.date_d_application égal à |2026-01-01|
+  définition location.recettes_brutes_propriétaire égal à 9 600 €
+  définition location.dépenses_propriétaire_transférées égal à 400 €
+  définition location.subventions_et_indemnités_pour_charges_déductibles égal à 1 000 €
+  définition location.réserve_33_ter_ou_33_quater égal à faux
+  assertion location.revenu_brut_selon_29 = Présent contenu 11 000 €
+  # LEGIARTI000006302231 : la réserve des articles 33 ter ou 33 quater s'applique.
+  définition réserve.date_d_application égal à |2026-01-01|
+  définition réserve.recettes_brutes_propriétaire égal à 9 600 €
+  définition réserve.dépenses_propriétaire_transférées égal à 400 €
+  définition réserve.subventions_et_indemnités_pour_charges_déductibles égal à 1 000 €
+  définition réserve.réserve_33_ter_ou_33_quater égal à vrai
+  assertion réserve.revenu_brut_selon_29 = Absent
+```

@@ -1,0 +1,39 @@
+#### Article 28|LEGIARTI000006302228
+
+Le revenu net foncier est égal à la différence entre le montant du revenu brut et le total des charges de la propriété.
+
+Interface `RevenuNetFoncier@v1`. Version applicable à compter du 1950-04-30, sans date de fin connue.
+
+Le revenu brut et la liste des charges de la propriété sont fournis par l’appelant ; leur qualification relève d’autres articles.
+
+```catala
+déclaration champ d'application RevenuNetFoncier:
+  entrée date_d_application contenu date
+  entrée revenu_brut contenu argent
+  entrée charges_de_la_propriété contenu liste de argent
+  résultat revenu_net_foncier contenu argent
+
+champ d'application RevenuNetFoncier:
+  # LEGIARTI000006302228, début de validité de la version.
+  assertion date_d_application >= |1950-04-30|
+  # CGI, article 28 : revenu brut diminué du total des charges de la propriété.
+  définition revenu_net_foncier égal à
+    revenu_brut - (Argent.somme de charges_de_la_propriété)
+
+#[test]
+déclaration champ d'application TestRevenuNetFoncier:
+  bénéficiaire champ d'application RevenuNetFoncier
+  déficitaire champ d'application RevenuNetFoncier
+
+champ d'application TestRevenuNetFoncier:
+  # LEGIARTI000006302228 : 12 000 € de revenu brut, 2 000 € et 1 500 € de charges.
+  définition bénéficiaire.date_d_application égal à |2026-01-01|
+  définition bénéficiaire.revenu_brut égal à 12 000 €
+  définition bénéficiaire.charges_de_la_propriété égal à [2 000 €; 1 500 €]
+  assertion bénéficiaire.revenu_net_foncier = 8 500 €
+  # LEGIARTI000006302228 : charges supérieures au revenu brut, la différence est négative.
+  définition déficitaire.date_d_application égal à |2026-01-01|
+  définition déficitaire.revenu_brut égal à 3 000 €
+  définition déficitaire.charges_de_la_propriété égal à [5 000 €]
+  assertion déficitaire.revenu_net_foncier = -2 000 €
+```

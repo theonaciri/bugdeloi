@@ -1,0 +1,60 @@
+#### Article 14|LEGIARTI000006302217
+
+Sous réserve des dispositions de l'article 15, sont compris dans la catégorie des revenus fonciers, lorsqu'ils ne sont pas inclus dans les bénéfices d'une entreprise industrielle, commerciale ou artisanale, d'une exploitation agricole ou d'une profession non commerciale : 1° Les revenus des propriétés bâties, telles que maisons et usines, ainsi que les revenus : a De l'outillage des établissements industriels attaché au fonds à perpétuelle demeure, dans les conditions indiquées au premier paragraphe de l'article 525 du code civil ou reposant sur des fondations spéciales faisant corps avec l'immeuble ; b De toutes installations commerciales ou industrielles assimilables à des constructions ; c Des bateaux utilisés en un point fixe et aménagés pour l'habitation, le commerce ou l'industrie, même s'ils sont seulement retenus par des amarres. 2° Les revenus des propriétés non bâties de toute nature, y compris ceux des terrains occupés par les carrières, mines et tourbières, les étangs, les salines et marais salants.
+
+Interface `CategorieRevenusFonciers@v1`. Version applicable à compter du 2005-01-01, sans date de fin connue.
+
+La nature du bien (1° et ses a, b, c, ou 2°) et sa qualification sont fournies par l’appelant. Les critères du code civil et la portée de l’article 15 sont hors périmètre : quand la réserve de l’article 15 s’applique, le champ d’application ne retient pas la catégorie et laisse l’article 15 décider.
+
+```catala
+déclaration énumération CategorieRevenusFonciersBien:
+  -- PropriétéBâtie
+  -- OutillageAttachéOuSurFondationsSpéciales
+  -- InstallationAssimilableÀUneConstruction
+  -- BateauFixeAménagé
+  -- PropriétéNonBâtie
+  -- AutreBien
+
+déclaration champ d'application CategorieRevenusFonciers:
+  entrée date_d_application contenu date
+  entrée catégorie_du_bien contenu CategorieRevenusFonciersBien
+  entrée inclus_dans_bénéfice_professionnel contenu booléen
+  entrée réserve_article_15_applicable contenu booléen
+  entrée appréciation_qualification_du_bien contenu booléen
+  résultat catégorie_foncière_selon_14 contenu booléen
+
+champ d'application CategorieRevenusFonciers:
+  # LEGIARTI000006302217, début de validité de la version.
+  assertion date_d_application >= |2005-01-01|
+  # CGI, article 14, chapeau : hors bénéfices industriels, commerciaux, artisanaux, agricoles ou non commerciaux.
+  # CGI, article 14, 1° (a, b, c) et 2° : biens dont les revenus sont fonciers.
+  # TODO juridique : la réserve de l'article 15 est traitée comme une exclusion ; sa portée exacte relève de l'article 15.
+  définition catégorie_foncière_selon_14 égal à
+    non inclus_dans_bénéfice_professionnel
+    et non réserve_article_15_applicable
+    et appréciation_qualification_du_bien
+    et (selon catégorie_du_bien sous forme
+      -- AutreBien : faux
+      -- n'importe quel : vrai)
+
+#[test]
+déclaration champ d'application TestCategorieRevenusFonciers:
+  bateau_amarré champ d'application CategorieRevenusFonciers
+  bien_professionnel champ d'application CategorieRevenusFonciers
+
+champ d'application TestCategorieRevenusFonciers:
+  # LEGIARTI000006302217, 1° c : bateau aménagé pour l'habitation et retenu par des amarres.
+  définition bateau_amarré.date_d_application égal à |2026-01-01|
+  définition bateau_amarré.catégorie_du_bien égal à BateauFixeAménagé
+  définition bateau_amarré.inclus_dans_bénéfice_professionnel égal à faux
+  définition bateau_amarré.réserve_article_15_applicable égal à faux
+  définition bateau_amarré.appréciation_qualification_du_bien égal à vrai
+  assertion bateau_amarré.catégorie_foncière_selon_14
+  # LEGIARTI000006302217, chapeau : propriété bâtie incluse dans le bénéfice d'une entreprise commerciale.
+  définition bien_professionnel.date_d_application égal à |2026-01-01|
+  définition bien_professionnel.catégorie_du_bien égal à PropriétéBâtie
+  définition bien_professionnel.inclus_dans_bénéfice_professionnel égal à vrai
+  définition bien_professionnel.réserve_article_15_applicable égal à faux
+  définition bien_professionnel.appréciation_qualification_du_bien égal à vrai
+  assertion non bien_professionnel.catégorie_foncière_selon_14
+```

@@ -1,0 +1,45 @@
+#### Article 12|LEGIARTI000006302214
+
+L'impôt est dû chaque année à raison des bénéfices ou revenus que le contribuable réalise ou dont il dispose au cours de la même année.
+
+Interface `RattachementAnnuelRevenusIr@v1`. Version applicable à compter du 1979-07-01, sans date de fin connue.
+
+L’appelant fournit les bénéfices ou revenus avec l’année au cours de laquelle ils ont été réalisés ou mis à la disposition du contribuable, une seule fois chacun. Le fait générateur est déterminé en amont.
+
+```catala
+déclaration structure RattachementAnnuelRevenusIrMontant:
+  donnée année contenu entier
+  donnée montant contenu argent
+
+déclaration champ d'application RattachementAnnuelRevenusIr:
+  entrée date_d_application contenu date
+  entrée année_d_imposition contenu entier
+  entrée bénéfices_ou_revenus_réalisés_ou_disponibles_par_année contenu liste de RattachementAnnuelRevenusIrMontant
+  résultat revenus_rattachés_à_l_année contenu liste de argent
+
+champ d'application RattachementAnnuelRevenusIr:
+  # LEGIARTI000006302214, début de validité de la version.
+  assertion date_d_application >= |1979-07-01|
+  # CGI, article 12 : revenus réalisés ou disponibles au cours de l'année d'imposition.
+  définition revenus_rattachés_à_l_année égal à
+    transforme chaque élément parmi
+      (liste de élément parmi bénéfices_ou_revenus_réalisés_ou_disponibles_par_année
+        tel que élément.année = année_d_imposition)
+    en élément.montant
+
+#[test]
+déclaration champ d'application TestRattachementAnnuelRevenusIr:
+  année_2025 champ d'application RattachementAnnuelRevenusIr
+
+champ d'application TestRattachementAnnuelRevenusIr:
+  # LEGIARTI000006302214 : deux revenus disponibles en 2025, un en 2024 ; imposition de 2025.
+  définition année_2025.date_d_application égal à |2026-01-01|
+  définition année_2025.année_d_imposition égal à 2025
+  définition année_2025.bénéfices_ou_revenus_réalisés_ou_disponibles_par_année égal à [
+    RattachementAnnuelRevenusIrMontant { -- année: 2025 -- montant: 1 200 € };
+    RattachementAnnuelRevenusIrMontant { -- année: 2024 -- montant: 800 € };
+    RattachementAnnuelRevenusIrMontant { -- année: 2025 -- montant: 300 € }
+  ]
+  assertion nombre de année_2025.revenus_rattachés_à_l_année = 2
+  assertion (Argent.somme de année_2025.revenus_rattachés_à_l_année) = 1 500 €
+```
