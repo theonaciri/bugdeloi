@@ -81,15 +81,28 @@ parenthèses avant une comparaison, sinon Catala compare à l’intérieur :
 **Arrondi** : le produit d’un `argent` par un `décimal` est arrondi au centime par Catala. Si le texte ne
 fixe pas d’arrondi, écris au-dessus de la définition
 `# TODO juridique : le texte ne fixe pas d’arrondi ; Catala arrondit au centime…`, pour qu’un relecteur
-le voie (AGENTS.md §7).
+le voie (AGENTS.md §7). L’écart possible reste alors sous 1 € : ce n’est pas un finding `ARRONDI`, qui
+suppose deux placements d’arrondi distants de plus de 1 € (AGENTS.md §4.4).
 
 ## Citations et tests
 
-Chaque constante, dans le code comme dans les tests, est précédée dans les trois lignes au-dessus d’un
-commentaire qui cite sa source : `# CGI, article 28 : …` pour une règle, `# LEGIARTI… : cas …` pour une
-valeur d’essai. Un test couvre chaque règle et chaque branche (le cas où l’article s’applique et celui où il
-ne s’applique pas). Il compare des nombres, des booléens ou des valeurs optionnelles ; pour une liste,
-compare `nombre de …` et `Argent.somme de …`.
+Chaque constante de la règle (montant, taux, seuil, durée, date) est précédée dans les trois lignes
+au-dessus d’un commentaire qui cite l’article et l’alinéa qui la fixent : `# CGI, article 28 : …`.
+
+Les tests suivent une autre règle, parce que la plupart des articles ne donnent aucun exemple chiffré :
+
+- `date_d_application` vaut le début de validité de la version, ce qui teste aussi la borne ;
+- les autres entrées sont des valeurs d’essai synthétiques, annoncées comme telles par
+  `# Cas d’essai synthétique : valeurs choisies pour le test, absentes du texte ; <calcul attendu>` ;
+  ne les attribue jamais à l’article ;
+- le résultat attendu se calcule à la main par la règle de l’article ;
+- il y a un cas où l’article s’applique et un cas par condition qui l’écarte (CGI 14 et 30 en ont quatre
+  à six) ;
+- Catala 1.3.2 n’a pas de test d’échec attendu : une date antérieure à la version ne se teste pas, puisque
+  son assertion ferait échouer toute la suite.
+
+Un test compare des nombres, des booléens ou des valeurs optionnelles ; pour une liste, compare
+`nombre de …` et `Argent.somme de …`.
 
 ```catala
 #[test]
@@ -97,8 +110,9 @@ déclaration champ d'application TestRevenuNetFoncier:
   bénéficiaire champ d'application RevenuNetFoncier
 
 champ d'application TestRevenuNetFoncier:
-  # LEGIARTI000006302228 : 12 000 € de revenu brut, 2 000 € et 1 500 € de charges.
-  définition bénéficiaire.date_d_application égal à |2026-01-01|
+  # LEGIARTI000006302228, date de début de la version : le cas s'applique dès le premier jour.
+  définition bénéficiaire.date_d_application égal à |1950-04-30|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; 12 000 € − 3 500 € = 8 500 €.
   définition bénéficiaire.revenu_brut égal à 12 000 €
   définition bénéficiaire.charges_de_la_propriété égal à [2 000 €; 1 500 €]
   assertion bénéficiaire.revenu_net_foncier = 8 500 €

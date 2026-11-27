@@ -123,8 +123,11 @@ précédée, dans les trois lignes au-dessus, d’un commentaire qui cite l’al
 notion d’appréciation (« charge effective », « délai raisonnable ») reste une entrée nommée
 appréciation_<notion>, jamais une formule. Les noms de structures et d’énumérations sont uniques
 dans tout le corpus : préfixe-les par le nom de l’interface, ou importe les types communs avec
-> Usage de Prologue_france (corpus/interfaces/prologue_france.catala_fr). Tes tests prennent leurs
-valeurs dans le texte seul ; un test sans assertion est refusé. Tu ne recopies jamais le code de
+> Usage de Prologue_france (corpus/interfaces/prologue_france.catala_fr). Tes tests couvrent chaque
+règle et chaque condition qui écarte l’article, avec date_d_application égale au début de la version.
+Quand le texte ne donne pas d’exemple chiffré, leurs entrées sont synthétiques : annonce-les par
+# Cas d’essai synthétique : … et calcule le résultat attendu à la main ; un test sans assertion est
+refusé. Tu ne recopies jamais le code de
 l’Inria ou de la DGFiP, qui sert d’oracle et dont la licence l’interdit. Quand le texte laisse un choix
 ouvert (arrondi non fixé, portée d’une réserve), tu écris ton choix et un commentaire
 # TODO juridique : … juste au-dessus, et tu le reprends dans la description de la PR.
