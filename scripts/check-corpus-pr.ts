@@ -91,6 +91,42 @@ const RESERVED = new Set([
 const fieldRe =
   /^\s*(donnée|entrée|résultat|interne|contexte)\s+(?:(?:entrée|résultat)\s+)?([^\s]+)\s+contenu\b/gm
 
+// AGENTS.md §8 : une constante de la règle (montant, taux, seuil, durée, date, rang) est précédée, dans
+// les trois lignes au-dessus (ou sur sa ligne), d'un commentaire qui cite sa source. Les champs
+// d'application de test en sont dispensés : leurs valeurs sont annoncées comme synthétiques.
+const numberRe = /(?<![\p{L}\p{N}_])\d/u
+const citationRe = /#.*(CGI|CSS|CCH|LEGIARTI|[Aa]rticle|Source|interface)/
+function uncitedConstants(raw: string): { line: number; text: string }[] {
+  const found: { line: number; text: string }[] = []
+  for (const block of raw.matchAll(/```catala\n([\s\S]*?)```/g)) {
+    const first = raw.slice(0, block.index).split('\n').length + 1
+    const lines = (block[1] ?? '').split('\n')
+    let inTest = false
+    let nextIsTest = false
+    lines.forEach((line, i) => {
+      if (/^#\[test\]/.test(line)) {
+        nextIsTest = true
+        return
+      }
+      const head = /^(?:déclaration\s+)?(?:champ d'application|structure|énumération)\s+(\S+?):?\s*$/.exec(
+        line,
+      )
+      if (head) {
+        inTest = nextIsTest || (head[1] ?? '').startsWith('Test')
+        nextIsTest = false
+        return
+      }
+      const code = line.replace(/#.*/, '')
+      if (inTest || !numberRe.test(code) || /^\s*(entrée|résultat|interne|contexte|donnée)\b/.test(code))
+        return
+      if (!lines.slice(Math.max(0, i - 3), i + 1).some((l) => citationRe.test(l))) {
+        found.push({ line: first + i, text: line.trim() })
+      }
+    })
+  }
+  return found
+}
+
 for (const file of files) {
   const raw = readFileSync(join(workdir, file), 'utf8')
   const isInterface = file.startsWith('interfaces/')
@@ -106,6 +142,14 @@ for (const file of files) {
   )
   if (!hasCatalaCode) {
     console.error(`[N1 ECHEC] Aucun bloc Catala formalisé dans ${file}`)
+    process.exit(1)
+  }
+
+  const uncited = uncitedConstants(raw)
+  if (!isInterface && uncited.length) {
+    console.error(
+      `[N2 ECHEC] ${file} : constante sans citation dans les trois lignes au-dessus (AGENTS.md §8). Place un commentaire « # CGI, article …, alinéa … : … » juste avant :\n${uncited.map((u) => `  ligne ${u.line} : ${u.text}`).join('\n')}`,
+    )
     process.exit(1)
   }
 

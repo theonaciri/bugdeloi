@@ -138,8 +138,23 @@ suppose deux placements d’arrondi distants de plus de 1 € (AGENTS.md §4.4).
 
 ## Citations et tests
 
-Chaque constante de la règle (montant, taux, seuil, durée, date) est précédée dans les trois lignes
-au-dessus d’un commentaire qui cite l’article et l’alinéa qui la fixent : `# CGI, article 28 : …`.
+Chaque constante de la règle (montant, taux, seuil, durée, date, rang) est précédée dans les trois
+lignes au-dessus d’un commentaire qui cite l’article et l’alinéa qui la fixent : `# CGI, article 28 : …`.
+`tools/bdl.sh check` refuse une constante sans citation et donne sa ligne. Dans une expression longue
+(barème, fenêtre de dates), un commentaire se place entre deux lignes, juste avant la branche :
+
+```catala
+  définition coefficient_spécial égal à
+    si non dans_le_champ alors Absent
+    # CGI, article 39 AA, premier alinéa : 2 pour une durée de trois ou quatre ans.
+    sinon si durée_normale < 5 an alors Présent contenu 2,0
+    # CGI, article 39 AA, premier alinéa : 2,5 pour une durée de cinq ou six ans.
+    sinon si durée_normale <= 6 an alors Présent contenu 2,5
+```
+
+Quand deux entrées de l’interface doivent concorder (un cumul et l’échéancier dont il découle), une
+`assertion` le vérifie dans le champ d’application, avec un commentaire « Cohérence des entrées » (CGI 38
+quater).
 
 Les tests suivent une autre règle, parce que la plupart des articles ne donnent aucun exemple chiffré :
 
@@ -151,6 +166,8 @@ Les tests suivent une autre règle, parce que la plupart des articles ne donnent
 - il y a un cas où l’article s’applique, puis un cas par condition booléenne de la règle, chacune mise
   seule à la valeur qui écarte l’article (même la plus évidente, comme « membre ») ;
 - chaque valeur d’une énumération a son cas (CGI 14 en a neuf) ;
+- chaque borne d’une fenêtre de dates a son cas juste au-delà, des deux côtés (CGI 39 AA : 1976, 1995 et
+  2003-01-02 autour des fenêtres 1977–1990 et 2001–2003) ;
 - quand la règle choisit entre plusieurs entrées, elles ont des valeurs différentes dans chaque cas : avec
   deux montants égaux, l’assertion passe quelle que soit la branche (CGI 36) ;
 - Catala 1.3.2 n’a pas de test d’échec attendu : une date antérieure à la version ne se teste pas, puisque

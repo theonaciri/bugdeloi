@@ -38,6 +38,22 @@ Six minutes de la réservation à la PR. Aucune erreur de compilation : les piè
    bail local » : impossible de recontrôler une correction demandée par la relecture (lot n° 2). →
    `tools/bdl.sh check <fichier.catala_fr>…` contrôle sans bail.
 
+## Commentaires CodeRabbit (6 fils, corrigés dans 17e6472)
+
+- **Citations trop loin des constantes (3 fils).** Les citations groupées au-dessus d'une définition
+  laissaient des constantes à plus de trois lignes de leur citation (AGENTS.md §8). Un programme peut le
+  voir : → `scripts/check-corpus-pr.ts` refuse désormais une constante de la règle sans citation dans les
+  trois lignes au-dessus, et donne sa ligne. Sur la version déposée, il signale les 12 lignes relevées par
+  CodeRabbit ; le reste du corpus passe. `corpus/CATALA.md` montre la citation placée avant chaque branche.
+- **Cumul incohérent avec l'échéancier (38 quater).** Un cumul déjà imposé qui ne correspond pas aux parts
+  conservées comptait deux fois une partie du profit. → Assertion « Cohérence des entrées » ; motif
+  documenté dans `corpus/CATALA.md`.
+- **Commentaire contraire au code (39 AA quinquies, et 39 AA).** Le commentaire rangeait « six ans et demi »
+  dans la tranche précédente alors que le code, conforme au texte, la traite comme « supérieure à six
+  ans ». Corrigé.
+- **Borne de fenêtre non testée (39 AA).** Rien ne testait un bien acquis juste après le 1er janvier 2003.
+  → Règle ajoutée : chaque borne d'une fenêtre de dates a son cas juste au-delà, des deux côtés.
+
 ## Choix d'interprétation à relire
 
 Recopiés dans la PR : lecture des coefficients de 39 AA (2 ; 2,5 ; 3) et de 39 AA quinquies
