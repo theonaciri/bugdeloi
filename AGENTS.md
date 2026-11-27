@@ -320,6 +320,9 @@ Podman ou Docker.
 - **Commentaires** : `# TODO juridique : …` pour une question d'interprétation ouverte (convention
   Inria, comptée par les métriques), `# Source : …` pour une citation hors LEGI.
 - **Tests** : un scope `#[test]` **sans assertion ne teste rien** (il réussit toujours) ; il est refusé.
+  La date d'application d'un test est le début de la version. Les entrées d'essai absentes du texte sont
+  annoncées par `# Cas d'essai synthétique : …` et ne sont jamais attribuées à l'article ; la règle de
+  citation (§8) vaut pour les constantes de la règle, pas pour ces valeurs d'essai.
 
 ---
 
