@@ -2,7 +2,7 @@
 
 Si l'exercice clos au cours de l'année de l'imposition s'étend sur une période de plus ou de moins de douze mois, l'impôt est néanmoins établi d'après les résultats dudit exercice. Si aucun bilan n'est dressé au cours d'une année quelconque, l'impôt dû au titre de la même année est établi sur les bénéfices de la période écoulée depuis la fin de la dernière période imposée ou, dans le cas d'entreprise nouvelle, depuis le commencement des opérations jusqu'au 31 décembre de l'année considérée. Ces mêmes bénéfices viennent ensuite en déduction des résultats du bilan dans lesquels ils sont compris. Lorsqu'il est dressé des bilans successifs au cours d'une même année, les résultats en sont totalisés pour l'assiette de l'impôt dû au titre de ladite année.
 
-Interface `ResultatExercicesAnnee37@v1`. Version applicable à compter du 1950-04-30, sans date de fin connue.
+Interface `ResultatExercicesAnnee37@v2`. Version applicable à compter du 1950-04-30, sans date de fin connue.
 
 L’appelant fournit les résultats des bilans clos dans l’année d’imposition, quelle que soit la durée de leurs exercices, le bénéfice de la période écoulée jusqu’au 31 décembre quand aucun bilan n’est dressé, et les bénéfices déjà imposés au titre d’années sans bilan qui sont compris dans ces bilans. La sortie est le résultat retenu pour l’assiette de l’année ; la découpe des bénéfices par période reste en amont.
 

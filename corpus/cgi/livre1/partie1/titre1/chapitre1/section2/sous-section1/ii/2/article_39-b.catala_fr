@@ -2,7 +2,7 @@
 
 A la clôture de chaque exercice, la somme des amortissements effectivement pratiqués depuis l'acquisition ou la création d'un élément donné ne peut être inférieure au montant cumulé des amortissements calculés suivant le mode linéaire et répartis sur la durée normale d'utilisation. A défaut de se conformer à cette obligation, l'entreprise perd définitivement le droit de déduire la fraction des amortissements qui a été ainsi différée.
 
-Interface `MinimumAmortissementLineaire@v1`. Version applicable à compter du 2003-12-31, sans date de fin connue.
+Interface `MinimumAmortissementLineaire@v2`. Version applicable à compter du 2003-12-31, sans date de fin connue.
 
 L’appelant fournit, pour un élément et à la clôture d’un exercice, le cumul des amortissements pratiqués et le cumul des amortissements calculés en mode linéaire sur la durée normale d’utilisation, ainsi que les fractions dont le droit de déduction a déjà été perdu, chacune avec l’exercice de sa perte. Les sorties disent si l’obligation est respectée, mesurent l’insuffisance de la clôture (la fraction différée dont la déduction est perdue) et reprennent les fractions déjà perdues, qu’une clôture ultérieure conforme ne rend pas déductibles.
 

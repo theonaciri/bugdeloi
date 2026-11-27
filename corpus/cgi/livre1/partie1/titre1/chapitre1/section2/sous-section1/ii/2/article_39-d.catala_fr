@@ -2,7 +2,7 @@
 
 L'amortissement des constructions et aménagements édifiés sur le sol d'autrui doit être réparti sur la durée normale d'utilisation de chaque élément. Cette disposition n'est pas applicable en cas de bail à construction passé dans les conditions prévues par les articles L 251-1 à L 251-8 du code de la construction et de l'habitation.
 
-Interface `DureeAmortissementSolAutrui@v1`. Version applicable à compter du 1979-07-01, sans date de fin connue.
+Interface `DureeAmortissementSolAutrui@v2`. Version applicable à compter du 1979-07-01, sans date de fin connue.
 
 Le champ d’application s’appelle une fois par élément. L’appelant indique si l’élément est une construction ou un aménagement édifié sur le sol d’autrui et si un bail à construction conforme aux articles L 251-1 à L 251-8 du code de la construction et de l’habitation le régit ; il fournit la durée normale d’utilisation de l’élément, qu’il apprécie. La sortie est la durée sur laquelle l’amortissement est réparti ; elle est absente quand l’article ne s’applique pas.
 

@@ -2,7 +2,7 @@
 
 Sont compris dans le total des revenus servant de base à l'impôt sur le revenu les bénéfices obtenus pendant l'année de l'imposition ou dans la période de douze mois dont les résultats ont servi à l'établissement du dernier bilan, lorsque cette période ne coincide pas avec l'année civile.
 
-Interface `PeriodeBeneficeImposable36@v1`. Version applicable à compter du 1979-07-01, sans date de fin connue.
+Interface `PeriodeBeneficeImposable36@v2`. Version applicable à compter du 1979-07-01, sans date de fin connue.
 
 L’appelant fournit l’année d’imposition, la période de douze mois du dernier bilan avec son résultat, et le bénéfice obtenu pendant l’année civile d’imposition. La sortie est le bénéfice compris dans la base de l’impôt : celui de l’année d’imposition quand la période du dernier bilan coïncide avec cette année civile, le résultat du dernier bilan sinon. Un exercice de plus ou de moins de douze mois relève de l’article 37.
 
