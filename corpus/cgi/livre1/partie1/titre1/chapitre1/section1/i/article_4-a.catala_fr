@@ -1,0 +1,56 @@
+#### Article 4 A|LEGIARTI000006302200
+
+Les personnes qui ont en France leur domicile fiscal sont passibles de l'impôt sur le revenu en raison de l'ensemble de leurs revenus. Celles dont le domicile fiscal est situé hors de France sont passibles de cet impôt en raison de leurs seuls revenus de source française.
+
+Interface `AssietteTerritorialeIr@v1`. Version applicable à compter du 1979-07-01, sans date de fin connue.
+
+L’appelant qualifie le domicile fiscal et la source de chaque revenu. Le champ d’application retient les revenus passibles de l’impôt sur le revenu selon ces deux qualifications.
+
+```catala
+déclaration structure AssietteTerritorialeIrRevenu:
+  donnée montant contenu argent
+  donnée source_française contenu booléen
+
+déclaration champ d'application AssietteTerritorialeIr:
+  entrée date_d_application contenu date
+  entrée domicile_fiscal_en_france contenu booléen
+  entrée revenus contenu liste de AssietteTerritorialeIrRevenu
+  résultat revenus_retenus contenu liste de AssietteTerritorialeIrRevenu
+
+champ d'application AssietteTerritorialeIr:
+  # LEGIARTI000006302200, début de validité de la version.
+  assertion date_d_application >= |1979-07-01|
+  # CGI, article 4 A, première phrase : domicile fiscal en France, ensemble des revenus.
+  # CGI, article 4 A, seconde phrase : domicile hors de France, seuls revenus de source française.
+  définition revenus_retenus égal à
+    si domicile_fiscal_en_france alors revenus
+    sinon liste de revenu parmi revenus tel que revenu.source_française
+
+#[test]
+déclaration champ d'application TestAssietteTerritorialeIr:
+  domicile_en_france champ d'application AssietteTerritorialeIr
+  domicile_hors_de_france champ d'application AssietteTerritorialeIr
+
+champ d'application TestAssietteTerritorialeIr:
+  # LEGIARTI000006302200, date de début de la version : le cas s'applique dès le premier jour.
+  définition domicile_en_france.date_d_application égal à |1979-07-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; première phrase, les deux revenus sont retenus.
+  définition domicile_en_france.domicile_fiscal_en_france égal à vrai
+  définition domicile_en_france.revenus égal à [
+    AssietteTerritorialeIrRevenu { -- montant: 1 000 € -- source_française: vrai };
+    AssietteTerritorialeIrRevenu { -- montant: 500 € -- source_française: faux }
+  ]
+  assertion nombre de domicile_en_france.revenus_retenus = 2
+  # LEGIARTI000006302200, date de début de la version : le cas s'applique dès le premier jour.
+  définition domicile_hors_de_france.date_d_application égal à |1979-07-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; seconde phrase, seul le revenu de source française reste.
+  définition domicile_hors_de_france.domicile_fiscal_en_france égal à faux
+  définition domicile_hors_de_france.revenus égal à [
+    AssietteTerritorialeIrRevenu { -- montant: 1 000 € -- source_française: vrai };
+    AssietteTerritorialeIrRevenu { -- montant: 500 € -- source_française: faux }
+  ]
+  assertion nombre de domicile_hors_de_france.revenus_retenus = 1
+  assertion (Argent.somme de
+    (transforme chaque revenu parmi domicile_hors_de_france.revenus_retenus en revenu.montant))
+    = 1 000 €
+```

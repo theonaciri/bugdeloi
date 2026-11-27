@@ -1,0 +1,38 @@
+#### Article 4 bis|LEGIARTI000006302202
+
+Sont également passibles de l'impôt sur le revenu : 1° (Abrogé) ; 2° Les personnes de nationalité française ou étrangère, ayant ou non leur domicile fiscal en France, qui recueillent des bénéfices ou revenus dont l'imposition est attribuée à la France par une convention internationale relative aux doubles impositions.
+
+Interface `AssujettissementConventionIr@v1`. Version applicable à compter du 1979-07-01, sans date de fin connue.
+
+Le 1° est abrogé et n’a pas de code. Pour le 2°, l’appelant indique, pour chaque bénéfice ou revenu, si une convention internationale relative aux doubles impositions en attribue l’imposition à la France. La nationalité et le domicile fiscal ne conditionnent pas la règle.
+
+```catala
+déclaration champ d'application AssujettissementConventionIr:
+  entrée date_d_application contenu date
+  entrée appréciation_imposition_attribuée_à_la_france contenu liste de booléen
+  résultat assujettissement_selon_4_bis contenu booléen
+
+champ d'application AssujettissementConventionIr:
+  # LEGIARTI000006302202, début de validité de la version.
+  assertion date_d_application >= |1979-07-01|
+  # CGI, article 4 bis, 2° : passible dès qu'un bénéfice ou revenu est attribué à la France par une convention.
+  définition assujettissement_selon_4_bis égal à
+    existe attribuée parmi appréciation_imposition_attribuée_à_la_france tel que attribuée
+
+#[test]
+déclaration champ d'application TestAssujettissementConventionIr:
+  attribution champ d'application AssujettissementConventionIr
+  aucune_attribution champ d'application AssujettissementConventionIr
+
+champ d'application TestAssujettissementConventionIr:
+  # LEGIARTI000006302202, date de début de la version : le cas s'applique dès le premier jour.
+  définition attribution.date_d_application égal à |1979-07-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; un revenu sur deux est attribué à la France.
+  définition attribution.appréciation_imposition_attribuée_à_la_france égal à [faux; vrai]
+  assertion attribution.assujettissement_selon_4_bis
+  # LEGIARTI000006302202, date de début de la version : le cas s'applique dès le premier jour.
+  définition aucune_attribution.date_d_application égal à |1979-07-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; aucun revenu attribué à la France.
+  définition aucune_attribution.appréciation_imposition_attribuée_à_la_france égal à [faux]
+  assertion non aucune_attribution.assujettissement_selon_4_bis
+```
