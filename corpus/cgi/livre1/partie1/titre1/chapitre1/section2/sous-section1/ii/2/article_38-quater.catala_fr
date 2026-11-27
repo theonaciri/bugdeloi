@@ -60,13 +60,16 @@ champ d'application EtalementIndemnisationDeces:
   définition étalement_applicable égal à
     contrat_et_indemnité_visés et appréciation_rôle_déterminant et option_d_étalement
 
-  # TODO juridique : le texte ne fixe pas d'arrondi. Chaque part est arrondie au centime par Catala, et
-  # la cinquième reçoit le reliquat, pour que les cinq parts fassent exactement le montant étalé (un profit
-  # de 50 000,03 € donne quatre parts de 10 000,01 € et une de 9 999,99 €).
-  # CGI, article 38 quater, premier alinéa, première phrase : profit réparti en cinq parts égales.
-  définition part_du_profit égal à profit / 5,0
-  # CGI, article 38 quater, premier alinéa, seconde phrase : primes déduites en cinq parts égales.
-  définition part_des_primes égal à primes_non_déduites / 5,0
+  # TODO juridique : le texte ne fixe pas d'arrondi. Les quatre premières parts sont arrondies au centime
+  # inférieur et la cinquième reçoit le reliquat (0 à 4 centimes de plus) : les cinq parts font exactement
+  # le montant étalé et aucune n'est négative (50 000,03 € : quatre parts de 10 000,00 € et une de
+  # 10 000,03 € ; 0,03 € : quatre parts nulles et une de 0,03 €).
+  # CGI, article 38 quater, premier alinéa, première phrase : profit réparti en cinq parts égales, calculé
+  # en centimes (× 100), tronqué, puis ramené en euros (× 0,01).
+  définition part_du_profit égal à (Argent.arrondi_par_défaut de ((profit * 100,0) / 5,0)) * 0,01
+  # CGI, article 38 quater, premier alinéa, seconde phrase : primes déduites en cinq parts égales, même
+  # calcul en centimes (× 100, puis × 0,01).
+  définition part_des_primes égal à (Argent.arrondi_par_défaut de ((primes_non_déduites * 100,0) / 5,0)) * 0,01
   définition tranches égal à
     # CGI, article 38 quater, premier alinéa, première phrase : l'année de réalisation (rang 0) et les
     # quatre années suivantes ; la dernière (rang 4) reçoit le reliquat d'arrondi des quatre premières.
@@ -110,6 +113,7 @@ déclaration champ d'application TestEtalementIndemnisationDeces:
   étalement champ d'application EtalementIndemnisationDeces
   cession champ d'application EtalementIndemnisationDeces
   reliquat_d_arrondi champ d'application EtalementIndemnisationDeces
+  profit_minime champ d'application EtalementIndemnisationDeces
   sans_option champ d'application EtalementIndemnisationDeces
   contrat_non_visé champ d'application EtalementIndemnisationDeces
   rôle_non_déterminant champ d'application EtalementIndemnisationDeces
@@ -152,7 +156,7 @@ champ d'application TestEtalementIndemnisationDeces:
   }
   # LEGIARTI000006302269, date de début de la version : le cas s'applique dès le premier jour.
   définition reliquat_d_arrondi.date_d_application égal à |2005-01-01|
-  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; 50 000,03 € donnent quatre parts de 10 000,01 € et une de 9 999,99 € ; cessation en 2025 après les cinq parts, rien à rapporter.
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; 50 000,03 € donnent quatre parts de 10 000,00 € et une de 10 000,03 € ; 0,04 € de primes, quatre parts nulles et une de 0,04 € ; cessation en 2025 après les cinq parts, rien à rapporter.
   définition reliquat_d_arrondi.appréciation_rôle_déterminant égal à vrai
   définition reliquat_d_arrondi.contrat_et_indemnité_visés égal à vrai
   définition reliquat_d_arrondi.option_d_étalement égal à vrai
@@ -165,13 +169,32 @@ champ d'application TestEtalementIndemnisationDeces:
   }
   assertion nombre de reliquat_d_arrondi.échéancier_ordinaire = 5
   assertion existe t parmi reliquat_d_arrondi.échéancier_ordinaire tel que
-    t.année = 2024 et t.profit_imposable = 9 999,99 € et t.primes_déductibles = 0,00 €
+    t.année = 2024 et t.profit_imposable = 10 000,03 € et t.primes_déductibles = 0,04 €
   assertion existe t parmi reliquat_d_arrondi.échéancier_ordinaire tel que
-    t.année = 2020 et t.profit_imposable = 10 000,01 € et t.primes_déductibles = 0,01 €
+    t.année = 2020 et t.profit_imposable = 10 000,00 € et t.primes_déductibles = 0,00 €
   assertion (Argent.somme de (transforme chaque t parmi reliquat_d_arrondi.échéancier_ordinaire en t.primes_déductibles)) = 0,04 €
   assertion reliquat_d_arrondi.rapport_à_l_exercice_de_cession_ou_cessation = Présent contenu EtalementIndemnisationDecesRapport {
     -- exercice: 2025
     -- montant: 0 €
+  }
+  # LEGIARTI000006302269, date de début de la version : le cas s'applique dès le premier jour.
+  définition profit_minime.date_d_application égal à |2005-01-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; 0,03 € de profit en 2020, quatre parts nulles ; cessation en 2024, les 0,03 € de la dernière part sont rapportés.
+  définition profit_minime.appréciation_rôle_déterminant égal à vrai
+  définition profit_minime.contrat_et_indemnité_visés égal à vrai
+  définition profit_minime.option_d_étalement égal à vrai
+  définition profit_minime.année_de_réalisation égal à 2020
+  définition profit_minime.profit égal à 0,03 €
+  définition profit_minime.primes_non_déduites égal à 0 €
+  définition profit_minime.données_de_cession_ou_cessation égal à Présent contenu EtalementIndemnisationDecesCession {
+    -- exercice: 2024
+    -- parts_du_profit_déjà_imposées: 0 €
+  }
+  assertion nombre de profit_minime.échéancier_ordinaire = 4
+  assertion non (existe t parmi profit_minime.échéancier_ordinaire tel que t.profit_imposable < 0 €)
+  assertion profit_minime.rapport_à_l_exercice_de_cession_ou_cessation = Présent contenu EtalementIndemnisationDecesRapport {
+    -- exercice: 2024
+    -- montant: 0,03 €
   }
   # LEGIARTI000006302269, date de début de la version : le cas s'applique dès le premier jour.
   définition sans_option.date_d_application égal à |2005-01-01|
