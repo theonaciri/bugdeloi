@@ -42,7 +42,8 @@ export interface RoundingFile {
 
 const ARTICLE_RE = /^#{1,6}\s+Article\s+(.+?)\|(LEGIARTI\d{12})\s*$/
 const DEFINITION_RE = /^\s*définition\s+([\p{L}\p{N}_.]+)/u
-const SCOPE_RE = /^champ d'application\s+([\p{L}\p{N}_]+)\s*:/u
+/** Corps de scope, éventuellement conditionnel (`champ d'application X sous condition … :`). */
+const SCOPE_RE = /^champ d'application\s+([\p{L}\p{N}_]+)(?:\s+sous condition\b.*)?\s*:\s*$/u
 const TEST_DECL_RE = /^déclaration champ d'application\s+([\p{L}\p{N}_]+)\s*:/u
 const DECIMAL_VAR_RE = /^\s*(?:entrée|résultat|interne|contexte)\s+([\p{L}\p{N}_]+)\s+contenu\s+décimal\b/u
 const EXPLICIT_RE = /\barrondi de\b|\bArgent\.arrondi_[\p{L}_]+|\bDécimal\.arrondi\b/u
@@ -62,7 +63,9 @@ function implicitOperation(line: string, isDecimal: (name: string) => boolean): 
   return false
 }
 
-const SUBSCOPE_RE = /^\s+([\p{L}\p{N}_]+)\s+champ d'application\s+([\p{L}\p{N}_]+)\s*$/u
+/** Sous-scope déclaré, y compris comme résultat ou interne (`résultat appel champ d'application Taux`). */
+const SUBSCOPE_RE =
+  /^\s+(?:(?:résultat|interne)\s+)?([\p{L}\p{N}_]+)\s+champ d'application\s+([\p{L}\p{N}_]+)\s*$/u
 
 export function scanRounding(file: string, raw: string): RoundingFile {
   const lines = raw.split('\n')

@@ -75,6 +75,31 @@ describe('inventaire des arrondis', () => {
     ])
   })
 
+  test('reconnaît les corps conditionnels et les sous-scopes en résultat', () => {
+    const raw = [
+      '```catala',
+      "déclaration champ d'application Taux:",
+      '  entrée p contenu décimal',
+      '  résultat t contenu décimal',
+      '',
+      "déclaration champ d'application Montant:",
+      '  entrée m contenu argent',
+      '  entrée actif contenu booléen',
+      "  résultat appel champ d'application Taux",
+      '  résultat a contenu argent',
+      '',
+      "champ d'application Taux sous condition p > 0,0:",
+      '  définition t égal à p * 50%',
+      '',
+      "champ d'application Montant sous condition actif:",
+      '  définition a égal à m * appel.t',
+      '```',
+    ].join('\n')
+    expect(scanRounding('z.catala_fr', raw).points.map((p) => [p.kind, p.definition, p.lines])).toEqual([
+      ['implicite', 'a', [16]],
+    ])
+  })
+
   test('corpus : 38 quater est un choix écrit, 193 et 1657 sont fixés par le texte', () => {
     const files = corpusRounding()
     const quater = files.find((f) => f.file.endsWith('article_38-quater.catala_fr'))
