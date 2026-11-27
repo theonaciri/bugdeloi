@@ -1,9 +1,10 @@
 import { CODES } from '@bugdeloi/core'
 import { articleInForce, articleStatus, legalArticle, legalText } from '@bugdeloi/db'
-import { and, asc, count, eq, inArray, isNull, or, sql } from 'drizzle-orm'
-import { asLevel, emptyLevelCounts, LEVELS, type Level } from '#lib/levels.ts'
+import { and, asc, eq, inArray, isNull, or } from 'drizzle-orm'
+import { asLevel, LEVELS, type Level } from '#lib/levels.ts'
 import { db } from '#lib/server/db.ts'
 import { CACHE } from '#lib/server/http.ts'
+import { getLevelCounts } from '#lib/server/queries.ts'
 import type { PageServerLoad } from './$types'
 
 type CodeKey = keyof typeof CODES
@@ -33,21 +34,8 @@ export const load: PageServerLoad = async ({ url, setHeaders }) => {
     baseConditions.push(eq(legalArticle.textId, CODES[code].id))
   }
 
-  // Compteurs par niveau de preuve pour le code sélectionné
-  const levelRows = await db()
-    .select({
-      level: sql<string>`coalesce(${articleStatus.level}, 'N0')`,
-      total: count(),
-    })
-    .from(legalArticle)
-    .leftJoin(articleStatus, eq(articleStatus.articleId, legalArticle.id))
-    .where(and(...baseConditions))
-    .groupBy(sql`coalesce(${articleStatus.level}, 'N0')`)
-
-  const counts = emptyLevelCounts()
-  for (const row of levelRows) {
-    counts[asLevel(row.level)] += row.total
-  }
+  // Compteurs par niveau de preuve pour le code sélectionné (cache mémoire 60 s)
+  const counts = await getLevelCounts(code !== 'all' ? CODES[code].id : undefined)
   const formalisesTotal = counts.N5 + counts.N4 + counts.N3 + counts.N2 + counts.N1 + counts.REF
   const allTotal = formalisesTotal + counts.N0
 

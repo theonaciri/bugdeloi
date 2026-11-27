@@ -156,6 +156,7 @@ export const legalArticle = pgTable(
     index('legal_article_section_idx').on(t.sectionId),
     index('legal_article_key_idx').on(t.articleKey),
     index('legal_article_etat_idx').on(t.etat),
+    index('legal_article_in_force_idx').on(t.textId, t.dateDebut, t.dateFin, t.etat, t.id),
     index('legal_article_search_gin').using('gin', t.search),
   ],
 )
@@ -201,7 +202,10 @@ export const articleStatus = pgTable(
     evidence: jsonb('evidence').$type<Record<string, unknown>>().notNull().default({}),
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
   },
-  (t) => [index('article_status_level_idx').on(t.level)],
+  (t) => [
+    index('article_status_level_idx').on(t.level),
+    index('article_status_level_article_idx').on(t.level, t.articleId),
+  ],
 )
 
 /**

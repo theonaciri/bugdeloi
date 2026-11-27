@@ -1,0 +1,2 @@
+CREATE INDEX "article_status_level_article_idx" ON "article_status" USING btree ("level","article_id");--> statement-breakpoint
+CREATE INDEX "legal_article_in_force_idx" ON "legal_article" USING btree ("text_id","date_debut","date_fin","etat","id");
