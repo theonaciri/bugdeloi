@@ -1,7 +1,11 @@
 <script lang="ts">
 import { FINDING_TYPE_LABEL, FINDING_TYPES } from '@bugdeloi/core/findings'
 import LevelSwatch from '#lib/components/LevelSwatch.svelte'
+import { formatInt } from '#lib/format.ts'
 import { LEVELS, type Level, levelName } from '#lib/levels.ts'
+import type { PageData } from './$types'
+
+let { data }: { data: PageData } = $props()
 
 const levelDescriptions: Record<Level, string> = {
   N0: 'Nous avons enregistré le texte officiel, son identifiant, les dates de sa version et son empreinte numérique.',
@@ -92,9 +96,9 @@ const verdicts = [
               <h3 class="text-lg font-semibold text-ink">{levelName(level)}</h3>
               <a
                 href="/travail?niveau={level}"
-                class="text-xs font-semibold text-brand-strong no-underline hover:underline"
+                class="text-xs font-semibold text-brand-strong no-underline hover:underline tabular"
               >
-                Voir les articles ({level === 'REF' ? '★ Référence' : level}) →
+                Voir les {formatInt(data.counts[level])} articles →
               </a>
             </div>
             <p class="leading-relaxed text-muted">{levelDescriptions[level]}</p>
