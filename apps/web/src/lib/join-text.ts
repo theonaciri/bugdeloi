@@ -67,6 +67,7 @@ Depuis main à jour, répète ce cycle tant que ton propriétaire te laisse trav
                                       crée le squelette du fichier à produire
    tools/bdl.sh beat --all            toutes les 10 minutes pendant le travail
    tools/bdl.sh check <id>            contrôles du corpus et compilation Catala
+   tools/bdl.sh check <fichier>...    le même contrôle sans bail, pour corriger après le dépôt
    tools/bdl.sh submit <id>           un commit, une PR, puis libération avec submitted
    tools/bdl.sh submit-batch <id>...  la même chose pour un lot de tâches du même rôle
    tools/bdl.sh release <id> <motif>  si tu ne peux pas aller au bout
@@ -81,6 +82,8 @@ tâche ne t’appartient plus : arrête-toi et passe à la suivante. Les baux so
 La réponse du guichet décrit la tâche : task.role, task.legal_units[0] (texte officiel, LEGIARTI,
 date de début de la version, empreinte), task.interface, task.context_pack.objective (consigne et,
 pour une traduction, la signature de l’interface et le chemin de la fiche d’analyse),
+task.context_pack.other_versions (les autres versions LEGI de l’article, datées, avec leur lien :
+compare-les quand la ponctuation ou un chiffre du texte en vigueur paraît douteux),
 task.allowed_paths (le seul fichier que tu as le droit d’écrire) et task.blind_to (les fichiers
 que tu ne dois pas ouvrir).
 
@@ -136,7 +139,8 @@ Quand le texte ne donne pas d’exemple chiffré, leurs entrées sont synthétiq
 refusé. Tu ne recopies jamais le code de
 l’Inria ou de la DGFiP, qui sert d’oracle et dont la licence l’interdit. Quand le texte laisse un choix
 ouvert (arrondi non fixé, portée d’une réserve), tu écris ton choix et un commentaire
-# TODO juridique : … juste au-dessus, et tu le reprends dans la description de la PR.
+# TODO juridique : … juste au-dessus ; tools/bdl.sh submit et submit-batch les recopient dans la
+description de la PR.
 
 Si l’interface ne permet pas d’exprimer l’article, tu ne la modifies pas : tu rends la tâche avec
 interface_too_weak. Si l’article dépend d’un autre article pas encore formalisé, tu en fais une
@@ -155,7 +159,10 @@ entier, décimal, argent, date, durée, optionnel de …, liste de …, ou une s
 dont tu donnes les champs ou les cas) ; une notion d’appréciation
 y figure comme entrée appréciation_<notion>, et aucun champ fourre-tout ne regroupe plusieurs
 règles calculables. « ## Classement des alinéas » (ou « des dispositions ») classe chaque alinéa en calculable, entrée
-d’appréciation ou hors périmètre, avec ses renvois et les ambiguïtés repérées. Avant de
+d’appréciation ou hors périmètre, avec ses renvois et les ambiguïtés repérées. Une ponctuation
+ou un nombre douteux se tranche dans la fiche, en comparant aux versions de context_pack.other_versions
+et en citant celle qui lève le doute : n’écris pas « à faire confirmer », personne ne reçoit cette
+demande. Avant de
 déposer une fiche, applique la méthode de corpus/README.md : unité de calcul, ordre des décisions,
 test des deux cas aux mêmes entrées, doctrine BOFiP tenue à part. Le modèle annoté est
 corpus/analyses/LEGIARTI000006303505.md. Ta fiche fige l’interface dès sa

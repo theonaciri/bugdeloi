@@ -66,6 +66,15 @@ export const taskArticle = {
   hash: legalArticle.textSha256,
   articleNumber: legalArticle.num,
   codeTitle: legalText.title,
+  versionIds: legalArticle.versionIds,
+}
+
+/** Autre version LEGI du même article : la comparer lève souvent un doute de ponctuation ou de mise en forme. */
+export interface OtherVersion {
+  legiarti: string
+  date_debut: string | null
+  date_fin: string | null
+  source_url: string
 }
 
 type TaskArticle = Pick<typeof legalArticle.$inferSelect, 'id' | 'dateDebut' | 'dateFin'> & {
@@ -76,7 +85,12 @@ type TaskArticle = Pick<typeof legalArticle.$inferSelect, 'id' | 'dateDebut' | '
 }
 
 /** `path` : chemin Catala calculé depuis l'arbre Légifrance quand l'interface n'en impose pas. */
-export function newDeskTask(row: TaskArticle, role: 'analyst' | 'translate', path?: string) {
+export function newDeskTask(
+  row: TaskArticle,
+  role: 'analyst' | 'translate',
+  path?: string,
+  otherVersions: OtherVersion[] = [],
+) {
   const spec = role === 'translate' ? frozenInterfaces().get(row.id) : undefined
   if (role === 'translate' && !spec) throw new Error(`Aucune interface figée pour ${row.id}`)
   if (!row.dateDebut || sha256Hex(row.text) !== row.hash) {
@@ -106,6 +120,7 @@ export function newDeskTask(row: TaskArticle, role: 'analyst' | 'translate', pat
           : 'Proposer une interface typée et classer chaque alinéa : calculable, entrée d’appréciation ou hors périmètre motivé.',
         code_title: row.codeTitle,
         article_number: row.articleNumber,
+        other_versions: otherVersions,
       },
       blind_to: [],
       allowed_paths: [spec ? (spec.path ?? path ?? `${row.id}.catala_fr`) : `analyses/${row.id}.md`],

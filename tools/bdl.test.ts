@@ -213,6 +213,28 @@ describe('tools/bdl.sh', () => {
     )
   })
 
+  test('checks corpus files without a lease, for fixes after submission', async () => {
+    for (const name of ['bun', 'podman']) {
+      await writeFile(
+        join(repo, 'bin', name),
+        `#!/bin/bash\nprintf "%s\\n" "${name}" "$@" >> "$BDL_TEST_REQUESTS"\n`,
+        { mode: 0o755 },
+      )
+    }
+    await mkdir(join(repo, 'corpus', 'cgi'), { recursive: true })
+    await writeFile(
+      join(repo, 'corpus', 'cgi', 'article_1.catala_fr'),
+      '#### Article 1|LEGIARTI000000000001\n',
+    )
+    expect(run(['check', 'corpus/cgi/article_1.catala_fr']).code).toBe(0)
+    const commands = await requests()
+    expect(commands).toStartWith('bun\nscripts/check-corpus-pr.ts\npodman\nrun\n')
+    expect(commands).toEndWith('clerk\ntest\n--color=never\ncgi/article_1.catala_fr\n')
+    const missing = run(['check', 'cgi/absent.catala_fr'])
+    expect(missing.code).toBe(1)
+    expect(missing.stderr).toContain('introuvable')
+  })
+
   test('prints the pinned Catala documentation without calling the desk', async () => {
     const result = run(['doc'])
     expect(result.code).toBe(0)
@@ -287,7 +309,14 @@ describe('tools/bdl.sh', () => {
       for (const [i, id] of ids.entries()) {
         const path = `cgi/article_${i + 1}.catala_fr`
         await mkdir(join(repo, 'corpus', 'cgi'), { recursive: true })
-        await writeFile(join(repo, 'corpus', path), `#### Article ${i + 1}|LEGIARTI00000000000${i + 1}\n`)
+        await writeFile(
+          join(repo, 'corpus', path),
+          `#### Article ${i + 1}|LEGIARTI00000000000${i + 1}\n\n\`\`\`catala\n${
+            i === 0
+              ? '  # TODO juridique : lecture choisie,\n  # suite de la note.\n  # CGI, article 1 : citation.\n'
+              : ''
+          }\`\`\`\n`,
+        )
         await writeFile(
           join(leases, `${id}.json`),
           JSON.stringify({
@@ -315,6 +344,9 @@ describe('tools/bdl.sh', () => {
       ])
       const log = await requests()
       expect(log).toContain('gh pr create')
+      expect(log).toContain('Choix d’interprétation à relire')
+      expect(log).toContain('- `cgi/article_1.catala_fr:4` : lecture choisie, suite de la note.')
+      expect(log).not.toContain('citation')
       expect(log.match(/reason=submitted/g)?.length).toBe(2)
       expect(await readdir(leases)).toEqual([])
     } finally {

@@ -230,6 +230,8 @@ test.skipIf(!reachable)(
               dateDebut: '2000-01-01',
               contentText,
               textSha256: sha256Hex(contentText),
+              // Le premier article a une autre version : la tâche doit la lister.
+              versionIds: index === 0 ? [id, ids[1] as string] : [],
             })),
           )
         },
@@ -242,6 +244,13 @@ test.skipIf(!reachable)(
       expect(claims.every((claim) => claim !== null)).toBe(true)
       expect(new Set(claims.map((claim) => claim?.task.id)).size).toBe(ids.length)
       expect(await claimTask(database, { ...assignment, handle: 'extra' })).toBeNull()
+      const withVersion = claims.find((claim) => claim?.task.node === ids[0])
+      expect(withVersion?.task.context_pack.other_versions?.map((v) => v.legiarti)).toEqual([
+        ids[1] as string,
+      ])
+      expect(claims.find((claim) => claim?.task.node === ids[2])?.task.context_pack.other_versions).toEqual(
+        [],
+      )
 
       const first = claims[0]
       if (!first) throw new Error('Bail de test absent')

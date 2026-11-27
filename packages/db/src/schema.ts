@@ -362,7 +362,18 @@ export type DeskTaskPayload = {
     source_url: string
   }[]
   interface: string | null
-  context_pack: { objective: string; code_title: string; article_number: string | null }
+  context_pack: {
+    objective: string
+    code_title: string
+    article_number: string | null
+    /** Autres versions LEGI du même article, par date de début (absent des tâches créées avant le 27/11/2026). */
+    other_versions?: {
+      legiarti: string
+      date_debut: string | null
+      date_fin: string | null
+      source_url: string
+    }[]
+  }
   blind_to: string[]
   allowed_paths: string[]
 }

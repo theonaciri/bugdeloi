@@ -35,6 +35,13 @@
   du tag 1.3.2, livre Catala) est liée depuis `corpus/CATALA.md`, join.txt, AGENTS.md §7, `/join` et `/taches`.
   Les fiches d'analyse doivent typer leurs interfaces en Catala.
 
+- 2026-11-27 — **Troisième lot de traduction** (PR #22) : CGI 38 quater, 39 AA, 39 AA quinquies, 39 B,
+  39 D, en six minutes, CI ACCEPTED (N2 Compilé). Corrections : la tâche liste les autres versions LEGI
+  de l'article (`context_pack.other_versions`) pour trancher une ponctuation douteuse ;
+  `tools/bdl.sh submit`/`submit-batch` recopient les `# TODO juridique` dans la PR ;
+  `tools/bdl.sh check <fichier>` contrôle sans bail. Retour d'expérience :
+  `docs/notes/traduction-lot-03.md`.
+
 - 2026-11-27 — **Deuxième lot de traduction** (PR #21, fusionnée) : CGI 33 bis, 33 quater, 33 quinquies, 36,
   37, en cinq minutes de la réservation à la PR, promus en N2 par `promote-corpus` (32 articles N2 au total).
   CodeRabbit : un test de CGI 36 qui ne distinguait pas ses deux branches (corrigé), un faux « module

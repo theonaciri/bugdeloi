@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto'
-import { sha256Hex } from '@bugdeloi/core/legi'
+import { legifranceArticleUrl, sha256Hex } from '@bugdeloi/core/legi'
 import { type Db, deskTask, event, legalArticle, legalText } from '@bugdeloi/db'
-import { and, eq, gt, isNull, lte, or, sql } from 'drizzle-orm'
+import { and, asc, eq, gt, inArray, isNull, lte, or, sql } from 'drizzle-orm'
 import { currentDeskTask, newDeskTask, newDeskTaskFilter, taskArticle, taskLabel } from './desk-catalog.ts'
 import { catalaPath, frozenInterfaces, sectionTitles } from './interfaces.ts'
 
@@ -117,7 +117,22 @@ async function reserveInTx(tx: Tx, { handle, role, family }: Assignment): Promis
             article.id,
           )
         : undefined
-    const task = newDeskTask(article, role, path)
+    const others = article.versionIds.filter((v) => v !== article.id)
+    const otherVersions = others.length
+      ? (
+          await tx
+            .select({ id: legalArticle.id, dateDebut: legalArticle.dateDebut, dateFin: legalArticle.dateFin })
+            .from(legalArticle)
+            .where(inArray(legalArticle.id, others))
+            .orderBy(asc(legalArticle.dateDebut))
+        ).map((v) => ({
+          legiarti: v.id,
+          date_debut: v.dateDebut,
+          date_fin: v.dateFin,
+          source_url: legifranceArticleUrl(v.id),
+        }))
+      : []
+    const task = newDeskTask(article, role, path, otherVersions)
     const [row] = await tx
       .insert(deskTask)
       .values({ ...task, ...reservation })

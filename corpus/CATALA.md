@@ -53,6 +53,14 @@ Interface `<Nom>@v1`. Version applicable à compter du <date_debut>, sans date d
 Le titre et le texte sont écrits par `tools/bdl.sh next`. Le texte reste identique au caractère près :
 `tools/bdl.sh check` le compare à la citation de la fiche d’analyse, et `promote-corpus` à LEGI.
 
+## Texte douteux
+
+LEGI consolide parfois mal un nombre : la version de 2002 de l’article 39 AA écrit « 2, 2, 5 et 3 » là où
+les quatre versions antérieures écrivent « 2, 2,5 et 3 ». Compare alors le texte aux autres versions de
+l’article, que la tâche liste dans `context_pack.other_versions` (et la page
+`/article/<LEGIARTI>` du site) : une version antérieure est une source LEGI citable. Écris la lecture
+retenue et sa justification dans la prose du fichier, puis un `# TODO juridique` au-dessus de la règle.
+
 ## Dates de validité
 
 `task.legal_units[0].date_debut` borne la version : `assertion date_d_application >= |AAAA-MM-JJ|`. Une
@@ -167,6 +175,7 @@ champ d'application TestRevenuNetFoncier:
 
 ## Contrôler
 
-`tools/bdl.sh check <id>` lance `scripts/check-corpus-pr.ts` (en-têtes, doublons, texte et nom du champ
+`tools/bdl.sh check <id>` (ou `tools/bdl.sh check <fichier.catala_fr>…` sans bail, pour corriger un
+fichier déjà déposé) lance `scripts/check-corpus-pr.ts` (en-têtes, doublons, texte et nom du champ
 d’application comparés à la fiche d’analyse) puis `clerk test` dans le conteneur Catala épinglé. Une
 erreur « Incompatible types: got bool, expected money » vient presque toujours d’une parenthèse manquante.

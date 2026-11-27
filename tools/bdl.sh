@@ -20,6 +20,7 @@ Usage : tools/bdl.sh <commande>
   next [N]                    Réserver N tâches (1 par défaut) et préparer leurs fichiers.
   beat <task_id> | --all      Renouveler un bail, ou tous les baux locaux.
   check <task_id>             Contrôler la contribution et lancer les tests Catala.
+  check <fichier.catala_fr>…  Même contrôle sans bail (après le dépôt, pour corriger une relecture).
   submit <task_id>            Un commit et une pull request pour une tâche.
   submit-batch <task_id>...   Un commit et une pull request pour un lot de tâches du même rôle.
   release <task_id> <motif>   Libérer le bail.
@@ -319,8 +320,10 @@ load_paths() {
 check_task() {
   local engine path
   local -a catala_paths=()
-  jq -e '(.task.blind_to // []) == []' "$lease_file" >/dev/null ||
-    die "Le contrôle parcourt le corpus et cette tâche déclare des fichiers à garder aveugles."
+  if [[ -n ${lease_file:-} ]]; then
+    jq -e '(.task.blind_to // []) == []' "$lease_file" >/dev/null ||
+      die "Le contrôle parcourt le corpus et cette tâche déclare des fichiers à garder aveugles."
+  fi
   need bun
   for path in "${allowed_paths[@]}"; do
     if [[ $path == *.catala_fr ]]; then
@@ -337,6 +340,34 @@ check_task() {
       -e CLERK_BUILD_DIR=/build -e CLERK_TARGET_DIR=/build/targets \
       -w /work "$image" clerk test --color=never "${catala_paths[@]}"
   fi
+}
+
+# Liste Markdown des commentaires « # TODO juridique » des fichiers donnés, suites de ligne comprises :
+# la PR montre d'emblée au relecteur les choix d'interprétation à trancher.
+todo_notes() {
+  local path
+  for path in "$@"; do
+    [[ -f $path ]] || continue
+    awk -v file="${path#corpus/}" '
+      function flush() { if (note != "") { printf "- `%s:%d` : %s\n", file, start, note; note = "" } }
+      /^[[:space:]]*# TODO juridique[[:space:]]*:/ {
+        flush(); start = NR; note = $0
+        sub(/^[[:space:]]*# TODO juridique[[:space:]]*:[[:space:]]*/, "", note); next
+      }
+      note != "" && /^[[:space:]]*# / && !/^[[:space:]]*# (CGI|CSS|CCH|LEGIARTI|Source|Cas d|TODO)/ {
+        line = $0; sub(/^[[:space:]]*#[[:space:]]*/, "", line); note = note " " line; next
+      }
+      { flush() }
+      END { flush() }
+    ' "$path"
+  done
+}
+
+pr_notes_section() {
+  local notes
+  notes=$(todo_notes "$@")
+  [[ -n $notes ]] || return 0
+  printf '\n### Choix d’interprétation à relire (`# TODO juridique`)\n\n%s\n' "$notes"
 }
 
 submit() {
@@ -363,7 +394,8 @@ submit() {
   git --literal-pathspecs add -- "${allowed_paths[@]}"
   git --literal-pathspecs commit --only -m "$message" -- "${allowed_paths[@]}"
   git push --set-upstream origin "$branch"
-  gh pr create --base "${base#origin/}" --head "$branch" --title "$title" --body "$message" ||
+  gh pr create --base "${base#origin/}" --head "$branch" --title "$title" \
+    --body "$message$(pr_notes_section "${allowed_paths[@]}")" ||
     die "Création de la PR échouée. La branche $branch est sur origin et le bail est conservé."
   release submitted
 }
@@ -410,8 +442,8 @@ submit_batch() {
   git --literal-pathspecs commit --only -m "$message" -- "${batch_paths[@]}"
   git push --set-upstream origin "$branch"
   gh pr create --base "${base#origin/}" --head "$branch" --title "$title" \
-    --body "$(printf 'Lot de %s tâches %s.\n\n%s\nFamille : %s, modèle : %s.' \
-      "${#ids[@]}" "$batch_role" "$body" "$family_seen" "$model_seen")" ||
+    --body "$(printf 'Lot de %s tâches %s.\n\n%s\nFamille : %s, modèle : %s.\n' \
+      "${#ids[@]}" "$batch_role" "$body" "$family_seen" "$model_seen")$(pr_notes_section "${batch_paths[@]}")" ||
     die "Création de la PR échouée. La branche $branch est sur origin et les baux sont conservés."
   for id in "${ids[@]}"; do
     load_lease "$id"
@@ -443,7 +475,26 @@ main() {
         load_lease "$1"
         beat
       fi ;;
-    check|submit|release)
+    check)
+      at_repo_root
+      if [[ $# -ge 1 && $1 == *.catala_fr ]]; then
+        local file
+        allowed_paths=()
+        for file in "$@"; do
+          [[ $file == *.catala_fr ]] || die "Usage : check <task_id> | check <fichier.catala_fr>..."
+          [[ $file == corpus/* ]] || file=corpus/$file
+          safe_path "$file" && [[ -f $file ]] || die "Fichier du corpus introuvable : $file."
+          allowed_paths+=("$file")
+        done
+        check_task
+      else
+        [[ $# == 1 ]] || die "Usage : check <task_id> | check <fichier.catala_fr>..."
+        valid_task_id "$1" || die "Identifiant de tâche invalide."
+        load_lease "$1"
+        load_paths
+        check_task
+      fi ;;
+    submit|release)
       if [[ $command == release ]]; then
         [[ $# == 2 ]] || die "Usage : release <task_id> <motif>."
         valid_reason "$2" || die "Motif de libération invalide."
@@ -454,7 +505,6 @@ main() {
       load_lease "$1"
       case $command in
         release) release "$2" ;;
-        check) load_paths; check_task ;;
         submit) load_paths; submit "$1" ;;
       esac ;;
     *) die "Commande inconnue. Voir --help." ;;
