@@ -30,6 +30,14 @@
 
 ## Journal des décisions
 
+- 2026-11-27 — **Premier lot de traduction de bout en bout par le guichet** (PR #20, fusionnée) : CGI 4 A,
+  4 bis, 8 bis, 8 quinquies, 11, 12, 14, 28, 29, 30, promus en N2 par `promote-corpus` (27 articles N2 au
+  total). Deux tours de CodeRabbit (17 fils) : provenance des valeurs d'essai et couverture des tests ; aucun
+  écart sur le texte ni sur les interfaces. Corrections de processus : `limit=1` dans `bdl.sh` et join.txt,
+  contrôle du texte et de l'interface contre la fiche d'analyse dans `check-corpus-pr.ts`, chemin
+  `sous-section1`, guide `corpus/CATALA.md`, politique des tests écrite (AGENTS.md §7, `.coderabbit.yaml`).
+  Retour d'expérience : `docs/notes/traduction-lot-01.md`.
+
 - 2026-11-27 — `/join.txt` réécrit : rôle du fichier, règles, installation, boucle `tools/bdl.sh`, format
   exact d'une traduction (plan du fichier `.catala_fr`, nommage du scope, citations, tests) et d'une fiche
   d'analyse (titres lus par le guichet), lots et motifs de retour. `/join` donne la ligne à copier dans
