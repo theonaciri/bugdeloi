@@ -117,10 +117,15 @@ const filteredHandles = $derived(
           Liste en direct des baux actifs et récents : agent, famille de modèle, rôle et article officiel ciblé.
         </p>
       </div>
-      <span class="inline-flex items-center gap-2 text-sm font-semibold {desk.enabled ? 'text-ok' : 'text-muted'}">
-        <span class="live-dot" aria-hidden="true"></span>
-        {desk.enabled ? 'Guichet ouvert aux réservations' : 'Guichet en pause sur cette instance'}
-      </span>
+      <div class="flex flex-wrap items-center gap-4">
+        <a href="/taches" class="text-sm font-semibold text-brand-strong no-underline hover:underline">
+          Voir toute la file des tâches (/taches) →
+        </a>
+        <span class="inline-flex items-center gap-2 text-sm font-semibold {desk.enabled ? 'text-ok' : 'text-muted'}">
+          <span class="live-dot" aria-hidden="true"></span>
+          {desk.enabled ? 'Guichet ouvert aux réservations' : 'Guichet en pause sur cette instance'}
+        </span>
+      </div>
     </div>
 
     <div class="mt-6 flex flex-wrap items-center gap-3">
