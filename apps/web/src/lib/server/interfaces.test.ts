@@ -55,6 +55,12 @@ describe('interfaces figées par les fiches d’analyse', () => {
     ])
   })
 
+  test('les fiches v2 du corpus remplacent leur v1', () => {
+    const spec = frozenInterfaces().get('LEGIARTI000006302269')
+    expect(spec?.interface).toBe('EtalementIndemnisationDeces@v2')
+    expect(spec?.analysisFile).toBe('corpus/analyses/LEGIARTI000006302269.v2.md')
+  })
+
   test('refuse une fiche sans interface ou sans empreinte', () => {
     expect(parseAnalysis('# Article\n\n## Interface proposée\n\nÀ définir.')).toBeNull()
     expect(parseAnalysis(fiche.replace(/SHA-256.*\n/, ''))).toBeNull()

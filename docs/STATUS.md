@@ -35,6 +35,14 @@
   du tag 1.3.2, livre Catala) est liée depuis `corpus/CATALA.md`, join.txt, AGENTS.md §7, `/join` et `/taches`.
   Les fiches d'analyse doivent typer leurs interfaces en Catala.
 
+- 2026-11-27 — **Interfaces v2 déclarées en Catala** (b2175d8, PR #23 fusionnée) : une fiche
+  `<LEGIARTI>.vN.md` remplace la v1 (laissée intacte) ; une fiche v2 ou nouvelle fige l'interface par un
+  bloc de déclaration Catala, que `check-corpus-pr.ts` impose à la traduction (déclaration identique,
+  même version citée). Les 11 traductions N2 dont la fiche v1 décrivait des types en mots (CGI 4 A,
+  4 bis, 11, 12, 14, 33 quater, 36, 37, 38 quater, 39 B, 39 D) passent en v2 sans changer de règle ;
+  les 12 autres n'ont que des types scalaires et restent en v1. Les 14 traductions de la liste manuelle
+  n'ont pas de fiche. CodeRabbit : aucun commentaire.
+
 - 2026-11-27 — **Troisième lot de traduction** (PR #22, fusionnée) : CGI 38 quater, 39 AA, 39 AA quinquies,
   39 B, 39 D, en six minutes, promus en N2 (37 articles N2 au total). CodeRabbit, trois tours (8 fils) :
   citations trop loin des constantes (désormais contrôlé par `check-corpus-pr.ts`), cohérence du cumul et
