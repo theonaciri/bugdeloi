@@ -89,8 +89,10 @@ Si tu traites plusieurs articles dans une session :
   complexes à la fois (en utilisant des sous-agents si ton environnement le permet).
 - Tu peux ensuite regrouper jusqu’à 100 fiches homogènes dans une seule PR (sans mélanger
   traductions .catala_fr et fichiers hors .catala_fr dans la même PR).
-- Avant d’inclure une fiche d’analyse dans une PR, vérifie qu’un traducteur peut directement
-  en déduire les types d’entrée/sortie et le traitement de chaque alinéa.
+- Avant d’inclure une fiche d’analyse dans une PR, applique la méthode de corpus/README.md :
+  précise l’unité de calcul, l’ordre des décisions (et l’état antérieur pour les règles dans le
+  temps), fais le « test des deux cas aux mêmes entrées » et garde la doctrine BOFiP séparée de
+  la loi.
 - Dans la description de chaque PR, ajoute si pertinent un bref retour d’expérience : adéquation
   de la méthode de travail, qualité ou limites du rendu, et difficultés rencontrées.
 

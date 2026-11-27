@@ -16,11 +16,13 @@ Règle bundle : 1 tâche = 1 PR par défaut ; lots jusqu'à 100 articles homogè
 - Règle formalisée ou modifiée :
 - Notions non calculables modélisées en `appréciation_…` (si applicable) :
 
-## Vérifications locales
+## Vérifications locales (méthode : `corpus/README.md`)
 
 - [ ] `bun scripts/check-corpus-pr.ts` vert (en-têtes `LEGIARTI` et anti-doublon)
 - [ ] `clerk test` vert sur Catala 1.3.2
 - [ ] Texte officiel LEGI recopié verbatim, aucune constante sans source
+- [ ] **Test des deux cas aux mêmes entrées** vérifié sur les articles complexes (unité de calcul, ordre des décisions, règles dans le temps et état antérieur)
+- [ ] Séparation loi / doctrine (BOFiP) respectée ; questions d'interprétation ouvertes et fiches à relire avant traduction signalées ci-dessous
 
 ## Provenance déclarée
 
