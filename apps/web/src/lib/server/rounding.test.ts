@@ -51,6 +51,30 @@ describe('inventaire des arrondis', () => {
     expect(points[2]?.note).toBe('Article 1 : taux de 11 %.')
   })
 
+  test('le type décimal dépend du scope de la définition', () => {
+    const raw = [
+      '```catala',
+      "déclaration champ d'application Taux:",
+      '  entrée p contenu décimal',
+      '  résultat a contenu décimal',
+      '',
+      "déclaration champ d'application Montant:",
+      '  entrée m contenu argent',
+      '  entrée p contenu décimal',
+      '  résultat a contenu argent',
+      '',
+      "champ d'application Taux:",
+      '  définition a égal à p * 50%',
+      '',
+      "champ d'application Montant:",
+      '  définition a égal à m * p',
+      '```',
+    ].join('\n')
+    expect(scanRounding('y.catala_fr', raw).points.map((p) => [p.kind, p.lines])).toEqual([
+      ['implicite', [15]],
+    ])
+  })
+
   test('corpus : 38 quater est un choix écrit, 193 et 1657 sont fixés par le texte', () => {
     const files = corpusRounding()
     const quater = files.find((f) => f.file.endsWith('article_38-quater.catala_fr'))

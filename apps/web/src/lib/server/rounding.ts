@@ -53,33 +53,54 @@ function isComment(line: string): boolean {
 }
 
 /** Produit ou quotient d'un montant par un décimal (heuristique de ligne, sans typage). */
-function implicitOperation(line: string, decimals: Set<string>): boolean {
+function implicitOperation(line: string, isDecimal: (name: string) => boolean): boolean {
   if (/\bdécimal de\b/u.test(line)) return false
   if (PERCENT_RE.test(line)) return true
   for (const m of line.matchAll(/[*/]\s*\(?\s*([\p{L}_][\p{L}\p{N}_.]*)/gu)) {
-    const name = m[1]?.split('.').pop()
-    if (name && decimals.has(name)) return true
+    if (m[1] && isDecimal(m[1])) return true
   }
   return false
 }
 
+const SUBSCOPE_RE = /^\s+([\p{L}\p{N}_]+)\s+champ d'application\s+([\p{L}\p{N}_]+)\s*$/u
+
 export function scanRounding(file: string, raw: string): RoundingFile {
   const lines = raw.split('\n')
-  const decimals = new Set<string>()
+  /** Variables décimales et sous-scopes, par scope déclaré : un même nom peut changer de type d'un scope à l'autre. */
+  const decimals = new Map<string, Set<string>>()
+  const subscopes = new Map<string, Map<string, string>>()
   const testScopes = new Set<string>()
   let pendingTest = false
+  let declaring: string | null = null
   for (const line of lines) {
-    const decimal = DECIMAL_VAR_RE.exec(line)?.[1]
-    if (decimal) decimals.add(decimal)
     if (/^#\[test\]/.test(line)) pendingTest = true
     const decl = TEST_DECL_RE.exec(line)?.[1]
-    if (decl && pendingTest) testScopes.add(decl)
-    if (decl) pendingTest = false
+    if (decl) {
+      if (pendingTest) testScopes.add(decl)
+      pendingTest = false
+      declaring = decl
+      continue
+    }
+    if (/^\S/.test(line)) declaring = null
+    if (!declaring) continue
+    const decimal = DECIMAL_VAR_RE.exec(line)?.[1]
+    if (decimal) decimals.set(declaring, (decimals.get(declaring) ?? new Set()).add(decimal))
+    const sub = SUBSCOPE_RE.exec(line)
+    if (sub?.[1] && sub[2])
+      subscopes.set(declaring, (subscopes.get(declaring) ?? new Map()).set(sub[1], sub[2]))
+  }
+  /** `x` dans le scope courant, ou `sous_scope.x` dans le scope du sous-scope. */
+  function decimalIn(scope: string | null, name: string): boolean {
+    if (!scope) return false
+    const [head, field] = name.split('.', 2)
+    if (head && field) return decimalIn(subscopes.get(scope)?.get(head) ?? null, field)
+    return decimals.get(scope)?.has(name) ?? false
   }
 
   const points: RoundingPoint[] = []
   let inCode = false
   let inTest = false
+  let currentScope: string | null = null
   let article: RoundingPoint['article'] = null
   let definition: string | null = null
   /** Ligne de la définition en cours : deux définitions homonymes ne fusionnent pas. */
@@ -106,6 +127,7 @@ export function scanRounding(file: string, raw: string): RoundingFile {
     const scope = SCOPE_RE.exec(line)?.[1]
     if (scope) {
       inTest = testScopes.has(scope)
+      currentScope = scope
       definition = null
       note = null
       comments = []
@@ -131,8 +153,9 @@ export function scanRounding(file: string, raw: string): RoundingFile {
     comments = []
     const explicit = EXPLICIT_RE.test(line)
     // Un résultat décimal (ratio, taux) n'est pas un montant : Catala ne l'arrondit pas au centime.
-    const decimalResult = definition !== null && decimals.has(definition.split('.').pop() ?? '')
-    if (!explicit && (decimalResult || !implicitOperation(line, decimals))) return
+    const isDecimal = (name: string) => decimalIn(currentScope, name)
+    const decimalResult = definition !== null && isDecimal(definition)
+    if (!explicit && (decimalResult || !implicitOperation(line, isDecimal))) return
     const choisi =
       (note !== null && /TODO juridique/i.test(note) && /arrondi/i.test(note)) || (explicit && scopeChoice)
     const kind: RoundingKind = choisi ? 'choisi' : explicit ? 'prescrit' : 'implicite'
