@@ -1,0 +1,55 @@
+#### Article 33 bis|LEGIARTI000006302240
+
+Sous réserve des dispositions de l'article 151 quater, les loyers et prestations de toute nature qui constituent le prix d'un bail à construction passé dans les conditions prévues par les articles L 251-1 à L 251-8 du code de la construction et de l'habitation, ont le caractère de revenus fonciers au sens de l'article 14.
+
+Interface `PrixBailConstructionFoncier@v1`. Version applicable à compter du 2005-12-31, sans date de fin connue.
+
+L’appelant indique si le bail à construction respecte les articles L 251-1 à L 251-8 du code de la construction et de l’habitation et si la réserve de l’article 151 quater s’applique. La sortie est le prix du bail, loyers et prestations compris, classé en revenus fonciers ; elle est absente quand le bail ne respecte pas ces articles ou quand la réserve s’applique.
+
+```catala
+déclaration champ d'application PrixBailConstructionFoncier:
+  entrée date_d_application contenu date
+  entrée bail_conforme_aux_renvois_cch contenu booléen
+  entrée réserve_151_quater contenu booléen
+  entrée prix_constitué_de_loyers_et_prestations contenu argent
+  résultat prix_classé_en_revenus_fonciers contenu optionnel de argent
+
+champ d'application PrixBailConstructionFoncier:
+  # LEGIARTI000006302240, début de validité de la version.
+  assertion date_d_application >= |2005-12-31|
+  # CGI, article 33 bis : « Sous réserve des dispositions de l'article 151 quater », le prix d'un bail
+  # passé dans les conditions des articles L 251-1 à L 251-8 du CCH a le caractère de revenus fonciers.
+  définition prix_classé_en_revenus_fonciers égal à
+    si bail_conforme_aux_renvois_cch et non réserve_151_quater
+    alors Présent contenu prix_constitué_de_loyers_et_prestations
+    sinon Absent
+
+#[test]
+déclaration champ d'application TestPrixBailConstructionFoncier:
+  bail_conforme champ d'application PrixBailConstructionFoncier
+  bail_non_conforme champ d'application PrixBailConstructionFoncier
+  réserve_151_quater champ d'application PrixBailConstructionFoncier
+
+champ d'application TestPrixBailConstructionFoncier:
+  # LEGIARTI000006302240, date de début de la version : le cas s'applique dès le premier jour.
+  définition bail_conforme.date_d_application égal à |2005-12-31|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; bail conforme, sans réserve, prix de 4 800 € classé en revenus fonciers.
+  définition bail_conforme.bail_conforme_aux_renvois_cch égal à vrai
+  définition bail_conforme.réserve_151_quater égal à faux
+  définition bail_conforme.prix_constitué_de_loyers_et_prestations égal à 4 800 €
+  assertion bail_conforme.prix_classé_en_revenus_fonciers = Présent contenu 4 800 €
+  # LEGIARTI000006302240, date de début de la version : le cas s'applique dès le premier jour.
+  définition bail_non_conforme.date_d_application égal à |2005-12-31|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; bail hors des articles L 251-1 à L 251-8 du CCH.
+  définition bail_non_conforme.bail_conforme_aux_renvois_cch égal à faux
+  définition bail_non_conforme.réserve_151_quater égal à faux
+  définition bail_non_conforme.prix_constitué_de_loyers_et_prestations égal à 4 800 €
+  assertion bail_non_conforme.prix_classé_en_revenus_fonciers = Absent
+  # LEGIARTI000006302240, date de début de la version : le cas s'applique dès le premier jour.
+  définition réserve_151_quater.date_d_application égal à |2005-12-31|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; bail conforme, réserve de l'article 151 quater applicable.
+  définition réserve_151_quater.bail_conforme_aux_renvois_cch égal à vrai
+  définition réserve_151_quater.réserve_151_quater égal à vrai
+  définition réserve_151_quater.prix_constitué_de_loyers_et_prestations égal à 4 800 €
+  assertion réserve_151_quater.prix_classé_en_revenus_fonciers = Absent
+```
