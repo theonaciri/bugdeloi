@@ -37,10 +37,11 @@ champ d'application TestPeriodeBeneficeImposable36:
   # LEGIARTI000006302251, date de début de la version : le cas s'applique dès le premier jour.
   définition année_civile.date_d_application égal à |1979-07-01|
   # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; bilan du 1er janvier au 31 décembre 2025, bénéfice de l'année 2025 retenu.
+  # Les deux montants diffèrent pour que l'assertion montre quelle entrée la règle lit.
   définition année_civile.année_d_imposition égal à 2025
   définition année_civile.dernier_bilan égal à PeriodeBeneficeImposable36Bilan {
     -- période: Période.Période { -- début: |2025-01-01| -- fin: |2025-12-31| }
-    -- résultat_du_bilan: 18 000 €
+    -- résultat_du_bilan: 17 500 €
   }
   définition année_civile.bénéfice_annuel égal à 18 000 €
   assertion année_civile.bénéfice_retenu = 18 000 €
