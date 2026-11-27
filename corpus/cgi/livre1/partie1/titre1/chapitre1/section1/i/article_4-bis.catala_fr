@@ -2,7 +2,7 @@
 
 Sont également passibles de l'impôt sur le revenu : 1° (Abrogé) ; 2° Les personnes de nationalité française ou étrangère, ayant ou non leur domicile fiscal en France, qui recueillent des bénéfices ou revenus dont l'imposition est attribuée à la France par une convention internationale relative aux doubles impositions.
 
-Interface `AssujettissementConventionIr@v1`. Version applicable à compter du 1979-07-01, sans date de fin connue.
+Interface `AssujettissementConventionIr@v2`. Version applicable à compter du 1979-07-01, sans date de fin connue.
 
 Le 1° est abrogé et n’a pas de code. Pour le 2°, l’appelant indique, pour chaque bénéfice ou revenu, si une convention internationale relative aux doubles impositions en attribue l’imposition à la France. La nationalité et le domicile fiscal ne conditionnent pas la règle.
 

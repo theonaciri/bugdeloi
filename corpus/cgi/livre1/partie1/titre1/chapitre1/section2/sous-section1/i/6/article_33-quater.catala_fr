@@ -2,7 +2,7 @@
 
 Pour la détermination du revenu foncier imposable des personnes qui sont redevables de la taxe sur la valeur ajoutée pour les loyers de leurs immeubles, les recettes brutes ainsi que les dépenses déductibles relatives aux immeubles sont retenues pour leur montant hors taxe sur la valeur ajoutée.
 
-Interface `MontantsFonciersHorsTva@v1`. Version applicable à compter du 1991-06-24, sans date de fin connue.
+Interface `MontantsFonciersHorsTva@v2`. Version applicable à compter du 1991-06-24, sans date de fin connue.
 
 L’appelant indique si la personne est redevable de la TVA pour les loyers de ses immeubles et fournit les recettes brutes et les dépenses déductibles hors TVA ; la qualification des dépenses et le calcul de la TVA restent en amont. La sortie est le couple des montants retenus ; elle est absente pour une personne qui n’est pas redevable de la TVA sur ses loyers, que l’article ne vise pas.
 

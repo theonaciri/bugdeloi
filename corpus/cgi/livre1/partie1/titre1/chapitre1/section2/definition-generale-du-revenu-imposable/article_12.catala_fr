@@ -2,7 +2,7 @@
 
 L'impôt est dû chaque année à raison des bénéfices ou revenus que le contribuable réalise ou dont il dispose au cours de la même année.
 
-Interface `RattachementAnnuelRevenusIr@v1`. Version applicable à compter du 1979-07-01, sans date de fin connue.
+Interface `RattachementAnnuelRevenusIr@v2`. Version applicable à compter du 1979-07-01, sans date de fin connue.
 
 L’appelant fournit les bénéfices ou revenus avec l’année au cours de laquelle ils ont été réalisés ou mis à la disposition du contribuable, une seule fois chacun. Le fait générateur est déterminé en amont.
 
