@@ -1,0 +1,57 @@
+#### Article 33 quater|LEGIARTI000006302245
+
+Pour la détermination du revenu foncier imposable des personnes qui sont redevables de la taxe sur la valeur ajoutée pour les loyers de leurs immeubles, les recettes brutes ainsi que les dépenses déductibles relatives aux immeubles sont retenues pour leur montant hors taxe sur la valeur ajoutée.
+
+Interface `MontantsFonciersHorsTva@v1`. Version applicable à compter du 1991-06-24, sans date de fin connue.
+
+L’appelant indique si la personne est redevable de la TVA pour les loyers de ses immeubles et fournit les recettes brutes et les dépenses déductibles hors TVA ; la qualification des dépenses et le calcul de la TVA restent en amont. La sortie est le couple des montants retenus ; elle est absente pour une personne qui n’est pas redevable de la TVA sur ses loyers, que l’article ne vise pas.
+
+```catala
+déclaration structure MontantsFonciersHorsTvaMontants:
+  donnée recettes_brutes contenu argent
+  donnée dépenses_déductibles contenu argent
+
+déclaration champ d'application MontantsFonciersHorsTva:
+  entrée date_d_application contenu date
+  entrée redevable_tva_sur_loyers contenu booléen
+  entrée recettes_brutes_ht contenu argent
+  entrée dépenses_déductibles_ht contenu argent
+  résultat montants_retenus_selon_33_quater contenu optionnel de MontantsFonciersHorsTvaMontants
+
+champ d'application MontantsFonciersHorsTva:
+  # LEGIARTI000006302245, début de validité de la version.
+  assertion date_d_application >= |1991-06-24|
+  # CGI, article 33 quater : pour les personnes redevables de la TVA sur leurs loyers, recettes brutes
+  # et dépenses déductibles sont retenues pour leur montant hors taxe sur la valeur ajoutée.
+  définition montants_retenus_selon_33_quater égal à
+    si redevable_tva_sur_loyers
+    alors Présent contenu MontantsFonciersHorsTvaMontants {
+      -- recettes_brutes: recettes_brutes_ht
+      -- dépenses_déductibles: dépenses_déductibles_ht
+    }
+    sinon Absent
+
+#[test]
+déclaration champ d'application TestMontantsFonciersHorsTva:
+  redevable champ d'application MontantsFonciersHorsTva
+  non_redevable champ d'application MontantsFonciersHorsTva
+
+champ d'application TestMontantsFonciersHorsTva:
+  # LEGIARTI000006302245, date de début de la version : le cas s'applique dès le premier jour.
+  définition redevable.date_d_application égal à |1991-06-24|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; les montants hors TVA sont repris tels quels.
+  définition redevable.redevable_tva_sur_loyers égal à vrai
+  définition redevable.recettes_brutes_ht égal à 30 000 €
+  définition redevable.dépenses_déductibles_ht égal à 8 000 €
+  assertion redevable.montants_retenus_selon_33_quater = Présent contenu MontantsFonciersHorsTvaMontants {
+    -- recettes_brutes: 30 000 €
+    -- dépenses_déductibles: 8 000 €
+  }
+  # LEGIARTI000006302245, date de début de la version : le cas s'applique dès le premier jour.
+  définition non_redevable.date_d_application égal à |1991-06-24|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; personne non redevable de la TVA sur ses loyers.
+  définition non_redevable.redevable_tva_sur_loyers égal à faux
+  définition non_redevable.recettes_brutes_ht égal à 30 000 €
+  définition non_redevable.dépenses_déductibles_ht égal à 8 000 €
+  assertion non_redevable.montants_retenus_selon_33_quater = Absent
+```

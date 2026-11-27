@@ -1,0 +1,67 @@
+#### Article 37|LEGIARTI000006302252
+
+Si l'exercice clos au cours de l'année de l'imposition s'étend sur une période de plus ou de moins de douze mois, l'impôt est néanmoins établi d'après les résultats dudit exercice. Si aucun bilan n'est dressé au cours d'une année quelconque, l'impôt dû au titre de la même année est établi sur les bénéfices de la période écoulée depuis la fin de la dernière période imposée ou, dans le cas d'entreprise nouvelle, depuis le commencement des opérations jusqu'au 31 décembre de l'année considérée. Ces mêmes bénéfices viennent ensuite en déduction des résultats du bilan dans lesquels ils sont compris. Lorsqu'il est dressé des bilans successifs au cours d'une même année, les résultats en sont totalisés pour l'assiette de l'impôt dû au titre de ladite année.
+
+Interface `ResultatExercicesAnnee37@v1`. Version applicable à compter du 1950-04-30, sans date de fin connue.
+
+L’appelant fournit les résultats des bilans clos dans l’année d’imposition, quelle que soit la durée de leurs exercices, le bénéfice de la période écoulée jusqu’au 31 décembre quand aucun bilan n’est dressé, et les bénéfices déjà imposés au titre d’années sans bilan qui sont compris dans ces bilans. La sortie est le résultat retenu pour l’assiette de l’année ; la découpe des bénéfices par période reste en amont.
+
+```catala
+déclaration champ d'application ResultatExercicesAnnee37:
+  entrée date_d_application contenu date
+  entrée bilans_clos_dans_l_année contenu liste de argent
+  entrée bénéfice_jusqu_au_31_décembre_sans_bilan contenu argent
+  entrée bénéfices_antérieurs_déjà_imposés_inclus_dans_les_bilans contenu argent
+  résultat résultat_retenu contenu argent
+
+champ d'application ResultatExercicesAnnee37:
+  # LEGIARTI000006302252, début de validité de la version.
+  assertion date_d_application >= |1950-04-30|
+  # CGI, article 37, deuxième phrase : sans bilan dans l'année, bénéfices de la période écoulée depuis la
+  # fin de la dernière période imposée, ou depuis le commencement des opérations, jusqu'au 31 décembre.
+  # CGI, article 37, première, troisième et quatrième phrases : résultats des bilans de l'année, quelle que
+  # soit la durée de l'exercice, totalisés, sous déduction des bénéfices déjà imposés qu'ils comprennent.
+  définition résultat_retenu égal à
+    si nombre de bilans_clos_dans_l_année = 0
+    alors bénéfice_jusqu_au_31_décembre_sans_bilan
+    sinon
+      (Argent.somme de bilans_clos_dans_l_année)
+      - bénéfices_antérieurs_déjà_imposés_inclus_dans_les_bilans
+
+#[test]
+déclaration champ d'application TestResultatExercicesAnnee37:
+  exercice_unique champ d'application ResultatExercicesAnnee37
+  aucun_bilan champ d'application ResultatExercicesAnnee37
+  bilans_successifs champ d'application ResultatExercicesAnnee37
+  déduction_des_bénéfices_imposés champ d'application ResultatExercicesAnnee37
+
+champ d'application TestResultatExercicesAnnee37:
+  # LEGIARTI000006302252, date de début de la version : le cas s'applique dès le premier jour.
+  définition exercice_unique.date_d_application égal à |1950-04-30|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; un exercice de quinze mois clos dans l'année, son résultat de 25 000 € est retenu.
+  définition exercice_unique.bilans_clos_dans_l_année égal à [25 000 €]
+  définition exercice_unique.bénéfice_jusqu_au_31_décembre_sans_bilan égal à 0 €
+  définition exercice_unique.bénéfices_antérieurs_déjà_imposés_inclus_dans_les_bilans égal à 0 €
+  assertion exercice_unique.résultat_retenu = 25 000 €
+  # LEGIARTI000006302252, date de début de la version : le cas s'applique dès le premier jour.
+  définition aucun_bilan.date_d_application égal à |1950-04-30|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; aucun bilan dans l'année, bénéfice de 9 000 € jusqu'au 31 décembre.
+  définition aucun_bilan.bilans_clos_dans_l_année égal à []
+  définition aucun_bilan.bénéfice_jusqu_au_31_décembre_sans_bilan égal à 9 000 €
+  définition aucun_bilan.bénéfices_antérieurs_déjà_imposés_inclus_dans_les_bilans égal à 0 €
+  assertion aucun_bilan.résultat_retenu = 9 000 €
+  # LEGIARTI000006302252, date de début de la version : le cas s'applique dès le premier jour.
+  définition bilans_successifs.date_d_application égal à |1950-04-30|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; deux bilans dans l'année, 12 000 € + 7 000 € = 19 000 €.
+  définition bilans_successifs.bilans_clos_dans_l_année égal à [12 000 €; 7 000 €]
+  définition bilans_successifs.bénéfice_jusqu_au_31_décembre_sans_bilan égal à 0 €
+  définition bilans_successifs.bénéfices_antérieurs_déjà_imposés_inclus_dans_les_bilans égal à 0 €
+  assertion bilans_successifs.résultat_retenu = 19 000 €
+  # LEGIARTI000006302252, date de début de la version : le cas s'applique dès le premier jour.
+  définition déduction_des_bénéfices_imposés.date_d_application égal à |1950-04-30|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; bilan de 30 000 € comprenant 9 000 € déjà imposés l'année précédente, 30 000 € − 9 000 € = 21 000 €.
+  définition déduction_des_bénéfices_imposés.bilans_clos_dans_l_année égal à [30 000 €]
+  définition déduction_des_bénéfices_imposés.bénéfice_jusqu_au_31_décembre_sans_bilan égal à 0 €
+  définition déduction_des_bénéfices_imposés.bénéfices_antérieurs_déjà_imposés_inclus_dans_les_bilans égal à 9 000 €
+  assertion déduction_des_bénéfices_imposés.résultat_retenu = 21 000 €
+```

@@ -1,0 +1,58 @@
+#### Article 36|LEGIARTI000006302251
+
+Sont compris dans le total des revenus servant de base à l'impôt sur le revenu les bénéfices obtenus pendant l'année de l'imposition ou dans la période de douze mois dont les résultats ont servi à l'établissement du dernier bilan, lorsque cette période ne coincide pas avec l'année civile.
+
+Interface `PeriodeBeneficeImposable36@v1`. Version applicable à compter du 1979-07-01, sans date de fin connue.
+
+L’appelant fournit l’année d’imposition, la période de douze mois du dernier bilan avec son résultat, et le bénéfice obtenu pendant l’année civile d’imposition. La sortie est le bénéfice compris dans la base de l’impôt : celui de l’année d’imposition quand la période du dernier bilan coïncide avec cette année civile, le résultat du dernier bilan sinon. Un exercice de plus ou de moins de douze mois relève de l’article 37.
+
+```catala
+déclaration structure PeriodeBeneficeImposable36Bilan:
+  donnée période contenu Période.Période
+  donnée résultat_du_bilan contenu argent
+
+déclaration champ d'application PeriodeBeneficeImposable36:
+  entrée date_d_application contenu date
+  entrée année_d_imposition contenu entier
+  entrée dernier_bilan contenu PeriodeBeneficeImposable36Bilan
+  entrée bénéfice_annuel contenu argent
+  résultat bénéfice_retenu contenu argent
+
+champ d'application PeriodeBeneficeImposable36:
+  # LEGIARTI000006302251, début de validité de la version.
+  assertion date_d_application >= |1979-07-01|
+  # CGI, article 36 : bénéfices de l'année de l'imposition, ou de la période de douze mois du dernier
+  # bilan « lorsque cette période ne coincide pas avec l'année civile ».
+  définition bénéfice_retenu égal à
+    si dernier_bilan.période = Période.depuis_année de année_d_imposition
+    alors bénéfice_annuel
+    sinon dernier_bilan.résultat_du_bilan
+
+#[test]
+déclaration champ d'application TestPeriodeBeneficeImposable36:
+  année_civile champ d'application PeriodeBeneficeImposable36
+  exercice_décalé champ d'application PeriodeBeneficeImposable36
+
+champ d'application TestPeriodeBeneficeImposable36:
+  # LEGIARTI000006302251, date de début de la version : le cas s'applique dès le premier jour.
+  définition année_civile.date_d_application égal à |1979-07-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; bilan du 1er janvier au 31 décembre 2025, bénéfice de l'année 2025 retenu.
+  # Les deux montants diffèrent pour que l'assertion montre quelle entrée la règle lit.
+  définition année_civile.année_d_imposition égal à 2025
+  définition année_civile.dernier_bilan égal à PeriodeBeneficeImposable36Bilan {
+    -- période: Période.Période { -- début: |2025-01-01| -- fin: |2025-12-31| }
+    -- résultat_du_bilan: 17 500 €
+  }
+  définition année_civile.bénéfice_annuel égal à 18 000 €
+  assertion année_civile.bénéfice_retenu = 18 000 €
+  # LEGIARTI000006302251, date de début de la version : le cas s'applique dès le premier jour.
+  définition exercice_décalé.date_d_application égal à |1979-07-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; bilan du 1er juillet 2024 au 30 juin 2025, son résultat de 21 000 € est retenu.
+  définition exercice_décalé.année_d_imposition égal à 2025
+  définition exercice_décalé.dernier_bilan égal à PeriodeBeneficeImposable36Bilan {
+    -- période: Période.Période { -- début: |2024-07-01| -- fin: |2025-06-30| }
+    -- résultat_du_bilan: 21 000 €
+  }
+  définition exercice_décalé.bénéfice_annuel égal à 19 500 €
+  assertion exercice_décalé.bénéfice_retenu = 21 000 €
+```
