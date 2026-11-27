@@ -1,0 +1,238 @@
+#### Article 38 quater|LEGIARTI000006302269
+
+Par dérogation aux dispositions de l'article 38, lorsqu'un contrat d'assurance sur la vie a été souscrit auprès d'une compagnie d'assurances par une entreprise sur la tête d'un dirigeant ou d'une personne jouant un rôle déterminant dans le fonctionnement de l'exploitation, le profit qui résulte de l'indemnisation du préjudice économique subi par l'entreprise consécutivement au décès peut être réparti par parts égales sur l'année de sa réalisation et sur les quatre années suivantes. Dans ce cas, l'entreprise échelonne, par parts égales sur les mêmes années, la déduction du montant global des primes qu'elle a acquittées en exécution de ces contrats et qui n'ont pas été précédemment déduites des résultats imposables de l'entreprise. Les sommes dont l'imposition a été différée en application de l'alinéa précédent sont rapportées au bénéfice imposable de l'exercice de la cession ou de la cessation de l'entreprise.
+
+Interface `EtalementIndemnisationDeces@v1`. Version applicable à compter du 2005-01-01, sans date de fin connue.
+
+L’appelant qualifie le contrat et l’indemnité (contrat d’assurance sur la vie souscrit par l’entreprise sur la tête de l’assuré, profit tiré de l’indemnisation du préjudice économique consécutif au décès) et apprécie le rôle de l’assuré : `appréciation_rôle_déterminant` vaut vrai pour un dirigeant comme pour une personne qui joue un rôle déterminant dans l’exploitation. Il indique si l’entreprise opte pour l’étalement et fournit l’année de réalisation du profit, le profit, les primes non encore déduites et, s’il y a lieu, l’exercice de la cession ou de la cessation (identifié par son année) avec le cumul des parts du profit déjà imposées avant lui.
+
+L’échéancier ordinaire donne, année par année, la part du profit imposable et la part des primes déductibles. Il est vide quand l’étalement ne s’applique pas : l’article 38 régit alors le profit. À la cession ou à la cessation, l’échéancier s’arrête avant l’exercice concerné, et le profit dont l’imposition a été différée est rapporté à cet exercice.
+
+```catala
+déclaration structure EtalementIndemnisationDecesTranche:
+  donnée année contenu entier
+  donnée profit_imposable contenu argent
+  donnée primes_déductibles contenu argent
+
+déclaration structure EtalementIndemnisationDecesCession:
+  donnée exercice contenu entier
+  donnée parts_du_profit_déjà_imposées contenu argent
+
+déclaration structure EtalementIndemnisationDecesRapport:
+  donnée exercice contenu entier
+  donnée montant contenu argent
+
+déclaration champ d'application EtalementIndemnisationDeces:
+  entrée date_d_application contenu date
+  entrée appréciation_rôle_déterminant contenu booléen
+  entrée contrat_et_indemnité_visés contenu booléen
+  entrée option_d_étalement contenu booléen
+  entrée année_de_réalisation contenu entier
+  entrée profit contenu argent
+  entrée primes_non_déduites contenu argent
+  entrée données_de_cession_ou_cessation contenu optionnel de EtalementIndemnisationDecesCession
+  interne étalement_applicable contenu booléen
+  interne part_du_profit contenu argent
+  interne part_des_primes contenu argent
+  interne tranches contenu liste de EtalementIndemnisationDecesTranche
+  résultat échéancier_ordinaire contenu liste de EtalementIndemnisationDecesTranche
+  résultat rapport_à_l_exercice_de_cession_ou_cessation contenu optionnel de EtalementIndemnisationDecesRapport
+
+champ d'application EtalementIndemnisationDeces:
+  # LEGIARTI000006302269, début de validité de la version.
+  assertion date_d_application >= |2005-01-01|
+  # Contrainte de l'interface : le cumul déjà imposé est compris entre zéro et le profit étalé.
+  assertion (selon données_de_cession_ou_cessation sous forme
+    -- Présent contenu cession :
+      cession.parts_du_profit_déjà_imposées >= 0 € et cession.parts_du_profit_déjà_imposées <= profit
+    -- Absent : vrai)
+  # Cohérence des entrées : quand l'étalement s'applique, le cumul fourni est celui des parts de
+  # l'échéancier antérieures à l'exercice de la cession ; le profit n'est ainsi compté qu'une fois.
+  assertion (selon données_de_cession_ou_cessation sous forme
+    -- Présent contenu cession :
+      non étalement_applicable
+      ou cession.parts_du_profit_déjà_imposées
+        = (Argent.somme de (transforme chaque t parmi échéancier_ordinaire en t.profit_imposable))
+    -- Absent : vrai)
+
+  # CGI, article 38 quater, premier alinéa, première phrase : contrat sur la tête d'un dirigeant ou d'une
+  # personne au rôle déterminant, profit de l'indemnisation, répartition au choix de l'entreprise (« peut »).
+  définition étalement_applicable égal à
+    contrat_et_indemnité_visés et appréciation_rôle_déterminant et option_d_étalement
+
+  # TODO juridique : le texte ne fixe pas d'arrondi. Les quatre premières parts sont arrondies au centime
+  # inférieur et la cinquième reçoit le reliquat (0 à 4 centimes de plus) : les cinq parts font exactement
+  # le montant étalé et aucune n'est négative (50 000,03 € : quatre parts de 10 000,00 € et une de
+  # 10 000,03 € ; 0,03 € : quatre parts nulles et une de 0,03 €).
+  # CGI, article 38 quater, premier alinéa, première phrase : profit réparti en cinq parts égales, calculé
+  # en centimes (× 100), tronqué, puis ramené en euros (× 0,01).
+  définition part_du_profit égal à (Argent.arrondi_par_défaut de ((profit * 100,0) / 5,0)) * 0,01
+  # CGI, article 38 quater, premier alinéa, seconde phrase : primes déduites en cinq parts égales, même
+  # calcul en centimes (× 100, puis × 0,01).
+  définition part_des_primes égal à (Argent.arrondi_par_défaut de ((primes_non_déduites * 100,0) / 5,0)) * 0,01
+  définition tranches égal à
+    # CGI, article 38 quater, premier alinéa, première phrase : l'année de réalisation (rang 0) et les
+    # quatre années suivantes ; la dernière (rang 4) reçoit le reliquat d'arrondi des quatre premières.
+    transforme chaque rang parmi [0; 1; 2; 3; 4] en
+      EtalementIndemnisationDecesTranche {
+        -- année: année_de_réalisation + rang
+        -- profit_imposable:
+          # CGI, article 38 quater, premier alinéa : quatre parts égales avant la dernière.
+          si rang = 4 alors profit - part_du_profit * 4,0 sinon part_du_profit
+        -- primes_déductibles:
+          # CGI, article 38 quater, premier alinéa : quatre parts égales avant la dernière.
+          si rang = 4 alors primes_non_déduites - part_des_primes * 4,0 sinon part_des_primes
+      }
+
+  # CGI, article 38 quater, second alinéa : les sommes rapportées à l'exercice de la cession ou de la
+  # cessation sortent de l'échéancier ordinaire.
+  # TODO juridique : le second alinéa ne vise que les sommes dont l'imposition a été différée ; le sort des
+  # parts de primes non encore déduites à la cession ou à la cessation n'est pas réglé par l'article.
+  définition échéancier_ordinaire égal à
+    si non étalement_applicable alors []
+    sinon
+      selon données_de_cession_ou_cessation sous forme
+      -- Présent contenu cession : liste de t parmi tranches tel que t.année < cession.exercice
+      -- Absent : tranches
+
+  # CGI, article 38 quater, second alinéa : les sommes dont l'imposition a été différée sont rapportées au
+  # bénéfice imposable de l'exercice de la cession ou de la cessation.
+  définition rapport_à_l_exercice_de_cession_ou_cessation égal à
+    si non étalement_applicable alors Absent
+    sinon
+      selon données_de_cession_ou_cessation sous forme
+      -- Présent contenu cession :
+        Présent contenu EtalementIndemnisationDecesRapport {
+          -- exercice: cession.exercice
+          -- montant: profit - cession.parts_du_profit_déjà_imposées
+        }
+      -- Absent : Absent
+
+#[test]
+déclaration champ d'application TestEtalementIndemnisationDeces:
+  étalement champ d'application EtalementIndemnisationDeces
+  cession champ d'application EtalementIndemnisationDeces
+  reliquat_d_arrondi champ d'application EtalementIndemnisationDeces
+  profit_minime champ d'application EtalementIndemnisationDeces
+  sans_option champ d'application EtalementIndemnisationDeces
+  contrat_non_visé champ d'application EtalementIndemnisationDeces
+  rôle_non_déterminant champ d'application EtalementIndemnisationDeces
+
+champ d'application TestEtalementIndemnisationDeces:
+  # LEGIARTI000006302269, date de début de la version : le cas s'applique dès le premier jour.
+  définition étalement.date_d_application égal à |2005-01-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; 50 000 € de profit et 10 000 € de primes en 2020, soit 10 000 € et 2 000 € par an de 2020 à 2024.
+  définition étalement.appréciation_rôle_déterminant égal à vrai
+  définition étalement.contrat_et_indemnité_visés égal à vrai
+  définition étalement.option_d_étalement égal à vrai
+  définition étalement.année_de_réalisation égal à 2020
+  définition étalement.profit égal à 50 000 €
+  définition étalement.primes_non_déduites égal à 10 000 €
+  définition étalement.données_de_cession_ou_cessation égal à Absent
+  assertion nombre de étalement.échéancier_ordinaire = 5
+  assertion (Argent.somme de (transforme chaque t parmi étalement.échéancier_ordinaire en t.profit_imposable)) = 50 000 €
+  assertion (Argent.somme de (transforme chaque t parmi étalement.échéancier_ordinaire en t.primes_déductibles)) = 10 000 €
+  assertion existe t parmi étalement.échéancier_ordinaire tel que
+    t.année = 2024 et t.profit_imposable = 10 000 € et t.primes_déductibles = 2 000 €
+  assertion étalement.rapport_à_l_exercice_de_cession_ou_cessation = Absent
+  # LEGIARTI000006302269, date de début de la version : le cas s'applique dès le premier jour.
+  définition cession.date_d_application égal à |2005-01-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; cession en 2022 après deux parts de 10 000 € imposées, 50 000 € − 20 000 € = 30 000 € rapportés.
+  définition cession.appréciation_rôle_déterminant égal à vrai
+  définition cession.contrat_et_indemnité_visés égal à vrai
+  définition cession.option_d_étalement égal à vrai
+  définition cession.année_de_réalisation égal à 2020
+  définition cession.profit égal à 50 000 €
+  définition cession.primes_non_déduites égal à 10 000 €
+  définition cession.données_de_cession_ou_cessation égal à Présent contenu EtalementIndemnisationDecesCession {
+    -- exercice: 2022
+    -- parts_du_profit_déjà_imposées: 20 000 €
+  }
+  assertion nombre de cession.échéancier_ordinaire = 2
+  assertion (Argent.somme de (transforme chaque t parmi cession.échéancier_ordinaire en t.profit_imposable)) = 20 000 €
+  assertion cession.rapport_à_l_exercice_de_cession_ou_cessation = Présent contenu EtalementIndemnisationDecesRapport {
+    -- exercice: 2022
+    -- montant: 30 000 €
+  }
+  # LEGIARTI000006302269, date de début de la version : le cas s'applique dès le premier jour.
+  définition reliquat_d_arrondi.date_d_application égal à |2005-01-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; 50 000,03 € donnent quatre parts de 10 000,00 € et une de 10 000,03 € ; 0,04 € de primes, quatre parts nulles et une de 0,04 € ; cessation en 2025 après les cinq parts, rien à rapporter.
+  définition reliquat_d_arrondi.appréciation_rôle_déterminant égal à vrai
+  définition reliquat_d_arrondi.contrat_et_indemnité_visés égal à vrai
+  définition reliquat_d_arrondi.option_d_étalement égal à vrai
+  définition reliquat_d_arrondi.année_de_réalisation égal à 2020
+  définition reliquat_d_arrondi.profit égal à 50 000,03 €
+  définition reliquat_d_arrondi.primes_non_déduites égal à 0,04 €
+  définition reliquat_d_arrondi.données_de_cession_ou_cessation égal à Présent contenu EtalementIndemnisationDecesCession {
+    -- exercice: 2025
+    -- parts_du_profit_déjà_imposées: 50 000,03 €
+  }
+  assertion nombre de reliquat_d_arrondi.échéancier_ordinaire = 5
+  assertion existe t parmi reliquat_d_arrondi.échéancier_ordinaire tel que
+    t.année = 2024 et t.profit_imposable = 10 000,03 € et t.primes_déductibles = 0,04 €
+  assertion existe t parmi reliquat_d_arrondi.échéancier_ordinaire tel que
+    t.année = 2020 et t.profit_imposable = 10 000,00 € et t.primes_déductibles = 0,00 €
+  assertion (Argent.somme de (transforme chaque t parmi reliquat_d_arrondi.échéancier_ordinaire en t.primes_déductibles)) = 0,04 €
+  assertion reliquat_d_arrondi.rapport_à_l_exercice_de_cession_ou_cessation = Présent contenu EtalementIndemnisationDecesRapport {
+    -- exercice: 2025
+    -- montant: 0 €
+  }
+  # LEGIARTI000006302269, date de début de la version : le cas s'applique dès le premier jour.
+  définition profit_minime.date_d_application égal à |2005-01-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; 0,03 € de profit en 2020, quatre parts nulles ; cessation en 2024, les 0,03 € de la dernière part sont rapportés.
+  définition profit_minime.appréciation_rôle_déterminant égal à vrai
+  définition profit_minime.contrat_et_indemnité_visés égal à vrai
+  définition profit_minime.option_d_étalement égal à vrai
+  définition profit_minime.année_de_réalisation égal à 2020
+  définition profit_minime.profit égal à 0,03 €
+  définition profit_minime.primes_non_déduites égal à 0 €
+  définition profit_minime.données_de_cession_ou_cessation égal à Présent contenu EtalementIndemnisationDecesCession {
+    -- exercice: 2024
+    -- parts_du_profit_déjà_imposées: 0 €
+  }
+  assertion nombre de profit_minime.échéancier_ordinaire = 4
+  assertion non (existe t parmi profit_minime.échéancier_ordinaire tel que t.profit_imposable < 0 €)
+  assertion profit_minime.rapport_à_l_exercice_de_cession_ou_cessation = Présent contenu EtalementIndemnisationDecesRapport {
+    -- exercice: 2024
+    -- montant: 0,03 €
+  }
+  # LEGIARTI000006302269, date de début de la version : le cas s'applique dès le premier jour.
+  définition sans_option.date_d_application égal à |2005-01-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; l'entreprise n'opte pas pour l'étalement.
+  définition sans_option.appréciation_rôle_déterminant égal à vrai
+  définition sans_option.contrat_et_indemnité_visés égal à vrai
+  définition sans_option.option_d_étalement égal à faux
+  définition sans_option.année_de_réalisation égal à 2020
+  définition sans_option.profit égal à 50 000 €
+  définition sans_option.primes_non_déduites égal à 10 000 €
+  définition sans_option.données_de_cession_ou_cessation égal à Absent
+  assertion nombre de sans_option.échéancier_ordinaire = 0
+  assertion sans_option.rapport_à_l_exercice_de_cession_ou_cessation = Absent
+  # LEGIARTI000006302269, date de début de la version : le cas s'applique dès le premier jour.
+  définition contrat_non_visé.date_d_application égal à |2005-01-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; contrat ou indemnité hors du premier alinéa, même avec une cession.
+  définition contrat_non_visé.appréciation_rôle_déterminant égal à vrai
+  définition contrat_non_visé.contrat_et_indemnité_visés égal à faux
+  définition contrat_non_visé.option_d_étalement égal à vrai
+  définition contrat_non_visé.année_de_réalisation égal à 2020
+  définition contrat_non_visé.profit égal à 50 000 €
+  définition contrat_non_visé.primes_non_déduites égal à 10 000 €
+  définition contrat_non_visé.données_de_cession_ou_cessation égal à Présent contenu EtalementIndemnisationDecesCession {
+    -- exercice: 2022
+    -- parts_du_profit_déjà_imposées: 20 000 €
+  }
+  assertion nombre de contrat_non_visé.échéancier_ordinaire = 0
+  assertion contrat_non_visé.rapport_à_l_exercice_de_cession_ou_cessation = Absent
+  # LEGIARTI000006302269, date de début de la version : le cas s'applique dès le premier jour.
+  définition rôle_non_déterminant.date_d_application égal à |2005-01-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; assuré ni dirigeant ni au rôle déterminant.
+  définition rôle_non_déterminant.appréciation_rôle_déterminant égal à faux
+  définition rôle_non_déterminant.contrat_et_indemnité_visés égal à vrai
+  définition rôle_non_déterminant.option_d_étalement égal à vrai
+  définition rôle_non_déterminant.année_de_réalisation égal à 2020
+  définition rôle_non_déterminant.profit égal à 50 000 €
+  définition rôle_non_déterminant.primes_non_déduites égal à 10 000 €
+  définition rôle_non_déterminant.données_de_cession_ou_cessation égal à Absent
+  assertion nombre de rôle_non_déterminant.échéancier_ordinaire = 0
+  assertion rôle_non_déterminant.rapport_à_l_exercice_de_cession_ou_cessation = Absent
+```

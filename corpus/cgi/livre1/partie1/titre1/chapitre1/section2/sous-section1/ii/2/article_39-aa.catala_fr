@@ -1,0 +1,145 @@
+#### Article 39 AA|LEGIARTI000006302279
+
+Les coefficients utilisés pour le calcul de l'amortissement dégressif sont portés respectivement à 2, 2, 5 et 3 selon que la durée normale d'utilisation des matériels est de trois ou quatre ans, de cinq ou six ans, ou supérieure à six ans en ce qui concerne : 1° (Périmé) ; 2° a. Les matériels destinés à économiser l'énergie et les équipements de production d'énergies renouvelables acquis ou fabriqués par les entreprises à compter du 1er janvier 1977 qui figurent sur une liste établie par arrêté conjoint du ministre du budget et du ministre chargé de l'industrie ; b. (périmé) ; 3° (périmé) ; Les dispositions prévues au a du 2° ne s'appliquent pas aux biens dont la commande a donné lieu au bénéfice de l'aide fiscale instituée par les lois n° 75-408 du 29 mai 1975 et n° 75-853 du 13 septembre 1975. Les dispositions prévues au 2° ne s'appliquent pas pour les matériels acquis ou fabriqués à compter du 1er janvier 1991. Par dérogation aux dispositions du septième alinéa, les dispositions de cet article s'appliquent aux matériels mentionnés au a du 2° acquis ou fabriqués entre le 1er janvier 2001 et le 1er janvier 2003.
+
+Interface `MajorationDegressifMaterielsEnergie@v1`. Version applicable à compter du 2002-03-31, sans date de fin connue.
+
+Seul le a du 2° reste en vigueur : le 1°, le b du 2° et le 3° sont périmés. L’appelant indique si le bien est un matériel destiné à économiser l’énergie ou un équipement de production d’énergies renouvelables figurant sur la liste de l’arrêté, et si sa commande a bénéficié de l’aide fiscale des lois n° 75-408 et n° 75-853. Il fournit la date d’acquisition ou de fabrication et la durée normale d’utilisation. La sortie est le coefficient de l’amortissement dégressif ; elle est absente quand l’article ne s’applique pas au bien.
+
+Lecture des coefficients : la version de 2002 écrit « 2, 2, 5 et 3 » ; les quatre versions antérieures (LEGIARTI000006302275 à LEGIARTI000006302278) écrivent « 2, 2,5 et 3 ». Les coefficients sont 2, 2,5 et 3.
+
+```catala
+déclaration champ d'application MajorationDegressifMaterielsEnergie:
+  entrée date_d_application contenu date
+  entrée acquisition_ou_fabrication contenu date
+  entrée durée_normale contenu durée
+  entrée matériel_du_2_a_et_listé contenu booléen
+  entrée aide_fiscale_sur_commande contenu booléen
+  interne dans_le_champ contenu booléen
+  résultat coefficient_spécial contenu optionnel de décimal
+
+champ d'application MajorationDegressifMaterielsEnergie:
+  # LEGIARTI000006302279, début de validité de la version.
+  assertion date_d_application >= |2002-03-31|
+  # TODO juridique : « entre le 1er janvier 2001 et le 1er janvier 2003 » est lu bornes comprises.
+  définition dans_le_champ égal à
+    # CGI, article 39 AA, 2° a : matériel listé par arrêté ; phrase sur l'aide fiscale : exclusion des
+    # biens dont la commande a bénéficié de l'aide des lois n° 75-408 et n° 75-853.
+    matériel_du_2_a_et_listé
+    et non aide_fiscale_sur_commande
+    # CGI, article 39 AA, 2° a : matériels acquis ou fabriqués à compter du 1er janvier 1977.
+    et acquisition_ou_fabrication >= |1977-01-01|
+    et (
+      # CGI, article 39 AA, avant-dernière phrase : le 2° ne s'applique pas à compter du 1er janvier 1991.
+      acquisition_ou_fabrication < |1991-01-01|
+      # CGI, article 39 AA, dernière phrase : il s'applique entre le 1er janvier 2001 et le 1er janvier 2003.
+      ou (acquisition_ou_fabrication >= |2001-01-01| et acquisition_ou_fabrication <= |2003-01-01|))
+  # TODO juridique : une durée entre quatre et cinq ans est rangée avec la tranche de trois ou quatre
+  # ans ; le texte ne nomme que des années entières. Une durée de plus de six ans, même non entière, est
+  # « supérieure à six ans ».
+  définition coefficient_spécial égal à
+    si non dans_le_champ alors Absent
+    # CGI, article 39 AA, premier alinéa : la plus courte durée visée est de trois ans.
+    sinon si durée_normale < 3 an alors Absent
+    # CGI, article 39 AA, premier alinéa : 2 pour une durée de trois ou quatre ans.
+    sinon si durée_normale < 5 an alors Présent contenu 2,0
+    # CGI, article 39 AA, premier alinéa : 2,5 pour une durée de cinq ou six ans.
+    sinon si durée_normale <= 6 an alors Présent contenu 2,5
+    # CGI, article 39 AA, premier alinéa : 3 pour une durée supérieure à six ans.
+    sinon Présent contenu 3,0
+
+#[test]
+déclaration champ d'application TestMajorationDegressifMaterielsEnergie:
+  quatre_ans champ d'application MajorationDegressifMaterielsEnergie
+  cinq_ans champ d'application MajorationDegressifMaterielsEnergie
+  huit_ans champ d'application MajorationDegressifMaterielsEnergie
+  deux_ans champ d'application MajorationDegressifMaterielsEnergie
+  dérogation_2002 champ d'application MajorationDegressifMaterielsEnergie
+  après_la_dérogation champ d'application MajorationDegressifMaterielsEnergie
+  acquis_en_1995 champ d'application MajorationDegressifMaterielsEnergie
+  acquis_en_1976 champ d'application MajorationDegressifMaterielsEnergie
+  non_listé champ d'application MajorationDegressifMaterielsEnergie
+  aide_fiscale champ d'application MajorationDegressifMaterielsEnergie
+
+champ d'application TestMajorationDegressifMaterielsEnergie:
+  # LEGIARTI000006302279, date de début de la version : le cas s'applique dès le premier jour.
+  définition quatre_ans.date_d_application égal à |2002-03-31|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; matériel listé acquis en 1985, quatre ans.
+  définition quatre_ans.acquisition_ou_fabrication égal à |1985-06-01|
+  définition quatre_ans.durée_normale égal à 4 an
+  définition quatre_ans.matériel_du_2_a_et_listé égal à vrai
+  définition quatre_ans.aide_fiscale_sur_commande égal à faux
+  assertion quatre_ans.coefficient_spécial = Présent contenu 2,0
+  # LEGIARTI000006302279, date de début de la version : le cas s'applique dès le premier jour.
+  définition cinq_ans.date_d_application égal à |2002-03-31|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; matériel listé acquis en 1985, cinq ans.
+  définition cinq_ans.acquisition_ou_fabrication égal à |1985-06-01|
+  définition cinq_ans.durée_normale égal à 5 an
+  définition cinq_ans.matériel_du_2_a_et_listé égal à vrai
+  définition cinq_ans.aide_fiscale_sur_commande égal à faux
+  assertion cinq_ans.coefficient_spécial = Présent contenu 2,5
+  # LEGIARTI000006302279, date de début de la version : le cas s'applique dès le premier jour.
+  définition huit_ans.date_d_application égal à |2002-03-31|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; matériel listé acquis en 1985, huit ans.
+  définition huit_ans.acquisition_ou_fabrication égal à |1985-06-01|
+  définition huit_ans.durée_normale égal à 8 an
+  définition huit_ans.matériel_du_2_a_et_listé égal à vrai
+  définition huit_ans.aide_fiscale_sur_commande égal à faux
+  assertion huit_ans.coefficient_spécial = Présent contenu 3,0
+  # LEGIARTI000006302279, date de début de la version : le cas s'applique dès le premier jour.
+  définition deux_ans.date_d_application égal à |2002-03-31|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; deux ans, durée que l'article ne vise pas.
+  définition deux_ans.acquisition_ou_fabrication égal à |1985-06-01|
+  définition deux_ans.durée_normale égal à 2 an
+  définition deux_ans.matériel_du_2_a_et_listé égal à vrai
+  définition deux_ans.aide_fiscale_sur_commande égal à faux
+  assertion deux_ans.coefficient_spécial = Absent
+  # LEGIARTI000006302279, date de début de la version : le cas s'applique dès le premier jour.
+  définition dérogation_2002.date_d_application égal à |2002-03-31|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; acquis en 2002, dans la fenêtre de la dernière phrase.
+  définition dérogation_2002.acquisition_ou_fabrication égal à |2002-06-15|
+  définition dérogation_2002.durée_normale égal à 5 an
+  définition dérogation_2002.matériel_du_2_a_et_listé égal à vrai
+  définition dérogation_2002.aide_fiscale_sur_commande égal à faux
+  assertion dérogation_2002.coefficient_spécial = Présent contenu 2,5
+  # LEGIARTI000006302279, date de début de la version : le cas s'applique dès le premier jour.
+  définition après_la_dérogation.date_d_application égal à |2002-03-31|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; acquis le 2 janvier 2003, après la fenêtre de la dernière phrase.
+  définition après_la_dérogation.acquisition_ou_fabrication égal à |2003-01-02|
+  définition après_la_dérogation.durée_normale égal à 5 an
+  définition après_la_dérogation.matériel_du_2_a_et_listé égal à vrai
+  définition après_la_dérogation.aide_fiscale_sur_commande égal à faux
+  assertion après_la_dérogation.coefficient_spécial = Absent
+  # LEGIARTI000006302279, date de début de la version : le cas s'applique dès le premier jour.
+  définition acquis_en_1995.date_d_application égal à |2002-03-31|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; acquis en 1995, après le 1er janvier 1991 et hors dérogation.
+  définition acquis_en_1995.acquisition_ou_fabrication égal à |1995-06-01|
+  définition acquis_en_1995.durée_normale égal à 5 an
+  définition acquis_en_1995.matériel_du_2_a_et_listé égal à vrai
+  définition acquis_en_1995.aide_fiscale_sur_commande égal à faux
+  assertion acquis_en_1995.coefficient_spécial = Absent
+  # LEGIARTI000006302279, date de début de la version : le cas s'applique dès le premier jour.
+  définition acquis_en_1976.date_d_application égal à |2002-03-31|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; acquis en 1976, avant le 1er janvier 1977.
+  définition acquis_en_1976.acquisition_ou_fabrication égal à |1976-06-01|
+  définition acquis_en_1976.durée_normale égal à 5 an
+  définition acquis_en_1976.matériel_du_2_a_et_listé égal à vrai
+  définition acquis_en_1976.aide_fiscale_sur_commande égal à faux
+  assertion acquis_en_1976.coefficient_spécial = Absent
+  # LEGIARTI000006302279, date de début de la version : le cas s'applique dès le premier jour.
+  définition non_listé.date_d_application égal à |2002-03-31|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; bien absent de la liste de l'arrêté.
+  définition non_listé.acquisition_ou_fabrication égal à |1985-06-01|
+  définition non_listé.durée_normale égal à 5 an
+  définition non_listé.matériel_du_2_a_et_listé égal à faux
+  définition non_listé.aide_fiscale_sur_commande égal à faux
+  assertion non_listé.coefficient_spécial = Absent
+  # LEGIARTI000006302279, date de début de la version : le cas s'applique dès le premier jour.
+  définition aide_fiscale.date_d_application égal à |2002-03-31|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; commande ayant bénéficié de l'aide fiscale de 1975.
+  définition aide_fiscale.acquisition_ou_fabrication égal à |1985-06-01|
+  définition aide_fiscale.durée_normale égal à 5 an
+  définition aide_fiscale.matériel_du_2_a_et_listé égal à vrai
+  définition aide_fiscale.aide_fiscale_sur_commande égal à vrai
+  assertion aide_fiscale.coefficient_spécial = Absent
+```
