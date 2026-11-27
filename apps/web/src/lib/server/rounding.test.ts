@@ -12,6 +12,7 @@ const sample = [
   '  résultat b contenu argent',
   '  résultat c contenu argent',
   '  résultat d contenu argent',
+  '  résultat ratio contenu décimal',
   '',
   "champ d'application Calcul:",
   "  # Article 1 : arrondi à l'euro le plus proche.",
@@ -22,6 +23,11 @@ const sample = [
   '    # Article 1 : taux de 11 %.',
   '    montant * 11%',
   '  définition d égal à (décimal de 2) * 0,5',
+  '  définition ratio égal à proportion * 50%',
+  '',
+  "champ d'application Calcul:",
+  "  # Article 1 : arrondi à l'euro le plus proche.",
+  '  définition a égal à arrondi de montant',
   '',
   '#[test]',
   "déclaration champ d'application Test:",
@@ -36,9 +42,10 @@ describe('inventaire des arrondis', () => {
   test('classe chaque point et ignore les tests', () => {
     const { points } = scanRounding('x.catala_fr', sample)
     expect(points.map((p) => [p.kind, p.definition, p.lines])).toEqual([
-      ['prescrit', 'a', [14]],
-      ['choisi', 'b', [16]],
-      ['implicite', 'c', [19]],
+      ['prescrit', 'a', [15]],
+      ['choisi', 'b', [17]],
+      ['implicite', 'c', [20]],
+      ['prescrit', 'a', [26]],
     ])
     expect(points[0]?.article).toEqual({ num: '1', legiarti: 'LEGIARTI000000000001' })
     expect(points[2]?.note).toBe('Article 1 : taux de 11 %.')

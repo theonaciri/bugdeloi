@@ -82,6 +82,9 @@ export function scanRounding(file: string, raw: string): RoundingFile {
   let inTest = false
   let article: RoundingPoint['article'] = null
   let definition: string | null = null
+  /** Ligne de la définition en cours : deux définitions homonymes ne fusionnent pas. */
+  let definitionLine = 0
+  let previousLine = -1
   let note: string | null = null
   let comments: string[] = []
   /** Un `TODO juridique` sur l'arrondi vaut pour les arrondis explicites suivants du même scope. */
@@ -119,6 +122,7 @@ export function scanRounding(file: string, raw: string): RoundingFile {
     const def = DEFINITION_RE.exec(line)?.[1]
     if (def) {
       definition = def
+      definitionLine = index + 1
       note = comments.length > 0 ? comments.join(' ') : null
     } else if (definition !== null && comments.length > 0) {
       // Un commentaire à l'intérieur d'une définition complète sa note.
@@ -126,15 +130,18 @@ export function scanRounding(file: string, raw: string): RoundingFile {
     }
     comments = []
     const explicit = EXPLICIT_RE.test(line)
-    if (!explicit && !implicitOperation(line, decimals)) return
+    // Un résultat décimal (ratio, taux) n'est pas un montant : Catala ne l'arrondit pas au centime.
+    const decimalResult = definition !== null && decimals.has(definition.split('.').pop() ?? '')
+    if (!explicit && (decimalResult || !implicitOperation(line, decimals))) return
     const choisi =
       (note !== null && /TODO juridique/i.test(note) && /arrondi/i.test(note)) || (explicit && scopeChoice)
     const kind: RoundingKind = choisi ? 'choisi' : explicit ? 'prescrit' : 'implicite'
     const previous = points.at(-1)
-    if (previous && previous.definition === definition && previous.kind === kind && definition !== null) {
+    if (previous && definition !== null && previousLine === definitionLine && previous.kind === kind) {
       previous.lines.push(index + 1)
       return
     }
+    previousLine = definition !== null ? definitionLine : -1
     points.push({ kind, definition, article, lines: [index + 1], code: line.trim(), note })
   })
   return { file, points }
