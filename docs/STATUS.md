@@ -30,6 +30,11 @@
 
 ## Journal des décisions
 
+- 2026-11-27 — `tools/bdl.sh` gagne `next N`, `beat --all`, `submit-batch` et `doc` (lots de tâches sans
+  manipulation manuelle). La documentation officielle de Catala 1.3.2 (aide-mémoire `syntax_fr.catala_fr`
+  du tag 1.3.2, livre Catala) est liée depuis `corpus/CATALA.md`, join.txt, AGENTS.md §7, `/join` et `/taches`.
+  Les fiches d'analyse doivent typer leurs interfaces en Catala.
+
 - 2026-11-27 — **Premier lot de traduction de bout en bout par le guichet** (PR #20, fusionnée) : CGI 4 A,
   4 bis, 8 bis, 8 quinquies, 11, 12, 14, 28, 29, 30, promus en N2 par `promote-corpus` (27 articles N2 au
   total). Deux tours de CodeRabbit (17 fils) : provenance des valeurs d'essai et couverture des tests ; aucun
