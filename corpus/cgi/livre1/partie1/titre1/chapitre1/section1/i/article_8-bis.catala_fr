@@ -2,7 +2,7 @@
 
 Les associés ou actionnaires des sociétés visées à l'article 1655 ter sont personnellement soumis à l'impôt sur le revenu pour la part des revenus sociaux correspondant à leurs droits dans la société.
 
-Interface `QuotePartSocieteIr@v1`. Version applicable à compter du 1979-07-01, sans date de fin connue.
+Interface `QuotePartSocieteIr@v2`. Version applicable à compter du 1979-07-01, sans date de fin connue.
 
 L’appelant indique si la société relève de l’article 1655 ter, si la personne en est associée ou actionnaire, le montant des revenus sociaux et la proportion de ses droits (entre 0 et 1). La sortie est absente quand l’article ne s’applique pas.
 

@@ -5,6 +5,8 @@ Les articles L. 821-4 et L. 823-8, relatifs aux primes de déménagement, ne son
 <!-- Version LEGI du 2019-09-01. Interface ExclusionPrimesDemenagementMayotte@v1.
      La sortie indique uniquement si l'article L861-4 écarte les dispositions citées. -->
 
+Interface `ExclusionPrimesDemenagementMayotte@v2`.
+
 ```catala
 déclaration champ d'application ExclusionPrimesDemenagementMayotte:
   entrée à_mayotte contenu booléen

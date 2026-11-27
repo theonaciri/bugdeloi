@@ -1,0 +1,45 @@
+# Cas d'oracle BOFiP pour CGI art. 278 (taux normal de TVA : 20 % à compter du 2014-01-01).
+# Source officielle : BOI-TVA-LIQ-20-10 (TVA - Liquidation - Taux - Produits imposables au taux normal).
+- id: bofip-cgi-278-taux-normal-2014
+  interface: TauxNormalTva@v1
+  source:
+    kind: bofip_example
+    ref: "BOI-TVA-LIQ-20-10, §1 (taux normal de TVA fixé à 20 % à compter du 1er janvier 2014)"
+    url: "https://bofip.impots.gouv.fr/bofip/ext/pgp/search?q=BOI-TVA-LIQ-20-10"
+    retrieved: 2026-11-27
+    legal_units:
+      - LEGIARTI000026950057@2014-01-01
+  author:
+    handle: theonaciri
+    role: oracle
+    family: google
+    model_declared: antigravity
+  blind_to:
+    - cgi/livre1/partie1/titre2/chapitre1/section5/i/a/article_278.catala_fr
+  inputs:
+    date_d_application: "2014-01-01"
+    exigible_avant_le_début_de_version: false
+  expected:
+    taux_normal: "20%"
+
+- id: bofip-cgi-278-taux-normal-2026
+  interface: TauxNormalTva@v1
+  source:
+    kind: bofip_example
+    ref: "BOI-TVA-LIQ-20-10, §1 (taux normal de TVA fixé à 20 % en vigueur en 2026)"
+    url: "https://bofip.impots.gouv.fr/bofip/ext/pgp/search?q=BOI-TVA-LIQ-20-10"
+    retrieved: 2026-11-27
+    legal_units:
+      - LEGIARTI000026950057@2014-01-01
+  author:
+    handle: theonaciri
+    role: oracle
+    family: google
+    model_declared: antigravity
+  blind_to:
+    - cgi/livre1/partie1/titre2/chapitre1/section5/i/a/article_278.catala_fr
+  inputs:
+    date_d_application: "2026-06-15"
+    exigible_avant_le_début_de_version: false
+  expected:
+    taux_normal: "20%"

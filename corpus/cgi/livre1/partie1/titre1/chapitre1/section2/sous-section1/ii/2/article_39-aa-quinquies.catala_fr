@@ -2,7 +2,7 @@
 
 Les coefficients utilisés pour le calcul de l'amortissement dégressif des matériels et outillages utilisés à des opérations de recherche scientifique et technique mentionnées au a du II de l'article 244 quater B sont portés respectivement à 1, 5, 2 et 2, 5 selon que la durée normale d'utilisation de ces biens est de trois ou quatre ans, cinq ou six ans ou supérieure à six ans.
 
-Interface `MajorationDegressifRecherche@v1`. Version applicable à compter du 2003-12-31, sans date de fin connue.
+Interface `MajorationDegressifRecherche@v2`. Version applicable à compter du 2003-12-31, sans date de fin connue.
 
 L’appelant indique si le matériel ou l’outillage sert aux opérations de recherche du a du II de l’article 244 quater B et fournit sa durée normale d’utilisation, qu’il apprécie. La sortie est le coefficient de l’amortissement dégressif fixé par l’article ; elle est absente hors de ces opérations ou pour une durée de moins de trois ans, que l’article ne vise pas.
 

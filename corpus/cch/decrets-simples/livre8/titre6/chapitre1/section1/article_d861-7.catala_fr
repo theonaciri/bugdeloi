@@ -5,6 +5,8 @@ La section 2 du chapitre III du titre II du présent livre n'est pas applicable 
 <!-- Version LEGI du 2022-01-01. Interface ExclusionSectionLogementMayotte@v1.
      La sortie indique uniquement si cet article écarte la section citée. -->
 
+Interface `ExclusionSectionLogementMayotte@v2`.
+
 ```catala
 déclaration champ d'application ExclusionSectionLogementMayotte:
   entrée à_mayotte contenu booléen

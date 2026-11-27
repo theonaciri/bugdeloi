@@ -2,7 +2,7 @@
 
 Sous réserve des dispositions de l'article 15-II, le revenu brut des immeubles ou parties d'immeubles dont le propriétaire se réserve la jouissance est constitué par le montant du loyer qu'ils pourraient produire s'ils étaient donnés en location. Il est évalué par comparaison avec les immeubles ou parties d'immeubles similaires faisant l'objet d'une location normale, ou, à défaut, par voie d'appréciation directe. Il est majoré, s'il y a lieu, des recettes visées au deuxième alinéa de l'article 29. Cette disposition ne concerne pas le droit de chasse.
 
-Interface `RevenuBrutJouissanceReservee@v1`. Version applicable à compter du 2005-01-01, sans date de fin connue.
+Interface `RevenuBrutJouissanceReservee@v2`. Version applicable à compter du 2005-01-01, sans date de fin connue.
 
 Les loyers estimés par comparaison ou par appréciation directe sont des appréciations fournies par l’appelant. La sortie est absente quand la réserve de l’article 15-II s’applique ou quand l’objet évalué est la jouissance du droit de chasse, que la dernière phrase exclut ; les recettes de location du droit de chasse visées à l’article 29 restent dans recettes_29_alinéa_2.
 

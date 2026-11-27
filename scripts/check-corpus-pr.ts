@@ -17,6 +17,7 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { normalizeLegalText, sha256Hex } from '../packages/core/src/legi.ts'
 import { validateOracleCases } from '../packages/core/src/oracles.ts'
+import { runN4Checks } from './check-n4.ts'
 
 /** Même normalisation que `promote-corpus` : espaces et apostrophes unifiés. */
 function normalize(text: string): string {
@@ -204,6 +205,19 @@ for (const file of files) {
     process.exit(1)
   }
 
+  // AGENTS.md §8 : toute traduction hors interfaces/ inclut au moins un bloc #[test] avec assertion.
+  if (!isInterface) {
+    const joinedCode = codeBlocks.join('\n')
+    const hasTestAttr = /^\s*#\[test\]/m.test(joinedCode)
+    const hasAssertion = /^\s*assertion\s+/m.test(joinedCode)
+    if (!hasTestAttr || !hasAssertion) {
+      console.error(
+        `[N2 ECHEC] ${file} : au moins un champ d'application #[test] avec une « assertion » est requis (AGENTS.md §8).`,
+      )
+      process.exit(1)
+    }
+  }
+
   const uncited = uncitedConstants(raw)
   if (!isInterface && uncited.length) {
     console.error(
@@ -286,6 +300,50 @@ for (const file of files) {
   }
 }
 
+// Contrôle liste blanche §8 : aucun script exécutable imprévu dans corpus/ (hors outils corpus/doctrine/*.ts)
+const forbiddenScripts = Array.from(
+  new Bun.Glob('**/*.{sh,py,js,mjs,cjs,ts}').scanSync({ cwd: workdir }),
+).filter((f) => !f.startsWith('doctrine/'))
+if (forbiddenScripts.length > 0) {
+  console.error(
+    `[§8 ECHEC] Fichiers exécutables/scripts interdits dans corpus/ : ${forbiddenScripts.join(', ')}`,
+  )
+  process.exit(1)
+}
+
+// Contrôle des fiches d'analyse v2+ : empreinte LEGI, bloc Catala figé et absence de mots réservés
+const v2Analyses = Array.from(new Bun.Glob('analyses/LEGIARTI*.v*.md').scanSync({ cwd: workdir })).sort()
+for (const file of v2Analyses) {
+  const fiche = readFileSync(join(workdir, file), 'utf8')
+  const hash = /SHA-256\s*`([0-9a-f]{64})`/.exec(fiche)?.[1]
+  const quote = fiche
+    .split('\n')
+    .filter((l) => l.startsWith('>'))
+    .map((l) => l.replace(/^>\s?/, ''))
+    .join('\n')
+  if (!hash || !quote || sha256Hex(normalizeLegalText(quote)) !== hash) {
+    console.error(
+      `[N1 ECHEC] ${file} : empreinte SHA-256 absente ou incohérente avec le texte cité en \`>\`.`,
+    )
+    process.exit(1)
+  }
+  const section = fiche.split(/^##\s+Interface[^\n]*\n/im)[1]?.split(/^##\s+/m)[0] ?? ''
+  const block = /```catala\n([\s\S]*?)```/.exec(section)?.[1]
+  if (!block) {
+    console.error(`[N1 ECHEC] ${file} : une fiche v2+ doit déclarer son interface dans un bloc \`\`\`catala.`)
+    process.exit(1)
+  }
+  for (const match of block.matchAll(fieldRe)) {
+    const name = match[2]
+    if (name && RESERVED.has(name)) {
+      console.error(
+        `[N1 ECHEC] ${file} : « ${name} » est un mot réservé Catala dans la déclaration d'interface.`,
+      )
+      process.exit(1)
+    }
+  }
+}
+
 const oracleFiles = Array.from(new Bun.Glob('oracles/**/*.yaml').scanSync({ cwd: workdir })).sort()
 let oracleCasesCount = 0
 for (const file of oracleFiles) {
@@ -304,6 +362,12 @@ for (const file of oracleFiles) {
   oracleCasesCount += res.cases.length
 }
 
+const n4Res = runN4Checks(workdir)
+if (!n4Res.ok) {
+  for (const err of n4Res.errors) console.error(`[N4 MANIFEST] ${err}`)
+  process.exit(1)
+}
+
 console.log(
-  `[OK] Corpus PR check : ${files.length} fichiers, ${seenLegiarti.size} LEGIARTI uniques, ${seenSymbols.size} déclarations Catala uniques, ${oracleFiles.length} fichiers d'oracles (${oracleCasesCount} cas).`,
+  `[OK] Corpus PR check : ${files.length} fichiers, ${seenLegiarti.size} LEGIARTI uniques, ${seenSymbols.size} déclarations Catala uniques, ${v2Analyses.length} fiches v2, ${oracleFiles.length} fichiers d'oracles (${oracleCasesCount} cas).`,
 )

@@ -1,15 +1,28 @@
 import { CODES, legifranceArticleUrl, sha256Hex } from '@bugdeloi/core/legi'
 import { articleInForce, articleStatus, deskTask, legalArticle, legalText } from '@bugdeloi/db'
-import { and, eq, isNotNull, ne, notInArray, sql } from 'drizzle-orm'
+import { and, eq, inArray, isNotNull, ne, notInArray, sql } from 'drizzle-orm'
 import { translations } from './desk-translations.ts'
-import { frozenInterfaces, translationTaskId } from './interfaces.ts'
+import { compiledCorpusArticles, frozenInterfaces, translationTaskId } from './interfaces.ts'
 
 /**
  * Articles pour lesquels le guichet créerait une tâche au prochain appel.
  * Traduction : interface figée (fiche d'analyse fusionnée ou liste manuelle), texte inchangé depuis
  * l'analyse, aucune tâche de traduction déjà inscrite, article pas encore au niveau N2.
+ * Oracle : article au niveau N2 dans le corpus compilé, pas encore N3, sans tâche oracle inscrite.
  */
-export function newDeskTaskFilter(role: 'analyst' | 'translate') {
+export function newDeskTaskFilter(role: 'analyst' | 'translate' | 'oracle') {
+  if (role === 'oracle') {
+    const compiled = [...compiledCorpusArticles().keys()]
+    if (compiled.length === 0) return sql`false`
+    return and(
+      articleInForce(),
+      inArray(legalArticle.id, compiled),
+      sql`exists (select 1 from ${articleStatus} where ${articleStatus.articleId} = ${legalArticle.id}
+        and ${articleStatus.level} = 'N2')`,
+      sql`not exists (select 1 from ${deskTask}
+        where ${deskTask.role} = 'oracle' and ${deskTask.payload}->>'node' = ${legalArticle.id})`,
+    )
+  }
   if (role === 'translate') {
     const specs = [...frozenInterfaces().values()]
     if (specs.length === 0) return sql`false`
@@ -87,14 +100,45 @@ type TaskArticle = Pick<typeof legalArticle.$inferSelect, 'id' | 'dateDebut' | '
 /** `path` : chemin Catala calculé depuis l'arbre Légifrance quand l'interface n'en impose pas. */
 export function newDeskTask(
   row: TaskArticle,
-  role: 'analyst' | 'translate',
+  role: 'analyst' | 'translate' | 'oracle',
   path?: string,
   otherVersions: OtherVersion[] = [],
 ) {
   const spec = role === 'translate' ? frozenInterfaces().get(row.id) : undefined
+  const compiled = role === 'oracle' ? compiledCorpusArticles().get(row.id) : undefined
   if (role === 'translate' && !spec) throw new Error(`Aucune interface figée pour ${row.id}`)
+  if (role === 'oracle' && !compiled) throw new Error(`Aucun fichier Catala compilé pour ${row.id}`)
   if (!row.dateDebut || sha256Hex(row.text) !== row.hash) {
     throw new Error(`Version ou empreinte incohérente pour ${row.id}`)
+  }
+  if (role === 'oracle' && compiled) {
+    const code = (codeShort(row.codeTitle) ?? 'autres').toLowerCase()
+    return {
+      id: `oracle-${row.id}`,
+      role: 'oracle',
+      payload: {
+        node: row.id,
+        legal_units: [
+          {
+            legiarti: row.id,
+            date_debut: row.dateDebut,
+            date_fin: row.dateFin,
+            text: row.text,
+            text_sha256: row.hash,
+            source_url: legifranceArticleUrl(row.id),
+          },
+        ],
+        interface: compiled.interface,
+        context_pack: {
+          objective: `Rédiger des cas d’oracle YAML pour ${compiled.interface} sans lire le code du nœud (AGENTS.md §4.3). Au moins un cas doit provenir d’une source non-LLM (BOFiP, brochure officielle, OpenFisca, Inria, code M DGFiP). Interface publique :\n${compiled.signature}`,
+          code_title: row.codeTitle,
+          article_number: row.articleNumber,
+          other_versions: otherVersions,
+        },
+        blind_to: [compiled.file],
+        allowed_paths: [`oracles/${code}/${row.id.toLowerCase()}.yaml`],
+      },
+    } satisfies typeof deskTask.$inferInsert
   }
   return {
     id: spec ? translationTaskId(spec) : `analyst-${row.id}`,

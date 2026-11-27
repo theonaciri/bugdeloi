@@ -39,6 +39,7 @@ export interface OracleCheckResult {
   totalCases: number
   executedCases: number
   eligibleN3: OracleN3Article[]
+  generatedFiles?: string[]
 }
 
 /** Indexe tous les modules/scopes Catala de `corpus/`. */
@@ -56,18 +57,22 @@ function indexCorpusSchemas(workdir: string): {
     for (const m of scopeMatches) {
       const scopeName = m[1]
       if (!scopeName || scopeName.startsWith('Test')) continue
-      const schema = extractScopeSchema(raw, scopeName)
+      const schema = extractScopeSchema(raw, scopeName, file)
       if (!schema) continue
-      byModuleScope.set(`${schema.moduleName}.${schema.scopeName}`, schema)
+      if (schema.moduleName) {
+        byModuleScope.set(`${schema.moduleName}.${schema.scopeName}`, schema)
+      }
       const list = byScope.get(schema.scopeName) ?? []
-      if (!list.some((s) => s.moduleName === schema.moduleName)) list.push(schema)
+      if (!list.some((s) => s.moduleName === schema.moduleName && s.sourcePath === schema.sourcePath)) {
+        list.push(schema)
+      }
       byScope.set(schema.scopeName, list)
     }
   }
   return { byModuleScope, byScope }
 }
 
-export async function runOracleChecks(workdir = 'corpus'): Promise<OracleCheckResult> {
+export async function runOracleChecks(workdir = 'corpus', emitOnlyDir?: string): Promise<OracleCheckResult> {
   const errors: string[] = []
   const oracleFiles = Array.from(new Bun.Glob('oracles/**/*.yaml').scanSync({ cwd: workdir })).sort()
 
@@ -152,7 +157,9 @@ export async function runOracleChecks(workdir = 'corpus'): Promise<OracleCheckRe
       )
       continue
     }
-    const key = `${schema.moduleName}.${schema.scopeName}`
+    const key = schema.moduleName
+      ? `${schema.moduleName}.${schema.scopeName}`
+      : `${schema.sourcePath ?? 'corpus'}:${schema.scopeName}`
     const bucket = grouped.get(key) ?? { schema, items: [] }
     bucket.items.push(item)
     grouped.set(key, bucket)
@@ -170,7 +177,7 @@ export async function runOracleChecks(workdir = 'corpus'): Promise<OracleCheckRe
   }
 
   // Copie temporaire de `corpus/` pour exécuter les tests générés sans jamais salir le dépôt.
-  const tmpDir = mkdtempSync(join(tmpdir(), 'bugdeloi-oracles-'))
+  const tmpDir = emitOnlyDir ?? mkdtempSync(join(tmpdir(), 'bugdeloi-oracles-'))
   chmodSync(tmpDir, 0o755)
   try {
     cpSync(workdir, tmpDir, { recursive: true })
@@ -188,7 +195,8 @@ export async function runOracleChecks(workdir = 'corpus'): Promise<OracleCheckRe
         errors.push(`Génération Catala (${key}) : ${e instanceof Error ? e.message : String(e)}`)
         continue
       }
-      const relOut = `oracles_generated_${idx++}_${schema.moduleName.toLowerCase()}.catala_fr`
+      const safeName = (schema.moduleName ?? schema.scopeName).toLowerCase().replace(/[^a-z0-9_]+/g, '_')
+      const relOut = `oracles_generated_${idx++}_${safeName}.catala_fr`
       writeFileSync(join(tmpDir, relOut), catalaText, 'utf8')
       generatedFiles.push(relOut)
     }
@@ -201,6 +209,18 @@ export async function runOracleChecks(workdir = 'corpus'): Promise<OracleCheckRe
         totalCases: allCases.length,
         executedCases: 0,
         eligibleN3: [],
+      }
+    }
+
+    if (emitOnlyDir) {
+      return {
+        ok: true,
+        errors: [],
+        totalFiles: oracleFiles.length,
+        totalCases: allCases.length,
+        executedCases: independent.length,
+        eligibleN3: [],
+        generatedFiles,
       }
     }
 
@@ -269,13 +289,23 @@ export async function runOracleChecks(workdir = 'corpus'): Promise<OracleCheckRe
       eligibleN3,
     }
   } finally {
-    rmSync(tmpDir, { recursive: true, force: true })
+    if (!emitOnlyDir) rmSync(tmpDir, { recursive: true, force: true })
   }
 }
 
 if (import.meta.main) {
+  const emitIdx = process.argv.indexOf('--emit-dir')
+  const emitDir = emitIdx >= 0 ? process.argv[emitIdx + 1] : undefined
   const asJson = process.argv.includes('--json')
-  const result = await runOracleChecks('corpus')
+  const result = await runOracleChecks('corpus', emitDir)
+  if (emitDir) {
+    if (!result.ok) {
+      for (const err of result.errors) console.error(`[N3 ECHEC] ${err}`)
+      process.exit(1)
+    }
+    for (const f of result.generatedFiles ?? []) console.log(f)
+    process.exit(0)
+  }
   if (asJson) {
     console.log(JSON.stringify(result, null, 2))
   } else if (!result.ok) {

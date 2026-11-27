@@ -42,8 +42,8 @@ import {
 } from './interfaces.ts'
 import { getLevelCounts } from './level-counts.ts'
 
-export type DeskRole = 'analyst' | 'translate'
-export const OPEN_ROLES: DeskRole[] = ['analyst', 'translate']
+export type DeskRole = 'analyst' | 'translate' | 'oracle'
+export const OPEN_ROLES: DeskRole[] = ['analyst', 'translate', 'oracle']
 
 const now = sql`statement_timestamp()`
 const leaseActive = sql`coalesce(${deskTask.leaseExpiresAt} > ${now}, false)`
@@ -64,7 +64,7 @@ function reachedTarget(target: Level): SQL {
     and ${inArray(articleStatus.level, levelsAtLeast(target))})`
 }
 
-const ROLE_TARGET: Record<DeskRole, Level> = { analyst: 'N1', translate: 'N2' }
+const ROLE_TARGET: Record<DeskRole, Level> = { analyst: 'N1', translate: 'N2', oracle: 'N3' }
 
 function translationTaskId(legiarti: string): string | null {
   const spec = frozenInterfaces().get(legiarti)
@@ -72,7 +72,9 @@ function translationTaskId(legiarti: string): string | null {
 }
 
 function virtualTaskId(role: DeskRole, legiarti: string): string {
-  return role === 'analyst' ? `analyst-${legiarti}` : (translationTaskId(legiarti) ?? `translate-${legiarti}`)
+  if (role === 'analyst') return `analyst-${legiarti}`
+  if (role === 'oracle') return `oracle-${legiarti}`
+  return translationTaskId(legiarti) ?? `translate-${legiarti}`
 }
 
 function escapeLike(q: string): string {
@@ -190,21 +192,27 @@ export async function availableTasks(
 
 /** Les rôles ouverts au guichet, avec leur nombre de tâches à prendre. */
 export async function availableByRole(): Promise<Record<DeskRole, number>> {
-  const [a, t] = await Promise.all(OPEN_ROLES.map((role) => availableCount({ role })))
-  return { analyst: (a?.returned ?? 0) + (a?.fresh ?? 0), translate: (t?.returned ?? 0) + (t?.fresh ?? 0) }
+  const [a, t, o] = await Promise.all(OPEN_ROLES.map((role) => availableCount({ role })))
+  return {
+    analyst: (a?.returned ?? 0) + (a?.fresh ?? 0),
+    translate: (t?.returned ?? 0) + (t?.fresh ?? 0),
+    oracle: (o?.returned ?? 0) + (o?.fresh ?? 0),
+  }
 }
 
 // ---------------------------------------------------------------------------
 // Parcours d'une tâche
 // ---------------------------------------------------------------------------
 
-const TASK_ID_RE = /^(analyst)-(LEGIARTI\d{12})$|^(translate)-(LEGIARTI\d{12})(?:-(v\d+))?$/
+const TASK_ID_RE =
+  /^(analyst)-(LEGIARTI\d{12})$|^(translate)-(LEGIARTI\d{12})(?:-(v\d+))?$|^(oracle)-(LEGIARTI\d{12})$/
 
 export function parseTaskId(id: string): { role: DeskRole; legiarti: string } | null {
   const m = TASK_ID_RE.exec(id)
   if (!m) return null
   if (m[1] && m[2]) return { role: 'analyst', legiarti: m[2] }
   if (m[3] && m[4]) return { role: 'translate', legiarti: m[4] }
+  if (m[6] && m[7]) return { role: 'oracle', legiarti: m[7] }
   return null
 }
 
@@ -295,11 +303,13 @@ export async function taskJourney(id: string): Promise<TaskJourney | null> {
     column = reached ? 'done' : 'todo'
     if (!reached && !eligible?.n) {
       blockedReason =
-        role === 'translate'
-          ? 'Pas de traduction possible pour l’instant : il faut une fiche d’analyse fusionnée, classée « calculable » ou « mixte », sur le texte en vigueur (empreinte identique), et l’article ne doit pas déjà être au niveau N2.'
-          : LEVEL_RANK[level] >= 1
-            ? 'L’article est déjà analysé.'
-            : 'Le guichet ne propose pas cet article : il n’est plus en vigueur, il est vide ou il n’est pas un article autonome.'
+        role === 'oracle'
+          ? 'Pas de tâche d’oracle disponible : l’article doit être au niveau N2 Compilé dans le corpus et ne pas encore avoir atteint le niveau N3.'
+          : role === 'translate'
+            ? 'Pas de traduction possible pour l’instant : il faut une fiche d’analyse fusionnée, classée « calculable » ou « mixte », sur le texte en vigueur (empreinte identique), et l’article ne doit pas déjà être au niveau N2.'
+            : LEVEL_RANK[level] >= 1
+              ? 'L’article est déjà analysé.'
+              : 'Le guichet ne propose pas cet article : il n’est plus en vigueur, il est vide ou il n’est pas un article autonome.'
     }
   }
 
@@ -614,13 +624,20 @@ async function recentMoves(limit = 24): Promise<WorkMove[]> {
 /** Le tableau complet : une ligne par étape, quatre colonnes, les dernières cartes et mouvements. */
 export async function workBoard(): Promise<WorkBoard> {
   const levels = await getLevelCounts()
-  const [analyse, traduction, moves] = await Promise.all([
+  const [analyse, traduction, oracles, moves] = await Promise.all([
     deskLane('analyst', levels),
     deskLane('translate', levels),
+    deskLane('oracle', levels),
     recentMoves(),
   ])
   const lanes = STAGES.map((stage) =>
-    stage === 'analyse' ? analyse : stage === 'traduction' ? traduction : closedLane(stage, levels),
+    stage === 'analyse'
+      ? analyse
+      : stage === 'traduction'
+        ? traduction
+        : stage === 'oracles'
+          ? oracles
+          : closedLane(stage, levels),
   )
   return { enabled: process.env.DESK_ENABLED === '1', lanes, moves }
 }

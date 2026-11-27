@@ -79,6 +79,14 @@ const events: Record<string, Explanation> = {
     next: 'L’étape suivante (N4 Éprouvé) combine un test différentiel sur 10 000 cas, un score de mutation d’au moins 80 % et 7 jours de recherche de contre-exemples.',
     diagram: diagrams.level,
   },
+  'n4.promoted': {
+    title: 'Promotion d’articles au niveau N4 Éprouvé',
+    why: 'Le nœud a satisfait les trois critères mécaniques N4 : différentiel sur 10 000 entrées sans divergence inexpliquée, score de mutation d’au moins 80 % et 7 jours de recherche ouverte de contre-exemples sans réfutation.',
+    meaning:
+      'Ces articles sont désormais classés au niveau N4 Éprouvé. Il ne reste plus que la revue humaine signée par un juriste pour atteindre le niveau N5 Certifié.',
+    next: 'Un juriste identifié peut relire les choix d’interprétation et déposer une revue signée Git.',
+    diagram: diagrams.level,
+  },
   'ingest.started': {
     title: 'Le chargement des textes officiels a commencé',
     why: importWhy,

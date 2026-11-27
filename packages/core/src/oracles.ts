@@ -273,22 +273,26 @@ export function isIndependentOracle(c: OracleCase): boolean {
 }
 
 export interface ScopeSchema {
-  moduleName: string
+  moduleName: string | null
+  sourcePath: string | null
   scopeName: string
   inputs: Map<string, string>
   outputs: Map<string, string>
-  /** Constructeur d'énumération -> nom de l'énumération (pour qualifier `Module.Enum.Constructeur`). */
+  /** Constructeur d'énumération -> nom de l'énumération (pour qualifier `Module.Enum.Constructeur` ou `Enum.Constructeur`). */
   enumConstructors: Map<string, string>
 }
 
 /**
- * Lit les déclarations d'un fichier `.catala_fr` (nom de module, types des entrées/sorties
+ * Lit les déclarations d'un fichier `.catala_fr` (nom de module éventuel, types des entrées/sorties
  * d'un champ d'application, constructeurs d'énumération).
  */
-export function extractScopeSchema(catalaSource: string, scopeName: string): ScopeSchema | null {
+export function extractScopeSchema(
+  catalaSource: string,
+  scopeName: string,
+  sourcePath: string | null = null,
+): ScopeSchema | null {
   const modMatch = /^>\s*Module\s+([A-Za-z0-9_]+)\s*$/m.exec(catalaSource)
-  if (!modMatch?.[1]) return null
-  const moduleName = modMatch[1]
+  const moduleName = modMatch?.[1] ?? null
 
   const blocks = [...catalaSource.matchAll(/```(?:catala-metadata|catala)\n([\s\S]*?)```/g)].map(
     (m) => m[1] ?? '',
@@ -333,7 +337,7 @@ export function extractScopeSchema(catalaSource: string, scopeName: string): Sco
   }
 
   if (!foundScope) return null
-  return { moduleName, scopeName, inputs, outputs, enumConstructors }
+  return { moduleName, sourcePath, scopeName, inputs, outputs, enumConstructors }
 }
 
 /** Formate un montant YAML (`"1200 €"`, `"1 200,50 €"`, `1200`) en littéral Catala `argent`. */
@@ -358,7 +362,7 @@ export function formatCatalaLiteral(
   value: OracleScalar,
   typeName: string,
   enumConstructors: Map<string, string>,
-  moduleName: string,
+  moduleName: string | null,
 ): string {
   if (typeName === 'booléen') {
     if (typeof value === 'boolean') return value ? 'vrai' : 'faux'
@@ -400,7 +404,7 @@ export function formatCatalaLiteral(
   const ctor = String(value).trim()
   const enumName = enumConstructors.get(ctor)
   if (enumName) {
-    return `${moduleName}.${enumName}.${ctor}`
+    return moduleName ? `${moduleName}.${enumName}.${ctor}` : `${enumName}.${ctor}`
   }
   throw new Error(`Valeur "${ctor}" incompatible avec le type Catala "${typeName}"`)
 }
@@ -419,10 +423,19 @@ function sanitizeScopeId(id: string): string {
  * prêt à être exécuté par `clerk test` contre le module Catala cible.
  */
 export function generateOracleCatalaFile(schema: ScopeSchema, cases: OracleCase[]): string {
+  const headerDirective = schema.moduleName
+    ? `> Usage de ${schema.moduleName}`
+    : schema.sourcePath
+      ? `> Inclusion: ${schema.sourcePath}`
+      : null
+  if (!headerDirective) {
+    throw new Error(`Le schéma ${schema.scopeName} doit fournir moduleName ou sourcePath`)
+  }
+  const scopeRef = schema.moduleName ? `${schema.moduleName}.${schema.scopeName}` : schema.scopeName
   const lines: string[] = [
-    `> Usage de ${schema.moduleName}`,
+    headerDirective,
     '',
-    `# Tests d'oracle générés automatiquement pour ${schema.moduleName}.${schema.scopeName}`,
+    `# Tests d'oracle générés automatiquement pour ${scopeRef}`,
     '',
     '```catala',
   ]
@@ -440,16 +453,14 @@ export function generateOracleCatalaFile(schema: ScopeSchema, cases: OracleCase[
     lines.push(`# Oracle ${c.id} · source : ${c.source.kind} (${c.source.ref})`)
     lines.push('#[test]')
     lines.push(`déclaration champ d'application ${testScope}:`)
-    lines.push(`  c champ d'application ${schema.moduleName}.${schema.scopeName}`)
+    lines.push(`  c champ d'application ${scopeRef}`)
     lines.push('')
     lines.push(`champ d'application ${testScope}:`)
 
     for (const [field, val] of Object.entries(c.inputs)) {
       const typeName = schema.inputs.get(field)
       if (!typeName) {
-        throw new Error(
-          `Oracle ${c.id} : entrée "${field}" absente de ${schema.moduleName}.${schema.scopeName}`,
-        )
+        throw new Error(`Oracle ${c.id} : entrée "${field}" absente de ${scopeRef}`)
       }
       const lit = formatCatalaLiteral(val, typeName, schema.enumConstructors, schema.moduleName)
       lines.push(`  définition c.${field} égal à ${lit}`)
@@ -458,9 +469,7 @@ export function generateOracleCatalaFile(schema: ScopeSchema, cases: OracleCase[
     for (const [field, val] of Object.entries(c.expected)) {
       const typeName = schema.outputs.get(field)
       if (!typeName) {
-        throw new Error(
-          `Oracle ${c.id} : sortie "${field}" absente de ${schema.moduleName}.${schema.scopeName}`,
-        )
+        throw new Error(`Oracle ${c.id} : sortie "${field}" absente de ${scopeRef}`)
       }
       const lit = formatCatalaLiteral(val, typeName, schema.enumConstructors, schema.moduleName)
       lines.push(`  assertion c.${field} = ${lit}`)

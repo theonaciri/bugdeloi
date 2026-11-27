@@ -20,6 +20,7 @@ import {
   legalText,
 } from '../packages/db/src/index.ts'
 import { runInSandbox } from '../packages/runner/src/index.ts'
+import { runN4Checks } from './check-n4.ts'
 import { runOracleChecks } from './check-oracles.ts'
 
 const checkOnly = process.argv.includes('--check-only')
@@ -160,15 +161,24 @@ try {
     process.exit(1)
   }
 
+  const n4Res = runN4Checks(workdir)
+  if (!n4Res.ok) {
+    for (const err of n4Res.errors) {
+      console.error(`[N4 ECHEC] ${err}`)
+    }
+    process.exit(1)
+  }
+
   if (checkOnly) {
     console.log(
-      `\n[OK --check-only] ${promoted.length} articles vérifiés (N1 anti-doublon + verbatim LEGI + N2 clerk test), ${oracleRes.eligibleN3.length} articles éligibles N3 (${oracleRes.executedCases} cas d'oracle).`,
+      `\n[OK --check-only] ${promoted.length} articles vérifiés (N1 anti-doublon + verbatim LEGI + N2 clerk test), ${oracleRes.eligibleN3.length} articles éligibles N3 (${oracleRes.executedCases} cas d'oracle), ${n4Res.eligibleN4.length} éligibles N4 (${n4Res.pendingN4.length} en red team 7 j).`,
     )
     process.exit(0)
   }
 
   const HIGHER_THAN_N2 = new Set(['N3', 'N4', 'N5', 'REF'])
   const HIGHER_THAN_N3 = new Set(['N4', 'N5', 'REF'])
+  const HIGHER_THAN_N4 = new Set(['N5', 'REF'])
   const existingN2Rows = await db
     .select({
       articleId: articleStatus.articleId,
@@ -184,7 +194,9 @@ try {
     )
   const existingN2ById = new Map(existingN2Rows.map((r) => [r.articleId, r]))
   const eligibleN3ById = new Map(oracleRes.eligibleN3.map((e) => [e.legiarti, e]))
+  const n4ById = new Map([...n4Res.eligibleN4, ...n4Res.pendingN4].map((e) => [e.legiarti, e]))
   const promotedN3: { id: string; code: string; num: string; cases: number; sources: string[] }[] = []
+  const promotedN4: { id: string; code: string; num: string; mutationPct: number; diffCases: number }[] = []
 
   const now = new Date()
   await db.transaction(async (tx) => {
@@ -195,13 +207,19 @@ try {
           ? (current.evidence as Record<string, unknown>)
           : {}
       const n3Info = eligibleN3ById.get(art.id)
-      const nextLevel = n3Info
-        ? current && HIGHER_THAN_N3.has(current.level)
-          ? current.level
-          : 'N3'
-        : current && HIGHER_THAN_N2.has(current.level)
-          ? current.level
-          : 'N2'
+      const n4Info = n4ById.get(art.id)
+      const nextLevel =
+        n3Info && n4Info?.eligible
+          ? current && HIGHER_THAN_N4.has(current.level)
+            ? current.level
+            : 'N4'
+          : n3Info
+            ? current && HIGHER_THAN_N3.has(current.level)
+              ? current.level
+              : 'N3'
+            : current && HIGHER_THAN_N2.has(current.level)
+              ? current.level
+              : 'N2'
 
       const evidence: Record<string, unknown> = {
         ...prevEvidence,
@@ -228,6 +246,27 @@ try {
             num: art.num,
             cases: n3Info.totalCases,
             sources: n3Info.sources,
+          })
+        }
+      }
+      if (n4Info) {
+        evidence.n4 = {
+          manifest_id: n4Info.manifestId,
+          differential_cases: n4Info.differentialCases,
+          unexplained_divergences: n4Info.unexplainedDivergences,
+          mutation_score_pct: n4Info.mutationScorePct,
+          redteam_opened_at: n4Info.redteamOpenedAt,
+          redteam_eligible_at: n4Info.redteamEligibleAt,
+          eligible: n4Info.eligible,
+          verified_at: now.toISOString(),
+        }
+        if (nextLevel === 'N4') {
+          promotedN4.push({
+            id: art.id,
+            code: art.code,
+            num: art.num,
+            mutationPct: n4Info.mutationScorePct,
+            diffCases: n4Info.differentialCases,
           })
         }
       }
@@ -272,6 +311,19 @@ try {
           count: promotedN3.length,
           executed_cases: oracleRes.executedCases,
           articles: promotedN3,
+        },
+      })
+    }
+
+    if (promotedN4.length > 0) {
+      await tx.insert(event).values({
+        type: 'n4.promoted',
+        actor: 'system:n4',
+        summary: `${promotedN4.length} articles promus au niveau N4 Éprouvé (${promotedN4.map((p) => `${p.code} ${p.num}`).join(', ')})`,
+        payload: {
+          level: 'N4',
+          count: promotedN4.length,
+          articles: promotedN4,
         },
       })
     }

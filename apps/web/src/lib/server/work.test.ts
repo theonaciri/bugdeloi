@@ -12,11 +12,15 @@ describe('parcours des tâches', () => {
       role: 'translate',
       legiarti: 'LEGIARTI000038814974',
     })
+    expect(parseTaskId('oracle-LEGIARTI000006308234')).toEqual({
+      role: 'oracle',
+      legiarti: 'LEGIARTI000006308234',
+    })
     for (const invalid of [
       '',
       'analyst-',
       'analyst-LEGIARTI12',
-      'oracle-LEGIARTI000006308234',
+      'redteam-LEGIARTI000006308234',
       'analyst-LEGIARTI000006308234-v1',
     ]) {
       expect(parseTaskId(invalid)).toBeNull()

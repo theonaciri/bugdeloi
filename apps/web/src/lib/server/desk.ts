@@ -94,7 +94,7 @@ async function reserveInTx(tx: Tx, { handle, role, family }: Assignment): Promis
     if (!row?.expires_at) throw new Error('Échéance du nouveau bail absente')
     return { task: { ...row.payload, id: row.id, role }, lease, expires_at: row.expires_at }
   }
-  if (role !== 'analyst' && role !== 'translate') return null
+  if (role !== 'analyst' && role !== 'translate' && role !== 'oracle') return null
 
   for (;;) {
     const [article] = await tx
@@ -157,7 +157,7 @@ export async function claimTasks(
 ): Promise<ClaimedTask[]> {
   return db.transaction(async (tx) => {
     const claimed: ClaimedTask[] = []
-    const rolesToTry: TaskRow['role'][] = role ? [role] : ['analyst', 'translate']
+    const rolesToTry: TaskRow['role'][] = role ? [role] : ['analyst', 'translate', 'oracle']
     for (const currentRole of rolesToTry) {
       while (claimed.length < limit) {
         const next = await claimOneInTx(tx, { handle, role: currentRole, family })

@@ -2,7 +2,7 @@
 
 Sous réserve des dispositions des articles 33 ter et 33 quater, le revenu brut des immeubles ou parties d'immeubles donnés en location, est constitué par le montant des recettes brutes perçues par le propriétaire, augmenté du montant des dépenses incombant normalement à ce dernier et mises par les conventions à la charge des locataires. Les subventions et indemnités destinées à financer des charges déductibles sont comprises dans le revenu brut. Il n'est pas tenu compte des sommes versées par les locataires au titre des charges leur incombant. Dans les recettes brutes de la propriété sont comprises notamment celles qui proviennent de la location du droit d'affichage ou du droit de chasse, de la concession du droit d'exploitation des carrières, de redevances tréfoncières ou autres redevances analogues ayant leur origine dans le droit de propriété ou d'usufruit.
 
-Interface `RevenuBrutLocation@v1`. Version applicable à compter du 2005-01-01, sans date de fin connue.
+Interface `RevenuBrutLocation@v2`. Version applicable à compter du 2005-01-01, sans date de fin connue.
 
 Les recettes brutes incluent déjà, une seule fois, les recettes que la dernière phrase cite (affichage, chasse, carrières, redevances tréfoncières ou analogues). Les sommes versées par les locataires pour leurs propres charges ne sont pas fournies. Quand la réserve des articles 33 ter ou 33 quater s’applique, la sortie est absente et ces articles décident.
 

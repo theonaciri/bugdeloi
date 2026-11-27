@@ -319,17 +319,37 @@ load_paths() {
 
 check_task() {
   local engine path
-  local -a catala_paths=()
-  if [[ -n ${lease_file:-} ]]; then
-    jq -e '(.task.blind_to // []) == []' "$lease_file" >/dev/null ||
-      die "Le contrôle parcourt le corpus et cette tâche déclare des fichiers à garder aveugles."
-  fi
+  local -a catala_paths=() yaml_paths=()
   need bun
   for path in "${allowed_paths[@]}"; do
     if [[ $path == *.catala_fr ]]; then
       catala_paths+=("${path#corpus/}")
+    elif [[ $path == corpus/oracles/*.yaml || $path == corpus/oracles/*/*.yaml ]]; then
+      yaml_paths+=("$path")
     fi
   done
+  if (( ${#yaml_paths[@]} > 0 && ${#catala_paths[@]} == 0 )); then
+    # Contrôle aveugle pour les tâches oracle : valide le schéma YAML sans jamais lire blind_to.
+    bun -e '
+      import { readFileSync } from "node:fs";
+      import { validateOracleCases } from "./packages/core/src/oracles.ts";
+      let total = 0;
+      for (const p of process.argv.slice(1)) {
+        const res = validateOracleCases(Bun.YAML.parse(readFileSync(p, "utf8")), p);
+        if (res.errors.length) {
+          for (const e of res.errors) console.error("[N3 ORACLE SCHEMA]", e);
+          process.exit(1);
+        }
+        total += res.cases.length;
+      }
+      console.log(`[OK] Schéma d’oracles valide (${process.argv.length - 1} fichier(s), ${total} cas).`);
+    ' "${yaml_paths[@]}"
+    return 0
+  fi
+  if [[ -n ${lease_file:-} ]]; then
+    jq -e '(.task.blind_to // []) == []' "$lease_file" >/dev/null ||
+      die "Le contrôle parcourt le corpus et cette tâche déclare des fichiers à garder aveugles."
+  fi
   bun scripts/check-corpus-pr.ts
   if (( ${#catala_paths[@]} )); then
     engine=$(container_engine)

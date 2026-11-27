@@ -5,6 +5,8 @@ Les aides personnelles au logement sont accordées au titre de la résidence pri
 <!-- Version LEGI du 2019-09-01. Interface ResidencePrincipaleAidesLogement@v1.
      L’entrée indique si le logement constitue la résidence principale. La sortie porte uniquement sur cette condition. -->
 
+Interface `ResidencePrincipaleAidesLogement@v2`.
+
 ```catala
 déclaration champ d'application ResidencePrincipaleAidesLogement:
   entrée appréciation_résidence_principale contenu booléen

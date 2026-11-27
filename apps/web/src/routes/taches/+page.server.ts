@@ -8,7 +8,9 @@ const PAGE_SIZE = 40
 type CodeKey = keyof typeof CODES
 
 function parseRole(raw: string | null): DeskRole {
-  return raw === 'translate' ? 'translate' : 'analyst'
+  if (raw === 'translate') return 'translate'
+  if (raw === 'oracle') return 'oracle'
+  return 'analyst'
 }
 
 function parseCode(raw: string | null): CodeKey | null {

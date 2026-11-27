@@ -2,7 +2,7 @@
 
 Chaque membre des copropriétés de cheval de course ou d'étalon qui respectent les conditions mentionnées à l'article 238 bis M est personnellement soumis à l'impôt sur le revenu à raison de la part correspondant à ses droits dans les résultats déclarés par la copropriété. Pour l'application de ces dispositions, les statuts et les modalités de fonctionnement des copropriétés d'étalon doivent être conformes à des statuts types approuvés par décret.
 
-Interface `QuotePartCoproprieteCheval@v1`. Version applicable à compter du 1997-04-11, sans date de fin connue.
+Interface `QuotePartCoproprieteCheval@v2`. Version applicable à compter du 1997-04-11, sans date de fin connue.
 
 L’appelant indique si la personne est membre d’une copropriété qui respecte l’article 238 bis M, s’il s’agit d’une copropriété d’étalon et, dans ce cas, si ses statuts et son fonctionnement sont conformes aux statuts types (appréciation). La sortie est absente quand l’article ne s’applique pas.
 

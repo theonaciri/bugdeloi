@@ -39,3 +39,9 @@ jobs:
             -c 'CREATE EXTENSION ltree' -c 'CREATE EXTENSION pg_trgm' -c 'CREATE EXTENSION unaccent'
           DATABASE_URL="$TEST_DATABASE_URL" bun run db:migrate
       - run: bun run verify
+      - name: Build et smoke test HTTP 200
+        env:
+          DATABASE_URL: ${{ env.TEST_DATABASE_URL }}
+        run: |
+          bun run --filter @bugdeloi/web build
+          bun run smoke:web

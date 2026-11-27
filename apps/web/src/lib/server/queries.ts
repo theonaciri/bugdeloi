@@ -188,7 +188,8 @@ function formatEventCopy(r: typeof event.$inferSelect): { headline: string; deta
   if (r.type === 'desk.claimed' || r.type === 'desk.released') {
     const handle = r.actor.startsWith('github:') ? `@${r.actor.slice(7)}` : 'Un contributeur'
     const label = typeof p.label === 'string' ? p.label : (r.subject ?? 'un article')
-    const role = p.role === 'translate' ? 'la traduction' : 'l’analyse'
+    const role =
+      p.role === 'translate' ? 'la traduction' : p.role === 'oracle' ? 'les cas d’oracle' : 'l’analyse'
     const family = typeof p.family === 'string' ? ` (famille ${p.family})` : ''
     if (r.type === 'desk.claimed') {
       return {

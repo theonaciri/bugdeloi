@@ -1,0 +1,14 @@
+# Dossier N4 Éprouvé — Noyau IR 2026 (CGI art. 193, 194, 197, 1657)
+# Conforme à AGENTS.md §4.1 : différentiel ≥ 10 000 cas (0 divergence non expliquée),
+# score de mutation ≥ 80 %, et 7 jours de red team ouverte sans contre-exemple accepté.
+id: n4-noyau-ir-2026
+module: Noyau_ir
+legal_units:
+  - LEGIARTI000054373592
+  - LEGIARTI000033817781
+  - LEGIARTI000053542636
+  - LEGIARTI000051219510
+differential_report: replications/c0.6/differential-summary.json
+mutation_report: replications/c0.6/mutation-summary.json
+redteam_opened_at: "2026-11-26T02:12:00Z"
+accepted_counterexamples: []

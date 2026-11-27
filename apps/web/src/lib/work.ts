@@ -100,7 +100,16 @@ export const STAGE_INFO: Record<Stage, StageInfo> = {
     who: 'Un autre auteur que le traducteur, sans accès au code',
     what: 'Rédige des cas chiffrés tirés de sources officielles (BOFiP, brochures, OpenFisca) pour comparer les sorties du programme aux résultats attendus.',
     check: 'Tous les cas réussissent, dont au moins un tiré d’une source non issue d’une IA.',
-    open: false,
+    open: true,
+    task: {
+      receives:
+        'Le texte officiel, l’interface publique (entrées, sorties, types Catala sans le corps des règles) et le chemin du code mis en blind_to.',
+      produces:
+        'Une suite de cas YAML (§4.3) couvrant au moins un seuil et contenant au moins un cas issu d’une source officielle ou de référence (BOFiP, brochure, OpenFisca, Inria, code M).',
+      file: 'corpus/oracles/<code>/<legiarti>.yaml',
+      refused:
+        'Ouvrir le fichier .catala_fr listé dans blind_to, inventer un résultat sans source ni dérivation écrite, copier des tests déjà présents dans le code.',
+    },
   },
   epreuve: {
     stage: 'epreuve',

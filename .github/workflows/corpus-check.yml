@@ -76,10 +76,33 @@ jobs:
             clerk test --color=never "${FILES[@]}" > "$log" 2>&1 || status=$?
 
           case "$status" in
-            0) finish 'ACCEPTED (N2 Compilé)' 'N2 · clerk test' "$status" ;;
+            0) ;;
             125|126|127) finish FAULT 'Catala 1.3.2 · docker run' "$status" ;;
             *) finish REJECTED 'N2 · clerk test' "$status" ;;
           esac
+
+          ORACLE_DIR=$(mktemp -d)
+          trap 'rm -rf "$log" "$ORACLE_DIR"' EXIT
+          chmod 755 "$ORACLE_DIR"
+          mapfile -t ORACLE_FILES < <(bun scripts/check-oracles.ts --emit-dir "$ORACLE_DIR" 2> "$log") || finish REJECTED 'N3 · génération oracles' "$?"
+          if (( ${#ORACLE_FILES[@]} )); then
+            status=0
+            docker run --rm --pull=never --network=none --read-only \
+              --cpus=2 --memory=1536m --memory-swap=1536m --pids-limit=128 \
+              --tmpfs /tmp:rw,nodev,nosuid,size=128m,mode=1777 \
+              --tmpfs /build:rw,nodev,nosuid,exec,size=1g,mode=1777 \
+              -e CLERK_BUILD_DIR=/build -e CLERK_TARGET_DIR=/build/targets \
+              -v "$ORACLE_DIR:/work:ro" \
+              -w /work \
+              "$IMAGE" \
+              clerk test -I . --color=never "${ORACLE_FILES[@]}" > "$log" 2>&1 || status=$?
+            case "$status" in
+              0) finish 'ACCEPTED (N2 Compilé + N3 Oracles)' 'N3 · oracles' "$status" ;;
+              125|126|127) finish FAULT 'Catala 1.3.2 · docker run (oracles)' "$status" ;;
+              *) finish REJECTED 'N3 · oracles' "$status" ;;
+            esac
+          fi
+          finish 'ACCEPTED (N2 Compilé)' 'N2 · clerk test' 0
 
   comment-verdict:
     needs: corpus-check

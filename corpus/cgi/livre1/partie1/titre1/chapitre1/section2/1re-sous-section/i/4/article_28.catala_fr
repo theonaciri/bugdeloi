@@ -2,7 +2,7 @@
 
 Le revenu net foncier est égal à la différence entre le montant du revenu brut et le total des charges de la propriété.
 
-Interface `RevenuNetFoncier@v1`. Version applicable à compter du 1950-04-30, sans date de fin connue.
+Interface `RevenuNetFoncier@v2`. Version applicable à compter du 1950-04-30, sans date de fin connue.
 
 Le revenu brut et la liste des charges de la propriété sont fournis par l’appelant ; leur qualification relève d’autres articles.
 

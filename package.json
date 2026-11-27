@@ -19,7 +19,11 @@
     "db:generate": "bun run --filter @bugdeloi/db generate",
     "db:migrate": "bun run --filter @bugdeloi/db migrate",
     "impeccable": "impeccable detect apps/web/src",
-    "verify": "bun run check && biome check . && bun run impeccable && bun test"
+    "verify": "bun run check && biome check . && bun run impeccable && bun test",
+    "check:oracles": "bun scripts/check-oracles.ts",
+    "check:n4": "bun scripts/check-n4.ts",
+    "audit:analyses": "bun scripts/audit-analyses.ts",
+    "smoke:web": "bun scripts/smoke-web.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "2.6.9",

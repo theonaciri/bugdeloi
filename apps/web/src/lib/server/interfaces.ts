@@ -8,6 +8,8 @@
  * Les fiches « hors périmètre » ou « à préciser » n'ouvrent rien. La liste manuelle
  * (`desk-translations.ts`) reste prioritaire quand elle couvre le même article.
  */
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
+import { join, relative, resolve } from 'node:path'
 import { CODES } from '@bugdeloi/core/legi'
 import { type Db, legalSection } from '@bugdeloi/db'
 import { asc, sql } from 'drizzle-orm'
@@ -210,4 +212,107 @@ export async function sectionTitles(
     .where(sql`${legalSection.path} @> ${own}`)
     .orderBy(asc(legalSection.depth))
   return rows.map((r) => r.title)
+}
+
+export interface CompiledCorpusArticle {
+  legiarti: string
+  /** Chemin relatif à `corpus/`, ex. `cgi/.../article_278.catala_fr` (utilisé dans `blind_to`). */
+  file: string
+  moduleName: string | null
+  interface: string
+  /** Signature publique (déclarations sans règles ni variables internes) pour le rôle `oracle`. */
+  signature: string
+}
+
+function resolveCorpusRoot(): string | null {
+  for (const dir of [resolve(process.cwd(), 'corpus'), resolve(process.cwd(), '../../corpus')]) {
+    if (existsSync(dir)) return dir
+  }
+  return null
+}
+
+function walkCatalaFiles(root: string, dir = root, out: string[] = []): string[] {
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const full = join(dir, entry.name)
+    if (entry.isDirectory()) {
+      if (entry.name === 'interfaces' || entry.name === 'analyses' || entry.name === 'oracles') continue
+      walkCatalaFiles(root, full, out)
+    } else if (entry.isFile() && entry.name.endsWith('.catala_fr')) {
+      out.push(relative(root, full).replaceAll('\\', '/'))
+    }
+  }
+  return out
+}
+
+/** Extrait uniquement les déclarations d'interface (structures, énumérations, entrées/sorties du scope) sans les règles. */
+function extractPublicSignature(raw: string): { scopeName: string; signature: string } | null {
+  const blocks = [...raw.matchAll(/```(?:catala-metadata|catala)\n([\s\S]*?)```/g)].map((m) => m[1] ?? '')
+  const decls: string[] = []
+  let primaryScope: string | null = null
+  for (const block of blocks) {
+    let keep = false
+    let isScope = false
+    for (const rawLine of block.split('\n')) {
+      const line = rawLine.replace(/#.*/, '').trimEnd()
+      const trimmed = line.trim()
+      const declMatch = /^déclaration\s+(structure|énumération|champ d'application)\s+([^\s:]+)\s*:/.exec(
+        trimmed,
+      )
+      if (declMatch) {
+        const kind = declMatch[1]
+        const name = declMatch[2] ?? ''
+        if (kind === "champ d'application" && name.startsWith('Test')) {
+          keep = false
+          continue
+        }
+        keep = true
+        isScope = kind === "champ d'application"
+        if (isScope && !primaryScope) primaryScope = name
+        decls.push(trimmed)
+        continue
+      }
+      if (/^champ d'application\s+/.test(trimmed) || /^#\[test\]/.test(trimmed)) {
+        keep = false
+        continue
+      }
+      if (keep && /^\s+\S/.test(line)) {
+        if (isScope && /^\s+interne\s+/.test(line)) continue
+        decls.push(`  ${trimmed}`)
+      } else if (keep && trimmed === '') {
+        decls.push('')
+      }
+    }
+  }
+  if (!primaryScope) return null
+  return { scopeName: primaryScope, signature: decls.join('\n').trim() }
+}
+
+let cachedCompiled: Map<string, CompiledCorpusArticle> | null = null
+
+/** Articles formalisés dans `corpus/` (fichiers `.catala_fr`), avec leur interface publique (sans le corps des règles). */
+export function compiledCorpusArticles(): Map<string, CompiledCorpusArticle> {
+  if (cachedCompiled) return cachedCompiled
+  const map = new Map<string, CompiledCorpusArticle>()
+  const root = resolveCorpusRoot()
+  if (!root) return map
+  for (const rel of walkCatalaFiles(root).sort()) {
+    const raw = readFileSync(join(root, rel), 'utf8')
+    const pub = extractPublicSignature(raw)
+    if (!pub) continue
+    const moduleName = /^>\s*Module\s+([A-Za-z0-9_]+)\s*$/m.exec(raw)?.[1] ?? null
+    const ifaceCited = /Interface\s+`(\p{Lu}[\p{L}\p{N}_]*@v\d+)`/u.exec(raw)?.[1] ?? `${pub.scopeName}@v1`
+    for (const m of raw.matchAll(/^#{1,6}\s+.*\|(LEGIARTI\d{12})\s*$/gm)) {
+      const id = m[1]
+      if (!id) continue
+      map.set(id, {
+        legiarti: id,
+        file: rel,
+        moduleName,
+        interface: ifaceCited,
+        signature: pub.signature,
+      })
+    }
+  }
+  cachedCompiled = map
+  return map
 }

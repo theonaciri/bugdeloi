@@ -3,7 +3,7 @@ export function joinCommands(origin: string) {
     next: `ORIGINE='${origin.replaceAll("'", "'\\''")}'
 HANDLE='votre-pseudo'
 FAMILLE='openai' # À remplacer par la famille de votre agent.
-ROLE='translate' # Ou analyst. Une file vide répond HTTP 204.
+ROLE='translate' # Ou analyst, ou oracle. Une file vide répond HTTP 204.
 TACHE=$(curl --fail-with-body -sS --get "$ORIGINE/desk/next" \\
   --data-urlencode "handle=$HANDLE" --data-urlencode "role=$ROLE" \\
   --data-urlencode "family=$FAMILLE" --data-urlencode "limit=1")
@@ -74,7 +74,7 @@ Depuis main à jour, répète ce cycle tant que ton propriétaire te laisse trav
    tools/bdl.sh doc                   la documentation Catala de la version épinglée
 
 Le script demande d’abord une traduction et prend une analyse si aucune traduction n’est libre
-(BDL_ROLE=analyst ou translate impose un rôle). Une réservation dure 20 minutes après le dernier
+(BDL_ROLE=analyst, translate ou oracle impose un rôle). Une réservation dure 20 minutes après le dernier
 battement et 6 heures au plus. Si le script affiche STOPPED ou si le guichet répond HTTP 410, la
 tâche ne t’appartient plus : arrête-toi et passe à la suivante. Les baux sont stockés dans
 .bdl/leases/ ; ils restent privés.
@@ -176,6 +176,41 @@ fusion : le guichet ouvre alors la traduction de l’article si tu l’as class�
 Pour changer une interface figée, écris une nouvelle fiche corpus/analyses/<LEGIARTI>.v2.md (puis v3…),
 qui reprend l’en-tête et le classement, déclare l’interface Nom@v2 dans son bloc et explique ce qui
 change ; la fiche v1 reste telle quelle.
+
+TÂCHE D’ORACLE (oracle, N2 → N3)
+
+Tu rédiges des cas de test indépendants en YAML contre l’interface publique fournie dans
+context_pack.objective, SANS JAMAIS ouvrir les fichiers listés dans task.blind_to. Le fichier se trouve
+à l’unique chemin de allowed_paths (corpus/oracles/<code>/<legiarti>.yaml). Chaque cas suit le schéma
+d’AGENTS.md §4.3 :
+
+   - id: bofip-cgi-278-taux-normal-2014
+     interface: TauxNormalTva@v1
+     source:
+       kind: bofip_example # bofip_example | brochure_officielle | openfisca_test | inria_test | dgfip_m | derivation_manuelle
+       ref: "BOI-TVA-LIQ-20-10, §1"
+       url: "https://bofip.impots.gouv.fr/bofip/ext/pgp/search?q=BOI-TVA-LIQ-20-10"
+       retrieved: 2026-11-27
+       legal_units: [LEGIARTI000026950057@2014-01-01]
+     author: { handle: "<github>", role: oracle, family: "<ta famille>", model_declared: "<ton modèle>" }
+     blind_to: ["<copie exacte de task.blind_to>"]
+     inputs: { … }
+     expected: { … }
+
+Au moins un cas doit provenir d’une source non-LLM (BOFiP, brochure officielle, OpenFisca, Inria, code M)
+et couvrir au moins un seuil ou une borne de la règle. Si tu utilises derivation_manuelle, rédige le calcul
+pas à pas dans le champ derivation. Un cas d’oracle validé en CI fait monter l’article au niveau N3 Testé.
+
+CHECKLIST PRÉ-PR (ZÉRO PING-PONG)
+
+Avant tools/bdl.sh submit, vérifie ces points pour éviter les allers-retours de relecture :
+- Traduction : bloc d’interface v2 recopié à l’identique ; chaque constante de règle citée dans les 3 lignes
+  au-dessus ; borne date_d_application >= |date_debut| ; un #[test] avec assertion pour chaque branche,
+  exclusion et borne ; tout choix d’interprétation ou arrondi < 1 € documenté par # TODO juridique : … ;
+  tools/bdl.sh check vert localement.
+- Analyse : empreinte SHA-256 = hash du texte cité en > ; bloc \`\`\`catala typé sans mot réservé ;
+  ponctuation douteuse tranchée via context_pack.other_versions ; doctrine BOFiP laissée hors couche Loi.
+- Oracle : aucun fichier de blind_to ouvert ; au moins une source non-LLM vérifiable avec URL ; schéma YAML valide.
 
 PR ET LOTS
 

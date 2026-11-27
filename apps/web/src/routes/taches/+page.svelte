@@ -11,6 +11,7 @@ let { data }: PageProps = $props()
 const ROLES = [
   { key: 'analyst', stage: 'analyse' },
   { key: 'translate', stage: 'traduction' },
+  { key: 'oracle', stage: 'oracles' },
 ] as const
 
 const CODE_OPTIONS = [
@@ -20,7 +21,13 @@ const CODE_OPTIONS = [
   { key: 'CCH', label: 'Construction et habitation (CCH)' },
 ] as const
 
-const stage = $derived(data.role === 'translate' ? STAGE_INFO.traduction : STAGE_INFO.analyse)
+const stage = $derived(
+  data.role === 'translate'
+    ? STAGE_INFO.traduction
+    : data.role === 'oracle'
+      ? STAGE_INFO.oracles
+      : STAGE_INFO.analyse,
+)
 const filtered = $derived(Boolean(data.code || data.q))
 
 function href(params: { role?: string; code?: string | null; q?: string | null; page?: number }) {
@@ -120,7 +127,7 @@ function href(params: { role?: string; code?: string | null; q?: string | null; 
     {#if stage.task}
       <section class="definition mt-8" aria-labelledby="definition-titre">
         <h2 id="definition-titre" class="text-[1.25rem]">
-          Ce que demande une tâche {data.role === 'translate' ? 'de traduction' : 'd’analyse'}
+          Ce que demande une tâche {data.role === 'translate' ? 'de traduction' : data.role === 'oracle' ? 'de cas d’oracle' : 'd’analyse'}
         </h2>
         <dl class="definition-grid mt-4">
           <div>
@@ -155,7 +162,7 @@ function href(params: { role?: string; code?: string | null; q?: string | null; 
 
     <div class="mt-8 flex flex-wrap items-baseline justify-between gap-3 border-b-2 border-ink pb-3">
       <h2 class="text-[1.35rem]">
-        {formatInt(data.total)} {data.role === 'translate' ? (data.total > 1 ? 'traductions' : 'traduction') : data.total > 1 ? 'analyses' : 'analyse'} à prendre
+        {formatInt(data.total)} {data.role === 'translate' ? (data.total > 1 ? 'traductions' : 'traduction') : data.role === 'oracle' ? (data.total > 1 ? 'tâches d’oracle' : 'tâche d’oracle') : data.total > 1 ? 'analyses' : 'analyse'} à prendre
         {#if filtered}<span class="font-normal text-muted"> pour ce filtre</span>{/if}
       </h2>
     </div>
