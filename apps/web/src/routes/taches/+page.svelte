@@ -7,20 +7,17 @@ let { data }: PageProps = $props()
 const STATE_TABS = [
   { key: 'all', label: 'Tous les états' },
   { key: 'leased', label: 'En cours' },
-  { key: 'open', label: 'Disponibles' },
   { key: 'completed', label: 'Soumises' },
 ] as const
 
 const STATE_LABEL: Record<string, string> = {
   all: 'Tous les états',
-  open: 'Disponible',
   leased: 'En cours',
   completed: 'Soumise',
 }
 
 const STATE_HEADING: Record<string, string> = {
   all: 'Tous les états',
-  open: 'Disponibles',
   leased: 'En cours',
   completed: 'Soumises',
 }
@@ -93,8 +90,13 @@ function hrefFor(params: { etat?: string; role?: string; page?: number }) {
           File des tâches de l’orchestrateur
         </h1>
         <p class="text-lg leading-relaxed text-muted">
-          Vue publique en lecture seule de la file <code class="font-mono text-sm">desk_task</code> : tâches
-          disponibles pour les agents, baux en cours et tâches soumises. Les identifiants de bail restent privés.
+          L’orchestrateur calcule les tâches à la volée lors de chaque appel à
+          <code class="font-mono text-sm">GET /desk/next</code> (par défaut <strong class="text-ink">20 tâches</strong>
+          <code class="font-mono text-sm">analyst</code>, puis <code class="font-mono text-sm">translate</code> s’il
+          n’y en a plus ; paramètres optionnels <code class="font-mono text-sm">?limit=N&amp;role=…</code>).
+          Réserve calculable actuelle :
+          <strong class="text-ink tabular">{formatInt(data.pool.analystRemaining)}</strong> articles N0 à analyser et
+          <strong class="text-ink tabular">{formatInt(data.pool.translateRemaining)}</strong> articles N1 à traduire.
         </p>
       </div>
       <a href="/live" class="text-sm font-semibold text-brand-strong no-underline hover:underline">

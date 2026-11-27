@@ -1,11 +1,12 @@
 import { deskTask } from '@bugdeloi/db'
-import { and, asc, count, desc, eq, gt, isNotNull, isNull, lte, or, sql } from 'drizzle-orm'
+import { and, asc, count, desc, eq, gt, isNotNull, isNull, or } from 'drizzle-orm'
 import { db } from '#lib/server/db.ts'
 import { CACHE } from '#lib/server/http.ts'
+import { getLevelCounts } from '#lib/server/queries.ts'
 import type { PageServerLoad } from './$types'
 
 const PAGE_SIZE = 100
-type TaskStateFilter = 'all' | 'open' | 'leased' | 'completed'
+type TaskStateFilter = 'all' | 'leased' | 'completed'
 const DESK_ROLES = [
   'analyst',
   'translate',
@@ -19,7 +20,7 @@ const DESK_ROLES = [
 type DeskRole = (typeof DESK_ROLES)[number]
 
 function parseState(raw: string | null): TaskStateFilter {
-  if (raw === 'open' || raw === 'leased' || raw === 'completed') return raw
+  if (raw === 'leased' || raw === 'completed') return raw
   return 'all'
 }
 
@@ -37,33 +38,31 @@ export const load: PageServerLoad = async ({ url, setHeaders }) => {
   const offset = (page - 1) * PAGE_SIZE
   const now = new Date()
 
-  // Compteurs globaux par état et par rôle
+  // Réserve vivante calculée à la volée (N0 restants à analyser, N1 restants à traduire)
+  const levelCounts = await getLevelCounts()
+
+  // On ne compte que les tâches actives (en cours) ou soumises — les baux expirés ne sont plus une file séparée
+  const activeOrCompleted = or(
+    isNotNull(deskTask.completedAt),
+    and(isNull(deskTask.completedAt), gt(deskTask.leaseExpiresAt, now)),
+  )
+
   const stateRows = await db()
     .select({
       role: deskTask.role,
-      state: sql<string>`case
-        when ${deskTask.completedAt} is not null then 'completed'
-        when ${deskTask.leaseExpiresAt} is not null and ${deskTask.leaseExpiresAt} > now() then 'leased'
-        else 'open'
-      end`,
+      completed: isNotNull(deskTask.completedAt),
       total: count(),
     })
     .from(deskTask)
-    .groupBy(
-      deskTask.role,
-      sql`case
-        when ${deskTask.completedAt} is not null then 'completed'
-        when ${deskTask.leaseExpiresAt} is not null and ${deskTask.leaseExpiresAt} > now() then 'leased'
-        else 'open'
-      end`,
-    )
+    .where(activeOrCompleted)
+    .groupBy(deskTask.role, isNotNull(deskTask.completedAt))
 
-  const stateCounts: Record<TaskStateFilter, number> = { all: 0, open: 0, leased: 0, completed: 0 }
+  const stateCounts: Record<TaskStateFilter, number> = { all: 0, leased: 0, completed: 0 }
   const roleCounts = new Map<string, number>()
 
   for (const row of stateRows) {
     const n = Number(row.total)
-    const st = row.state as 'open' | 'leased' | 'completed'
+    const st: 'leased' | 'completed' = row.completed ? 'completed' : 'leased'
     if (role === 'all' || row.role === role) {
       stateCounts[st] += n
       stateCounts.all += n
@@ -73,7 +72,7 @@ export const load: PageServerLoad = async ({ url, setHeaders }) => {
     }
   }
 
-  const conditions = []
+  const conditions = [activeOrCompleted]
   if (role !== 'all') {
     conditions.push(eq(deskTask.role, role))
   }
@@ -81,13 +80,6 @@ export const load: PageServerLoad = async ({ url, setHeaders }) => {
     conditions.push(isNotNull(deskTask.completedAt))
   } else if (etat === 'leased') {
     conditions.push(and(isNull(deskTask.completedAt), gt(deskTask.leaseExpiresAt, now)))
-  } else if (etat === 'open') {
-    conditions.push(
-      and(
-        isNull(deskTask.completedAt),
-        or(isNull(deskTask.leaseExpiresAt), lte(deskTask.leaseExpiresAt, now)),
-      ),
-    )
   }
 
   const rows = await db()
@@ -103,7 +95,7 @@ export const load: PageServerLoad = async ({ url, setHeaders }) => {
       completedAt: deskTask.completedAt,
     })
     .from(deskTask)
-    .where(conditions.length > 0 ? and(...conditions) : undefined)
+    .where(and(...conditions))
     .orderBy(desc(deskTask.completedAt), desc(deskTask.leaseStartedAt), asc(deskTask.id))
     .limit(PAGE_SIZE)
     .offset(offset)
@@ -114,11 +106,7 @@ export const load: PageServerLoad = async ({ url, setHeaders }) => {
     const firstUnit = typeof rawUnits[0] === 'string' ? rawUnits[0] : null
     const legiarti = firstUnit ? (/LEGIARTI\d{12}/.exec(firstUnit)?.[0] ?? null) : null
     const node = typeof p?.node === 'string' ? p.node : null
-    const state: 'open' | 'leased' | 'completed' = r.completedAt
-      ? 'completed'
-      : r.leaseExpiresAt && r.leaseExpiresAt > now
-        ? 'leased'
-        : 'open'
+    const state: 'leased' | 'completed' = r.completedAt ? 'completed' : 'leased'
     return {
       id: r.id,
       role: r.role,
@@ -147,5 +135,9 @@ export const load: PageServerLoad = async ({ url, setHeaders }) => {
     stateCounts,
     roles,
     items,
+    pool: {
+      analystRemaining: levelCounts.N0,
+      translateRemaining: levelCounts.N1,
+    },
   }
 }

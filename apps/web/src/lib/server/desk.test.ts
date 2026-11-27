@@ -5,7 +5,7 @@ import { eq, inArray, sql } from 'drizzle-orm'
 import { drizzle } from 'drizzle-orm/postgres-js'
 import { claimTask, updateLease } from './desk.ts'
 import { createDeskRateLimiter } from './desk-http.ts'
-import { deskInput, parseDeskInput } from './desk-input.ts'
+import { deskInput, parseDeskInput, parseDeskNextInput } from './desk-input.ts'
 
 const leaseId = '78dd2fef-c09b-4fd6-9d8c-ad2b495347fb'
 
@@ -45,6 +45,26 @@ describe('schémas du desk', () => {
     expect(release(`lease=${leaseId}`)).toBeNull()
     expect(release(`lease=${leaseId}&reason=finished`)).toBeNull()
     expect(release(`lease=${leaseId}&reason=other&reason=submitted`)).toBeNull()
+  })
+
+  test('parseDeskNextInput applique les valeurs par défaut (limit=20, role omis) et valide les bornes', () => {
+    expect(parseDeskNextInput(new URLSearchParams(''))).toEqual({
+      handle: 'anonymous',
+      role: undefined,
+      family: 'local-autre',
+      limit: 20,
+    })
+    expect(
+      parseDeskNextInput(new URLSearchParams('limit=5&role=translate&handle=alice&family=openai')),
+    ).toEqual({
+      handle: 'alice',
+      role: 'translate',
+      family: 'openai',
+      limit: 5,
+    })
+    for (const invalid of ['limit=0', 'limit=101', 'limit=abc', 'role=unknown', 'extra=1']) {
+      expect(parseDeskNextInput(new URLSearchParams(invalid))).toBeNull()
+    }
   })
 })
 

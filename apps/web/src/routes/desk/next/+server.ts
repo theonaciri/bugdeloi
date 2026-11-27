@@ -1,20 +1,25 @@
 import { json } from '@sveltejs/kit'
 import { db } from '#lib/server/db.ts'
-import { claimTask } from '#lib/server/desk.ts'
+import { claimTasks } from '#lib/server/desk.ts'
 import { deskError } from '#lib/server/desk-http.ts'
-import { deskInput, parseDeskInput } from '#lib/server/desk-input.ts'
+import { parseDeskNextInput } from '#lib/server/desk-input.ts'
 import { notifyDeskUpdate } from '#lib/server/stream.ts'
 import type { RequestHandler } from './$types'
 
 export const trailingSlash = 'ignore'
 
 export const GET: RequestHandler = async ({ url }) => {
-  const input = parseDeskInput(url.searchParams, deskInput.next)
+  const input = parseDeskNextInput(url.searchParams)
   if (!input) return deskError(400, 'invalid_parameters')
 
-  const claim = await claimTask(db(), input)
-  if (claim) notifyDeskUpdate()
-  return claim ? json(claim) : new Response(null, { status: 204 })
+  const claims = await claimTasks(db(), input)
+  if (claims.length === 0) return new Response(null, { status: 204 })
+
+  notifyDeskUpdate()
+  if (claims.length === 1 && claims[0]) {
+    return json({ ...claims[0], count: 1, tasks: claims })
+  }
+  return json({ count: claims.length, tasks: claims })
 }
 
 // SvelteKit appelle normalement GET pour HEAD. HEAD ne doit jamais prendre de bail.
