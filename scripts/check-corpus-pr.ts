@@ -13,7 +13,7 @@
  *   fichier, et le champ d'application de l'interface figée est déclaré. Sans base LEGI : la fiche
  *   fusionnée fait foi, `promote-corpus` recontrôle contre LEGI après fusion.
  */
-import { existsSync, readFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { normalizeLegalText, sha256Hex } from '../packages/core/src/legi.ts'
 
@@ -27,10 +27,60 @@ function normalize(text: string): string {
     .trim()
 }
 
+/** Fiche la plus récente d'un article : `<LEGIARTI>.vN.md` remplace `<LEGIARTI>.md` (v1). */
+function latestAnalysisPath(legiarti: string): string | null {
+  const dir = join(workdir, 'analyses')
+  if (!existsSync(dir)) return null
+  let best: { path: string; version: number } | null = null
+  for (const name of readdirSync(dir)) {
+    const match = /^(LEGIARTI\d{12})(?:\.v(\d+))?\.md$/.exec(name)
+    if (match?.[1] !== legiarti) continue
+    const version = match[2] ? Number(match[2]) : 1
+    if (!best || version > best.version) best = { path: join(dir, name), version }
+  }
+  return best?.path ?? null
+}
+
+/**
+ * Déclarations Catala d'un texte, par en-tête (`déclaration structure X:`) : lignes sans commentaire ni
+ * espaces de tête. Pour un champ d'application, seules ses entrées et ses sorties comptent (l'interface) ;
+ * ses variables `interne` relèvent de la traduction.
+ */
+function declarations(code: string): Map<string, string> {
+  const found = new Map<string, string>()
+  let head: string | null = null
+  let body: string[] = []
+  const flush = () => {
+    if (head) found.set(head, body.join('\n'))
+    head = null
+    body = []
+  }
+  for (const rawLine of code.split('\n')) {
+    const line = rawLine.replace(/#.*/, '').trimEnd()
+    if (/^déclaration\s/.test(line)) {
+      flush()
+      head = line.trim()
+    } else if (head && /^\s+\S/.test(line)) {
+      const content = line.trim()
+      if (!/^interne\s/.test(content)) body.push(content.replace(/\s+/g, ' '))
+    } else if (head && line.trim() !== '') {
+      flush()
+    }
+  }
+  flush()
+  return found
+}
+
 /** Texte officiel et interface figée d'une fiche d'analyse, si sa citation a l'empreinte LEGI. */
-function frozenAnalysis(legiarti: string): { text: string; scope: string | null } | null {
-  const path = join(workdir, 'analyses', `${legiarti}.md`)
-  if (!existsSync(path)) return null
+function frozenAnalysis(legiarti: string): {
+  text: string
+  scope: string | null
+  version: string | null
+  file: string
+  declared: Map<string, string> | null
+} | null {
+  const path = latestAnalysisPath(legiarti)
+  if (!path) return null
   const fiche = readFileSync(path, 'utf8')
   const hash = /SHA-256\s*`([0-9a-f]{64})`/.exec(fiche)?.[1]
   const quote = fiche
@@ -40,8 +90,16 @@ function frozenAnalysis(legiarti: string): { text: string; scope: string | null 
     .join('\n')
   if (!hash || !quote || sha256Hex(normalizeLegalText(quote)) !== hash) return null
   const section = fiche.split(/^##\s+Interface[^\n]*\n/im)[1]?.split(/^##\s+/m)[0] ?? ''
-  const scope = /`(\p{Lu}[\p{L}\p{N}_]*)@v\d+`/u.exec(section)?.[1] ?? null
-  return { text: quote, scope }
+  const block = /```catala\n([\s\S]*?)```/.exec(section)?.[1]
+  const prose = section.replace(/```catala\n[\s\S]*?```/g, ' ')
+  const named = /`(\p{Lu}[\p{L}\p{N}_]*)@(v\d+)`/u.exec(prose)
+  return {
+    text: quote,
+    scope: named?.[1] ?? null,
+    version: named ? `${named[1]}@${named[2]}` : null,
+    file: path,
+    declared: block ? declarations(block) : null,
+  }
 }
 
 const workdir = 'corpus'
@@ -190,6 +248,27 @@ for (const file of files) {
         `[N2 ECHEC] ${file} : le texte de ${legiarti} diffère de celui de corpus/analyses/${legiarti}.md (texte LEGI). Recopie-le à l'identique.`,
       )
       process.exit(1)
+    }
+    if (frozen?.declared) {
+      // Interface figée par un bloc de déclaration (fiche v2 et suivantes) : la traduction la déclare à
+      // l'identique et cite la même version ; les oracles, écrits contre ce bloc, se branchent sans adaptation.
+      const own = declarations(codeBlocks.join('\n'))
+      for (const [head, body] of frozen.declared) {
+        const mine = own.get(head)
+        if (mine === undefined || mine !== body) {
+          console.error(
+            `[N2 ECHEC] ${file} : « ${head} » ${mine === undefined ? 'manque' : 'diffère de la déclaration figée'} (${frozen.file}). Recopie la déclaration de la fiche à l'identique ; seules les variables interne s'y ajoutent.`,
+          )
+          process.exit(1)
+        }
+      }
+      const cited = /Interface `([^`]+@v\d+)`/.exec(prose)?.[1] ?? null
+      if (frozen.version && cited !== frozen.version) {
+        console.error(
+          `[N2 ECHEC] ${file} : le fichier cite l'interface ${cited ?? '(aucune)'} alors que l'interface figée est ${frozen.version} (${frozen.file}).`,
+        )
+        process.exit(1)
+      }
     }
     if (frozen?.scope && !declaredScopes.has(frozen.scope)) {
       console.error(

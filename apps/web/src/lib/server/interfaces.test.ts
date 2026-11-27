@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'bun:test'
+import { latestAnalysisFilenames } from './analyses.ts'
 import { catalaPath, frozenInterfaces, parseAnalysis, sectionSlug } from './interfaces.ts'
 
 const fiche = `# Article 167 du code général des impôts
@@ -30,6 +31,28 @@ describe('interfaces figées par les fiches d’analyse', () => {
     expect(parsed?.signature).toContain('Entrées :')
     expect(parsed?.signature).toContain('Sorties :')
     expect(parsed?.signature).not.toContain('Classement')
+  })
+
+  test('lit une fiche v2 : nom de la nouvelle version, bloc de déclaration hors de la signature', () => {
+    const v2 = `# Article 37\n\nEmpreinte normalisée SHA-256 \`${'b'.repeat(64)}\`.\n\n## Interface proposée\n\n\`Resultat37@v2\`, qui remplace \`Resultat37@v1\`.\n\n\`\`\`catala\ndéclaration champ d'application Resultat37:\n  entrée bilans contenu liste de argent\n\`\`\`\n\n## Classement des dispositions\n\nCalculable.\n`
+    const parsed = parseAnalysis(v2)
+    expect(parsed?.interface).toBe('Resultat37@v2')
+    expect(parsed?.signature).not.toContain('déclaration champ')
+    expect(parsed?.signature).toContain('Déclaration Catala figée dans la fiche')
+  })
+
+  test('retient la version la plus récente de chaque fiche', () => {
+    expect(
+      latestAnalysisFilenames([
+        'LEGIARTI000000000002.md',
+        'LEGIARTI000000000001.v2.md',
+        'LEGIARTI000000000001.md',
+        'README.md',
+      ]),
+    ).toEqual([
+      { id: 'LEGIARTI000000000001', filename: 'LEGIARTI000000000001.v2.md', version: 2 },
+      { id: 'LEGIARTI000000000002', filename: 'LEGIARTI000000000002.md', version: 1 },
+    ])
   })
 
   test('refuse une fiche sans interface ou sans empreinte', () => {

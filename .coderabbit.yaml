@@ -62,7 +62,11 @@ reviews:
         proposée » donne pour chaque entrée et sortie un type Catala (`booléen`, `entier`, `décimal`, `argent`, `date`,
         `durée`, `optionnel de …`, `liste de …`, ou une structure ou énumération dont les champs ou les cas sont listés).
         Un type décrit seulement en mots (« liste datée de montants », « identifiant ») oblige le traducteur à deviner :
-        demande de le préciser. Catala n'a pas de type texte.
+        demande de le préciser. Catala n'a pas de type texte. Une nouvelle fiche, et toute fiche
+        `<LEGIARTI>.vN.md`, contient en plus un bloc ```catala qui déclare exactement l'interface (structures,
+        énumérations, champ d'application avec `date_d_application`, entrées et résultats, sans règle) : vérifie
+        qu'il concorde avec les types annoncés et le classement. Une fiche vN ne change ni le texte cité ni
+        l'empreinte de la v1 ; elle dit ce qui change par rapport à la version précédente.
         Applique ensuite la méthode d'analyse de `corpus/README.md` :
         1. Fais le **test des deux cas aux mêmes entrées** : signale si deux situations juridiquement différentes donnent les mêmes entrées (ex. établissement principal vs secondaire, double consommation d'un même montant, identifiant de regroupement manquant).
         2. Vérifie l'unité de calcul (par engagement, par opération, par exercice), l'ordre des décisions (admission, exécution, manquement) et l'état antérieur nécessaire pour les règles étalées dans le temps (ex. tranches déjà imposées).

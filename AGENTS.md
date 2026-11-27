@@ -266,7 +266,16 @@ fiches « hors périmètre » ou « à préciser » n'ouvrent rien. Le fichier �
 Légifrance (§7), calculée depuis l'arbre des sections. La liste manuelle
 `apps/web/src/lib/server/desk-translations.ts` reste prioritaire. Règle codée dans
 `apps/web/src/lib/server/interfaces.ts`. Modifier une interface figée = nouvelle version `Nom@v2` par
-une nouvelle fiche d'analyse.
+une nouvelle fiche d'analyse, `corpus/analyses/<LEGIARTI>.v2.md` (puis `.v3.md`…) ; la v1 reste intacte
+et la version la plus récente fait foi.
+
+**Interface déclarée (décision du 27/11/2026).** Une fiche v2, et toute nouvelle fiche, fige son
+interface par un bloc ` ```catala ` de déclaration (structures, énumérations, champ d'application avec
+`date_d_application`, entrées et résultats, sans règle). La traduction le recopie à l'identique, avec
+ses seules variables `interne` en plus, et cite la même version ; un cas d'oracle (§4.3) en reprend les
+noms et les types. `scripts/check-corpus-pr.ts` le contrôle. Les 11 traductions dont la fiche v1
+décrivait des types en mots ont reçu une fiche v2 qui fige la déclaration de leur code (CGI 4 A, 4 bis,
+11, 12, 14, 33 quater, 36, 37, 38 quater, 39 B, 39 D).
 
 Chaque réservation et chaque libération écrit un événement **append-only** dans `event`
 (`desk.claimed`, `desk.released` avec `role`, `family`, `reason`, `legiarti`, `label` ; `actor =

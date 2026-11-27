@@ -35,7 +35,24 @@ export interface AnalysesSummary {
   items: AnalysisEntry[]
 }
 
-const FILE_RE = /^(LEGIARTI\d{12})\.md$/
+/** `LEGIARTI….md` est la v1 d'une fiche ; `LEGIARTI….vN.md` est une nouvelle version (AGENTS.md §6). */
+const FILE_RE = /^(LEGIARTI\d{12})(?:\.v(\d+))?\.md$/
+
+/** Une fiche par article : la version la plus récente, triée par identifiant. */
+export function latestAnalysisFilenames(
+  filenames: string[],
+): { id: string; filename: string; version: number }[] {
+  const latest = new Map<string, { id: string; filename: string; version: number }>()
+  for (const filename of filenames) {
+    const match = FILE_RE.exec(filename)
+    const id = match?.[1]
+    if (!id) continue
+    const version = match[2] ? Number(match[2]) : 1
+    const current = latest.get(id)
+    if (!current || version > current.version) latest.set(id, { id, filename, version })
+  }
+  return [...latest.values()].sort((a, b) => a.id.localeCompare(b.id))
+}
 
 function resolveAnalysesDir(): string | null {
   const candidates = [
@@ -80,14 +97,11 @@ let cachedSummary: AnalysesSummary | null = null
 export function readAnalysisFiles(): { id: string; file: string; content: string }[] {
   const dir = resolveAnalysesDir()
   if (!dir) return []
-  return readdirSync(dir)
-    .filter((f) => FILE_RE.test(f))
-    .sort()
-    .flatMap((filename) => {
-      const id = FILE_RE.exec(filename)?.[1]
-      if (!id) return []
-      return [{ id, file: `corpus/analyses/${filename}`, content: readFileSync(join(dir, filename), 'utf8') }]
-    })
+  return latestAnalysisFilenames(readdirSync(dir)).map(({ id, filename }) => ({
+    id,
+    file: `corpus/analyses/${filename}`,
+    content: readFileSync(join(dir, filename), 'utf8'),
+  }))
 }
 
 /**
@@ -107,13 +121,7 @@ export function getAnalysesSummary(): AnalysesSummary {
 
   const dir = resolveAnalysesDir()
   if (dir) {
-    const files = readdirSync(dir)
-      .filter((f) => FILE_RE.test(f))
-      .sort()
-    for (const filename of files) {
-      const match = FILE_RE.exec(filename)
-      const id = match?.[1]
-      if (!id) continue
+    for (const { id, filename } of latestAnalysisFilenames(readdirSync(dir))) {
       const content = readFileSync(join(dir, filename), 'utf8')
       const headingMatch = /^#\s+(.+)$/m.exec(content)
       const title = headingMatch?.[1]?.trim() ?? id

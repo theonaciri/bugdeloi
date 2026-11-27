@@ -50,6 +50,11 @@ Interface `<Nom>@v1`. Version applicable à compter du <date_debut>, sans date d
 ```
 ````
 
+Quand la fiche d’analyse (la plus récente : `<LEGIARTI>.v2.md` remplace `<LEGIARTI>.md`) contient un
+bloc ` ```catala ` de déclaration, ce bloc est l’interface : recopie ses structures, ses énumérations et
+la déclaration du champ d’application à l’identique, ajoute seulement tes variables `interne`, et cite
+la même version (``Interface `Nom@v2` ``). `tools/bdl.sh check` refuse tout écart.
+
 Le titre et le texte sont écrits par `tools/bdl.sh next`. Le texte reste identique au caractère près :
 `tools/bdl.sh check` le compare à la citation de la fiche d’analyse, et `promote-corpus` à LEGI.
 

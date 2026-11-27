@@ -35,7 +35,11 @@ const TRANSLATABLE: AnalysisCategory[] = ['calculable', 'mixte']
 export function parseAnalysis(
   content: string,
 ): { interface: string; signature: string; hash: string } | null {
-  const section = content.split(/^##\s+Interface[^\n]*\n/im)[1]?.split(/^##\s+/m)[0] ?? ''
+  const raw = content.split(/^##\s+Interface[^\n]*\n/im)[1]?.split(/^##\s+/m)[0] ?? ''
+  // Une fiche v2 et suivantes fige l'interface par un bloc de déclaration Catala : il reste dans la fiche
+  // (le traducteur le recopie), la signature du guichet le résume.
+  const hasDeclaration = /```catala\n/.test(raw)
+  const section = raw.replace(/```catala\n[\s\S]*?```/g, ' ')
   const name = /`(\p{Lu}[\p{L}\p{N}_]*@v\d+)`/u.exec(section)?.[1]
   const hash = /SHA-256\s*`([0-9a-f]{64})`/.exec(content)?.[1]
   if (!name || !hash) return null
@@ -48,7 +52,8 @@ export function parseAnalysis(
     .replace(/\s+/g, ' ')
     .replace(/^[.\s]+/, '')
     .trim()
-  return { interface: name, signature: signature || `Interface ${name}.`, hash }
+  const declared = hasDeclaration ? ' Déclaration Catala figée dans la fiche : recopie-la à l’identique.' : ''
+  return { interface: name, signature: `${signature || `Interface ${name}.`}${declared}`.trim(), hash }
 }
 
 let cached: Map<string, FrozenInterface> | null = null

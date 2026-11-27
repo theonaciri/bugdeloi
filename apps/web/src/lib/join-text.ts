@@ -124,8 +124,11 @@ standard (fonctions Date, Période, Liste, Argent), https://github.com/CatalaLan
 Catala, https://book.catala-lang.org/en/2-0-tutorial.html (tools/bdl.sh doc affiche ces liens). Une date_fin égale à 2999-01-01 signifie
 « sans date de fin connue » : n’écris alors aucune assertion de fin. Le champ d’application porte le nom de l’interface sans le suffixe @vN. Ses entrées et sorties sont
 celles de l’interface, avec en plus date_d_application, qui borne la version visée. Quand la fiche
-décrit un type en mots (« liste de lignes qualifiées », « montant optionnel »), tu le déclares en
-Catala avec le type le plus précis que le texte justifie. Le texte
+contient un bloc \`\`\`catala de déclaration (fiches v2 et nouvelles fiches), tu recopies ses
+déclarations à l’identique, tu y ajoutes seulement tes variables interne, et tu cites la même version
+(« Interface \`Nom@v2\` ») : tools/bdl.sh check le vérifie. Quand une fiche plus ancienne décrit un type en
+mots (« liste de lignes qualifiées », « montant optionnel »), tu le déclares en Catala avec le type le
+plus précis que le texte justifie. Le texte
 officiel reste identique au caractère près : le contrôle compare son empreinte à celle de LEGI. Un
 bloc de code suit l’alinéa qu’il applique quand l’article en a plusieurs. Chaque constante est
 précédée, dans les trois lignes au-dessus, d’un commentaire qui cite l’alinéa qui la fixe. Une
@@ -150,13 +153,16 @@ la fiche d’analyse. L’article monte au niveau N2 après la fusion de ta PR.
 
 TÂCHE D’ANALYSE (analyst, N0 → N1)
 
-Tu lis l’article et tu écris la fiche corpus/analyses/<LEGIARTI>.md, sans code Catala. Elle
+Tu lis l’article et tu écris la fiche corpus/analyses/<LEGIARTI>.md, sans règle Catala. Elle
 commence par le titre de l’article, le lien LEGI avec la date de version, la ligne
 « Empreinte normalisée SHA-256 \`<task.legal_units[0].text_sha256>\`. » et le texte officiel cité.
 Viennent ensuite deux sections, dont le guichet lit les titres : « ## Interface proposée »
 donne un nom \`NomDescriptif@v1\` puis les entrées et les sorties avec leur type Catala (booléen,
 entier, décimal, argent, date, durée, optionnel de …, liste de …, ou une structure ou énumération
-dont tu donnes les champs ou les cas) ; une notion d’appréciation
+dont tu donnes les champs ou les cas), puis un bloc \`\`\`catala qui déclare exactement cette interface :
+structures et énumérations, puis « déclaration champ d’application Nom: » avec date_d_application,
+les entrées et les résultats, sans définition ni règle. Ce bloc devient le contrat du traducteur et des
+oracles ; une notion d’appréciation
 y figure comme entrée appréciation_<notion>, et aucun champ fourre-tout ne regroupe plusieurs
 règles calculables. « ## Classement des alinéas » (ou « des dispositions ») classe chaque alinéa en calculable, entrée
 d’appréciation ou hors périmètre, avec ses renvois et les ambiguïtés repérées. Une ponctuation
@@ -167,6 +173,9 @@ déposer une fiche, applique la méthode de corpus/README.md : unité de calcul,
 test des deux cas aux mêmes entrées, doctrine BOFiP tenue à part. Le modèle annoté est
 corpus/analyses/LEGIARTI000006303505.md. Ta fiche fige l’interface dès sa
 fusion : le guichet ouvre alors la traduction de l’article si tu l’as classé calculable ou mixte.
+Pour changer une interface figée, écris une nouvelle fiche corpus/analyses/<LEGIARTI>.v2.md (puis v3…),
+qui reprend l’en-tête et le classement, déclare l’interface Nom@v2 dans son bloc et explique ce qui
+change ; la fiche v1 reste telle quelle.
 
 PR ET LOTS
 
