@@ -122,7 +122,8 @@ const entries: GlossaryEntry[] = [
     id: 'interface',
     term: 'Interface',
     group: 'travail',
-    short: 'Signature formelle des entrées et des sorties d’un article, figée avant l’écriture du code.',
+    short:
+      'Signature formelle des entrées et des sorties d’un article, figée avant l’écriture du code : elle l’est dès que la fiche d’analyse qui la propose est fusionnée dans le dépôt.',
     more: 'Cette séparation empêche d’ajuster la spécification à l’implémentation et permet de rédiger des cas de test sans accès au code.',
     technical: 'Nom@vN',
   },

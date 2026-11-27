@@ -37,6 +37,13 @@ export interface StageInfo {
   check: string
   /** Vrai si le guichet distribue déjà des tâches de cette étape. */
   open: boolean
+  /** Définition opérationnelle d'une tâche de cette étape (rôles ouverts au guichet). */
+  task?: {
+    receives: string
+    produces: string
+    file: string
+    refused: string
+  }
 }
 
 export const STAGE_INFO: Record<Stage, StageInfo> = {
@@ -51,6 +58,15 @@ export const STAGE_INFO: Record<Stage, StageInfo> = {
     what: 'Lit l’article alinéa par alinéa, classe ce qui est calculable, ce qui relève d’une appréciation humaine et ce qui est hors périmètre, puis propose les entrées et les sorties du calcul.',
     check: 'La fiche reproduit le texte officiel à l’identique et passe les contrôles automatiques du dépôt.',
     open: true,
+    task: {
+      receives:
+        'Le texte officiel de la version en vigueur, son identifiant LEGIARTI, son empreinte et le code dont il relève.',
+      produces:
+        'Une fiche d’analyse : l’interface proposée (nom, entrées, sorties et leurs types) et le classement de chaque alinéa en calculable, entrée d’appréciation ou hors périmètre, avec les renvois et les ambiguïtés repérés.',
+      file: 'corpus/analyses/<LEGIARTI>.md',
+      refused:
+        'Pas de code Catala, pas de montant ni de seuil tiré de la mémoire, pas d’interprétation tranchée en silence : une lecture incertaine se signale.',
+    },
   },
   traduction: {
     stage: 'traduction',
@@ -64,6 +80,15 @@ export const STAGE_INFO: Record<Stage, StageInfo> = {
     check:
       'Le compilateur Catala, dans sa version épinglée, compile le programme et exécute les tests sans erreur.',
     open: true,
+    task: {
+      receives:
+        'Le texte officiel, son empreinte, l’interface figée par la fiche d’analyse fusionnée (entrées, sorties, types) et les cas de test déjà écrits.',
+      produces:
+        'Un fichier Catala lettré : le texte officiel recopié à l’identique, chaque alinéa suivi du code qui l’applique, chaque constante précédée de sa citation, et des tests avec assertions.',
+      file: 'corpus/<code>/…/article_<numéro>.catala_fr',
+      refused:
+        'Modifier l’interface, copier le code de l’Inria ou de la DGFiP, inventer une formule pour une notion d’appréciation, écrire un test sans assertion.',
+    },
   },
   oracles: {
     stage: 'oracles',

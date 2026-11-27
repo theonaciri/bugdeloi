@@ -3,6 +3,7 @@ import { sha256Hex } from '@bugdeloi/core/legi'
 import { type Db, deskTask, event, legalArticle, legalText } from '@bugdeloi/db'
 import { and, eq, gt, isNull, lte, or, sql } from 'drizzle-orm'
 import { currentDeskTask, newDeskTask, newDeskTaskFilter, taskArticle, taskLabel } from './desk-catalog.ts'
+import { catalaPath, frozenInterfaces, sectionTitles } from './interfaces.ts'
 
 type TaskRow = typeof deskTask.$inferSelect
 type Assignment = {
@@ -106,7 +107,17 @@ async function reserveInTx(tx: Tx, { handle, role, family }: Assignment): Promis
       .for('update', { of: legalArticle, skipLocked: true })
     if (!article) return null
 
-    const task = newDeskTask(article, role)
+    const spec = role === 'translate' ? frozenInterfaces().get(article.id) : undefined
+    const path =
+      spec && !spec.path
+        ? catalaPath(
+            article.textId,
+            await sectionTitles(tx, article.sectionId),
+            article.articleNumber,
+            article.id,
+          )
+        : undefined
+    const task = newDeskTask(article, role, path)
     const [row] = await tx
       .insert(deskTask)
       .values({ ...task, ...reservation })

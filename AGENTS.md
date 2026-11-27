@@ -258,6 +258,16 @@ Une **tâche** = un rôle × un article. Elle fait monter l'article d'**une éta
 | **En relecture** | Libérée avec `submitted`, article pas encore au niveau visé (PR en attente de fusion) |
 | **Intégrée**     | Article au niveau visé ou au-dessus (après fusion et `promote-corpus`)                |
 
+**Gel de l'interface (décision du 27/11/2026).** Une fiche d'analyse fusionnée sur `main` (PR relue,
+contrôles du dépôt verts) **fige** l'interface qu'elle propose. Le guichet ouvre alors une tâche
+`translate` pour chaque article dont la fiche est classée « calculable » ou « mixte », si le texte en
+vigueur a toujours l'empreinte relevée par l'analyse et si l'article n'est pas déjà au niveau N2. Les
+fiches « hors périmètre » ou « à préciser » n'ouvrent rien. Le fichier à produire suit la hiérarchie
+Légifrance (§7), calculée depuis l'arbre des sections. La liste manuelle
+`apps/web/src/lib/server/desk-translations.ts` reste prioritaire. Règle codée dans
+`apps/web/src/lib/server/interfaces.ts`. Modifier une interface figée = nouvelle version `Nom@v2` par
+une nouvelle fiche d'analyse.
+
 Chaque réservation et chaque libération écrit un événement **append-only** dans `event`
 (`desk.claimed`, `desk.released` avec `role`, `family`, `reason`, `legiarti`, `label` ; `actor =
 github:<handle>`). Le battement n'est pas journalisé. La fiche `/taches/<id>` et le tableau `/live`

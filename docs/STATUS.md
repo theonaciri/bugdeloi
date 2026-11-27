@@ -30,6 +30,13 @@
 
 ## Journal des décisions
 
+- 2026-11-27 — **Une fiche d'analyse fusionnée fige son interface** (choix du mainteneur). Avant, seules
+  3 interfaces saisies à la main ouvraient une traduction : les 405 articles analysés restaient bloqués.
+  Désormais 372 fiches « calculable » ou « mixte » à l'empreinte inchangée ouvrent une tâche `translate`
+  (369 à prendre, 3 déjà traduites ; 29 hors périmètre et 7 à préciser n'en ouvrent pas). Chemin du
+  fichier Catala calculé depuis l'arbre Légifrance. `/taches` définit désormais chaque type de tâche
+  (reçu, produit, contrôlé, exclu).
+
 - 2026-11-27 — Révision rédactionnelle complète du site (passe Impeccable `clarify` + ton neutre, naturel et
   scientifique) : suppression des formules rhétoriques (« X, article par article », « du texte au test », « X, pas Y »),
   des points-virgules et des tirets cadratins dans les textes d’interface, remplacement des tournures familières

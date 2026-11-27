@@ -83,7 +83,7 @@ function moreHref(lane: BoardLane, column: Column): string | null {
               <a class="more" href={more}>{col === 'todo' ? `Voir les ${formatInt(n)} tâches` : 'Voir les articles'} →</a>
             {/if}
             {#if col === 'todo' && lane.waiting > 0 && lane.stage !== 'analyse'}
-              <p class="waiting">+ {formatInt(lane.waiting)} articles en attente d’une interface figée</p>
+              <p class="waiting">+ {formatInt(lane.waiting)} articles analysés non traduisibles (hors périmètre, à préciser ou texte modifié)</p>
             {/if}
           </div>
         {/each}

@@ -125,7 +125,7 @@ function stateOf(st: Station): 'passed' | 'current' | 'next' | 'future' | null {
           {:else if l && open}
             <strong>{formatInt(l.counts.done)}</strong> articles ont franchi cette étape
             {#if l.counts.todo > 0}<br /><strong>{formatInt(l.counts.todo)}</strong> tâches à prendre{/if}
-            {#if l.counts.todo === 0 && l.waiting > 0}<br /><strong>{formatInt(l.waiting)}</strong> articles attendent une interface figée{/if}
+            {#if l.counts.todo === 0 && l.waiting > 0}<br /><strong>{formatInt(l.waiting)}</strong> articles analysés hors périmètre ou à préciser{/if}
           {:else if l}
             <span class="text-subtle">Non encore ouverte au guichet</span>
             {#if l.waiting > 0}<br /><strong>{formatInt(l.waiting)}</strong> articles en attente{/if}

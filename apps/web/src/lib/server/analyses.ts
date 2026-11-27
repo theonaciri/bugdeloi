@@ -61,7 +61,7 @@ function detectCodeKey(title: string): CodeKey | null {
   return null
 }
 
-function classifyAnalysis(content: string): AnalysisCategory {
+export function classifyAnalysis(content: string): AnalysisCategory {
   const section = (content.split(/##\s+Classement/i)[1] ?? content).toLowerCase()
   const hasCalc = /\bcalculable\b/.test(section)
   const hasApp = /appr[ée]ciation/.test(section)
@@ -75,6 +75,20 @@ function classifyAnalysis(content: string): AnalysisCategory {
 }
 
 let cachedSummary: AnalysesSummary | null = null
+
+/** Les fiches d'analyse fusionnées (`corpus/analyses/LEGIARTI*.md`), triées par identifiant. */
+export function readAnalysisFiles(): { id: string; file: string; content: string }[] {
+  const dir = resolveAnalysesDir()
+  if (!dir) return []
+  return readdirSync(dir)
+    .filter((f) => FILE_RE.test(f))
+    .sort()
+    .flatMap((filename) => {
+      const id = FILE_RE.exec(filename)?.[1]
+      if (!id) return []
+      return [{ id, file: `corpus/analyses/${filename}`, content: readFileSync(join(dir, filename), 'utf8') }]
+    })
+}
 
 /**
  * Charge et catégorise les fiches d'analyse (`corpus/analyses/LEGIARTI*.md`).
@@ -104,7 +118,7 @@ export function getAnalysesSummary(): AnalysesSummary {
       const headingMatch = /^#\s+(.+)$/m.exec(content)
       const title = headingMatch?.[1]?.trim() ?? id
       const ifaceSection = content.split(/##\s+Interface/i)[1]?.split(/^##\s+/m)[0] ?? ''
-      const ifaceMatch = /`([A-Z][A-Za-z0-9_]*@v\d+)`/.exec(ifaceSection)
+      const ifaceMatch = /`(\p{Lu}[\p{L}\p{N}_]*@v\d+)`/u.exec(ifaceSection)
       const category = classifyAnalysis(content)
       byCategory[category] += 1
       items.push({

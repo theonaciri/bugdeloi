@@ -44,7 +44,7 @@ export const load: PageServerLoad = async ({ url, setHeaders }) => {
     totalPages: Math.max(1, Math.ceil(list.total / PAGE_SIZE)),
     items: list.items,
     byRole,
-    /** Articles analysés (N1) : candidats à la traduction une fois leur interface figée. */
+    /** Articles au niveau N1 (analysés), pour expliquer une liste de traductions vide. */
     analysed: levels.N1,
     enabled: process.env.DESK_ENABLED === '1',
   }

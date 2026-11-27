@@ -380,7 +380,7 @@ const verdicts = [
           <strong class="text-ink">En cours</strong> : réservations actives. <strong class="text-ink">En relecture</strong> :
           tâches déposées dont l’article n’a pas encore atteint le niveau visé. <strong class="text-ink">Intégrées</strong> :
           articles en vigueur au niveau visé ou au-dessus (★ exclue). « En attente » : articles du niveau de départ qui ne
-          sont pas encore des tâches (par exemple, une traduction attend une interface figée). Règles :
+          sont pas encore des tâches (par exemple, un article analysé hors périmètre n’ouvre pas de traduction). Règles :
           <code class="wrap-anywhere">apps/web/src/lib/server/work.ts</code>.
         </dd>
       </div>

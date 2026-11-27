@@ -34,7 +34,12 @@ import {
 } from '../work.ts'
 import { db } from './db.ts'
 import { articleLabel, codeShort, currentDeskTask, newDeskTaskFilter, taskLabel } from './desk-catalog.ts'
-import { translations } from './desk-translations.ts'
+import {
+  catalaPath,
+  frozenInterfaces,
+  translationTaskId as frozenTaskId,
+  sectionTitles,
+} from './interfaces.ts'
 import { getLevelCounts } from './level-counts.ts'
 
 export type DeskRole = 'analyst' | 'translate'
@@ -62,8 +67,8 @@ function reachedTarget(target: Level): SQL {
 const ROLE_TARGET: Record<DeskRole, Level> = { analyst: 'N1', translate: 'N2' }
 
 function translationTaskId(legiarti: string): string | null {
-  const spec = translations.find((t) => t.legiarti === legiarti)
-  return spec ? `translate-${spec.legiarti}-${spec.interface.split('@')[1]}` : null
+  const spec = frozenInterfaces().get(legiarti)
+  return spec ? frozenTaskId(spec) : null
 }
 
 function virtualTaskId(role: DeskRole, legiarti: string): string {
@@ -224,6 +229,7 @@ export async function taskJourney(id: string): Promise<TaskJourney | null> {
         id: legalArticle.id,
         num: legalArticle.num,
         textId: legalArticle.textId,
+        sectionId: legalArticle.sectionId,
         codeTitle: legalText.title,
         dateDebut: legalArticle.dateDebut,
         text: legalArticle.contentText,
@@ -288,7 +294,7 @@ export async function taskJourney(id: string): Promise<TaskJourney | null> {
     if (!reached && !eligible?.n) {
       blockedReason =
         role === 'translate'
-          ? 'Aucune interface n’est encore figée pour cet article : la traduction ne peut pas commencer.'
+          ? 'Pas de traduction possible pour l’instant : il faut une fiche d’analyse fusionnée, classée « calculable » ou « mixte », sur le texte en vigueur (empreinte identique), et l’article ne doit pas déjà être au niveau N2.'
           : LEVEL_RANK[level] >= 1
             ? 'L’article est déjà analysé.'
             : 'Le guichet ne propose pas cet article : il n’est plus en vigueur, il est vide ou il n’est pas un article autonome.'
@@ -433,7 +439,11 @@ export async function taskJourney(id: string): Promise<TaskJourney | null> {
   steps.sort((a, b) => a.ts.localeCompare(b.ts))
 
   const payload = row?.payload
-  const spec = translations.find((t) => t.legiarti === legiarti)
+  const spec = role === 'translate' ? frozenInterfaces().get(legiarti) : undefined
+  const plannedPath =
+    role === 'translate' && spec && !payload
+      ? (spec.path ?? catalaPath(art.textId, await sectionTitles(db(), art.sectionId), art.num, legiarti))
+      : null
   return {
     taskId: id,
     role,
@@ -451,10 +461,15 @@ export async function taskJourney(id: string): Promise<TaskJourney | null> {
     text: art.text,
     sourceUrl: legifranceArticleUrl(legiarti),
     textSha256: art.hash,
-    objective: payload?.context_pack.objective ?? (role === 'translate' ? (spec?.signature ?? null) : null),
+    objective:
+      payload?.context_pack.objective ??
+      (spec
+        ? `Traduire l’article en Catala selon l’interface figée ${spec.interface}. ${spec.signature}`
+        : null),
     interfaceName: payload?.interface ?? spec?.interface ?? null,
     allowedPaths:
-      payload?.allowed_paths ?? (role === 'analyst' ? [`analyses/${legiarti}.md`] : spec ? [spec.path] : []),
+      payload?.allowed_paths ??
+      (role === 'analyst' ? [`analyses/${legiarti}.md`] : plannedPath ? [plannedPath] : []),
     handle: row?.active ? row.handle : null,
     family: row?.active ? row.family : null,
     leaseExpiresAt: row?.active && row.expiresAt ? row.expiresAt.toISOString() : null,

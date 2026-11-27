@@ -117,14 +117,40 @@ function href(params: { role?: string; code?: string | null; q?: string | null; 
       </form>
     </div>
 
+    {#if stage.task}
+      <section class="definition mt-8" aria-labelledby="definition-titre">
+        <h2 id="definition-titre" class="text-[1.25rem]">
+          Ce que demande une tâche {data.role === 'translate' ? 'de traduction' : 'd’analyse'}
+        </h2>
+        <dl class="definition-grid mt-4">
+          <div>
+            <dt>Le contributeur reçoit</dt>
+            <dd>{stage.task.receives}</dd>
+          </div>
+          <div>
+            <dt>Il produit</dt>
+            <dd>
+              {stage.task.produces}
+              <code class="mt-1.5 block w-fit text-[0.8rem]">{stage.task.file}</code>
+            </dd>
+          </div>
+          <div>
+            <dt>Ce qui est contrôlé</dt>
+            <dd>{stage.check} Intégrée, la tâche fait passer l’article de <strong>{stage.from}</strong> à <strong>{stage.to}</strong>.</dd>
+          </div>
+          <div>
+            <dt>Ce qui est exclu</dt>
+            <dd>{stage.task.refused}</dd>
+          </div>
+        </dl>
+      </section>
+    {/if}
+
     <div class="mt-8 flex flex-wrap items-baseline justify-between gap-3 border-b-2 border-ink pb-3">
       <h2 class="text-[1.35rem]">
         {formatInt(data.total)} {data.role === 'translate' ? (data.total > 1 ? 'traductions' : 'traduction') : data.total > 1 ? 'analyses' : 'analyse'} à prendre
         {#if filtered}<span class="font-normal text-muted"> pour ce filtre</span>{/if}
       </h2>
-      <p class="text-sm text-muted">
-        Une fois intégrée, chacune fait passer son article de {stage.from} à {stage.to}.
-      </p>
     </div>
 
     {#if data.items.length > 0}
@@ -162,9 +188,10 @@ function href(params: { role?: string; code?: string | null; q?: string | null; 
         <div class="max-w-[60ch] space-y-2">
           <p class="font-display text-xl font-bold [font-stretch:110%]">Aucune traduction à prendre pour l’instant</p>
           <p class="text-muted">
-            Une traduction ne s’ouvre qu’une fois l’<Term id="interface">interface</Term> de l’article figée par un
-            mainteneur, à partir de son analyse.
-            <strong class="text-ink">{formatInt(data.analysed)} articles analysés</strong> attendent cette étape.
+            Une traduction s’ouvre dès qu’une fiche d’analyse classée « calculable » ou « mixte » est fusionnée :
+            l’<Term id="interface">interface</Term> qu’elle propose est alors figée. Toutes les analyses fusionnées ont
+            déjà leur tâche de traduction ; les {formatInt(data.analysed)} articles analysés restants sont hors
+            périmètre, à préciser, déjà traduits ou réservés.
           </p>
           <p><a href={href({ role: 'analyst', page: 1 })}>Voir les tâches d’analyse →</a></p>
         </div>
@@ -316,6 +343,39 @@ function href(params: { role?: string; code?: string | null; q?: string | null; 
     line-height: 1.5;
     color: var(--ink-muted);
     max-width: 85ch;
+  }
+  .definition {
+    padding: 1.25rem 1.4rem 1.4rem;
+    border: 1.5px solid var(--line-strong);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+  }
+  .definition-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+  .definition-grid dt {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .definition-grid dd {
+    margin-top: 0.4rem;
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+  @media (max-width: 63.99rem) {
+    .definition-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 47.99rem) {
+    .definition-grid {
+      grid-template-columns: 1fr;
+    }
   }
   .select-wrap {
     position: relative;

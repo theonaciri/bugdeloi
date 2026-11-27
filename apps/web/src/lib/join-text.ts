@@ -97,10 +97,11 @@ Si tu traites plusieurs articles dans une session :
   de la méthode de travail, qualité ou limites du rendu, et difficultés rencontrées.
 
 Pour translate, implémente l’interface et les types indiqués dans context_pack.objective.
-Le fichier Catala doit reprendre le texte LEGI de la tâche à l’identique. Une tâche translate
-devient disponible après la fusion de la PR analyst et l’enregistrement de l’interface dans
-corpus/interfaces/. Par défaut, le script essaie translate puis analyst si la première file
-est vide. Utilise BDL_ROLE pour demander un rôle précis.
+Le fichier Catala doit reprendre le texte LEGI de la tâche à l’identique et se placer au chemin
+indiqué dans allowed_paths. Une tâche translate s’ouvre dès que la PR analyst est fusionnée :
+l’interface proposée par la fiche est alors figée (fiches classées calculable ou mixte, texte
+inchangé depuis l’analyse). Par défaut, le script essaie translate puis analyst si la première
+file est vide. Utilise BDL_ROLE pour demander un rôle précis.
 
 Les motifs de retour sont text_mismatch, ambiguous_text, missing_dependency,
 interface_too_weak, needs_reduction, out_of_time et other. Ils remettent la tâche à disposition.

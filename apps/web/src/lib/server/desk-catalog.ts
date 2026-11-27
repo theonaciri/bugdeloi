@@ -1,24 +1,29 @@
 import { CODES, legifranceArticleUrl, sha256Hex } from '@bugdeloi/core/legi'
 import { articleInForce, articleStatus, deskTask, legalArticle, legalText } from '@bugdeloi/db'
-import { and, eq, isNotNull, ne, notInArray, or, sql } from 'drizzle-orm'
+import { and, eq, isNotNull, ne, notInArray, sql } from 'drizzle-orm'
 import { translations } from './desk-translations.ts'
+import { frozenInterfaces, translationTaskId } from './interfaces.ts'
 
-const translationId = (spec: (typeof translations)[number]) =>
-  `translate-${spec.legiarti}-${spec.interface.split('@')[1]}`
-
+/**
+ * Articles pour lesquels le guichet créerait une tâche au prochain appel.
+ * Traduction : interface figée (fiche d'analyse fusionnée ou liste manuelle), texte inchangé depuis
+ * l'analyse, aucune tâche de traduction déjà inscrite, article pas encore au niveau N2.
+ */
 export function newDeskTaskFilter(role: 'analyst' | 'translate') {
   if (role === 'translate') {
+    const specs = [...frozenInterfaces().values()]
+    if (specs.length === 0) return sql`false`
+    const pairs = sql.join(
+      specs.map((s) => sql`(${s.legiarti}, ${s.hash})`),
+      sql`, `,
+    )
     return and(
       articleInForce(),
-      or(
-        ...translations.map((spec) =>
-          and(
-            eq(legalArticle.id, spec.legiarti),
-            eq(legalArticle.textSha256, spec.hash),
-            sql`not exists (select 1 from ${deskTask} where ${deskTask.id} = ${translationId(spec)})`,
-          ),
-        ),
-      ),
+      sql`(${legalArticle.id}, ${legalArticle.textSha256}) in (values ${pairs})`,
+      sql`not exists (select 1 from ${deskTask}
+        where ${deskTask.role} = 'translate' and ${deskTask.payload}->>'node' = ${legalArticle.id})`,
+      sql`not exists (select 1 from ${articleStatus} where ${articleStatus.articleId} = ${legalArticle.id}
+        and ${articleStatus.level} in ('N2', 'N3', 'N4', 'N5'))`,
     )
   }
   return and(
@@ -53,6 +58,8 @@ export const currentDeskTask = sql`not exists (
 
 export const taskArticle = {
   id: legalArticle.id,
+  sectionId: legalArticle.sectionId,
+  textId: legalArticle.textId,
   dateDebut: legalArticle.dateDebut,
   dateFin: legalArticle.dateFin,
   text: legalArticle.contentText,
@@ -68,13 +75,15 @@ type TaskArticle = Pick<typeof legalArticle.$inferSelect, 'id' | 'dateDebut' | '
   codeTitle: string
 }
 
-export function newDeskTask(row: TaskArticle, role: 'analyst' | 'translate') {
-  const spec = role === 'translate' ? translations.find(({ legiarti }) => legiarti === row.id) : undefined
+/** `path` : chemin Catala calculé depuis l'arbre Légifrance quand l'interface n'en impose pas. */
+export function newDeskTask(row: TaskArticle, role: 'analyst' | 'translate', path?: string) {
+  const spec = role === 'translate' ? frozenInterfaces().get(row.id) : undefined
+  if (role === 'translate' && !spec) throw new Error(`Aucune interface figée pour ${row.id}`)
   if (!row.dateDebut || sha256Hex(row.text) !== row.hash) {
     throw new Error(`Version ou empreinte incohérente pour ${row.id}`)
   }
   return {
-    id: spec ? translationId(spec) : `analyst-${row.id}`,
+    id: spec ? translationTaskId(spec) : `analyst-${row.id}`,
     role,
     payload: {
       node: row.id,
@@ -90,14 +99,16 @@ export function newDeskTask(row: TaskArticle, role: 'analyst' | 'translate') {
       ],
       interface: spec?.interface ?? null,
       context_pack: {
-        objective:
-          spec?.signature ??
-          'Proposer une interface typée et classer chaque alinéa : calculable, entrée d’appréciation ou hors périmètre motivé.',
+        objective: spec
+          ? `Traduire l’article en Catala selon l’interface figée ${spec.interface}. ${spec.signature}${
+              spec.analysisFile ? ` Fiche d’analyse : ${spec.analysisFile}.` : ''
+            }`
+          : 'Proposer une interface typée et classer chaque alinéa : calculable, entrée d’appréciation ou hors périmètre motivé.',
         code_title: row.codeTitle,
         article_number: row.articleNumber,
       },
       blind_to: [],
-      allowed_paths: [spec?.path ?? `analyses/${row.id}.md`],
+      allowed_paths: [spec ? (spec.path ?? path ?? `${row.id}.catala_fr`) : `analyses/${row.id}.md`],
     },
   } satisfies typeof deskTask.$inferInsert
 }
