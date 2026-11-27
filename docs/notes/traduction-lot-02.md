@@ -45,6 +45,11 @@ groupée, les squelettes, `corpus/CATALA.md` et la politique de tests écrite on
   bilan). Règle ajoutée à `corpus/CATALA.md` et `.coderabbit.yaml` : quand la règle choisit entre
   plusieurs entrées, elles ont des valeurs différentes dans chaque cas.
 
+Second tour (1 fil, refusé) : CodeRabbit affirmait que `Période` devait être déclaré par `> Usage de` et que
+CGI 36 ne compilait pas. Faux : c'est un module de la bibliothèque standard, et le fichier compile dans
+l'image épinglée (CI verte). `.coderabbit.yaml` nomme maintenant les modules de la bibliothèque standard et
+renvoie au contrôle `corpus-check` pour tout doute de compilation.
+
 Aucun commentaire sur le texte cité, les interfaces, les types choisis ni les règles elles-mêmes.
 
 ## Choix d'interprétation à relire
