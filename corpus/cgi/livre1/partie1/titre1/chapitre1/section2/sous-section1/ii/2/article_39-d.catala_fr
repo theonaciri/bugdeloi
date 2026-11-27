@@ -1,0 +1,55 @@
+#### Article 39 D|LEGIARTI000006302326
+
+L'amortissement des constructions et aménagements édifiés sur le sol d'autrui doit être réparti sur la durée normale d'utilisation de chaque élément. Cette disposition n'est pas applicable en cas de bail à construction passé dans les conditions prévues par les articles L 251-1 à L 251-8 du code de la construction et de l'habitation.
+
+Interface `DureeAmortissementSolAutrui@v1`. Version applicable à compter du 1979-07-01, sans date de fin connue.
+
+Le champ d’application s’appelle une fois par élément. L’appelant indique si l’élément est une construction ou un aménagement édifié sur le sol d’autrui et si un bail à construction conforme aux articles L 251-1 à L 251-8 du code de la construction et de l’habitation le régit ; il fournit la durée normale d’utilisation de l’élément, qu’il apprécie. La sortie est la durée sur laquelle l’amortissement est réparti ; elle est absente quand l’article ne s’applique pas.
+
+```catala
+déclaration champ d'application DureeAmortissementSolAutrui:
+  entrée date_d_application contenu date
+  entrée construction_ou_aménagement_sur_sol_d_autrui contenu booléen
+  entrée bail_à_construction_conforme contenu booléen
+  entrée appréciation_durée_normale_d_utilisation contenu durée
+  résultat durée_de_répartition contenu optionnel de durée
+
+champ d'application DureeAmortissementSolAutrui:
+  # LEGIARTI000006302326, début de validité de la version.
+  assertion date_d_application >= |1979-07-01|
+  # CGI, article 39 D, première phrase : répartition sur la durée normale d'utilisation de chaque élément.
+  # CGI, article 39 D, seconde phrase : exclusion du bail à construction des articles L 251-1 à L 251-8 du CCH.
+  définition durée_de_répartition égal à
+    si construction_ou_aménagement_sur_sol_d_autrui et non bail_à_construction_conforme
+    alors Présent contenu appréciation_durée_normale_d_utilisation
+    sinon Absent
+
+#[test]
+déclaration champ d'application TestDureeAmortissementSolAutrui:
+  sol_d_autrui champ d'application DureeAmortissementSolAutrui
+  sol_propre champ d'application DureeAmortissementSolAutrui
+  bail_à_construction champ d'application DureeAmortissementSolAutrui
+
+champ d'application TestDureeAmortissementSolAutrui:
+  # LEGIARTI000006302326, date de début de la version : le cas s'applique dès le premier jour.
+  définition sol_d_autrui.date_d_application égal à |1979-07-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; aménagement sur le sol d'autrui, durée normale de 20 ans.
+  définition sol_d_autrui.construction_ou_aménagement_sur_sol_d_autrui égal à vrai
+  définition sol_d_autrui.bail_à_construction_conforme égal à faux
+  définition sol_d_autrui.appréciation_durée_normale_d_utilisation égal à 20 an
+  assertion sol_d_autrui.durée_de_répartition = Présent contenu 20 an
+  # LEGIARTI000006302326, date de début de la version : le cas s'applique dès le premier jour.
+  définition sol_propre.date_d_application égal à |1979-07-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; construction sur le sol de l'entreprise.
+  définition sol_propre.construction_ou_aménagement_sur_sol_d_autrui égal à faux
+  définition sol_propre.bail_à_construction_conforme égal à faux
+  définition sol_propre.appréciation_durée_normale_d_utilisation égal à 20 an
+  assertion sol_propre.durée_de_répartition = Absent
+  # LEGIARTI000006302326, date de début de la version : le cas s'applique dès le premier jour.
+  définition bail_à_construction.date_d_application égal à |1979-07-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; construction régie par un bail à construction conforme.
+  définition bail_à_construction.construction_ou_aménagement_sur_sol_d_autrui égal à vrai
+  définition bail_à_construction.bail_à_construction_conforme égal à vrai
+  définition bail_à_construction.appréciation_durée_normale_d_utilisation égal à 20 an
+  assertion bail_à_construction.durée_de_répartition = Absent
+```

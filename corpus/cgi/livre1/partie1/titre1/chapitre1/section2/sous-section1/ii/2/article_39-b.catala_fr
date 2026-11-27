@@ -1,0 +1,74 @@
+#### Article 39 B|LEGIARTI000006302321
+
+A la clôture de chaque exercice, la somme des amortissements effectivement pratiqués depuis l'acquisition ou la création d'un élément donné ne peut être inférieure au montant cumulé des amortissements calculés suivant le mode linéaire et répartis sur la durée normale d'utilisation. A défaut de se conformer à cette obligation, l'entreprise perd définitivement le droit de déduire la fraction des amortissements qui a été ainsi différée.
+
+Interface `MinimumAmortissementLineaire@v1`. Version applicable à compter du 2003-12-31, sans date de fin connue.
+
+L’appelant fournit, pour un élément et à la clôture d’un exercice, le cumul des amortissements pratiqués et le cumul des amortissements calculés en mode linéaire sur la durée normale d’utilisation, ainsi que les fractions dont le droit de déduction a déjà été perdu, chacune avec l’exercice de sa perte. Les sorties disent si l’obligation est respectée, mesurent l’insuffisance de la clôture (la fraction différée dont la déduction est perdue) et reprennent les fractions déjà perdues, qu’une clôture ultérieure conforme ne rend pas déductibles.
+
+```catala
+déclaration structure MinimumAmortissementLineaireFraction:
+  donnée exercice_de_la_perte contenu entier
+  donnée montant contenu argent
+
+déclaration champ d'application MinimumAmortissementLineaire:
+  entrée date_d_application contenu date
+  entrée amortissement_pratiqué_cumulé contenu argent
+  entrée amortissement_linéaire_cumulé contenu argent
+  entrée fractions_déjà_définitivement_non_déductibles contenu liste de MinimumAmortissementLineaireFraction
+  résultat obligation_respectée contenu booléen
+  résultat insuffisance_à_la_clôture contenu argent
+  résultat fractions_antérieures_non_déductibles contenu liste de MinimumAmortissementLineaireFraction
+
+champ d'application MinimumAmortissementLineaire:
+  # LEGIARTI000006302321, début de validité de la version.
+  assertion date_d_application >= |2003-12-31|
+  # CGI, article 39 B, première phrase : la somme des amortissements pratiqués ne peut être inférieure au
+  # montant cumulé des amortissements linéaires.
+  définition obligation_respectée égal à
+    amortissement_pratiqué_cumulé >= amortissement_linéaire_cumulé
+  # CGI, article 39 B, seconde phrase : à défaut, la fraction ainsi différée n'est plus déductible.
+  définition insuffisance_à_la_clôture égal à
+    si obligation_respectée alors 0 €
+    sinon amortissement_linéaire_cumulé - amortissement_pratiqué_cumulé
+  # CGI, article 39 B, seconde phrase : la perte du droit de déduire est définitive.
+  définition fractions_antérieures_non_déductibles égal à
+    fractions_déjà_définitivement_non_déductibles
+
+#[test]
+déclaration champ d'application TestMinimumAmortissementLineaire:
+  obligation_respectée champ d'application MinimumAmortissementLineaire
+  insuffisance champ d'application MinimumAmortissementLineaire
+  fractions_conservées champ d'application MinimumAmortissementLineaire
+
+champ d'application TestMinimumAmortissementLineaire:
+  # LEGIARTI000006302321, date de début de la version : le cas s'applique dès le premier jour.
+  définition obligation_respectée.date_d_application égal à |2003-12-31|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; 12 000 € pratiqués pour 10 000 € linéaires.
+  définition obligation_respectée.amortissement_pratiqué_cumulé égal à 12 000 €
+  définition obligation_respectée.amortissement_linéaire_cumulé égal à 10 000 €
+  définition obligation_respectée.fractions_déjà_définitivement_non_déductibles égal à []
+  assertion obligation_respectée.obligation_respectée
+  assertion obligation_respectée.insuffisance_à_la_clôture = 0 €
+  assertion nombre de obligation_respectée.fractions_antérieures_non_déductibles = 0
+  # LEGIARTI000006302321, date de début de la version : le cas s'applique dès le premier jour.
+  définition insuffisance.date_d_application égal à |2003-12-31|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; 7 000 € pratiqués pour 10 000 € linéaires, 3 000 € perdus.
+  définition insuffisance.amortissement_pratiqué_cumulé égal à 7 000 €
+  définition insuffisance.amortissement_linéaire_cumulé égal à 10 000 €
+  définition insuffisance.fractions_déjà_définitivement_non_déductibles égal à []
+  assertion non insuffisance.obligation_respectée
+  assertion insuffisance.insuffisance_à_la_clôture = 3 000 €
+  # LEGIARTI000006302321, date de début de la version : le cas s'applique dès le premier jour.
+  définition fractions_conservées.date_d_application égal à |2003-12-31|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; cumuls égaux, une fraction de 1 500 € perdue en 2024 reste perdue.
+  définition fractions_conservées.amortissement_pratiqué_cumulé égal à 10 000 €
+  définition fractions_conservées.amortissement_linéaire_cumulé égal à 10 000 €
+  définition fractions_conservées.fractions_déjà_définitivement_non_déductibles égal à [
+    MinimumAmortissementLineaireFraction { -- exercice_de_la_perte: 2024 -- montant: 1 500 € }
+  ]
+  assertion fractions_conservées.obligation_respectée
+  assertion fractions_conservées.insuffisance_à_la_clôture = 0 €
+  assertion nombre de fractions_conservées.fractions_antérieures_non_déductibles = 1
+  assertion (Argent.somme de (transforme chaque f parmi fractions_conservées.fractions_antérieures_non_déductibles en f.montant)) = 1 500 €
+```

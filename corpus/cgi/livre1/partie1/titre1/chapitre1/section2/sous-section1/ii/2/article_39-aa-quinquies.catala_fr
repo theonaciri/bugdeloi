@@ -1,0 +1,71 @@
+#### Article 39 AA quinquies|LEGIARTI000006302283
+
+Les coefficients utilisés pour le calcul de l'amortissement dégressif des matériels et outillages utilisés à des opérations de recherche scientifique et technique mentionnées au a du II de l'article 244 quater B sont portés respectivement à 1, 5, 2 et 2, 5 selon que la durée normale d'utilisation de ces biens est de trois ou quatre ans, cinq ou six ans ou supérieure à six ans.
+
+Interface `MajorationDegressifRecherche@v1`. Version applicable à compter du 2003-12-31, sans date de fin connue.
+
+L’appelant indique si le matériel ou l’outillage sert aux opérations de recherche du a du II de l’article 244 quater B et fournit sa durée normale d’utilisation, qu’il apprécie. La sortie est le coefficient de l’amortissement dégressif fixé par l’article ; elle est absente hors de ces opérations ou pour une durée de moins de trois ans, que l’article ne vise pas.
+
+Lecture des coefficients : LEGI écrit « 1, 5, 2 et 2, 5 » pour trois durées. Le dernier coefficient suit « et » : c’est 2,5. Les deux premiers sont 1,5 et 2 ou 1 et 5,2 ; seule la première lecture donne des coefficients croissants avec la durée. Les versions antérieures de l’article 39 AA, voisin et de même construction, écrivent « 2, 2,5 et 3 » là où sa version de 2002 écrit « 2, 2, 5 et 3 » : l’espace après la virgule décimale vient de la consolidation.
+
+```catala
+déclaration champ d'application MajorationDegressifRecherche:
+  entrée date_d_application contenu date
+  entrée usage_recherche_244_quater_b contenu booléen
+  entrée appréciation_durée_normale_d_utilisation contenu durée
+  résultat coefficient_spécial contenu optionnel de décimal
+
+champ d'application MajorationDegressifRecherche:
+  # LEGIARTI000006302283, début de validité de la version.
+  assertion date_d_application >= |2003-12-31|
+  # TODO juridique : « 1, 5, 2 et 2, 5 » est lu 1,5 ; 2 ; 2,5 (voir la lecture des coefficients
+  # ci-dessus). Une durée entre quatre et cinq ans, ou entre six et sept ans non révolus, est rangée avec
+  # la tranche qui commence avant elle ; le texte ne nomme que des années entières.
+  # CGI, article 39 AA quinquies : 1,5 pour trois ou quatre ans, 2 pour cinq ou six ans, 2,5 au-delà de six ans.
+  définition coefficient_spécial égal à
+    si non usage_recherche_244_quater_b alors Absent
+    sinon si appréciation_durée_normale_d_utilisation < 3 an alors Absent
+    sinon si appréciation_durée_normale_d_utilisation < 5 an alors Présent contenu 1,5
+    sinon si appréciation_durée_normale_d_utilisation <= 6 an alors Présent contenu 2,0
+    sinon Présent contenu 2,5
+
+#[test]
+déclaration champ d'application TestMajorationDegressifRecherche:
+  trois_ans champ d'application MajorationDegressifRecherche
+  six_ans champ d'application MajorationDegressifRecherche
+  sept_ans champ d'application MajorationDegressifRecherche
+  deux_ans champ d'application MajorationDegressifRecherche
+  hors_recherche champ d'application MajorationDegressifRecherche
+
+champ d'application TestMajorationDegressifRecherche:
+  # LEGIARTI000006302283, date de début de la version : le cas s'applique dès le premier jour.
+  définition trois_ans.date_d_application égal à |2003-12-31|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; trois ans, première tranche.
+  définition trois_ans.usage_recherche_244_quater_b égal à vrai
+  définition trois_ans.appréciation_durée_normale_d_utilisation égal à 3 an
+  assertion trois_ans.coefficient_spécial = Présent contenu 1,5
+  # LEGIARTI000006302283, date de début de la version : le cas s'applique dès le premier jour.
+  définition six_ans.date_d_application égal à |2003-12-31|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; six ans, deuxième tranche.
+  définition six_ans.usage_recherche_244_quater_b égal à vrai
+  définition six_ans.appréciation_durée_normale_d_utilisation égal à 6 an
+  assertion six_ans.coefficient_spécial = Présent contenu 2,0
+  # LEGIARTI000006302283, date de début de la version : le cas s'applique dès le premier jour.
+  définition sept_ans.date_d_application égal à |2003-12-31|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; sept ans, supérieure à six ans.
+  définition sept_ans.usage_recherche_244_quater_b égal à vrai
+  définition sept_ans.appréciation_durée_normale_d_utilisation égal à 7 an
+  assertion sept_ans.coefficient_spécial = Présent contenu 2,5
+  # LEGIARTI000006302283, date de début de la version : le cas s'applique dès le premier jour.
+  définition deux_ans.date_d_application égal à |2003-12-31|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; deux ans, durée que l'article ne vise pas.
+  définition deux_ans.usage_recherche_244_quater_b égal à vrai
+  définition deux_ans.appréciation_durée_normale_d_utilisation égal à 2 an
+  assertion deux_ans.coefficient_spécial = Absent
+  # LEGIARTI000006302283, date de début de la version : le cas s'applique dès le premier jour.
+  définition hors_recherche.date_d_application égal à |2003-12-31|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; matériel hors des opérations de recherche.
+  définition hors_recherche.usage_recherche_244_quater_b égal à faux
+  définition hors_recherche.appréciation_durée_normale_d_utilisation égal à 5 an
+  assertion hors_recherche.coefficient_spécial = Absent
+```
