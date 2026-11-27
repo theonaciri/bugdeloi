@@ -2,6 +2,7 @@ import { CODES } from '@bugdeloi/core'
 import { articleInForce, articleStatus, legalArticle, legalText } from '@bugdeloi/db'
 import { and, asc, eq, inArray, isNull, or } from 'drizzle-orm'
 import { asLevel, LEVELS, type Level } from '#lib/levels.ts'
+import { ANALYSIS_CATEGORIES, type AnalysisCategory, getAnalysesSummary } from '#lib/server/analyses.ts'
 import { db } from '#lib/server/db.ts'
 import { CACHE } from '#lib/server/http.ts'
 import { getLevelCounts } from '#lib/server/queries.ts'
@@ -11,19 +12,28 @@ type CodeKey = keyof typeof CODES
 const isCodeKey = (value: string | null): value is CodeKey => value !== null && Object.hasOwn(CODES, value)
 
 const PAGE_SIZE = 100
-type FilterLevel = Level | 'formalises' | 'all'
+type FilterLevel = Level | 'formalises' | 'analyses' | 'all'
+type FilterCategory = AnalysisCategory | 'all'
 
 function parseFilterLevel(raw: string | null): FilterLevel {
   if (!raw || raw === 'formalises') return 'formalises'
+  if (raw === 'analyses') return 'analyses'
   if (raw === 'all') return 'all'
   if ((LEVELS as readonly string[]).includes(raw)) return raw as Level
   return 'formalises'
+}
+
+function parseFilterCategory(raw: string | null): FilterCategory {
+  if (!raw || raw === 'all') return 'all'
+  if ((ANALYSIS_CATEGORIES as readonly string[]).includes(raw)) return raw as AnalysisCategory
+  return 'all'
 }
 
 export const load: PageServerLoad = async ({ url, setHeaders }) => {
   setHeaders({ 'cache-control': CACHE.data })
 
   const niveau = parseFilterLevel(url.searchParams.get('niveau'))
+  const categorie = parseFilterCategory(url.searchParams.get('categorie'))
   const rawCode = url.searchParams.get('code')
   const code: CodeKey | 'all' = rawCode && isCodeKey(rawCode) ? rawCode : 'all'
   const page = Math.max(1, Number.parseInt(url.searchParams.get('page') ?? '1', 10) || 1)
@@ -38,6 +48,44 @@ export const load: PageServerLoad = async ({ url, setHeaders }) => {
   const counts = await getLevelCounts(code !== 'all' ? CODES[code].id : undefined)
   const formalisesTotal = counts.N5 + counts.N4 + counts.N3 + counts.N2 + counts.N1 + counts.REF
   const allTotal = formalisesTotal + counts.N0
+
+  // Analyses préparatoires (corpus/analyses/*.md) filtrées par code si sélectionné
+  const allAnalyses = getAnalysesSummary()
+  const analysesForCode =
+    code === 'all' ? allAnalyses.items : allAnalyses.items.filter((a) => a.codeKey === code)
+  const analysesByCategory: Record<AnalysisCategory, number> = {
+    calculable: 0,
+    mixte: 0,
+    hors_perimetre: 0,
+    autre: 0,
+  }
+  for (const a of analysesForCode) {
+    analysesByCategory[a.category] += 1
+  }
+  const analysesTotal = analysesForCode.length
+
+  if (niveau === 'analyses') {
+    const filtered =
+      categorie === 'all' ? analysesForCode : analysesForCode.filter((a) => a.category === categorie)
+    const totalMatching = filtered.length
+    const paged = filtered.slice(offset, offset + PAGE_SIZE)
+    return {
+      niveau,
+      categorie,
+      code,
+      page,
+      pageSize: PAGE_SIZE,
+      totalMatching,
+      totalPages: Math.max(1, Math.ceil(totalMatching / PAGE_SIZE)),
+      counts,
+      formalisesTotal,
+      allTotal,
+      analysesTotal,
+      analysesByCategory,
+      items: [],
+      analysesItems: paged,
+    }
+  }
 
   const filterConditions = [...baseConditions]
   if (niveau === 'formalises') {
@@ -87,6 +135,7 @@ export const load: PageServerLoad = async ({ url, setHeaders }) => {
 
   return {
     niveau,
+    categorie,
     code,
     page,
     pageSize: PAGE_SIZE,
@@ -95,6 +144,9 @@ export const load: PageServerLoad = async ({ url, setHeaders }) => {
     counts,
     formalisesTotal,
     allTotal,
+    analysesTotal,
+    analysesByCategory,
     items,
+    analysesItems: [],
   }
 }

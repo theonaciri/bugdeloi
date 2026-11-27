@@ -3,6 +3,19 @@ import { CODES } from '@bugdeloi/core'
 import LevelBadge from '#lib/components/LevelBadge.svelte'
 
 const CODE_KEYS = Object.keys(CODES) as Array<keyof typeof CODES>
+const CATEGORY_LIST = [
+  { key: 'calculable', label: 'Calculable' },
+  { key: 'mixte', label: 'Mixte (calculable + appréciation / hors périmètre)' },
+  { key: 'hors_perimetre', label: 'Hors périmètre' },
+  { key: 'autre', label: 'À préciser' },
+] as const
+
+const CATEGORY_LABEL: Record<string, string> = {
+  calculable: 'Calculable',
+  mixte: 'Mixte',
+  hors_perimetre: 'Hors périmètre',
+  autre: 'À préciser',
+}
 
 import { formatInt } from '#lib/format.ts'
 import { LEVELS, levelName } from '#lib/levels.ts'
@@ -10,12 +23,14 @@ import type { PageProps } from './$types'
 
 let { data }: PageProps = $props()
 
-function hrefFor(params: { niveau?: string; code?: string; page?: number }) {
+function hrefFor(params: { niveau?: string; categorie?: string; code?: string; page?: number }) {
   const n = params.niveau ?? data.niveau
+  const cat = params.categorie ?? (n === 'analyses' ? data.categorie : 'all')
   const c = params.code ?? data.code
   const p = params.page ?? 1
   const qs = new URLSearchParams()
   qs.set('niveau', n)
+  if (n === 'analyses' && cat !== 'all') qs.set('categorie', cat)
   if (c !== 'all') qs.set('code', c)
   if (p > 1) qs.set('page', String(p))
   return `/travail?${qs.toString()}`
@@ -51,6 +66,14 @@ function hrefFor(params: { niveau?: string; code?: string; page?: number }) {
           <span>Formalisés (N1–N5 + ★)</span>
           <span class="text-xs tabular text-muted">{formatInt(data.formalisesTotal)}</span>
         </a>
+        <a
+          href={hrefFor({ niveau: 'analyses', categorie: 'all', page: 1 })}
+          aria-current={data.niveau === 'analyses' ? 'page' : undefined}
+          class="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 text-sm font-medium no-underline transition hover:border-brand aria-[current=page]:border-brand aria-[current=page]:bg-brand-soft aria-[current=page]:font-semibold aria-[current=page]:text-brand-strong"
+        >
+          <span>Analysés (pré-N1)</span>
+          <span class="text-xs tabular text-muted">{formatInt(data.analysesTotal)}</span>
+        </a>
         {#each LEVELS as lvl (lvl)}
           <a
             href={hrefFor({ niveau: lvl, page: 1 })}
@@ -70,6 +93,30 @@ function hrefFor(params: { niveau?: string; code?: string; page?: number }) {
           <span class="text-xs tabular text-muted">{formatInt(data.allTotal)}</span>
         </a>
       </div>
+
+      <!-- Sous-filtres par catégorie d'analyse -->
+      {#if data.niveau === 'analyses'}
+        <div class="flex flex-wrap items-center gap-2" role="navigation" aria-label="Filtrer par catégorie d'analyse">
+          <a
+            href={hrefFor({ niveau: 'analyses', categorie: 'all', page: 1 })}
+            aria-current={data.categorie === 'all' ? 'page' : undefined}
+            class="inline-flex items-center gap-1.5 rounded-full border border-line px-3.5 py-1.5 text-xs font-medium no-underline hover:border-brand aria-[current=page]:border-brand aria-[current=page]:bg-brand-soft aria-[current=page]:font-semibold aria-[current=page]:text-brand-strong"
+          >
+            <span>Toutes les analyses</span>
+            <span class="tabular text-muted">{formatInt(data.analysesTotal)}</span>
+          </a>
+          {#each CATEGORY_LIST as cat (cat.key)}
+            <a
+              href={hrefFor({ niveau: 'analyses', categorie: cat.key, page: 1 })}
+              aria-current={data.categorie === cat.key ? 'page' : undefined}
+              class="inline-flex items-center gap-1.5 rounded-full border border-line px-3.5 py-1.5 text-xs font-medium no-underline hover:border-brand aria-[current=page]:border-brand aria-[current=page]:bg-brand-soft aria-[current=page]:font-semibold aria-[current=page]:text-brand-strong"
+            >
+              <span>{cat.label}</span>
+              <span class="tabular text-muted">{formatInt(data.analysesByCategory[cat.key])}</span>
+            </a>
+          {/each}
+        </div>
+      {/if}
 
       <!-- Filtres par code -->
       <div class="flex flex-wrap items-center gap-2" role="navigation" aria-label="Filtrer par code">
@@ -109,7 +156,50 @@ function hrefFor(params: { niveau?: string; code?: string; page?: number }) {
       </a>
     </div>
 
-    {#if data.items.length > 0}
+    {#if data.niveau === 'analyses' && data.analysesItems.length > 0}
+      <div class="mt-6 overflow-x-auto rounded-xl border border-line bg-bg">
+        <table class="w-full min-w-[44rem] border-collapse text-left text-sm">
+          <thead>
+            <tr class="border-b border-line bg-surface text-xs uppercase tracking-wide text-muted">
+              <th scope="col" class="px-4 py-3 font-semibold">Catégorie</th>
+              <th scope="col" class="px-4 py-3 font-semibold">Article</th>
+              <th scope="col" class="px-4 py-3 font-semibold">Interface proposée</th>
+              <th scope="col" class="px-4 py-3 font-semibold">LEGIARTI</th>
+              <th scope="col" class="px-4 py-3 font-semibold">Fiche d’analyse</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-line">
+            {#each data.analysesItems as entry (entry.id)}
+              <tr>
+                <td class="px-4 py-3">
+                  <span class="inline-block rounded-full bg-surface-2 px-2.5 py-0.5 text-xs font-semibold text-ink">
+                    {CATEGORY_LABEL[entry.category] ?? entry.category}
+                  </span>
+                </td>
+                <td class="px-4 py-3 font-semibold text-ink">
+                  <a href="/article/{entry.id}" class="text-brand-strong no-underline hover:underline">
+                    {entry.title}
+                  </a>
+                </td>
+                <td class="px-4 py-3 font-mono text-xs text-muted">
+                  {entry.interfaceName ?? 'Aucune'}
+                </td>
+                <td class="px-4 py-3 font-mono text-xs text-muted">{entry.id}</td>
+                <td class="px-4 py-3 text-xs">
+                  <a
+                    href="https://github.com/theonaciri/bugdeloi/blob/main/{entry.file}"
+                    rel="external"
+                    class="font-mono text-brand-strong no-underline hover:underline"
+                  >
+                    {entry.file} →
+                  </a>
+                </td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      </div>
+    {:else if data.items.length > 0}
       <div class="mt-6 overflow-x-auto rounded-xl border border-line bg-bg">
         <table class="w-full min-w-[40rem] border-collapse text-left text-sm">
           <thead>

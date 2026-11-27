@@ -1,6 +1,7 @@
 import { legifranceArticleUrl } from '@bugdeloi/core/legi'
 import { C03_CASE_CONTEXT } from '#lib/c03-overview.ts'
 import type { CodeMapPreview, EuroCase } from '#lib/components/viz/index.ts'
+import { getAnalysesSummary } from '#lib/server/analyses.ts'
 import { readVerifications } from '#lib/server/c03-verifications.ts'
 import { CACHE } from '#lib/server/http.ts'
 import { CODE_KEYS, mapData, snapshot } from '#lib/server/queries.ts'
@@ -89,12 +90,17 @@ export const load: PageServerLoad = async ({ setHeaders, url }) => {
         cases: c03EuroCases,
         spotlights: c03Spotlights,
       },
+      analyses: (() => {
+        const a = getAnalysesSummary()
+        return { total: a.total, byCategory: a.byCategory }
+      })(),
       origin: url.origin,
       dbError: false,
     }
   } catch (e) {
     console.error('[accueil] base injoignable', e)
     setHeaders({ 'cache-control': 'no-store' })
+    const a = getAnalysesSummary()
     return {
       snapshot: null,
       mapPreviews: [] as CodeMapPreview[],
@@ -103,6 +109,7 @@ export const load: PageServerLoad = async ({ setHeaders, url }) => {
         cases: c03EuroCases,
         spotlights: c03Spotlights,
       },
+      analyses: { total: a.total, byCategory: a.byCategory },
       origin: url.origin,
       dbError: true,
     }

@@ -633,6 +633,46 @@ $effect(() => {
       </article>
     </div>
 
+    <div class="rounded-xl border border-line bg-bg px-5 py-4 space-y-3">
+      <div class="flex flex-wrap items-center justify-between gap-2 text-sm">
+        <p class="text-muted">
+          <strong class="font-semibold text-ink tabular">{formatInt(data.analyses.total)} articles analysés</strong>
+          (pré-N1, avant traduction Catala) :
+        </p>
+        <a href="/travail?niveau=analyses" class="font-semibold text-brand-strong no-underline hover:underline">
+          Parcourir toutes les analyses →
+        </a>
+      </div>
+      <div class="flex flex-wrap gap-2 text-xs">
+        <a
+          href="/travail?niveau=analyses&categorie=calculable"
+          class="rounded-full border border-line bg-surface px-3 py-1 font-medium text-ink no-underline hover:border-brand tabular"
+        >
+          Calculable · {formatInt(data.analyses.byCategory.calculable)}
+        </a>
+        <a
+          href="/travail?niveau=analyses&categorie=mixte"
+          class="rounded-full border border-line bg-surface px-3 py-1 font-medium text-ink no-underline hover:border-brand tabular"
+        >
+          Mixte · {formatInt(data.analyses.byCategory.mixte)}
+        </a>
+        <a
+          href="/travail?niveau=analyses&categorie=hors_perimetre"
+          class="rounded-full border border-line bg-surface px-3 py-1 font-medium text-ink no-underline hover:border-brand tabular"
+        >
+          Hors périmètre · {formatInt(data.analyses.byCategory.hors_perimetre)}
+        </a>
+        {#if data.analyses.byCategory.autre > 0}
+          <a
+            href="/travail?niveau=analyses&categorie=autre"
+            class="rounded-full border border-line bg-surface px-3 py-1 font-medium text-muted no-underline hover:border-brand tabular"
+          >
+            À préciser · {formatInt(data.analyses.byCategory.autre)}
+          </a>
+        {/if}
+      </div>
+    </div>
+
     <div class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-line bg-bg px-5 py-4 text-sm">
       <p class="text-muted">
         <strong class="font-semibold text-ink">Annexes d’étalonnage :</strong>

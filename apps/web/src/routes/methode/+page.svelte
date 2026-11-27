@@ -106,6 +106,48 @@ const verdicts = [
         </li>
       {/each}
     </ol>
+    <div class="max-w-4xl rounded-xl border border-line bg-surface p-5 space-y-3">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <h3 class="text-base font-semibold text-ink">
+          Analyses préparatoires (pré-N1) · <span class="tabular">{formatInt(data.analyses.total)}</span> articles
+        </h3>
+        <a href="/travail?niveau=analyses" class="text-xs font-semibold text-brand-strong no-underline hover:underline">
+          Parcourir toutes les analyses →
+        </a>
+      </div>
+      <p class="text-sm leading-relaxed text-muted">
+        Avant toute traduction Catala, chaque article est classé alinéa par alinéa (calculable, entrée d’appréciation
+        ou hors périmètre) avec une interface proposée.
+      </p>
+      <div class="flex flex-wrap gap-2 text-xs">
+        <a
+          href="/travail?niveau=analyses&categorie=calculable"
+          class="rounded-full border border-line bg-bg px-3 py-1 font-medium text-ink no-underline hover:border-brand tabular"
+        >
+          Calculable · {formatInt(data.analyses.byCategory.calculable)}
+        </a>
+        <a
+          href="/travail?niveau=analyses&categorie=mixte"
+          class="rounded-full border border-line bg-bg px-3 py-1 font-medium text-ink no-underline hover:border-brand tabular"
+        >
+          Mixte · {formatInt(data.analyses.byCategory.mixte)}
+        </a>
+        <a
+          href="/travail?niveau=analyses&categorie=hors_perimetre"
+          class="rounded-full border border-line bg-bg px-3 py-1 font-medium text-ink no-underline hover:border-brand tabular"
+        >
+          Hors périmètre · {formatInt(data.analyses.byCategory.hors_perimetre)}
+        </a>
+        {#if data.analyses.byCategory.autre > 0}
+          <a
+            href="/travail?niveau=analyses&categorie=autre"
+            class="rounded-full border border-line bg-bg px-3 py-1 font-medium text-muted no-underline hover:border-brand tabular"
+          >
+            À préciser · {formatInt(data.analyses.byCategory.autre)}
+          </a>
+        {/if}
+      </div>
+    </div>
     <dl class="max-w-4xl grid gap-4 sm:grid-cols-2 sm:gap-8">
       <div class="space-y-1">
         <dt class="font-semibold text-notice-ink">Contesté</dt>
