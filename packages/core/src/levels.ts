@@ -49,7 +49,7 @@ export const LEVEL_INFO: Record<Level, LevelInfo> = {
     level: 'N3',
     label: 'Testé',
     meaning:
-      'Tous les cas d’oracle réussissent, à partir d’au moins deux sources indépendantes dont une non issue d’une IA. Aucun auteur d’oracle n’appartient à la famille de modèles du traducteur, et aucun conflit d’exceptions ni cas non couvert n’est détecté.',
+      'Tous les cas d’oracle réussissent, dont au moins un tiré d’une source non issue d’une IA (test OpenFisca ou Inria, exemple officiel, calcul écrit par un humain). Aucun conflit d’exceptions ni cas non couvert n’est détecté.',
     colorToken: '--level-n3',
     pattern: 'hatch',
   },
@@ -57,7 +57,7 @@ export const LEVEL_INFO: Record<Level, LevelInfo> = {
     level: 'N4',
     label: 'Éprouvé',
     meaning:
-      'Au moins 10 000 entrées générées (dont chaque seuil à ± 1 €) sont comparées à une implémentation indépendante sans divergence inexpliquée. Au moins 80 % des mutations sont détectées, une rétro-traduction aveugle est jugée équivalente par une troisième famille de modèles, et 7 jours d’examen contradictoire se déroulent sans contre-exemple retenu.',
+      'Au moins 10 000 entrées générées (dont chaque seuil à ± 1 €) sont comparées à une implémentation indépendante sans divergence inexpliquée. Au moins 80 % des mutations sont détectées, et 7 jours d’examen contradictoire se déroulent sans contre-exemple retenu.',
     colorToken: '--level-n4',
     pattern: 'solid',
   },

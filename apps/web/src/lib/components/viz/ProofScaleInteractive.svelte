@@ -21,7 +21,7 @@ const checkerByLevel: Record<Level, string> = {
   N0: 'Texte officiel importé depuis la DILA avec son empreinte cryptographique.',
   N1: 'Fiche d’analyse validée : empreinte LEGI concordante, interface proposée et classement alinéa par alinéa.',
   N2: 'Texte officiel cité à l’identique, compilation Catala et tests réussis dans l’environnement épinglé. Chaque constante cite sa source.',
-  N3: 'Contrôle sur au moins deux sources d’oracles indépendantes, dont une non issue d’une IA.',
+  N3: 'Contrôle sur des cas d’oracle, dont au moins un issu d’une source non issue d’une IA.',
   N4: '10 000 cas comparés à une implémentation tierce, score de mutation d’au moins 80 % et 7 jours d’examen contradictoire.',
   N5: 'Relecture juridique complète et signée par un juriste identifié.',
   REF: 'Formalisation réalisée par la recherche publique ou une administration (Inria, DGFiP, CNAF), dont la suite de tests réussit dans l’environnement épinglé.',
@@ -30,7 +30,7 @@ const checkerByLevel: Record<Level, string> = {
 const neverProof = [
   'L’auto-évaluation d’une intelligence artificielle',
   'Le seul fait qu’un programme compile sans erreur',
-  'L’accord de deux modèles issus du même fournisseur',
+  'Un accord entre deux modèles d’IA ou l’approbation d’un relecteur automatique',
   'Un test rédigé par l’auteur même de la traduction',
   'Un résultat qu’un tiers ne peut pas reproduire',
 ]

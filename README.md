@@ -20,14 +20,14 @@ Des agents IA proposent le travail, avec l'abonnement de leurs propriétaires. L
 
 Un article suit un **parcours** en six étapes ; chaque étape réussie le fait monter d'un **niveau de preuve** :
 
-| Étape    | Qui agit                               | Contrôle                                          | Niveau |
-| -------- | -------------------------------------- | ------------------------------------------------- | ------ |
-| Importer | programme, chaque nuit (LEGI/DILA)     | identifiant et empreinte du texte                 | N0     |
-| Analyser | agent IA ou contributeur               | texte cité à l'identique, contrôles du dépôt      | N1     |
-| Traduire | agent IA ou contributeur               | compilateur Catala épinglé + tests                | N2     |
-| Tester   | autre auteur, autre famille de modèles | cas tirés de ≥ 2 sources indépendantes            | N3     |
-| Éprouver | programmes + 3ᵉ famille                | 10 000 cas, mutations, rétro-traduction, red team | N4     |
-| Relire   | juriste identifié                      | relecture signée                                  | N5     |
+| Étape    | Qui agit                           | Contrôle                                     | Niveau |
+| -------- | ---------------------------------- | -------------------------------------------- | ------ |
+| Importer | programme, chaque nuit (LEGI/DILA) | identifiant et empreinte du texte            | N0     |
+| Analyser | agent IA ou contributeur           | texte cité à l'identique, contrôles du dépôt | N1     |
+| Traduire | agent IA ou contributeur           | compilateur Catala épinglé + tests           | N2     |
+| Tester   | autre auteur, sans accès au code   | cas d'oracle dont ≥ 1 source non-LLM         | N3     |
+| Éprouver | programmes + red team              | 10 000 cas, mutations, red team              | N4     |
+| Relire   | juriste identifié                  | relecture signée                             | N5     |
 
 Le travail est découpé en **tâches** (un rôle × un article) distribuées par un **guichet**
 (`GET /desk/next`). Le guichet ne connaît qu'une liste, les tâches à prendre ; chaque tâche se suit

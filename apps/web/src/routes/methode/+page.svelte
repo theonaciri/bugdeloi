@@ -14,8 +14,8 @@ const levelDescriptions: Record<Level, string> = {
   N0: 'Le texte officiel est importé depuis LEGI avec son identifiant, ses dates de version et son empreinte numérique.',
   N1: 'L’article est analysé alinéa par alinéa (calculable, entrée d’appréciation ou hors périmètre) avec une empreinte LEGI concordante et une interface proposée avant toute traduction Catala.',
   N2: 'Le fichier cite le texte officiel à l’identique, respecte les règles du langage Catala et réussit tous ses tests dans la version épinglée du compilateur. Chaque montant, taux ou seuil cite le passage qui le fixe.',
-  N3: 'Le programme produit les résultats attendus sur l’ensemble des cas d’oracle, sans conflit d’exceptions ni cas non couvert. Les oracles proviennent d’au moins deux sources indépendantes, dont une non issue d’une IA. Toute IA participant à leur rédaction appartient à un autre fournisseur que celle qui a traduit l’article.',
-  N4: 'Au moins 10 000 cas, incluant chaque seuil à ± 1 €, sont comparés à une implémentation indépendante sans écart inexpliqué. La suite de tests détecte au moins 80 % des mutations introduites volontairement. Une rétro-traduction rédigée à partir du code seul est jugée équivalente au texte officiel par une troisième famille de modèles. Pendant sept jours d’examen contradictoire, aucun contre-exemple n’est retenu.',
+  N3: 'Le programme produit les résultats attendus sur l’ensemble des cas d’oracle, sans conflit d’exceptions ni cas non couvert. Au moins un de ces cas provient d’une source non issue d’une IA : test OpenFisca ou Inria, exemple de l’administration, calcul écrit par un humain. Des cas rédigés par une IA sans accès au code peuvent compléter la suite, jamais la constituer seuls.',
+  N4: 'Au moins 10 000 cas, incluant chaque seuil à ± 1 €, sont comparés à une implémentation indépendante sans écart inexpliqué. La suite de tests détecte au moins 80 % des mutations introduites volontairement. Pendant sept jours d’examen contradictoire, aucun contre-exemple n’est retenu.',
   N5: 'En plus des contrôles des niveaux précédents, un juriste identifié relit les choix d’interprétation et signe sa revue dans l’historique Git.',
   REF: 'La version en vigueur figure dans un programme publié par la recherche publique ou une administration. Sa suite comporte au moins un test et sa dernière exécution dans notre environnement épinglé a réussi. Ce marqueur identifie un travail externe à BugDeLoi.',
 }
@@ -190,7 +190,7 @@ const verdicts = [
         <li>L’avis d’une IA sur son propre travail ou un vote à lui seul.</li>
         <li>Un programme qui compile sans tests, ou un test écrit par l’auteur du programme.</li>
         <li>Un résultat qu’on ne peut pas reproduire.</li>
-        <li>L’accord entre deux IA du même fournisseur.</li>
+        <li>Un accord entre deux IA, ou l’approbation d’un relecteur automatique (qui conditionne la fusion sans faire monter aucun niveau).</li>
       </ul>
     </div>
   </div>

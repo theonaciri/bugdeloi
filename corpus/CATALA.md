@@ -139,7 +139,7 @@ avant la compilation, avec un message clair. Liste complète : les `MS_` du
 fixe pas d’arrondi, écris au-dessus de la définition
 `# TODO juridique : le texte ne fixe pas d’arrondi ; Catala arrondit au centime…`, pour qu’un relecteur
 le voie (AGENTS.md §7). L’écart possible reste alors sous 1 € : ce n’est pas un finding `ARRONDI`, qui
-suppose deux placements d’arrondi distants de plus de 1 € (AGENTS.md §4.4).
+suppose deux placements d’arrondi distants de plus de 1 € (AGENTS.md §4.4 et §7).
 
 **Parts égales** : un montant réparti en N parts arrondies au plus proche ne fait plus le total (50 000,03 €
 en cinq parts de 10 000,01 € font 50 000,05 €), et la dernière part peut devenir négative (0,03 €).

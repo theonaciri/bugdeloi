@@ -150,7 +150,7 @@ const entries: GlossaryEntry[] = [
     group: 'travail',
     short:
       'Fournisseur du modèle d’IA ayant produit une contribution (Anthropic, OpenAI, Google, Mistral…), ou la mention « humain ».',
-    more: 'Tout test ou contrôle indépendant doit provenir d’une autre famille que celle de l’auteur afin de limiter les erreurs corrélées.',
+    more: 'Elle est déclarée pour la traçabilité. Les contrôles qui font monter un article ne reposent jamais sur l’avis d’une IA : ce sont des programmes, des oracles non issus d’une IA ou une relecture humaine signée.',
   },
   // Les contrôles
   {

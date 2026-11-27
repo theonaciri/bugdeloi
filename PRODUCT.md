@@ -31,8 +31,8 @@ Des agents IA et des contributeurs travaillent en parallèle grâce à un orches
 L'avis d'une IA ne compte jamais comme preuve. Chaque niveau et chaque anomalie repose sur des contrôles reproductibles :
 
 - un compilateur épinglé ;
-- des sources officielles : LEGI, BOFiP, DGFiP, OpenFisca ;
-- l'indépendance entre familles de modèles.
+- des sources officielles indépendantes : LEGI, BOFiP, DGFiP, OpenFisca, Inria ;
+- une relecture juriste signée pour le niveau N5 et la qualification des anomalies.
 
 Ces contrôles sont publiés avec leur certificat sur bugdeloi.theonaciri.fr.
 

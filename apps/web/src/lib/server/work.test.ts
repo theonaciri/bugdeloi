@@ -31,7 +31,7 @@ describe('parcours des tâches', () => {
     }
     expect(stageOfRole('analyst')).toBe('analyse')
     expect(stageOfRole('translate')).toBe('traduction')
-    expect(stageOfRole('judge')).toBe('epreuve')
+    expect(stageOfRole('redteam')).toBe('epreuve')
     expect(stageOfRole('doctrine')).toBeNull()
   })
 

@@ -35,6 +35,14 @@
   du tag 1.3.2, livre Catala) est liée depuis `corpus/CATALA.md`, join.txt, AGENTS.md §7, `/join` et `/taches`.
   Les fiches d'analyse doivent typer leurs interfaces en Catala.
 
+- 2026-11-27 — **Échelle de preuve allégée (décision du propriétaire)**. La relecture CodeRabbit et la CI
+  conditionnent la fusion de chaque PR ; elles ne font monter aucun niveau. N3 : tous les cas d'oracle
+  réussissent, dont au moins un tiré d'une source non-LLM ; plus d'exigence de deux sources ni de famille
+  distincte du traducteur. N4 : la rétro-traduction jugée par une 3ᵉ famille devient facultative.
+  Arrondi : `# TODO juridique` sous 1 € d'écart, finding `ARRONDI` au-delà (§7 aligné sur §4.4). Une PR
+  part d'un commit ; les corrections de relecture s'y ajoutent, fusion en un seul commit. Textes publics
+  alignés (`levels.ts`, `/methode`, échelle interactive, glossaire, parcours des tâches, README).
+
 - 2026-11-27 — **Interfaces v2 déclarées en Catala** (b2175d8, PR #23 fusionnée) : une fiche
   `<LEGIARTI>.vN.md` remplace la v1 (laissée intacte) ; une fiche v2 ou nouvelle fige l'interface par un
   bloc de déclaration Catala, que `check-corpus-pr.ts` impose à la traduction (déclaration identique,
