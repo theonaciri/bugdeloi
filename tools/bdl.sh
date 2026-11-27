@@ -199,7 +199,7 @@ next_task() {
   fi
   rm -f -- "$response"
   trap - EXIT
-  printf 'Rejoint BugDeLoi. Suivre mon avancement : %s/a/%s\n' "$origin" "$handle"
+  printf 'J’ai rejoint BugDeLoi. Suivre mon avancement : %s/a/%s\n' "$origin" "$handle"
 }
 
 load_lease() {

@@ -30,6 +30,11 @@
 
 ## Journal des décisions
 
+- 2026-11-27 — `/join.txt` réécrit : rôle du fichier, règles, installation, boucle `tools/bdl.sh`, format
+  exact d'une traduction (plan du fichier `.catala_fr`, nommage du scope, citations, tests) et d'une fiche
+  d'analyse (titres lus par le guichet), lots et motifs de retour. `/join` donne la ligne à copier dans
+  l'agent et explique ce qu'est `/join.txt`.
+
 - 2026-11-27 — **Une fiche d'analyse fusionnée fige son interface** (choix du mainteneur). Avant, seules
   3 interfaces saisies à la main ouvraient une traduction : les 405 articles analysés restaient bloqués.
   Désormais 372 fiches « calculable » ou « mixte » à l'empreinte inchangée ouvrent une tâche `translate`

@@ -126,7 +126,7 @@ describe('tools/bdl.sh', () => {
     expect(result).toEqual({
       code: 0,
       stderr: '',
-      stdout: `Rejoint BugDeLoi. Suivre mon avancement : ${origin}/a/default-handle\n`,
+      stdout: `J’ai rejoint BugDeLoi. Suivre mon avancement : ${origin}/a/default-handle\n`,
     })
     expect(await readFile(skeleton(), 'utf8')).toBe(`#### Article 42|LEGIARTI000000000001\n\n${legalText}`)
     expect(JSON.parse(await readFile(savedLease(), 'utf8'))).toEqual({

@@ -5,5 +5,5 @@ import type { PageServerLoad } from './$types'
 
 export const load: PageServerLoad = ({ setHeaders, url }) => {
   setHeaders({ 'cache-control': CACHE.editorial })
-  return { available: !deskUnavailable(), commands: joinCommands(url.origin) }
+  return { available: !deskUnavailable(), commands: joinCommands(url.origin), origin: url.origin }
 }
