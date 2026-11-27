@@ -40,21 +40,59 @@ champ d'application CategorieRevenusFonciers:
 #[test]
 déclaration champ d'application TestCategorieRevenusFonciers:
   bateau_amarré champ d'application CategorieRevenusFonciers
+  propriété_non_bâtie champ d'application CategorieRevenusFonciers
   bien_professionnel champ d'application CategorieRevenusFonciers
+  réserve_article_15 champ d'application CategorieRevenusFonciers
+  qualification_refusée champ d'application CategorieRevenusFonciers
+  autre_bien champ d'application CategorieRevenusFonciers
 
 champ d'application TestCategorieRevenusFonciers:
-  # LEGIARTI000006302217, 1° c : bateau aménagé pour l'habitation et retenu par des amarres.
-  définition bateau_amarré.date_d_application égal à |2026-01-01|
+  # LEGIARTI000006302217, date de début de la version : le cas s'applique dès le premier jour.
+  définition bateau_amarré.date_d_application égal à |2005-01-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; 1° c, bateau aménagé pour l'habitation et retenu par des amarres.
   définition bateau_amarré.catégorie_du_bien égal à BateauFixeAménagé
   définition bateau_amarré.inclus_dans_bénéfice_professionnel égal à faux
   définition bateau_amarré.réserve_article_15_applicable égal à faux
   définition bateau_amarré.appréciation_qualification_du_bien égal à vrai
   assertion bateau_amarré.catégorie_foncière_selon_14
-  # LEGIARTI000006302217, chapeau : propriété bâtie incluse dans le bénéfice d'une entreprise commerciale.
-  définition bien_professionnel.date_d_application égal à |2026-01-01|
+  # LEGIARTI000006302217, date de début de la version : le cas s'applique dès le premier jour.
+  définition propriété_non_bâtie.date_d_application égal à |2005-01-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; 2°, propriété non bâtie.
+  définition propriété_non_bâtie.catégorie_du_bien égal à PropriétéNonBâtie
+  définition propriété_non_bâtie.inclus_dans_bénéfice_professionnel égal à faux
+  définition propriété_non_bâtie.réserve_article_15_applicable égal à faux
+  définition propriété_non_bâtie.appréciation_qualification_du_bien égal à vrai
+  assertion propriété_non_bâtie.catégorie_foncière_selon_14
+  # LEGIARTI000006302217, date de début de la version : le cas s'applique dès le premier jour.
+  définition bien_professionnel.date_d_application égal à |2005-01-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; chapeau, revenu inclus dans un bénéfice professionnel.
   définition bien_professionnel.catégorie_du_bien égal à PropriétéBâtie
   définition bien_professionnel.inclus_dans_bénéfice_professionnel égal à vrai
   définition bien_professionnel.réserve_article_15_applicable égal à faux
   définition bien_professionnel.appréciation_qualification_du_bien égal à vrai
   assertion non bien_professionnel.catégorie_foncière_selon_14
+  # LEGIARTI000006302217, date de début de la version : le cas s'applique dès le premier jour.
+  définition réserve_article_15.date_d_application égal à |2005-01-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; réserve de l'article 15 applicable.
+  définition réserve_article_15.catégorie_du_bien égal à PropriétéBâtie
+  définition réserve_article_15.inclus_dans_bénéfice_professionnel égal à faux
+  définition réserve_article_15.réserve_article_15_applicable égal à vrai
+  définition réserve_article_15.appréciation_qualification_du_bien égal à vrai
+  assertion non réserve_article_15.catégorie_foncière_selon_14
+  # LEGIARTI000006302217, date de début de la version : le cas s'applique dès le premier jour.
+  définition qualification_refusée.date_d_application égal à |2005-01-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; qualification du bien non retenue.
+  définition qualification_refusée.catégorie_du_bien égal à PropriétéBâtie
+  définition qualification_refusée.inclus_dans_bénéfice_professionnel égal à faux
+  définition qualification_refusée.réserve_article_15_applicable égal à faux
+  définition qualification_refusée.appréciation_qualification_du_bien égal à faux
+  assertion non qualification_refusée.catégorie_foncière_selon_14
+  # LEGIARTI000006302217, date de début de la version : le cas s'applique dès le premier jour.
+  définition autre_bien.date_d_application égal à |2005-01-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; bien hors des 1° et 2°.
+  définition autre_bien.catégorie_du_bien égal à AutreBien
+  définition autre_bien.inclus_dans_bénéfice_professionnel égal à faux
+  définition autre_bien.réserve_article_15_applicable égal à faux
+  définition autre_bien.appréciation_qualification_du_bien égal à vrai
+  assertion non autre_bien.catégorie_foncière_selon_14
 ```

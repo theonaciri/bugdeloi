@@ -32,11 +32,14 @@ champ d'application QuotePartCoproprieteCheval:
 #[test]
 déclaration champ d'application TestQuotePartCoproprieteCheval:
   cheval_de_course champ d'application QuotePartCoproprieteCheval
+  étalon_conforme champ d'application QuotePartCoproprieteCheval
   étalon_non_conforme champ d'application QuotePartCoproprieteCheval
+  conditions_non_remplies champ d'application QuotePartCoproprieteCheval
 
 champ d'application TestQuotePartCoproprieteCheval:
-  # LEGIARTI000006302211, première phrase : membre détenant 10 % d'une copropriété de cheval de course.
-  définition cheval_de_course.date_d_application égal à |2026-01-01|
+  # LEGIARTI000006302211, date de début de la version : le cas s'applique dès le premier jour.
+  définition cheval_de_course.date_d_application égal à |1997-04-11|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; cheval de course, 20 000 € × 0,1 = 2 000 €.
   définition cheval_de_course.membre égal à vrai
   définition cheval_de_course.conditions_238_bis_m_remplies égal à vrai
   définition cheval_de_course.copropriété_d_étalon égal à faux
@@ -44,8 +47,19 @@ champ d'application TestQuotePartCoproprieteCheval:
   définition cheval_de_course.résultat_déclaré égal à 20 000 €
   définition cheval_de_course.proportion_des_droits égal à 0,1
   assertion cheval_de_course.résultat_imputable = Présent contenu 2 000 €
-  # LEGIARTI000006302211, seconde phrase : copropriété d'étalon non conforme aux statuts types.
-  définition étalon_non_conforme.date_d_application égal à |2026-01-01|
+  # LEGIARTI000006302211, date de début de la version : le cas s'applique dès le premier jour.
+  définition étalon_conforme.date_d_application égal à |1997-04-11|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; étalon, statuts conformes aux statuts types.
+  définition étalon_conforme.membre égal à vrai
+  définition étalon_conforme.conditions_238_bis_m_remplies égal à vrai
+  définition étalon_conforme.copropriété_d_étalon égal à vrai
+  définition étalon_conforme.appréciation_conformité_aux_statuts_types égal à vrai
+  définition étalon_conforme.résultat_déclaré égal à 20 000 €
+  définition étalon_conforme.proportion_des_droits égal à 0,1
+  assertion étalon_conforme.résultat_imputable = Présent contenu 2 000 €
+  # LEGIARTI000006302211, date de début de la version : le cas s'applique dès le premier jour.
+  définition étalon_non_conforme.date_d_application égal à |1997-04-11|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; étalon, statuts non conformes.
   définition étalon_non_conforme.membre égal à vrai
   définition étalon_non_conforme.conditions_238_bis_m_remplies égal à vrai
   définition étalon_non_conforme.copropriété_d_étalon égal à vrai
@@ -53,4 +67,14 @@ champ d'application TestQuotePartCoproprieteCheval:
   définition étalon_non_conforme.résultat_déclaré égal à 20 000 €
   définition étalon_non_conforme.proportion_des_droits égal à 0,1
   assertion étalon_non_conforme.résultat_imputable = Absent
+  # LEGIARTI000006302211, date de début de la version : le cas s'applique dès le premier jour.
+  définition conditions_non_remplies.date_d_application égal à |1997-04-11|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; conditions de l'article 238 bis M non remplies.
+  définition conditions_non_remplies.membre égal à vrai
+  définition conditions_non_remplies.conditions_238_bis_m_remplies égal à faux
+  définition conditions_non_remplies.copropriété_d_étalon égal à faux
+  définition conditions_non_remplies.appréciation_conformité_aux_statuts_types égal à faux
+  définition conditions_non_remplies.résultat_déclaré égal à 20 000 €
+  définition conditions_non_remplies.proportion_des_droits égal à 0,1
+  assertion conditions_non_remplies.résultat_imputable = Absent
 ```

@@ -25,12 +25,14 @@ déclaration champ d'application TestAssujettissementConventionIr:
   aucune_attribution champ d'application AssujettissementConventionIr
 
 champ d'application TestAssujettissementConventionIr:
-  # LEGIARTI000006302202, 2° : un revenu sur deux est attribué à la France.
-  définition attribution.date_d_application égal à |2026-01-01|
+  # LEGIARTI000006302202, date de début de la version : le cas s'applique dès le premier jour.
+  définition attribution.date_d_application égal à |1979-07-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; un revenu sur deux est attribué à la France.
   définition attribution.appréciation_imposition_attribuée_à_la_france égal à [faux; vrai]
   assertion attribution.assujettissement_selon_4_bis
-  # LEGIARTI000006302202, 2° : aucun revenu attribué à la France.
-  définition aucune_attribution.date_d_application égal à |2026-01-01|
+  # LEGIARTI000006302202, date de début de la version : le cas s'applique dès le premier jour.
+  définition aucune_attribution.date_d_application égal à |1979-07-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; aucun revenu attribué à la France.
   définition aucune_attribution.appréciation_imposition_attribuée_à_la_france égal à [faux]
   assertion non aucune_attribution.assujettissement_selon_4_bis
 ```

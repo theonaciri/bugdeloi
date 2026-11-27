@@ -34,22 +34,44 @@ champ d'application RevenuBrutJouissanceReservee:
 déclaration champ d'application TestRevenuBrutJouissanceReservee:
   comparaison champ d'application RevenuBrutJouissanceReservee
   appréciation_directe champ d'application RevenuBrutJouissanceReservee
+  réserve_15_ii champ d'application RevenuBrutJouissanceReservee
+  droit_de_chasse champ d'application RevenuBrutJouissanceReservee
 
 champ d'application TestRevenuBrutJouissanceReservee:
-  # LEGIARTI000006302234 : loyer comparable de 7 200 €, 300 € de recettes d'affichage.
-  définition comparaison.date_d_application égal à |2026-01-01|
+  # LEGIARTI000006302234, date de début de la version : le cas s'applique dès le premier jour.
+  définition comparaison.date_d_application égal à |2005-01-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; loyer comparable 7 200 € + 300 € de recettes = 7 500 €.
   définition comparaison.réserve_15_ii égal à faux
   définition comparaison.appréciation_loyer_par_comparaison égal à Présent contenu 7 200 €
   définition comparaison.appréciation_loyer_direct égal à 6 000 €
   définition comparaison.recettes_29_alinéa_2 égal à 300 €
   définition comparaison.évaluation_de_la_jouissance_du_droit_de_chasse égal à faux
   assertion comparaison.revenu_brut_selon_30 = Présent contenu 7 500 €
-  # LEGIARTI000006302234, deuxième phrase : aucun comparable, appréciation directe à 6 000 €.
-  définition appréciation_directe.date_d_application égal à |2026-01-01|
+  # LEGIARTI000006302234, date de début de la version : le cas s'applique dès le premier jour.
+  définition appréciation_directe.date_d_application égal à |2005-01-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; aucun comparable, appréciation directe.
   définition appréciation_directe.réserve_15_ii égal à faux
   définition appréciation_directe.appréciation_loyer_par_comparaison égal à Absent
   définition appréciation_directe.appréciation_loyer_direct égal à 6 000 €
   définition appréciation_directe.recettes_29_alinéa_2 égal à 0 €
   définition appréciation_directe.évaluation_de_la_jouissance_du_droit_de_chasse égal à faux
   assertion appréciation_directe.revenu_brut_selon_30 = Présent contenu 6 000 €
+  # LEGIARTI000006302234, date de début de la version : le cas s'applique dès le premier jour.
+  définition réserve_15_ii.date_d_application égal à |2005-01-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; réserve de l'article 15-II applicable.
+  définition réserve_15_ii.réserve_15_ii égal à vrai
+  définition réserve_15_ii.appréciation_loyer_par_comparaison égal à Présent contenu 7 200 €
+  définition réserve_15_ii.appréciation_loyer_direct égal à 6 000 €
+  définition réserve_15_ii.recettes_29_alinéa_2 égal à 300 €
+  définition réserve_15_ii.évaluation_de_la_jouissance_du_droit_de_chasse égal à faux
+  assertion réserve_15_ii.revenu_brut_selon_30 = Absent
+  # LEGIARTI000006302234, date de début de la version : le cas s'applique dès le premier jour.
+  définition droit_de_chasse.date_d_application égal à |2005-01-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; jouissance du droit de chasse, exclue par la dernière phrase.
+  définition droit_de_chasse.réserve_15_ii égal à faux
+  définition droit_de_chasse.appréciation_loyer_par_comparaison égal à Présent contenu 7 200 €
+  définition droit_de_chasse.appréciation_loyer_direct égal à 6 000 €
+  définition droit_de_chasse.recettes_29_alinéa_2 égal à 300 €
+  définition droit_de_chasse.évaluation_de_la_jouissance_du_droit_de_chasse égal à vrai
+  assertion droit_de_chasse.revenu_brut_selon_30 = Absent
 ```

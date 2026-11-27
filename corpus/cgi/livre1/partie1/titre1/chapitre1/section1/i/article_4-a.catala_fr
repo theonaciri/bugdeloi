@@ -32,24 +32,25 @@ déclaration champ d'application TestAssietteTerritorialeIr:
   domicile_hors_de_france champ d'application AssietteTerritorialeIr
 
 champ d'application TestAssietteTerritorialeIr:
-  # LEGIARTI000006302200, première phrase : un revenu de source française et un revenu de source étrangère.
-  définition domicile_en_france.date_d_application égal à |2026-01-01|
+  # LEGIARTI000006302200, date de début de la version : le cas s'applique dès le premier jour.
+  définition domicile_en_france.date_d_application égal à |1979-07-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; première phrase, les deux revenus sont retenus.
   définition domicile_en_france.domicile_fiscal_en_france égal à vrai
   définition domicile_en_france.revenus égal à [
     AssietteTerritorialeIrRevenu { -- montant: 1 000 € -- source_française: vrai };
     AssietteTerritorialeIrRevenu { -- montant: 500 € -- source_française: faux }
   ]
   assertion nombre de domicile_en_france.revenus_retenus = 2
-  # LEGIARTI000006302200, seconde phrase : mêmes revenus, domicile hors de France.
-  définition domicile_hors_de_france.date_d_application égal à |2026-01-01|
+  # LEGIARTI000006302200, date de début de la version : le cas s'applique dès le premier jour.
+  définition domicile_hors_de_france.date_d_application égal à |1979-07-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; seconde phrase, seul le revenu de source française reste.
   définition domicile_hors_de_france.domicile_fiscal_en_france égal à faux
   définition domicile_hors_de_france.revenus égal à [
     AssietteTerritorialeIrRevenu { -- montant: 1 000 € -- source_française: vrai };
     AssietteTerritorialeIrRevenu { -- montant: 500 € -- source_française: faux }
   ]
   assertion nombre de domicile_hors_de_france.revenus_retenus = 1
-  assertion
-    (Argent.somme de
-      (transforme chaque revenu parmi domicile_hors_de_france.revenus_retenus en revenu.montant))
+  assertion (Argent.somme de
+    (transforme chaque revenu parmi domicile_hors_de_france.revenus_retenus en revenu.montant))
     = 1 000 €
 ```

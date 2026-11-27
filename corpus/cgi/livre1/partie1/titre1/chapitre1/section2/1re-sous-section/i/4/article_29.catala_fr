@@ -32,15 +32,17 @@ déclaration champ d'application TestRevenuBrutLocation:
   réserve champ d'application RevenuBrutLocation
 
 champ d'application TestRevenuBrutLocation:
-  # LEGIARTI000006302231 : 9 600 € de loyers, 400 € de taxe foncière mise à la charge du locataire, 1 000 € de subvention.
-  définition location.date_d_application égal à |2026-01-01|
+  # LEGIARTI000006302231, date de début de la version : le cas s'applique dès le premier jour.
+  définition location.date_d_application égal à |2005-01-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; 9 600 € + 400 € + 1 000 € = 11 000 €.
   définition location.recettes_brutes_propriétaire égal à 9 600 €
   définition location.dépenses_propriétaire_transférées égal à 400 €
   définition location.subventions_et_indemnités_pour_charges_déductibles égal à 1 000 €
   définition location.réserve_33_ter_ou_33_quater égal à faux
   assertion location.revenu_brut_selon_29 = Présent contenu 11 000 €
-  # LEGIARTI000006302231 : la réserve des articles 33 ter ou 33 quater s'applique.
-  définition réserve.date_d_application égal à |2026-01-01|
+  # LEGIARTI000006302231, date de début de la version : le cas s'applique dès le premier jour.
+  définition réserve.date_d_application égal à |2005-01-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; réserve des articles 33 ter ou 33 quater applicable.
   définition réserve.recettes_brutes_propriétaire égal à 9 600 €
   définition réserve.dépenses_propriétaire_transférées égal à 400 €
   définition réserve.subventions_et_indemnités_pour_charges_déductibles égal à 1 000 €

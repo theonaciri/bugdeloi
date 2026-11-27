@@ -29,24 +29,56 @@ champ d'application LieuImpositionApresDeplacement:
 
 #[test]
 déclaration champ d'application TestLieuImpositionApresDeplacement:
+  année_du_changement champ d'application LieuImpositionApresDeplacement
   année_antérieure_ouverte champ d'application LieuImpositionApresDeplacement
   année_prescrite champ d'application LieuImpositionApresDeplacement
+  année_ultérieure champ d'application LieuImpositionApresDeplacement
+  sans_déplacement champ d'application LieuImpositionApresDeplacement
 
 champ d'application TestLieuImpositionApresDeplacement:
-  # LEGIARTI000006302213 : changement en 2025, imposition de 2024 non prescrite, lieu codé 75.
-  définition année_antérieure_ouverte.date_d_application égal à |2026-01-01|
+  # LEGIARTI000006302213, date de début de la version : le cas s'applique dès le premier jour.
+  définition année_du_changement.date_d_application égal à |1979-07-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; année du changement ; la prescription ne joue que pour les années antérieures.
+  définition année_du_changement.déplacement_résidence_ou_principal_établissement égal à vrai
+  définition année_du_changement.année_du_changement égal à 2025
+  définition année_du_changement.année_imposée égal à 2025
+  définition année_du_changement.appréciation_prescription_acquise égal à vrai
+  définition année_du_changement.nouveau_lieu_d_imposition égal à 75
+  assertion année_du_changement.lieu_autorisé_selon_11 = Présent contenu 75
+  # LEGIARTI000006302213, date de début de la version : le cas s'applique dès le premier jour.
+  définition année_antérieure_ouverte.date_d_application égal à |1979-07-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; année antérieure non prescrite.
   définition année_antérieure_ouverte.déplacement_résidence_ou_principal_établissement égal à vrai
   définition année_antérieure_ouverte.année_du_changement égal à 2025
   définition année_antérieure_ouverte.année_imposée égal à 2024
   définition année_antérieure_ouverte.appréciation_prescription_acquise égal à faux
   définition année_antérieure_ouverte.nouveau_lieu_d_imposition égal à 75
   assertion année_antérieure_ouverte.lieu_autorisé_selon_11 = Présent contenu 75
-  # LEGIARTI000006302213 : même cas, année antérieure atteinte par la prescription.
-  définition année_prescrite.date_d_application égal à |2026-01-01|
+  # LEGIARTI000006302213, date de début de la version : le cas s'applique dès le premier jour.
+  définition année_prescrite.date_d_application égal à |1979-07-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; année antérieure prescrite.
   définition année_prescrite.déplacement_résidence_ou_principal_établissement égal à vrai
   définition année_prescrite.année_du_changement égal à 2025
   définition année_prescrite.année_imposée égal à 2020
   définition année_prescrite.appréciation_prescription_acquise égal à vrai
   définition année_prescrite.nouveau_lieu_d_imposition égal à 75
   assertion année_prescrite.lieu_autorisé_selon_11 = Absent
+  # LEGIARTI000006302213, date de début de la version : le cas s'applique dès le premier jour.
+  définition année_ultérieure.date_d_application égal à |1979-07-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; année postérieure au changement, hors du texte.
+  définition année_ultérieure.déplacement_résidence_ou_principal_établissement égal à vrai
+  définition année_ultérieure.année_du_changement égal à 2025
+  définition année_ultérieure.année_imposée égal à 2026
+  définition année_ultérieure.appréciation_prescription_acquise égal à faux
+  définition année_ultérieure.nouveau_lieu_d_imposition égal à 75
+  assertion année_ultérieure.lieu_autorisé_selon_11 = Absent
+  # LEGIARTI000006302213, date de début de la version : le cas s'applique dès le premier jour.
+  définition sans_déplacement.date_d_application égal à |1979-07-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; pas de déplacement de la résidence ni du principal établissement.
+  définition sans_déplacement.déplacement_résidence_ou_principal_établissement égal à faux
+  définition sans_déplacement.année_du_changement égal à 2025
+  définition sans_déplacement.année_imposée égal à 2025
+  définition sans_déplacement.appréciation_prescription_acquise égal à faux
+  définition sans_déplacement.nouveau_lieu_d_imposition égal à 75
+  assertion sans_déplacement.lieu_autorisé_selon_11 = Absent
 ```

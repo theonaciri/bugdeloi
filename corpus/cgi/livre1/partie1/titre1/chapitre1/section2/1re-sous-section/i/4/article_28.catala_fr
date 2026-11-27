@@ -24,16 +24,25 @@ champ d'application RevenuNetFoncier:
 déclaration champ d'application TestRevenuNetFoncier:
   bénéficiaire champ d'application RevenuNetFoncier
   déficitaire champ d'application RevenuNetFoncier
+  sans_charge champ d'application RevenuNetFoncier
 
 champ d'application TestRevenuNetFoncier:
-  # LEGIARTI000006302228 : 12 000 € de revenu brut, 2 000 € et 1 500 € de charges.
-  définition bénéficiaire.date_d_application égal à |2026-01-01|
+  # LEGIARTI000006302228, date de début de la version : le cas s'applique dès le premier jour.
+  définition bénéficiaire.date_d_application égal à |1950-04-30|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; 12 000 € − (2 000 € + 1 500 €) = 8 500 €.
   définition bénéficiaire.revenu_brut égal à 12 000 €
   définition bénéficiaire.charges_de_la_propriété égal à [2 000 €; 1 500 €]
   assertion bénéficiaire.revenu_net_foncier = 8 500 €
-  # LEGIARTI000006302228 : charges supérieures au revenu brut, la différence est négative.
-  définition déficitaire.date_d_application égal à |2026-01-01|
+  # LEGIARTI000006302228, date de début de la version : le cas s'applique dès le premier jour.
+  définition déficitaire.date_d_application égal à |1950-04-30|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; charges supérieures au revenu brut, différence négative.
   définition déficitaire.revenu_brut égal à 3 000 €
   définition déficitaire.charges_de_la_propriété égal à [5 000 €]
   assertion déficitaire.revenu_net_foncier = -2 000 €
+  # LEGIARTI000006302228, date de début de la version : le cas s'applique dès le premier jour.
+  définition sans_charge.date_d_application égal à |1950-04-30|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; aucune charge, le revenu net égale le revenu brut.
+  définition sans_charge.revenu_brut égal à 3 000 €
+  définition sans_charge.charges_de_la_propriété égal à []
+  assertion sans_charge.revenu_net_foncier = 3 000 €
 ```

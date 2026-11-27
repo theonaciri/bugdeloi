@@ -29,20 +29,31 @@ champ d'application QuotePartSocieteIr:
 déclaration champ d'application TestQuotePartSocieteIr:
   associé champ d'application QuotePartSocieteIr
   société_non_visée champ d'application QuotePartSocieteIr
+  non_associé champ d'application QuotePartSocieteIr
 
 champ d'application TestQuotePartSocieteIr:
-  # LEGIARTI000006302205 : associé détenant un quart des droits d'une société visée.
-  définition associé.date_d_application égal à |2026-01-01|
+  # LEGIARTI000006302205, date de début de la version : le cas s'applique dès le premier jour.
+  définition associé.date_d_application égal à |1979-07-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; un quart des droits, 10 000 € × 0,25 = 2 500 €.
   définition associé.société_visée_par_1655_ter égal à vrai
   définition associé.associé_ou_actionnaire égal à vrai
   définition associé.revenus_sociaux égal à 10 000 €
   définition associé.proportion_des_droits égal à 0,25
   assertion associé.quote_part_soumise_personnellement = Présent contenu 2 500 €
-  # LEGIARTI000006302205 : société hors du champ de l'article 1655 ter.
-  définition société_non_visée.date_d_application égal à |2026-01-01|
+  # LEGIARTI000006302205, date de début de la version : le cas s'applique dès le premier jour.
+  définition société_non_visée.date_d_application égal à |1979-07-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; société hors de l'article 1655 ter.
   définition société_non_visée.société_visée_par_1655_ter égal à faux
   définition société_non_visée.associé_ou_actionnaire égal à vrai
   définition société_non_visée.revenus_sociaux égal à 10 000 €
   définition société_non_visée.proportion_des_droits égal à 0,25
   assertion société_non_visée.quote_part_soumise_personnellement = Absent
+  # LEGIARTI000006302205, date de début de la version : le cas s'applique dès le premier jour.
+  définition non_associé.date_d_application égal à |1979-07-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; personne ni associée ni actionnaire.
+  définition non_associé.société_visée_par_1655_ter égal à vrai
+  définition non_associé.associé_ou_actionnaire égal à faux
+  définition non_associé.revenus_sociaux égal à 10 000 €
+  définition non_associé.proportion_des_droits égal à 0,25
+  assertion non_associé.quote_part_soumise_personnellement = Absent
 ```
