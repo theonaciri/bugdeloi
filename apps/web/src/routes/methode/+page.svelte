@@ -117,7 +117,10 @@ const verdicts = [
       </div>
       <p class="text-sm leading-relaxed text-muted">
         Avant toute traduction Catala, chaque article est classé alinéa par alinéa (calculable, entrée d’appréciation
-        ou hors périmètre) avec une interface proposée.
+        ou hors périmètre) avec une interface proposée. Cette séparation entre <strong class="text-ink">analyse</strong>
+        (N1) et <strong class="text-ink">traduction</strong> (N2) permet de trier les articles non calculables avant de
+        coder, de figer l’interface sans biais d’implémentation, d’écrire des oracles aveugles (N3) contre cette
+        interface sans voir le code, et de détecter les ambiguïtés si deux traductions indépendantes divergent.
       </p>
       <div class="flex flex-wrap gap-2 text-xs">
         <a

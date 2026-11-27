@@ -157,6 +157,29 @@ function hrefFor(params: { etat?: string; role?: string; page?: number }) {
           <strong class="font-semibold text-ink">Oracle</strong> = cas de test indépendant issu d’une source officielle
           (BOFiP, brochure, OpenFisca) pour vérifier le calcul sans voir le code (N3).
         </p>
+        <details class="pt-1 text-xs">
+          <summary class="cursor-pointer font-semibold text-brand-strong hover:underline">
+            Pourquoi séparer l’analyse (analyst) de la traduction (translate) ?
+          </summary>
+          <ol class="mt-2 list-decimal space-y-1 pl-5 text-muted leading-relaxed">
+            <li>
+              <strong class="text-ink">Trier avant de coder :</strong> sur plus de 13 000 articles, beaucoup sont
+              procéduraux ou hors périmètre. L’analyse filtre rapidement ce qui est réellement calculable.
+            </li>
+            <li>
+              <strong class="text-ink">Figer l’interface avant le code :</strong> l’analyste définit les entrées, les
+              sorties et les entrées d’appréciation pour éviter que le traducteur n’adapte l’énoncé à son propre code.
+            </li>
+            <li>
+              <strong class="text-ink">Permettre des oracles aveugles (N3) :</strong> une fois l’interface figée, un
+              autre modèle écrit les tests contre cette interface sans jamais voir le code Catala.
+            </li>
+            <li>
+              <strong class="text-ink">Détecter les ambiguïtés :</strong> plusieurs traducteurs indépendants peuvent
+              implémenter la même interface ; une divergence sur une même entrée révèle une ambiguïté du texte.
+            </li>
+          </ol>
+        </details>
       </div>
     </div>
   </div>
