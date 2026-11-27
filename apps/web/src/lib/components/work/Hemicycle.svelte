@@ -109,6 +109,7 @@ const seatLevels = $derived.by(() => {
 const reduceMotion = () =>
   typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches
 
+let animStart: number | null = null
 let drawnOnce = false
 let raf = 0
 
@@ -124,8 +125,10 @@ function draw(progress: number) {
   const dpr = Math.min(window.devicePixelRatio || 1, 2)
   const R = width / 2 - PAD
   const h = R + PAD * 2
-  canvas.width = Math.round(width * dpr)
-  canvas.height = Math.round(h * dpr)
+  const targetW = Math.round(width * dpr)
+  const targetH = Math.round(h * dpr)
+  if (canvas.width !== targetW) canvas.width = targetW
+  if (canvas.height !== targetH) canvas.height = targetH
   const ctx = canvas.getContext('2d')
   if (!ctx) return
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
@@ -161,10 +164,11 @@ function animate() {
     painted = true
     return
   }
-  const t0 = performance.now()
+  if (animStart === null) animStart = performance.now()
+  const t0 = animStart
   const D = 1400
   const step = (t: number) => {
-    const x = Math.min(1, (t - t0) / D)
+    const x = Math.max(0, Math.min(1, (t - t0) / D))
     draw(x === 1 ? 1 : 1 - 2 ** (-10 * x))
     painted = true
     if (x < 1) raf = requestAnimationFrame(step)
@@ -193,6 +197,7 @@ $effect(() => {
   void selected
   void hovered
   if (width > 0) animate()
+  return () => cancelAnimationFrame(raf)
 })
 
 function levelAt(ev: MouseEvent): Level | null {
