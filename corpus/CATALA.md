@@ -96,8 +96,9 @@ Les tests suivent une autre règle, parce que la plupart des articles ne donnent
   `# Cas d’essai synthétique : valeurs choisies pour le test, absentes du texte ; <calcul attendu>` ;
   ne les attribue jamais à l’article ;
 - le résultat attendu se calcule à la main par la règle de l’article ;
-- il y a un cas où l’article s’applique et un cas par condition qui l’écarte (CGI 14 et 30 en ont quatre
-  à six) ;
+- il y a un cas où l’article s’applique, puis un cas par condition booléenne de la règle, chacune mise
+  seule à la valeur qui écarte l’article (même la plus évidente, comme « membre ») ;
+- chaque valeur d’une énumération a son cas (CGI 14 en a neuf) ;
 - Catala 1.3.2 n’a pas de test d’échec attendu : une date antérieure à la version ne se teste pas, puisque
   son assertion ferait échouer toute la suite.
 

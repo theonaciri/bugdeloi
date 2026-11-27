@@ -57,6 +57,10 @@ itérations de compilation.
   `ARRONDI`. Refusé avec motif : l'écart possible est d'un demi-centime, sous le seuil de 1 € du finding, et
   le paramètre changerait l'interface figée. La consigne le précise maintenant.
 
+Seconde relecture (2 fils, corrigés dans b281775) : 8 quinquies ne testait pas `membre = faux`, et 14 ne
+testait que deux des cinq catégories positives. La règle de couverture précise maintenant « une condition
+booléenne à la fois, une valeur d'énumération à la fois ».
+
 Aucun commentaire ne portait sur le texte cité, l'interface ou les règles elles-mêmes : les contrôles
 mécaniques ajoutés à `check-corpus-pr.ts` couvrent ces points avant la relecture.
 
