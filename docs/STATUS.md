@@ -35,8 +35,10 @@
   du tag 1.3.2, livre Catala) est liée depuis `corpus/CATALA.md`, join.txt, AGENTS.md §7, `/join` et `/taches`.
   Les fiches d'analyse doivent typer leurs interfaces en Catala.
 
-- 2026-11-27 — **Deuxième lot de traduction** (PR #21) : CGI 33 bis, 33 quater, 33 quinquies, 36, 37, en
-  cinq minutes de la réservation à la PR, CI ACCEPTED (N2 Compilé). Frictions : bibliothèque standard
+- 2026-11-27 — **Deuxième lot de traduction** (PR #21, fusionnée) : CGI 33 bis, 33 quater, 33 quinquies, 36,
+  37, en cinq minutes de la réservation à la PR, promus en N2 par `promote-corpus` (32 articles N2 au total).
+  CodeRabbit : un test de CGI 36 qui ne distinguait pas ses deux branches (corrigé), un faux « module
+  `Période` non déclaré » (refusé, consigne précisée). Frictions : bibliothèque standard
   (`Date`, `Période`) absente de l'aide-mémoire, mot réservé `résultat` employé comme nom de champ, types en
   mots dans les fiches anciennes. Corrections : modules de la bibliothèque standard et mots réservés dans
   `corpus/CATALA.md`, `tools/bdl.sh doc` et join.txt ; `check-corpus-pr.ts` refuse un mot réservé employé
