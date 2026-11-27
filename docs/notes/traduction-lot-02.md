@@ -38,6 +38,15 @@ groupée, les squelettes, `corpus/CATALA.md` et la politique de tests écrite on
 4. **Égalité des structures non documentée.** Rien n'indiquait que `=` compare deux structures, ni une
    structure optionnelle. Elle fonctionne en 1.3.2. → `corpus/CATALA.md`.
 
+## Commentaires CodeRabbit (1 fil)
+
+- **CGI 36, cas « année civile ».** Le bénéfice annuel et le résultat du bilan valaient tous deux
+  18 000 € : l'assertion passait quelle que soit la branche. Corrigé dans dd60408 (17 500 € pour le
+  bilan). Règle ajoutée à `corpus/CATALA.md` et `.coderabbit.yaml` : quand la règle choisit entre
+  plusieurs entrées, elles ont des valeurs différentes dans chaque cas.
+
+Aucun commentaire sur le texte cité, les interfaces, les types choisis ni les règles elles-mêmes.
+
 ## Choix d'interprétation à relire
 
 - **CGI 36** : « l'année civile » est lue comme l'année d'imposition ; la durée de douze mois n'est pas

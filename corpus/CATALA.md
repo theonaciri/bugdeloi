@@ -143,6 +143,8 @@ Les tests suivent une autre règle, parce que la plupart des articles ne donnent
 - il y a un cas où l’article s’applique, puis un cas par condition booléenne de la règle, chacune mise
   seule à la valeur qui écarte l’article (même la plus évidente, comme « membre ») ;
 - chaque valeur d’une énumération a son cas (CGI 14 en a neuf) ;
+- quand la règle choisit entre plusieurs entrées, elles ont des valeurs différentes dans chaque cas : avec
+  deux montants égaux, l’assertion passe quelle que soit la branche (CGI 36) ;
 - Catala 1.3.2 n’a pas de test d’échec attendu : une date antérieure à la version ne se teste pas, puisque
   son assertion ferait échouer toute la suite.
 

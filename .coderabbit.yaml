@@ -31,7 +31,8 @@ reviews:
            si elle est connue).
         6. Tests : au moins un champ d'application `#[test]` avec des `assertion`, un cas par règle, par branche et
            par exclusion (un cas où l'article s'applique, un cas par condition booléenne mise seule à la valeur qui
-           écarte l'article, un cas par valeur d'énumération), et une date
+           écarte l'article, un cas par valeur d'énumération, et des valeurs distinctes pour les entrées entre lesquelles la
+           règle choisit), et une date
            d'application égale au début de validité de la version. Quand le texte ne donne pas d'exemple chiffré, les
            entrées d'essai sont synthétiques : elles sont annoncées par un commentaire `# Cas d'essai synthétique : …`
            et le résultat attendu se calcule à la main par la règle de l'article. N'exige pas qu'elles viennent du
