@@ -32,6 +32,8 @@ déclaration champ d'application EtalementIndemnisationDeces:
   entrée primes_non_déduites contenu argent
   entrée données_de_cession_ou_cessation contenu optionnel de EtalementIndemnisationDecesCession
   interne étalement_applicable contenu booléen
+  interne part_du_profit contenu argent
+  interne part_des_primes contenu argent
   interne tranches contenu liste de EtalementIndemnisationDecesTranche
   résultat échéancier_ordinaire contenu liste de EtalementIndemnisationDecesTranche
   résultat rapport_à_l_exercice_de_cession_ou_cessation contenu optionnel de EtalementIndemnisationDecesRapport
@@ -58,18 +60,25 @@ champ d'application EtalementIndemnisationDeces:
   définition étalement_applicable égal à
     contrat_et_indemnité_visés et appréciation_rôle_déterminant et option_d_étalement
 
-  # TODO juridique : le texte ne fixe pas d'arrondi ; Catala arrondit chaque part au centime, et la somme
-  # des cinq parts peut s'écarter du montant de quelques centimes.
+  # TODO juridique : le texte ne fixe pas d'arrondi. Chaque part est arrondie au centime par Catala, et
+  # la cinquième reçoit le reliquat, pour que les cinq parts fassent exactement le montant étalé (un profit
+  # de 50 000,03 € donne quatre parts de 10 000,01 € et une de 9 999,99 €).
+  # CGI, article 38 quater, premier alinéa, première phrase : profit réparti en cinq parts égales.
+  définition part_du_profit égal à profit / 5,0
+  # CGI, article 38 quater, premier alinéa, seconde phrase : primes déduites en cinq parts égales.
+  définition part_des_primes égal à primes_non_déduites / 5,0
   définition tranches égal à
-    # CGI, article 38 quater, premier alinéa, première phrase : l'année de réalisation et les quatre
-    # années suivantes.
+    # CGI, article 38 quater, premier alinéa, première phrase : l'année de réalisation (rang 0) et les
+    # quatre années suivantes ; la dernière (rang 4) reçoit le reliquat d'arrondi des quatre premières.
     transforme chaque rang parmi [0; 1; 2; 3; 4] en
       EtalementIndemnisationDecesTranche {
         -- année: année_de_réalisation + rang
-        # CGI, article 38 quater, premier alinéa, première phrase : profit réparti par parts égales.
-        -- profit_imposable: profit / 5,0
-        # CGI, article 38 quater, premier alinéa, seconde phrase : primes déduites par parts égales.
-        -- primes_déductibles: primes_non_déduites / 5,0
+        -- profit_imposable:
+          # CGI, article 38 quater, premier alinéa : quatre parts égales avant la dernière.
+          si rang = 4 alors profit - part_du_profit * 4,0 sinon part_du_profit
+        -- primes_déductibles:
+          # CGI, article 38 quater, premier alinéa : quatre parts égales avant la dernière.
+          si rang = 4 alors primes_non_déduites - part_des_primes * 4,0 sinon part_des_primes
       }
 
   # CGI, article 38 quater, second alinéa : les sommes rapportées à l'exercice de la cession ou de la
@@ -100,6 +109,7 @@ champ d'application EtalementIndemnisationDeces:
 déclaration champ d'application TestEtalementIndemnisationDeces:
   étalement champ d'application EtalementIndemnisationDeces
   cession champ d'application EtalementIndemnisationDeces
+  reliquat_d_arrondi champ d'application EtalementIndemnisationDeces
   sans_option champ d'application EtalementIndemnisationDeces
   contrat_non_visé champ d'application EtalementIndemnisationDeces
   rôle_non_déterminant champ d'application EtalementIndemnisationDeces
@@ -139,6 +149,29 @@ champ d'application TestEtalementIndemnisationDeces:
   assertion cession.rapport_à_l_exercice_de_cession_ou_cessation = Présent contenu EtalementIndemnisationDecesRapport {
     -- exercice: 2022
     -- montant: 30 000 €
+  }
+  # LEGIARTI000006302269, date de début de la version : le cas s'applique dès le premier jour.
+  définition reliquat_d_arrondi.date_d_application égal à |2005-01-01|
+  # Cas d'essai synthétique : valeurs choisies pour le test, absentes du texte ; 50 000,03 € donnent quatre parts de 10 000,01 € et une de 9 999,99 € ; cessation en 2025 après les cinq parts, rien à rapporter.
+  définition reliquat_d_arrondi.appréciation_rôle_déterminant égal à vrai
+  définition reliquat_d_arrondi.contrat_et_indemnité_visés égal à vrai
+  définition reliquat_d_arrondi.option_d_étalement égal à vrai
+  définition reliquat_d_arrondi.année_de_réalisation égal à 2020
+  définition reliquat_d_arrondi.profit égal à 50 000,03 €
+  définition reliquat_d_arrondi.primes_non_déduites égal à 0,04 €
+  définition reliquat_d_arrondi.données_de_cession_ou_cessation égal à Présent contenu EtalementIndemnisationDecesCession {
+    -- exercice: 2025
+    -- parts_du_profit_déjà_imposées: 50 000,03 €
+  }
+  assertion nombre de reliquat_d_arrondi.échéancier_ordinaire = 5
+  assertion existe t parmi reliquat_d_arrondi.échéancier_ordinaire tel que
+    t.année = 2024 et t.profit_imposable = 9 999,99 € et t.primes_déductibles = 0,00 €
+  assertion existe t parmi reliquat_d_arrondi.échéancier_ordinaire tel que
+    t.année = 2020 et t.profit_imposable = 10 000,01 € et t.primes_déductibles = 0,01 €
+  assertion (Argent.somme de (transforme chaque t parmi reliquat_d_arrondi.échéancier_ordinaire en t.primes_déductibles)) = 0,04 €
+  assertion reliquat_d_arrondi.rapport_à_l_exercice_de_cession_ou_cessation = Présent contenu EtalementIndemnisationDecesRapport {
+    -- exercice: 2025
+    -- montant: 0 €
   }
   # LEGIARTI000006302269, date de début de la version : le cas s'applique dès le premier jour.
   définition sans_option.date_d_application égal à |2005-01-01|
