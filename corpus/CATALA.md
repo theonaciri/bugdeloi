@@ -136,6 +136,11 @@ fixe pas d’arrondi, écris au-dessus de la définition
 le voie (AGENTS.md §7). L’écart possible reste alors sous 1 € : ce n’est pas un finding `ARRONDI`, qui
 suppose deux placements d’arrondi distants de plus de 1 € (AGENTS.md §4.4).
 
+**Parts égales** : un montant réparti en N parts arrondies au centime ne fait plus le total (50 000,03 €
+en cinq parts de 10 000,01 € font 50 000,05 €). Donne le reliquat à la dernière part,
+`si rang = 4 alors profit - part * 4,0 sinon part`, pour que la somme des parts égale le montant, et
+expose ce choix par un `# TODO juridique` (CGI 38 quater).
+
 ## Citations et tests
 
 Chaque constante de la règle (montant, taux, seuil, durée, date, rang) est précédée dans les trois

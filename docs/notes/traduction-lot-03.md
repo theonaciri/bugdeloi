@@ -54,11 +54,15 @@ Six minutes de la réservation à la PR. Aucune erreur de compilation : les piè
 - **Borne de fenêtre non testée (39 AA).** Rien ne testait un bien acquis juste après le 1er janvier 2003.
   → Règle ajoutée : chaque borne d'une fenêtre de dates a son cas juste au-delà, des deux côtés.
 
+Second tour (1 fil, corrigé dans 866e14a) : cinq parts arrondies au centime ne faisaient plus le profit
+(50 000,03 € → 50 000,05 €), ce qui rendait contradictoires l'assertion de borne et celle de cohérence.
+La cinquième part reçoit maintenant le reliquat ; motif « parts égales » ajouté à `corpus/CATALA.md`.
+
 ## Choix d'interprétation à relire
 
 Recopiés dans la PR : lecture des coefficients de 39 AA (2 ; 2,5 ; 3) et de 39 AA quinquies
 (1,5 ; 2 ; 2,5), fenêtre 2001–2003 de 39 AA bornes comprises, durées non entières rangées dans la tranche
-qui commence avant elles, arrondi au centime des parts de 38 quater, sort des primes non déduites à la
+qui commence avant elles, arrondi au centime des parts de 38 quater (reliquat sur la cinquième), sort des primes non déduites à la
 cession, appel de 39 D par élément.
 
 ## Optimisation à décider
